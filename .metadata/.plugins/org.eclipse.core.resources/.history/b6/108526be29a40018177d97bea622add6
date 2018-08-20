@@ -1,0 +1,83 @@
+package com.adc.da.main.aspect;
+
+
+import com.adc.da.common.SignUtils;
+import com.adc.da.util.http.Result;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+@Aspect
+@Component
+public class AppRequestAspect {
+
+    private static Logger logger = LoggerFactory.getLogger(AppRequestAspect.class);
+
+
+    @Value("${app.timeOut}")
+    private String timeOut;
+
+    /**
+     * 匹配controller层的方法
+     */
+    @Pointcut(value = "(execution(* com.adc.da.product.controller.AppRestController.*(..))) " +
+            " && !execution(* com.adc.da.product.controller.AppRestController.loginRest(..)) " +
+            " && !execution(* com.adc.da.product.controller.AppRestController.queryQRCodeDetails(..))")
+    private void appPointcut() {
+    }
+
+    @Around(value = "appPointcut()")
+    public Object process(ProceedingJoinPoint joinPoint) throws Throwable {
+        try {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String dateValue = request.getParameter("timestamp");
+            Long nowTime = System.currentTimeMillis();
+            if (nowTime - Long.valueOf(dateValue) > Long.valueOf(timeOut)) {
+                logger.info("接口安全:超时请求");
+                return Result.error("fail", "非法请求");
+            }
+           String sign = "";
+            Map<String, String[]> name = request.getParameterMap();
+            HashMap<String, String> map = new HashMap<>();
+            Iterator it = name.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                Object key = entry.getKey();
+                String keyString = (String) key;
+                Object value = entry.getValue();
+                String[] arrayValue = (String[])value;
+                String  stringValue = arrayValue[0];
+
+                if(keyString.equals("sign")){
+                    sign = stringValue;
+                    continue;
+                }
+                map.put(keyString, stringValue);
+            }
+          String afterSign =  SignUtils.getSignature(map);
+          if(!afterSign.equals(sign)){
+              logger.info("接口安全:sign不匹配");
+              return Result.error("fail","非法请求");
+          }
+        }catch (Exception e){
+            logger.info("接口安全:参数错误");
+            return Result.error("fail","参数错误");
+        }
+
+        Object result = joinPoint.proceed();
+        return result;
+    }
+
+}

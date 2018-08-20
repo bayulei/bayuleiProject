@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.sys.dao.SysCorpEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.sys.entity.SysCorpEO" >
+    <id column="id" property="id" />
+    <result column="corp_name" property="corpName" />
+    <result column="corp_address" property="corpAddress" />
+    <result column="corp_user" property="corpUser" />
+    <result column="corp_phone" property="corpPhone" />
+    <result column="corp_email" property="corpEmail" />
+    <result column="corp_duty" property="corpDuty" />
+    <result column="corp_info" property="corpInfo" />
+    <result column="active_flag" property="activeFlag" />
+    <result column="del_flag" property="delFlag" />
+    <result column="insert_time" property="insertTime" />
+    <result column="update_time" property="updateTime" />
+    <result column="corp_type" property="corpType" />
+    <result column="corp_code" property="corpCode" />
+  </resultMap>
+
+  <!-- SYS_CORP table all fields -->
+  <sql id="Base_Column_List" >
+     id, corp_name, corp_address, corp_user, corp_phone, corp_email, corp_duty, corp_info, active_flag, del_flag, insert_time, update_time, corp_type, corp_code
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="corpName != null and corpName != ''" >
+        and corp_name ${corpNameOperator} #{corpName}
+      </if>
+      <if test="corpAddress != null and corpAddress != ''" >
+        and corp_address ${corpAddressOperator} #{corpAddress}
+      </if>
+      <if test="corpUser != null and corpUser != ''" >
+        and corp_user ${corpUserOperator} #{corpUser}
+      </if>
+      <if test="corpPhone != null" >
+        and corp_phone ${corpPhoneOperator} #{corpPhone}
+      </if>
+      <if test="corpEmail != null" >
+        and corp_email ${corpEmailOperator} #{corpEmail}
+      </if>
+      <if test="corpDuty != null and corpDuty != ''" >
+        and corp_duty ${corpDutyOperator} #{corpDuty}
+      </if>
+      <if test="corpInfo != null" >
+        and corp_info ${corpInfoOperator} #{corpInfo}
+      </if>
+      <if test="activeFlag != null" >
+        and active_flag ${activeFlagOperator} #{activeFlag}
+      </if>
+      <if test="delFlag != null" >
+        and del_flag ${delFlagOperator} #{delFlag}
+      </if>
+      <if test="insertTime != null" >
+        and insert_time ${insertTimeOperator} #{insertTime}
+      </if>
+      <if test="insertTime1 != null" >
+        and insert_time &gt;= #{insertTime1}
+      </if>
+      <if test="insertTime2 != null" >
+        and insert_time &lt;= #{insertTime2}
+      </if>
+      <if test="updateTime != null" >
+        and update_time ${updateTimeOperator} #{updateTime}
+      </if>
+      <if test="updateTime1 != null" >
+        and update_time &gt;= #{updateTime1}
+      </if>
+      <if test="updateTime2 != null" >
+        and update_time &lt;= #{updateTime2}
+      </if>
+      <if test="corpType != null" >
+        and corp_type ${corpTypeOperator} #{corpType}
+      </if>
+      <if test="corpCode != null" >
+        and corp_code ${corpCodeOperator} #{corpCode}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.sys.entity.SysCorpEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SYS_CORP.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SYS_CORP(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=VARCHAR}, #{corpName, jdbcType=VARCHAR}, #{corpAddress, jdbcType=VARCHAR}, #{corpUser, jdbcType=VARCHAR}, #{corpPhone, jdbcType=VARCHAR}, #{corpEmail, jdbcType=VARCHAR}, #{corpDuty, jdbcType=VARCHAR}, #{corpInfo, jdbcType=VARCHAR}, #{activeFlag, jdbcType=INTEGER}, #{delFlag, jdbcType=INTEGER}, #{insertTime, jdbcType=TIMESTAMP}, #{updateTime, jdbcType=TIMESTAMP}, #{corpType, jdbcType=VARCHAR}, #{corpCode, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.sys.entity.SysCorpEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SYS_CORP.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SYS_CORP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="corpName != null" >corp_name,</if>
+                <if test="corpAddress != null" >corp_address,</if>
+                <if test="corpUser != null" >corp_user,</if>
+                <if test="corpPhone != null" >corp_phone,</if>
+                <if test="corpEmail != null" >corp_email,</if>
+                <if test="corpDuty != null" >corp_duty,</if>
+                <if test="corpInfo != null" >corp_info,</if>
+                <if test="activeFlag != null" >active_flag,</if>
+                <if test="delFlag != null" >del_flag,</if>
+                <if test="insertTime != null" >insert_time,</if>
+                <if test="updateTime != null" >update_time,</if>
+                <if test="corpType != null" >corp_type,</if>
+                <if test="corpCode != null" >corp_code,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+                <if test="corpName != null" >#{corpName, jdbcType=VARCHAR},</if>
+                <if test="corpAddress != null" >#{corpAddress, jdbcType=VARCHAR},</if>
+                <if test="corpUser != null" >#{corpUser, jdbcType=VARCHAR},</if>
+                <if test="corpPhone != null" >#{corpPhone, jdbcType=VARCHAR},</if>
+                <if test="corpEmail != null" >#{corpEmail, jdbcType=VARCHAR},</if>
+                <if test="corpDuty != null" >#{corpDuty, jdbcType=VARCHAR},</if>
+                <if test="corpInfo != null" >#{corpInfo, jdbcType=VARCHAR},</if>
+                <if test="activeFlag != null" >#{activeFlag, jdbcType=INTEGER},</if>
+                <if test="delFlag != null" >#{delFlag, jdbcType=INTEGER},</if>
+                <if test="insertTime != null" >#{insertTime, jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null" >#{updateTime, jdbcType=TIMESTAMP},</if>
+                <if test="corpType != null" >#{corpType, jdbcType=VARCHAR},</if>
+                <if test="corpCode != null" >#{corpCode, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.sys.entity.SysCorpEO" >
+    update SYS_CORP
+       set  corp_name = #{corpName},
+            corp_address = #{corpAddress},
+            corp_user = #{corpUser},
+            corp_phone = #{corpPhone},
+            corp_email = #{corpEmail},
+            corp_duty = #{corpDuty},
+            corp_info = #{corpInfo},
+            active_flag = #{activeFlag},
+            del_flag = #{delFlag},
+            insert_time = #{insertTime},
+            update_time = #{updateTime},
+            corp_type = #{corpType},
+            corp_code = #{corpCode}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.sys.entity.SysCorpEO" >
+    update SYS_CORP
+    <set >
+      <if test="corpName != null" >
+        corp_name = #{corpName},
+      </if>
+      <if test="corpAddress != null" >
+        corp_address = #{corpAddress},
+      </if>
+      <if test="corpUser != null" >
+        corp_user = #{corpUser},
+      </if>
+      <if test="corpPhone != null" >
+        corp_phone = #{corpPhone},
+      </if>
+      <if test="corpEmail != null" >
+        corp_email = #{corpEmail},
+      </if>
+      <if test="corpDuty != null" >
+        corp_duty = #{corpDuty},
+      </if>
+      <if test="corpInfo != null" >
+        corp_info = #{corpInfo},
+      </if>
+      <if test="activeFlag != null" >
+        active_flag = #{activeFlag},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag},
+      </if>
+      <if test="insertTime != null" >
+        insert_time = #{insertTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="corpType != null" >
+        corp_type = #{corpType},
+      </if>
+      <if test="corpCode != null" >
+        corp_code = #{corpCode},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+  
+  <!-- 根据id查询 SYS_CORP -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SYS_CORP
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SYS_CORP
+     where id = #{value}
+
+  </delete>
+
+  <!-- SYS_CORP 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SYS_CORP
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SYS_CORP列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SYS_CORP
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SYS_CORP
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+    <!--duyunbao 根据唯一辨识码查找企业 -->
+    <select id="selectByCorpCode"  parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT SYS_CORP.*  FROM  SYS_CORP WHERE  CORP_CODE = #{corpCode} AND DEL_FLAG = 0  AND ACTIVE_FLAG = 0
+    </select>
+
+
+    <insert id="batchInsertCorp" >
+        INSERT INTO PART_PRODUCT  ("ID", "CORP_NAME",  "CORP_USER",  "ACTIVE_FLAG", "DEL_FLAG", "INSERT_TIME",
+        "UPDATE_TIME",  "CORP_CODE")
+        VALUES
+        <foreach collection="sysCorpEOS" item="eo" separator=",">
+            (#{eo.id},#{eo.corpName},#{eo.corpUser},#{eo.activeFlag},
+            #{eo.delFlag},#{eo.insertTime},#{eo.updateTime},#{eo.corpCode}
+            )
+        </foreach>
+    </insert>
+    <insert id="addCorpeos" parameterType="java.util.LinkedList">
+    	insert into SYS_CORP
+        (
+       	id, corp_name, corp_address, corp_user, corp_phone,corp_email, corp_duty, del_flag
+        	, active_flag, insert_time, update_time, corp_type
+        ) SELECT A.* 
+        FROM (
+        <foreach collection="list" item="item" index="index" separator="UNION ALL">
+        	SELECT 
+        	#{item.id, jdbcType=VARCHAR}, 
+        	#{item.corpName, jdbcType=VARCHAR},
+        	#{item.corpAddress, jdbcType=VARCHAR},
+        	#{item.corpUser, jdbcType=VARCHAR},
+        	#{item.corpPhone, jdbcType=VARCHAR},
+        	#{item.corpEmail, jdbcType=VARCHAR},
+        	#{item.corpDuty, jdbcType=VARCHAR},
+        	#{item.delFlag, jdbcType=INTEGER},
+        	#{item.activeFlag, jdbcType=INTEGER},
+        	#{item.insertTime, jdbcType=TIMESTAMP},
+        	#{item.updateTime, jdbcType=TIMESTAMP},
+        	#{item.corpType, jdbcType=VARCHAR}
+        	FROM DUAL
+        </foreach>
+        ) A
+    </insert>
+</mapper>
