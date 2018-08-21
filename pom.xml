@@ -46,10 +46,9 @@
 	<modules>
 		<module>adc-da-main</module>
 		<module>adc-da-ui</module>
-		<module>adc-da-demo</module>
 		<module>adc-da-login</module>
 		<module>adc-da-sys</module>
-		<module>adc-da-project</module>
+		<module>adc-da-activiti</module>
   </modules>
 
 	<repositories>

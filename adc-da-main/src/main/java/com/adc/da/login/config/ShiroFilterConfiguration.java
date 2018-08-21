@@ -29,7 +29,7 @@ public class ShiroFilterConfiguration {
         GlobalConfig.setRestApiPath(env.getProperty("restPath"));
     }
 
-    @Bean(name = "shiroFilter")
+    /*@Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         String adminPath = GlobalConfig.getAdminPath();
         String restPath = GlobalConfig.getRestApiPath();
@@ -62,5 +62,5 @@ public class ShiroFilterConfiguration {
 
         return shiroFilterFactoryBean;
     }
-
+*/
 }
