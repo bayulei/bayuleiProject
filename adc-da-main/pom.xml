@@ -45,6 +45,12 @@
 			<version>2.2.02</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.adc</groupId>
+			<artifactId>adc-da-convert</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 
 <!-- 		<dependency> -->
 <!-- 			<groupId>com.adc</groupId> -->
