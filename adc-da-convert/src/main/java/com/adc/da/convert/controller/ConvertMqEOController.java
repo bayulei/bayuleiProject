@@ -13,10 +13,8 @@ import java.util.Map;
 import com.adc.da.convert.MQService.SendMQService;
 import com.adc.da.convert.common.DocConverter;
 import com.adc.da.file.store.IFileStore;
-import com.adc.da.util.utils.BeanMapper;
-import com.adc.da.util.utils.FileUtil;
-import com.adc.da.util.utils.IOUtils;
-import com.adc.da.util.utils.UUID;
+import com.adc.da.util.utils.*;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +133,7 @@ public class ConvertMqEOController extends BaseController<ConvertMqEO>{
         HttpServletRequest request;
         //文件上传后，保存在upload文件夹
         //获取文件上传路径
-        File directory = new File("");//参数为空
+        File directory = new File("");
         String courseFile = directory.getCanonicalPath();
         System.out.println("*****上传文件路径*******"+courseFile);
         //保存文件路径
@@ -158,10 +156,12 @@ public class ConvertMqEOController extends BaseController<ConvertMqEO>{
             //保存文件
             String path = this.iFileStore.storeFile(is, fileExtension, saveDirectory);
             if(!path.isEmpty()){
+                //String userId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
                 ConvertMqEO convert = new ConvertMqEO();
                 String convertId = UUID.randomUUID(20);
                 convert.setId(convertId);
                 convert.setFilePath(path);
+                /*convert.setUserId(userId);*/
                 //创建消息队列
                 int countAdd = sendMQController.sendMQ(convert,0);
                 if(countAdd > 0){
@@ -196,6 +196,22 @@ public class ConvertMqEOController extends BaseController<ConvertMqEO>{
         } else {
             return Result.error("文件加入数据库失败，请重试");
         }
+    }
+
+    /**
+     * @Author yangxuenan
+     * @Description 删除转换队列数据
+     * Date 2018/8/28 8:56
+     * @Param [convertMqEO]
+     * @return com.adc.da.util.http.ResponseMessage<com.adc.da.convert.entity.ConvertMqEO>
+     **/
+    @ApiOperation(value = "|ConvertMqEO|删除")
+    @PutMapping("/deleteConvert")
+    /*@RequiresPermissions("convert:convertMq:deleteConvert")*/
+    public ResponseMessage<ConvertMqEO> deleteConvert(@RequestBody ConvertMqEO convertMqEO) throws Exception {
+        convertMqEO.setDelFlag(1);
+        convertMqEOService.updateByPrimaryKeySelective(convertMqEO);
+        return Result.success(convertMqEO);
     }
 
 }
