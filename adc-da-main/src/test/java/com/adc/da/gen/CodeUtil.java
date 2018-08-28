@@ -17,7 +17,7 @@ public class CodeUtil {
 
 
 
-        entityPackage = "project";
+        entityPackage = "search";
 
         DbCodeGenerateFactory.codeGenerate("PART_PRODUCT", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_ROLE", entityPackage);

@@ -27,6 +27,9 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+/**
+ *
+ */
 @RestController
 @RequestMapping("/${restPath}/sys/dictionary")
 @Api(description = "数据字典管理")

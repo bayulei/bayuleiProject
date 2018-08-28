@@ -49,6 +49,7 @@
 		<module>adc-da-login</module>
 		<module>adc-da-sys</module>
 		<module>adc-da-activiti</module>
+		<module>adc-da-search</module>
   </modules>
 
 	<repositories>
