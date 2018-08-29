@@ -1,4 +1,4 @@
-# 法规智库前端系统
+# laws_system_front_pc
 
 > A Vue.js project
 
