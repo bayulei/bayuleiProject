@@ -4,16 +4,11 @@ import com.adc.da.search.entity.PartProductEO;
 import com.adc.da.search.service.ElasticsearchService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
-import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
@@ -21,6 +16,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -46,16 +43,7 @@ public class TestController {
     @Autowired
     private ElasticsearchService elasticsearchService;
 
-   @GetMapping("/get/book/novel")
-   @ResponseBody
-   public ResponseEntity get(@RequestParam(name="id",defaultValue = "")String id){
-        if(id.isEmpty()){
-            return  new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        GetResponse result = this.client.prepareGet("book","novel",id).get();
 
-        return  new ResponseEntity(result.getSource(),HttpStatus.OK);
-    }
 
     @PostMapping("add/book/novel")
     @ResponseBody
@@ -94,36 +82,7 @@ public class TestController {
         }
     }
 
-    @PutMapping("update/book/novel")
-    @ResponseBody
-    public ResponseEntity update(
-            @RequestParam(name="id") String id,
-            @RequestParam(name="title",required = false) String title,
-            @RequestParam(name="author",required = false) String author
-    ){
-        UpdateRequest update = new UpdateRequest("book","novel",id);
-       try {
-           XContentBuilder builder = XContentFactory.jsonBuilder().startObject();
-           if (title!=null) {
-               builder.field("title", title);
-           }
-           if(author!=null){
-               builder.field("author",author);
-           }
-           builder.endObject();
-           update.doc(builder);
-       }catch (IOException e) {
-           e.printStackTrace();
-           return  new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-       }
-        try {
-            UpdateResponse result = this.client.update(update).get();
-            return  new ResponseEntity(result.getResult().toString(),HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return  new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
 
     @PostMapping("query/book/novel")
     @ResponseBody
@@ -191,9 +150,11 @@ public class TestController {
 
     @PostMapping("justtest")
     @ResponseBody
-    public boolean justtest() throws IOException {
-        boolean  indexstate = elasticsearchService.isIndexExist("testone");
-        System.out.println(indexstate);
+    public List<Map<String, Object>>   justtest() throws IOException {
+        String [] index={"bank","book"};
+        String [] type={"_doc","_type"};
+        String [] fields={"account_number", "balance"};
+        List<Map<String, Object>> indexstate = elasticsearchService.searchListDataGroupComplex(index,type);
         return  indexstate;
     }
 }
