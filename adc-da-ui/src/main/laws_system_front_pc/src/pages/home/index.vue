@@ -1,6 +1,9 @@
 <template>
   <div class="home">
     <home-header></home-header>
+    <div class="container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -47,5 +50,11 @@ export default {
   .home{
     width: 100%;
     height: 100%;
+    .container{
+      width: 100%;
+      height: calc(~'100% - 1.6rem');
+      padding-top: 0.48rem;
+      box-sizing: border-box;
+    }
   }
 </style>

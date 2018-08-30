@@ -13,10 +13,13 @@ import $ from 'jquery'
 import store from './store'
 // 自定义插件引入
 import plugins from '@/common/plugins'
+// 自定义全局组件引入
+import components from '@/common/components'
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.prototype.$ = $
 Vue.use(plugins)
+Vue.use(components)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
