@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.activiti.dao.BusProcessEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.activiti.entity.BusProcessEO" >
+    <id column="id" property="id" />
+    <result column="end_time" property="endTime" />
+    <result column="create_time" property="createTime" />
+    <result column="process_status" property="processStatus" />
+    <result column="now_user_id" property="nowUserId" />
+    <result column="now_uesr_name" property="nowUesrName" />
+    <result column="last_user_id" property="lastUserId" />
+    <result column="last_user_name" property="lastUserName" />
+    <result column="create_user_id" property="createUserId" />
+    <result column="standard_id" property="standardId" />
+    <result column="process_type" property="processType" />
+    <result column="process_number" property="processNumber" />
+  </resultMap>
+
+  <!-- BUS_PROCESS table all fields -->
+  <sql id="Base_Column_List" >
+     end_time, create_time, process_status, now_user_id, now_uesr_name, last_user_id, last_user_name, create_user_id, standard_id, process_type, process_number, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="endTime != null" >
+        and end_time ${endTimeOperator} #{endTime}
+      </if>
+      <if test="endTime1 != null" >
+        and end_time &gt;= #{endTime1}
+      </if>
+      <if test="endTime2 != null" >
+        and end_time &lt;= #{endTime2}
+      </if>
+      <if test="createTime != null" >
+        and create_time ${createTimeOperator} #{createTime}
+      </if>
+      <if test="createTime1 != null" >
+        and create_time &gt;= #{createTime1}
+      </if>
+      <if test="createTime2 != null" >
+        and create_time &lt;= #{createTime2}
+      </if>
+      <if test="processStatus != null" >
+        and process_status ${processStatusOperator} #{processStatus}
+      </if>
+      <if test="nowUserId != null" >
+        and now_user_id ${nowUserIdOperator} #{nowUserId}
+      </if>
+      <if test="nowUesrName != null" >
+        and now_uesr_name ${nowUesrNameOperator} #{nowUesrName}
+      </if>
+      <if test="lastUserId != null" >
+        and last_user_id ${lastUserIdOperator} #{lastUserId}
+      </if>
+      <if test="lastUserName != null" >
+        and last_user_name ${lastUserNameOperator} #{lastUserName}
+      </if>
+      <if test="createUserId != null" >
+        and create_user_id ${createUserIdOperator} #{createUserId}
+      </if>
+      <if test="standardId != null" >
+        and standard_id ${standardIdOperator} #{standardId}
+      </if>
+      <if test="processType != null" >
+        and process_type ${processTypeOperator} #{processType}
+      </if>
+      <if test="processNumber != null" >
+        and process_number ${processNumberOperator} #{processNumber}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.activiti.entity.BusProcessEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_BUS_PROCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into BUS_PROCESS(<include refid="Base_Column_List" />)
+    values (#{endTime, jdbcType=TIMESTAMP}, #{createTime, jdbcType=TIMESTAMP}, #{processStatus, jdbcType=VARCHAR}, #{nowUserId, jdbcType=VARCHAR}, #{nowUesrName, jdbcType=VARCHAR}, #{lastUserId, jdbcType=VARCHAR}, #{lastUserName, jdbcType=VARCHAR}, #{createUserId, jdbcType=VARCHAR}, #{standardId, jdbcType=VARCHAR}, #{processType, jdbcType=VARCHAR}, #{processNumber, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.activiti.entity.BusProcessEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_BUS_PROCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into BUS_PROCESS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="endTime != null" >end_time,</if>
+                <if test="createTime != null" >create_time,</if>
+                <if test="processStatus != null" >process_status,</if>
+                <if test="nowUserId != null" >now_user_id,</if>
+                <if test="nowUesrName != null" >now_uesr_name,</if>
+                <if test="lastUserId != null" >last_user_id,</if>
+                <if test="lastUserName != null" >last_user_name,</if>
+                <if test="createUserId != null" >create_user_id,</if>
+                <if test="standardId != null" >standard_id,</if>
+                <if test="processType != null" >process_type,</if>
+                <if test="processNumber != null" >process_number,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="endTime != null" >#{endTime, jdbcType=TIMESTAMP},</if>
+                <if test="createTime != null" >#{createTime, jdbcType=TIMESTAMP},</if>
+                <if test="processStatus != null" >#{processStatus, jdbcType=VARCHAR},</if>
+                <if test="nowUserId != null" >#{nowUserId, jdbcType=VARCHAR},</if>
+                <if test="nowUesrName != null" >#{nowUesrName, jdbcType=VARCHAR},</if>
+                <if test="lastUserId != null" >#{lastUserId, jdbcType=VARCHAR},</if>
+                <if test="lastUserName != null" >#{lastUserName, jdbcType=VARCHAR},</if>
+                <if test="createUserId != null" >#{createUserId, jdbcType=VARCHAR},</if>
+                <if test="standardId != null" >#{standardId, jdbcType=VARCHAR},</if>
+                <if test="processType != null" >#{processType, jdbcType=VARCHAR},</if>
+                <if test="processNumber != null" >#{processNumber, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.activiti.entity.BusProcessEO" >
+    update BUS_PROCESS
+       set  end_time = #{endTime},
+            create_time = #{createTime},
+            process_status = #{processStatus},
+            now_user_id = #{nowUserId},
+            now_uesr_name = #{nowUesrName},
+            last_user_id = #{lastUserId},
+            last_user_name = #{lastUserName},
+            create_user_id = #{createUserId},
+            standard_id = #{standardId},
+            process_type = #{processType},
+            process_number = #{processNumber}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.activiti.entity.BusProcessEO" >
+    update BUS_PROCESS
+    <set >
+      <if test="endTime != null" >
+        end_time = #{endTime},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="processStatus != null" >
+        process_status = #{processStatus},
+      </if>
+      <if test="nowUserId != null" >
+        now_user_id = #{nowUserId},
+      </if>
+      <if test="nowUesrName != null" >
+        now_uesr_name = #{nowUesrName},
+      </if>
+      <if test="lastUserId != null" >
+        last_user_id = #{lastUserId},
+      </if>
+      <if test="lastUserName != null" >
+        last_user_name = #{lastUserName},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId},
+      </if>
+      <if test="standardId != null" >
+        standard_id = #{standardId},
+      </if>
+      <if test="processType != null" >
+        process_type = #{processType},
+      </if>
+      <if test="processNumber != null" >
+        process_number = #{processNumber},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 BUS_PROCESS -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from BUS_PROCESS
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BUS_PROCESS
+     where id = #{value}
+
+  </delete>
+
+  <!-- BUS_PROCESS 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from BUS_PROCESS
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询BUS_PROCESS列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from BUS_PROCESS
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from BUS_PROCESS
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>
