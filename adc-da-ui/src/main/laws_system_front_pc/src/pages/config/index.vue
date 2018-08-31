@@ -1,6 +1,6 @@
-<!-- 个人中心 -->
+<!-- 配置管理 -->
 <template>
-  <div class="personal">
+  <div class="config">
     <com-header></com-header>
     <div class="main">
       <side-bar :navList="navList"></side-bar>
@@ -15,27 +15,30 @@
 import ComHeader from '@/pages/components/Header'
 import SideBar from '@/pages/components/SideBar'
 export default {
-  name: 'personal',
+  name: 'config',
   data () {
     return {
       navList: [{
-        title: '个人信息',
-        path: '/info'
+        title: '标准法规属性管理',
+        path: '/regulationsManage'
       }, {
-        title: '个人板块管理',
-        path: '/plate'
+        title: '资料中心模块配置',
+        path: '/informationCenterConfig'
       }, {
-        title: '我的动态',
-        path: '/dynamics'
+        title: '机构管理',
+        path: '/mechanismManage'
       }, {
-        title: '我的收藏',
-        path: '/collection'
+        title: '角色管理',
+        path: '/roleManage'
       }, {
-        title: '我的推送',
-        path: '/push'
+        title: '用户管理',
+        path: '/userManage'
       }, {
-        title: '我的浏览',
-        path: '/browsing'
+        title: '动态信息管理',
+        path: '/dynamicInformationManage'
+      }, {
+        title: '预警时间设置',
+        path: '/warningTimeSetting'
       }]
     }
   },
@@ -47,7 +50,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .personal{
+  .config{
     width: 100%;
     height: 100%;
     .main{

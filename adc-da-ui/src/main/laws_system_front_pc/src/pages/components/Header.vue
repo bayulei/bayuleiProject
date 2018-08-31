@@ -22,7 +22,7 @@ export default {
   name: 'home-header',
   data () {
     return {
-      logo: require('assets/logo.png'),
+      logo: require('assets/images/home/logo.png'),
       userAvator: require('assets/images/user-avator.png')
     }
   }

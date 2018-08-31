@@ -1,6 +1,6 @@
 <!-- 我的动态 -->
 <template>
-  <div class="my-dynamics"></div>
+  <div class="my-dynamics">我的动态</div>
 </template>
 
 <script>

@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     /**
-     * @description: 切换组件
+     * @description: 切换组件side-bar-left
      * @author: xx
      * @date: 2018-08-30 14:00:36
      */
@@ -47,6 +47,6 @@ export default {
 <style lang="less" scoped>
   @import 'animate.css';
   .personal-info{
-    height: inherit;
+    height: 100%;
   }
 </style>

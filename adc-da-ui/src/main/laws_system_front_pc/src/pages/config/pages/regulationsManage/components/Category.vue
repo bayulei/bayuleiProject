@@ -1,16 +1,16 @@
-<!-- 我的推送 -->
+<!-- 所属类别 -->
 <template>
-  <div class="my-push">我的推送</div>
+  <div class="category">所属类别</div>
 </template>
 
 <script>
 export default {
-  name: 'my-push'
+  name: 'category'
 }
 </script>
 
 <style lang="less" scoped>
-  .my-push{
+  .category{
 
   }
 </style>

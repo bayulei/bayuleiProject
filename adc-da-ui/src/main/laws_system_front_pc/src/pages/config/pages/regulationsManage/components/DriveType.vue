@@ -1,16 +1,16 @@
-<!-- 我的推送 -->
+<!-- 驱动类型 -->
 <template>
-  <div class="my-push">我的推送</div>
+  <div class="drive-type">驱动类型</div>
 </template>
 
 <script>
 export default {
-  name: 'my-push'
+  name: 'drive-type'
 }
 </script>
 
 <style lang="less" scoped>
-  .my-push{
+  .drive-type{
 
   }
 </style>

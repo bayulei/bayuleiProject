@@ -1,6 +1,6 @@
 <!-- 个人板块管理 -->
 <template>
-  <div class="individual-plate"></div>
+  <div class="individual-plate">个人板块管理</div>
 </template>
 
 <script>

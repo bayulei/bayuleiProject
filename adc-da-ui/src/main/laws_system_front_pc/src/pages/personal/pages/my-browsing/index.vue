@@ -1,6 +1,6 @@
 <!-- 我的浏览 -->
 <template>
-  <div class="my-browsing"></div>
+  <div class="my-browsing">我的浏览</div>
 </template>
 
 <script>

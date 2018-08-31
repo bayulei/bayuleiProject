@@ -18,6 +18,9 @@
     }
   }
 }
+.main{
+  padding-top: 0.4rem;
+}
 
 /**
  * @description: 皮肤样式
@@ -35,6 +38,9 @@
     font-size: 0.28rem;
     padding: 0 0.56rem;
     box-sizing: border-box;
+  }
+  .box-bg{
+    background: @header;
   }
   .border-bg-right(@width: 2px, @border-color: @bgColor) {
     position: relative;
@@ -65,6 +71,13 @@
       li{
         &.active{
           background: #F0F0F0;
+          &:hover{
+            span{
+              &::after{
+                display: none;
+              }
+            }
+          }
         }
         span{
           position: relative;
@@ -124,10 +137,11 @@
   .container{
     background: #F4F8FB;
   }
-  .side-bar-left,
   .side-bar-position{
     background: #FFF;
-    float: left;
+    position: absolute;
+    top: 0;
+    left: calc(~'5.2rem - 1px');
   }
   .sub-container{
     border: 1px solid #CCCDCE;

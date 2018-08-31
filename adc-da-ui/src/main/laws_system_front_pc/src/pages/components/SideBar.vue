@@ -37,26 +37,13 @@ export default {
     return {
       username: '管理员',
       role: '超级管理员',
-      navList: [{
-        title: '个人信息',
-        path: '/info'
-      }, {
-        title: '个人板块管理',
-        path: '/plate'
-      }, {
-        title: '我的动态',
-        path: '/dynamics'
-      }, {
-        title: '我的收藏',
-        path: '/collection'
-      }, {
-        title: '我的推送',
-        path: '/push'
-      }, {
-        title: '我的浏览',
-        path: '/browsing'
-      }],
       userAvator: require('assets/images/user-avator.png')
+    }
+  },
+  props: {
+    navList: {
+      type: Array,
+      required: true
     }
   },
   computed: {
@@ -72,9 +59,12 @@ export default {
   .side-bar{
     width: 6rem;
     height: 100%;
+    position: relative;
     .side-bar-left{
       width: 5.2rem;
-      height: inherit;
+      height: 100%;
+      border-top: 1px solid #EDEDED;
+      border-right: 1px solid #EDEDED;
       .content{
         width: 3.8rem;
         margin: 0 auto;
@@ -122,6 +112,12 @@ export default {
       color: #333;
       font-size: .4rem;
       margin: 0 auto;
+      border-top: 1px solid #EDEDED;
+      border-bottom: 1px solid #EDEDED;
+      &::before{
+        height: calc(~'100% + 2px');
+        top: -1px;
+      }
     }
   }
 </style>
