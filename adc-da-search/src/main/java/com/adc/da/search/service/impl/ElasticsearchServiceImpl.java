@@ -654,6 +654,14 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
         return sourceList;
     }
 
+    /**
+     * 涉及组合查询条件主要涉及到聚合函数的使用，较为复杂，按照年龄阶段分组后，再安装性别分组，求balance平均值  ranges
+     * @param index  index名称，可以从多个index中查询，所以这里定义成String数组
+     * @param type   type名称，可以从多种type中查询，所以这里定义成String数组
+     * @return
+     * @author gaoyan
+     * date 2018-08-29
+     */
     @Override
     public List<Map<String, Object>> searchListDataGroupComplex(String[] index, String[] type) {
         SearchResponse sr = client.prepareSearch(index)
