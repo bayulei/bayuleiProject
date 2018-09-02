@@ -29,10 +29,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  @import '~styles/style';
   .panel-header{
     height: 0.9rem;
     padding: 0.1rem 0 0 0.8rem;
     box-sizing: border-box;
+    border-bottom: 1px solid #CCCDCE;
     .tabs{
       li{
         float: left;
@@ -43,10 +45,11 @@ export default {
         cursor: pointer;
         user-select: none;
         &.active{
-          background: #FFF;
+          background: @subContainerContentColor;
           border-top: 1px solid #CCCCCC;
           border-left: 1px solid #CFCFCF;
           box-sizing: border-box;
+          color: @baseColor;
         }
         &::before{
           height: calc(~'100% + 1px');

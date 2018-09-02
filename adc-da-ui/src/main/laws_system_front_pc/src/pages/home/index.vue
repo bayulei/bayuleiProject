@@ -7,52 +7,53 @@
       <div class="search-input">
         <Input type="text" v-model="keywords" autofocus id="search-input" :placeholder="searchRecommend" clearable></Input>
       </div>
-      <div class="search-btn box-bg">
+      <div class="search-btn">
         <Icon type="ios-search" :size="34" color="rgba(0,0,0,.8)" />
       </div>
       <div class="search-text">{{ searchText }}</div>
     </div>
-    <!-- 菜单导航 -->
-    <div class="nav-menu">
-      <div class="menu-left">
-        <div class="menu-box">
-          <div class="menu-item-wrapper">
-            <!-- 分析工具 -->
-            <div class="menu"></div>
-            <!-- 数据分析 -->
-            <div class="menu"></div>
+    <!-- 导航 -->
+    <div class="nav">
+      <div class="time-box">{{ currentTime }}</div>
+      <div class="nav-content">
+        <div class="nav-content-left">
+          <div class="nav-group nav-top">
+            <div class="nav-top-left">
+              <div class="nav-item router-item">分析工具</div>
+              <div class="nav-item router-item">数据分析</div>
+            </div>
+            <div class="nav-top-right router-item">本地标准法规库</div>
           </div>
-          <div class="menu-item-wrapper">
-            <!-- 本地标准法规库 -->
-            <div class="menu"></div>
+          <div class="nav-group nav-top">
+            <div class="nav-top-item router-item">资源中心</div>
+            <div class="nav-top-item router-item">国内动态</div>
+          </div>
+          <div class="nav-group nav-bottom">
+            <div class="nav-bottom-left router-item">待办任务</div>
+            <div class="nav-bottom-right">
+              <div class="nav-bottom-right-item">
+                <div class="nav-item router-item">标准团队</div>
+                <div class="nav-item router-item">云端资源库</div>
+              </div>
+              <div class="nav-bottom-right-item">
+                <div class="nav-item router-item">流程中心</div>
+                <router-link tag="div" class="nav-item router-item" to="/config">配置管理</router-link>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="menu-box">
-          <div class="menu-item-wrapper">
-            <!-- 资料中心 -->
-            <div class="menu"></div>
+        <div class="nav-content-right">
+          <div class="nav-top">
+            <div class="nav-item router-item">联系我们</div>
+            <router-link tag="div" class="nav-item router-item" to="/personal">欢迎您，张三</router-link>
           </div>
-          <div class="menu-item-wrapper">
-            <!-- 国内动态 -->
-            <div class="menu"></div>
+          <div class="nav-middle router-item">友情链接</div>
+          <div class="nav-bottom">
+            <div class="nav-item router-item">同时在线人数</div>
+            <div class="nav-item router-item">累计登录总人数</div>
           </div>
-        </div>
-        <div class="menu-box left3">
-          <!-- 待办任务 -->
-          <div class="menu"></div>
-        </div>
-        <div class="menu-box left4">
-          <!-- 标准团队 -->
-          <div class="menu"></div>
-          <!-- 云端资源库 -->
-          <div class="menu"></div>
-          <!-- 流程中心 -->
-          <div class="menu"></div>
-          <!-- 配置管理 -->
-          <div class="menu"></div>
         </div>
       </div>
-      <div class="menu-right"></div>
     </div>
   </div>
 </template>
@@ -64,173 +65,261 @@ export default {
     return {
       searchText: '标准高级检索',
       searchRecommend: '中文文献、外文文献 (elsevier、Springer、wiley......)',
-      keywords: '' // 搜索关键词
+      keywords: '', // 搜索关键词
+      currentTime: ''
     }
   },
   methods: {
-    //
+    /**
+     * @description: 获取当前时间
+     * @author: chenxiaoxi
+     * @date: 2018-09-02 10:59:50
+     */
+    getTime () {
+      setInterval(() => {
+        this.currentTime = this.$dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss') + ' 星期' + '日一二三四五六'.charAt(new Date().getDay())
+      }, 1000)
+    }
+  },
+  mounted () {
+    this.getTime()
   }
 }
 </script>
 
 <style lang="less">
   @import '~styles/style';
+  @import '~styles/mixins';
   .home{
     width: 100%;
     height: 100%;
     background: url("~assets/images/home/bg.png") no-repeat;
-    background-position: center center;
-    background-size: 100% 100%;
-    padding: 1.57% 0 0 1.66%;
+    background-position: top center;
+    background-attachment: fixed;
+    background-size: cover;
+    position: relative;
     .logo{
-      width: 22.55%;
+      width: 23%;
       height: 4.35%;
-      background-image: url("~assets/images/home/logo.png");
+      background: url("~assets/images/home/logo.png") no-repeat;
       background-size: 100%;
-      background-repeat: no-repeat;
+      position: absolute;
+      top: 20px;
+      left: 26px;
     }
     .search-box{
-      width: 45.4%;
-      height: 5.1%;
-      margin: 3.6% auto 5.4% auto;
+      width: 45.8%;
+      height: 5.55%;
+      margin: 8% auto 0 auto;
       display: flex;
+      &>div{
+        height: 100%;
+      }
       .search-option{
-        flex: 0 0 13.74%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #757575;
-        font-size: 14px;
-        border-right: 2px solid #D9E9ED;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+        flex: 0 0 13.63%;
+        color: #515151;
+        font-size: .32rem;
         background: rgba(255,255,255,.8);
+        border: 1px solid #B3C3C7;
+        .flex-center;
       }
       .search-input{
-        flex: 0 0 55.37%;
+        flex: 0 0 55%;
         background: rgba(255,255,255,.8);
+        border: 1px solid #B3C3C7;
+        border-left: transparent;
         .ivu-input-wrapper{
-          width: 100%;
           height: 100%;
-          border: none;
           display: flex;
           align-items: center;
-          .ivu-icon{
-            cursor: pointer;
-          }
-        }
-        .ivu-input:hover{
-          border: none;
-        }
-        .ivu-input{
-          width: 100%;
-          height: 100%;
-          padding: 0 0.4rem;
-          color: #757575;
-          font-size: 14px;
-          background: transparent;
-          box-shadow: none;
-          border: none;
-          &:focus{
+          .ivu-input{
+            height: 100%;
+            background: transparent;
+            border: none !important;
             box-shadow: none;
+            padding: 0 .4rem;
+            font-size: .32rem;
           }
         }
       }
       .search-btn{
-        flex: 0 0 13.69%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        flex: 0 0 13.63%;
+        background: @bgColor;
         cursor: pointer;
-        opacity: .9;
         &:hover{
-          opacity: 1;
+          opacity: .8;
         }
+        .flex-center;
       }
       .search-text{
-        flex: 0 0 2.26rem;
-        margin-left: 0.5rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #FFF;
-        letter-spacing: 1px;
-        font-size: 14px;
+        .flex-center;
+        color: #FEFEFE;
+        font-size: .32rem;
+        flex: 0 0 calc(~'100% - 82.26%');
+        position: relative;
+        top: 5px;
+        left: 5px;
       }
     }
-    .nav-menu{
-      width: 54.16%;
-      height: 57.9%;
-      margin: 0 auto;
-      display: flex;
-      .menu-left{
-        flex: 0 0 61%;
-        height: 100%;
+    .nav{
+      width: 54.2%;
+      height: 61%;
+      margin: 3.5% auto 0 auto;
+      .time-box{
         display: flex;
-        flex-flow: row wrap;
-        align-content: flex-start;
-        .menu-box{
-          flex: 0 0 48.5%;
-          height: 48.75%;
-          margin-right: 3%;
-          &:nth-child(1),
-          &:nth-child(2){
-            margin-bottom: 2.5%;
-          }
-          &:nth-child(even){
-            margin-right: 0;
-          }
-          .menu-item-wrapper{
+        justify-content: flex-end;
+        color: #FEFEFE;
+        margin-right: 5px;
+        height: 30px;
+        line-height: 30px;
+      }
+      .nav-content{
+        height: calc(~'100% - 30px');
+        display: flex;
+        color: #FFF;
+        .nav-content-left{
+          flex: 0 0 64%;
+          margin-right: 4%;
+          height: 100%;
+          .nav-group{
             width: 100%;
-            height: 48.4%;
+            height: 25%;
+          }
+          .nav-top{
+            height: 23.5%;
+            margin-bottom: 1.5%;
             display: flex;
-            margin-bottom: 3.2%;
-            &:last-child{
-              margin-bottom: 0;
-            }
-            .menu{
+            .nav-top-item{
               flex: 1;
-              background: #DDD;
-              margin-right: 3.2%;
-              &:last-child{
+              margin-right: 1.5%;
+              &:nth-child(1){
+                background: @boxColor3;
+              }
+              &:nth-child(2){
+                background: @boxColor1;
                 margin-right: 0;
+              }
+            }
+            &:nth-child(1){
+              display: flex;
+              .nav-top-left{
+                flex: 1;
+                margin-right: 1.5%;
+                display: flex;
+                .nav-item{
+                  flex: 1;
+                  margin-right: 1.5%;
+                  &:nth-child(1){
+                    background: @boxColor2;
+                  }
+                  &:nth-child(2){
+                    background: @bgColor;
+                    margin-right: 0;
+                  }
+                }
+              }
+              .nav-top-right{
+                flex: 1;
+                background: @boxColor3;
+              }
+            }
+          }
+          .nav-bottom{
+            width: 100%;
+            height: 50%;
+            display: flex;
+            .nav-bottom-left{
+              flex: 1;
+              height: 100%;
+              background: #23A3DC;
+              margin-right: 1.5%;
+            }
+            .nav-bottom-right{
+              flex: 1;
+              height: 100%;
+              .nav-bottom-right-item{
+                height: 49.25%;
+                margin-bottom: 1.5%;
+                display: flex;
+                &:last-child{
+                  margin-bottom: 0;
+                  .nav-item{
+                    &:nth-child(1){
+                      background: @boxColor2;
+                    }
+                    &:nth-child(2){
+                      background: @boxColor4;
+                    }
+                  }
+                }
+                &:nth-child(1){
+                  .nav-item{
+                    &:nth-child(1){
+                      background: @boxColor3;
+                    }
+                    &:nth-child(2){
+                      background: @boxColor5;
+                    }
+                  }
+                }
+                .nav-item{
+                  flex: 1;
+                  margin-right: 1.5%;
+                  &:last-child{
+                    margin-right: 0;
+                  }
+                }
               }
             }
           }
         }
-        .left3{
-          .menu{
+        .nav-content-right{
+          flex: 0 0 32%;
+          height: 100%;
+          .nav-top{
             width: 100%;
-            height: 100%;
-            background: #DDD;
-          }
-        }
-        .left4{
-          display: flex;
-          flex-flow: row wrap;
-          align-content: flex-start;
-          .menu{
-            flex: 0 0 48.5%;
-            height: 48%;
-            background: #DDD;
-            margin-right: 3%;
-            margin-bottom: 3%;
-            &:last-child{
-              margin-bottom: 0;
+            height: 23.5%;
+            margin-bottom: 2.5%;
+            display: flex;
+            .nav-item{
+              flex: 0 0 49%;
+              &:nth-child(1){
+                background: @boxColor5;
+                margin-right: 2%;
+              }
+              &:nth-child(2){
+                background: #CCC;
+              }
             }
-            &:nth-child(even){
-              margin-right: 0;
+          }
+          .nav-middle{
+            width: 100%;
+            height: 50%;
+            background: @boxColor2;
+          }
+          .nav-bottom{
+            width: 100%;
+            height: 23.5%;
+            margin-top: 2.5%;
+            display: flex;
+            .nav-item{
+              flex: 0 0 49%;
+              &:nth-child(1){
+                background: @bgColor;
+                margin-right: 2%
+              }
+              &:nth-child(2){
+                background: @boxColor3;
+              }
             }
           }
         }
       }
-      .menu-right{
-        flex: 0 0 29.6%;
-        margin-left: 9.6%;
-        heighgt: 100%;
-        border: 1px solid #DDD;
+    }
+    .router-item{
+      cursor: pointer;
+      &:hover{
+        .flex-center;
       }
     }
   }

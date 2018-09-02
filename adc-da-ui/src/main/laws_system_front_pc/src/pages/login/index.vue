@@ -1,6 +1,6 @@
 <!-- 登录页 -->
 <template>
-  <div class="login" :style="{ backgroundImage: 'url(' + bgImage + ')' }">
+  <div class="login">
     <div class="logo">
       <img :src="logo" alt="logo">
     </div>
@@ -26,8 +26,12 @@
       </div>
     </div>
     <div class="login-footer">
-      <div class="system"></div>
-      <div class="system-text">打造法规标准信息化应用平台</div>
+      <div class="comp">广汽研究院</div>
+      <div class="system-text">
+        <div class="system"></div>
+        <div class="line"></div>
+        <span>打造法规标准信息化应用平台</span>
+      </div>
     </div>
   </div>
 </template>
@@ -55,35 +59,37 @@ export default {
     }
   },
   mounted () {
-    $('.login-footer').animate({ bottom: '2rem' }, 2000)
-    $('.system-text').animate({ opacity: 1 }, 5000)
+    $('.system').stop().animate({ left: 0, opacity: 1 }, 2000)
+    $('.login-footer span').stop().animate({ right: 0, opacity: 1 }, 2000)
   }
 }
 </script>
 
 <style lang="less">
   @import '~styles/style';
+  @import '~styles/mixins';
   .login{
     width: 100%;
     height: 100%;
-    padding: 0.36rem 0 0 0.64rem;
     box-sizing: border-box;
     background-size: 100%;
     background-repeat: no-repeat;
     position: relative;
+    background: url("~assets/images/login/login-bg.png");
     .logo{
-      width: 8.6rem * @zoom;
+      width: 7.5rem;
+      padding: 0.36rem 0 0 0.64rem;
       img{
         width: 100%;
       }
     }
     .login-content{
-      width: 16rem * @zoom;
-      height: 3rem * @zoom;
+      width: 14.32rem;
+      height: 2.8rem;
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -65%);
       background: #FBFCFD;
       box-sizing: border-box;
       .login-form{
@@ -100,10 +106,10 @@ export default {
             border-bottom: transparent;
           }
           .label{
-            font-size: 0.36rem * @zoom;
+            font-size: 0.28rem;
             color: #313131;
             border-right: 1px solid #ECEDED;
-            padding: 0 0.3rem * @zoom 0 0.1rem;
+            padding: 0 0.3rem  0 0.1rem;
           }
           .ivu-icon{
             cursor: pointer;
@@ -141,27 +147,49 @@ export default {
       }
     }
     .login-footer{
-      width: 16rem * @zoom;
-      height: 2.2rem * @zoom;
+      width: 16rem ;
+      height: 2.2rem ;
       position: absolute;
       left: 50%;
       transform: translate(-50%);
-      bottom: 1rem;
+      bottom: 2.2rem;
       animation: slideInText 500 linear forwards;
       color: #FFF;
       box-sizing: border-box;
-      .system{
-        width: 100%;
-        height: 1.5rem * @zoom;
-        background: url("../../assets/images/login/login-system.png") center center no-repeat;
-        background-size: 25%;
+      .comp{
+        width: 5.92rem;
+        height: 0.94rem;
+        margin: 0 auto;
+        border: 1px solid #DDD;
+        .flex-center;
       }
       .system-text{
         width: 100%;
-        height: 0.72rem * @zoom;
-        font-size: 0.5rem;
-        text-align: center;
-        opacity: 0.1;
+        font-size: 0.55rem;
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5rem;
+        .system{
+          flex: 0 0 3.54rem;
+          height: 0.8rem;
+          float: left;
+          background: url("../../assets/images/login/login-system.png") center center no-repeat;
+          background-size: 80%;
+          position: relative;
+          left: -0.4rem;
+          opacity: .5;
+        }
+        .line{
+          width: 0;
+          height: 0.8rem;
+          border-right: 2px solid #FFF;
+          margin-right: 0.2rem;
+        }
+        span{
+          position: relative;
+          right: -0.4rem;
+          opacity: .5;
+        }
       }
     }
   }

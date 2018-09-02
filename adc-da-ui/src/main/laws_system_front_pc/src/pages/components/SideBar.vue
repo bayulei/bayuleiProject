@@ -56,6 +56,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  @import '~styles/style';
   .side-bar{
     width: 6rem;
     height: 100%;
@@ -65,6 +66,7 @@ export default {
       height: 100%;
       border-top: 1px solid #EDEDED;
       border-right: 1px solid #EDEDED;
+      background: @sideBarColor;
       .content{
         width: 3.8rem;
         margin: 0 auto;
@@ -99,6 +101,8 @@ export default {
               &.active{
                 padding-left: 0.28rem;
                 transition: all linear .2s;
+                color: @baseColor;
+                background: #F0F0F0;
               }
             }
           }
@@ -114,10 +118,10 @@ export default {
       margin: 0 auto;
       border-top: 1px solid #EDEDED;
       border-bottom: 1px solid #EDEDED;
-      &::before{
-        height: calc(~'100% + 2px');
-        top: -1px;
-      }
+      position: absolute;
+      top: 0;
+      right: 1px;
+      background: #FFF;
     }
   }
 </style>
