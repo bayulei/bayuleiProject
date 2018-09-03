@@ -14,7 +14,7 @@ import 'styles/reset.css'
 // 全局样式文件
 import 'styles/common.less'
 // iconfont字体库
-// import 'styles/iconfont.css'
+import 'styles/iconfont.css'
 // jQuery
 import $ from 'jquery'
 // vuex

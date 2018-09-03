@@ -61,6 +61,7 @@ export default {
     width: 6rem;
     height: 100%;
     position: relative;
+    float: left;
     .side-bar-left{
       width: 5.2rem;
       height: 100%;
