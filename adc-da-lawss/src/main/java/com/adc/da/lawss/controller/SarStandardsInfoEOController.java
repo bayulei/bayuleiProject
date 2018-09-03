@@ -41,7 +41,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
  */
 @RestController
 @RequestMapping("/${restPath}/lawss/sarStandardsInfo")
-@Api(description = "|SarStandardsInfoEO|")
+@Api(description = "|标准信息管理|")
 public class SarStandardsInfoEOController extends BaseController<SarStandardsInfoEO>{
 
     private static final Logger logger = LoggerFactory.getLogger(SarStandardsInfoEOController.class);
@@ -78,8 +78,8 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
      * @throws Exception
      */
     @ApiOperation(value = "|SarStandardsInfoEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("lawss:sarStandardsInfo:save")
+    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE,value = "addarStandardsInfo")
+    //@RequiresPermissions("lawss:sarStandardsInfo:save")
     public ResponseMessage<SarStandardsInfoEO> create(@RequestBody SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
         sarStandardsInfoEOService.createSarStandardsInfo(sarStandardsInfoEO);
         return Result.success(sarStandardsInfoEO);
