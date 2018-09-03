@@ -59,7 +59,7 @@
 
 		<dependency>
 			<groupId>com.adc</groupId>
-			<artifactId>adc-da-project</artifactId>
+			<artifactId>adc-da-lawss</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 

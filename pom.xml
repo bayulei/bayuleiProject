@@ -51,7 +51,7 @@
 		<module>adc-da-activiti</module>
 		<module>adc-da-search</module>
 		<module>adc-da-convert</module>
-		<module>adc-da-project</module>
+		<module>adc-da-lawss</module>
   </modules>
 
 	<repositories>
