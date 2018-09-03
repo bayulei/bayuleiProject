@@ -8,6 +8,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/pages/login'
 import Home from '@/pages/home'
+import Test from '@/pages/home/test'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
@@ -22,6 +23,15 @@ const routes = [
     path: '/signin',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: Test,
+    meta: {
+      requireAuth: true,
+      title: '功能测试页'
+    }
   },
   {
     path: '/',

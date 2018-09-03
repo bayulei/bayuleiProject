@@ -1,157 +1,44 @@
+@import './style';
+@import '~iview/src/styles/index.less';
+@primary-color: @baseColor;
 /**
- * @description:  全局样式文件
- * @author: xx
- * @date: 2018-08-29 14:13:27
+ * @description: 主题定制mixins(注意:所有要作为主题的样式，都写在这个mixins里,然后根据主题给该方法传入自定义颜色)
+ * @author: chenxiaoxi
+ * @params:
+ *    1. @baseColor: 基础颜色(不可使用过渡和图片)
+ *    2. @bgColor: 背景色
+ * @date: 2018-09-01 17:23:58
  */
-.ivu-row{
-  width: 100%;
+.my-theme (@baseColor: @baseColor, @bgColor: @bgColor) {
+
 }
-.img-warpper{
-  overflow: hidden;
-  img{
-    width: 100%;
-    border-radius: 2px;
-    transition: all .2s linear;
-    transform: scale(1.1);
-    &:hover{
-      transform: scale(1);
-    }
-  }
+
+// 主题1
+.theme-one{
+  .my-theme();
 }
+// 主题2
+.theme-two {
+  .my-theme(@baseColor: #E4393C)
+}
+// 普通样式
 .main{
   padding-top: 0.4rem;
-}
-
-/**
- * @description: 皮肤样式
- * @author: xx
- * @date: 2018-08-30 16:22:03
- */
-.theme(@header: #EEE, @header-color: #FFF, @bgColor: #E4393C, @font-color: #333) {
-  .com-header{
-    width: 100%;
-    height: 1.6rem;
-    background: @header;
-    display: flex;
-    align-items: center;
-    color: @header-color;
-    font-size: 0.28rem;
-    padding: 0 0.56rem;
-    box-sizing: border-box;
-  }
-  .box-bg{
-    background: @header;
-  }
-  .border-bg-right(@width: 2px, @border-color: @bgColor) {
-    position: relative;
-    &::before{
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: @width;
-      height: 100%;
-      background: @border-color;
-    }
-  }
-  .border-right{
-    .border-bg-right(5px, @bgColor)
-  }
-  .bg-color{
-    background: @bgColor
-  }
-  .font-color{
-    color: @bgColor;
-  }
-  .active{
-    color: @bgColor
-  }
-  .nav-list{
-    ul{
-      li{
-        &.active{
-          background: #F0F0F0;
-          &:hover{
-            span{
-              &::after{
-                display: none;
-              }
-            }
-          }
-        }
-        span{
-          position: relative;
-          &::after{
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -0.2rem;
-            width: 0;
-            height: 2px;
-            background: @bgColor;
-            transition: all linear .2s;
-          }
-        }
-        &:hover{
-          span{
-            &::after{
-              width: 100%;
-              left: 0;
-            }
-          }
-        }
-      }
-    }
-  }
-  .primary-btn{
-    background: @bgColor;
-    color: #FFF;
-    border-radius: 2px;
-    opacity: .9;
-    &:hover{
-      opacity: 1;
-    }
-  }
-  .tips{
-    text-align: right;
-    margin-top: 0.1rem;
-  }
-  .require{
-    color: #FF0000;
-  }
-}
-
-/**
- * @description: 皮肤配置
- * @params:
- *    @header: 公共头背景色
- *    @bgColor: 按钮背景色与大边框背景色
- *    @header-color: 头部字体色
- *    @font-color: 字体色
- * @author: xx
- * @date: 2018-08-29 16:40:54
- */
-
-.theme-white{
-  .theme(@header:linear-gradient(to right, #52b8db, #5484d8),@header-color:#FFF, @bgColor: #5596CC, @font-color:#FFF);
-  .container{
-    background: #F4F8FB;
-  }
-  .side-bar-position{
-    background: #FFF;
-    position: absolute;
-    top: 0;
-    left: calc(~'5.2rem - 1px');
-  }
+  background: @containerColor;
   .sub-container{
     border: 1px solid #CCCDCE;
-    background: #F3F3F3;
+    background: @subContainerHeaderColor;
   }
-  .panel-header{
-    background: #F3F3F3;
-    border-bottom: 1px solid #CCCDCE;
-  }
-  .panel-content{
-    background: #FFF;
+}
+.border-right{
+  position: relative;
+  &::before{
+    content: '';
+    width: 5px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: @baseColor;
   }
 }

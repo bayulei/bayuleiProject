@@ -1,18 +1,11 @@
 <template>
   <div class="com-header">
-    <div class="logo-wrapper">
-      <img :src="logo" alt="logo" class="logo-img">
-    </div>
+    <router-link tag="div" class="logo" title="回到首页" to="/" />
     <div class="user-info">
       <div class="user-avator">
         <img :src="userAvator" alt="user-avator">
       </div>
-      <div class="info-box">
-        <dl>
-          <dt>2018/08/28 12:00:00</dt>
-          <dd>欢迎您,管理员</dd>
-        </dl>
-      </div>
+      <div class="info-box">欢迎您，{{ username }}</div>
     </div>
   </div>
 </template>
@@ -22,7 +15,7 @@ export default {
   name: 'home-header',
   data () {
     return {
-      logo: require('assets/images/home/logo.png'),
+      username: '张三',
       userAvator: require('assets/images/user-avator.png')
     }
   }
@@ -32,12 +25,20 @@ export default {
 <style lang="less" scoped>
   @import '~styles/style';
   .com-header{
+    width: 100%;
     position: relative;
-    .logo-wrapper{
-      width: 6rem;
-      .logo-img{
-        width: 100%;
-      }
+    height: 1.6rem;
+    background: @bgColor;
+    display: flex;
+    align-items: center;
+    padding-left: 0.4rem;
+    .logo{
+      width: 22.7%;
+      height: 58.75%;
+      background: url("~assets/images/home/logo.png") no-repeat;
+      background-position: left center;
+      background-size: 85%;
+      cursor: pointer;
     }
     .user-info{
       position: absolute;
@@ -60,6 +61,8 @@ export default {
         padding-left: 0.45rem;
         box-sizing: border-box;
         position: relative;
+        color: #FFF;
+        font-size: .32rem;
         dd{
           font-size: 0.35rem;
         }
