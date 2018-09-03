@@ -195,7 +195,7 @@
 		insert into TS_ROLE(
 		<include refid="Base_Column_List" />
 		)
-		values (#{id}, #{validFlag,#{roleType}, #{isDefault}, #{name}, #{remarks}, #{extInfo},#{useFlag},#{operUser},#{creationTime},#{modifyTime})
+		values (#{id}, #{validFlag} ,#{roleType}, #{isDefault}, #{name}, #{remarks}, #{extInfo},#{useFlag},#{operUser},#{creationTime},#{modifyTime})
 	</insert>
 
 	<!-- 根据pk，修改记录 -->
