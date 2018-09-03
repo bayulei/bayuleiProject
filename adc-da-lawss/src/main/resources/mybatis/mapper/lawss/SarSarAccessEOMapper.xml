@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarSarAccessEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarSarAccessEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="creation_user" property="creationUser" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="access_content" property="accessContent" />
+    <result column="country" property="country" />
+  </resultMap>
+
+  <!-- SAR_SAR_ACCESS table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, creation_user, valid_flag, access_content, country, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="creationUser != null" >
+        and creation_user ${creationUserOperator} #{creationUser}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="accessContent != null" >
+        and access_content ${accessContentOperator} #{accessContent}
+      </if>
+      <if test="country != null" >
+        and country ${countryOperator} #{country}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarSarAccessEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_SAR_ACCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_SAR_ACCESS(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{creationUser, jdbcType=VARCHAR}, #{validFlag, jdbcType=INTEGER}, #{accessContent, jdbcType=VARCHAR}, #{country, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarSarAccessEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_SAR_ACCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_SAR_ACCESS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="creationUser != null" >creation_user,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="accessContent != null" >access_content,</if>
+                <if test="country != null" >country,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationUser != null" >#{creationUser, jdbcType=VARCHAR},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="accessContent != null" >#{accessContent, jdbcType=VARCHAR},</if>
+                <if test="country != null" >#{country, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarSarAccessEO" >
+    update SAR_SAR_ACCESS
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            creation_user = #{creationUser},
+            valid_flag = #{validFlag},
+            access_content = #{accessContent},
+            country = #{country}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarSarAccessEO" >
+    update SAR_SAR_ACCESS
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="creationUser != null" >
+        creation_user = #{creationUser},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="accessContent != null" >
+        access_content = #{accessContent},
+      </if>
+      <if test="country != null" >
+        country = #{country},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_SAR_ACCESS -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_SAR_ACCESS
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_SAR_ACCESS
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_SAR_ACCESS 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_SAR_ACCESS
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_SAR_ACCESS列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_SAR_ACCESS
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_SAR_ACCESS
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

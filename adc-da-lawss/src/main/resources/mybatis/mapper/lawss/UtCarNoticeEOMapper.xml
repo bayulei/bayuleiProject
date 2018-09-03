@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.UtCarNoticeEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.UtCarNoticeEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="creation_user" property="creationUser" />
+    <result column="effection_date" property="effectionDate" />
+    <result column="product_code" property="productCode" />
+    <result column="arctic_model" property="arcticModel" />
+    <result column="notice_batch" property="noticeBatch" />
+  </resultMap>
+
+  <!-- UT_CAR_NOTICE table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, creation_user, effection_date, product_code, arctic_model, notice_batch, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="creationUser != null" >
+        and creation_user ${creationUserOperator} #{creationUser}
+      </if>
+      <if test="effectionDate != null" >
+        and effection_date ${effectionDateOperator} #{effectionDate}
+      </if>
+      <if test="effectionDate1 != null" >
+        and effection_date &gt;= #{effectionDate1}
+      </if>
+      <if test="effectionDate2 != null" >
+        and effection_date &lt;= #{effectionDate2}
+      </if>
+      <if test="productCode != null" >
+        and product_code ${productCodeOperator} #{productCode}
+      </if>
+      <if test="arcticModel != null" >
+        and arctic_model ${arcticModelOperator} #{arcticModel}
+      </if>
+      <if test="noticeBatch != null" >
+        and notice_batch ${noticeBatchOperator} #{noticeBatch}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.UtCarNoticeEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_UT_CAR_NOTICE.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into UT_CAR_NOTICE(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{effectionDate, jdbcType=TIMESTAMP}, #{productCode, jdbcType=VARCHAR}, #{arcticModel, jdbcType=VARCHAR}, #{noticeBatch, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.UtCarNoticeEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_UT_CAR_NOTICE.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into UT_CAR_NOTICE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="creationUser != null" >creation_user,</if>
+                <if test="effectionDate != null" >effection_date,</if>
+                <if test="productCode != null" >product_code,</if>
+                <if test="arcticModel != null" >arctic_model,</if>
+                <if test="noticeBatch != null" >notice_batch,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="creationUser != null" >#{creationUser, jdbcType=VARCHAR},</if>
+                <if test="effectionDate != null" >#{effectionDate, jdbcType=TIMESTAMP},</if>
+                <if test="productCode != null" >#{productCode, jdbcType=VARCHAR},</if>
+                <if test="arcticModel != null" >#{arcticModel, jdbcType=VARCHAR},</if>
+                <if test="noticeBatch != null" >#{noticeBatch, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.UtCarNoticeEO" >
+    update UT_CAR_NOTICE
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            creation_user = #{creationUser},
+            effection_date = #{effectionDate},
+            product_code = #{productCode},
+            arctic_model = #{arcticModel},
+            notice_batch = #{noticeBatch}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.UtCarNoticeEO" >
+    update UT_CAR_NOTICE
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="creationUser != null" >
+        creation_user = #{creationUser},
+      </if>
+      <if test="effectionDate != null" >
+        effection_date = #{effectionDate},
+      </if>
+      <if test="productCode != null" >
+        product_code = #{productCode},
+      </if>
+      <if test="arcticModel != null" >
+        arctic_model = #{arcticModel},
+      </if>
+      <if test="noticeBatch != null" >
+        notice_batch = #{noticeBatch},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 UT_CAR_NOTICE -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from UT_CAR_NOTICE
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from UT_CAR_NOTICE
+     where id = #{value}
+
+  </delete>
+
+  <!-- UT_CAR_NOTICE 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from UT_CAR_NOTICE
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询UT_CAR_NOTICE列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from UT_CAR_NOTICE
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from UT_CAR_NOTICE
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.UtCarCccEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.UtCarCccEO" >
+    <id column="id" property="id" />
+    <result column="modify_date" property="modifyDate" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="creation_user" property="creationUser" />
+    <result column="effective_date" property="effectiveDate" />
+    <result column="arctic_model" property="arcticModel" />
+    <result column="ccie_num" property="ccieNum" />
+    <result column="ccie_code" property="ccieCode" />
+  </resultMap>
+
+  <!-- UT_CAR_CCC table all fields -->
+  <sql id="Base_Column_List" >
+     modify_date, creation_time, valid_flag, creation_user, effective_date, arctic_model, ccie_num, ccie_code, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyDate != null" >
+        and modify_date ${modifyDateOperator} #{modifyDate}
+      </if>
+      <if test="modifyDate1 != null" >
+        and modify_date &gt;= #{modifyDate1}
+      </if>
+      <if test="modifyDate2 != null" >
+        and modify_date &lt;= #{modifyDate2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="creationUser != null" >
+        and creation_user ${creationUserOperator} #{creationUser}
+      </if>
+      <if test="effectiveDate != null" >
+        and effective_date ${effectiveDateOperator} #{effectiveDate}
+      </if>
+      <if test="effectiveDate1 != null" >
+        and effective_date &gt;= #{effectiveDate1}
+      </if>
+      <if test="effectiveDate2 != null" >
+        and effective_date &lt;= #{effectiveDate2}
+      </if>
+      <if test="arcticModel != null" >
+        and arctic_model ${arcticModelOperator} #{arcticModel}
+      </if>
+      <if test="ccieNum != null" >
+        and ccie_num ${ccieNumOperator} #{ccieNum}
+      </if>
+      <if test="ccieCode != null" >
+        and ccie_code ${ccieCodeOperator} #{ccieCode}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.UtCarCccEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_UT_CAR_CCC.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into UT_CAR_CCC(<include refid="Base_Column_List" />)
+    values (#{modifyDate, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{effectiveDate, jdbcType=TIMESTAMP}, #{arcticModel, jdbcType=VARCHAR}, #{ccieNum, jdbcType=VARCHAR}, #{ccieCode, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.UtCarCccEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_UT_CAR_CCC.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into UT_CAR_CCC
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyDate != null" >modify_date,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="creationUser != null" >creation_user,</if>
+                <if test="effectiveDate != null" >effective_date,</if>
+                <if test="arcticModel != null" >arctic_model,</if>
+                <if test="ccieNum != null" >ccie_num,</if>
+                <if test="ccieCode != null" >ccie_code,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyDate != null" >#{modifyDate, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="creationUser != null" >#{creationUser, jdbcType=VARCHAR},</if>
+                <if test="effectiveDate != null" >#{effectiveDate, jdbcType=TIMESTAMP},</if>
+                <if test="arcticModel != null" >#{arcticModel, jdbcType=VARCHAR},</if>
+                <if test="ccieNum != null" >#{ccieNum, jdbcType=VARCHAR},</if>
+                <if test="ccieCode != null" >#{ccieCode, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.UtCarCccEO" >
+    update UT_CAR_CCC
+       set  modify_date = #{modifyDate},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            creation_user = #{creationUser},
+            effective_date = #{effectiveDate},
+            arctic_model = #{arcticModel},
+            ccie_num = #{ccieNum},
+            ccie_code = #{ccieCode}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.UtCarCccEO" >
+    update UT_CAR_CCC
+    <set >
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="creationUser != null" >
+        creation_user = #{creationUser},
+      </if>
+      <if test="effectiveDate != null" >
+        effective_date = #{effectiveDate},
+      </if>
+      <if test="arcticModel != null" >
+        arctic_model = #{arcticModel},
+      </if>
+      <if test="ccieNum != null" >
+        ccie_num = #{ccieNum},
+      </if>
+      <if test="ccieCode != null" >
+        ccie_code = #{ccieCode},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 UT_CAR_CCC -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from UT_CAR_CCC
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from UT_CAR_CCC
+     where id = #{value}
+
+  </delete>
+
+  <!-- UT_CAR_CCC 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from UT_CAR_CCC
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询UT_CAR_CCC列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from UT_CAR_CCC
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from UT_CAR_CCC
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarProductLawsEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarProductLawsEO" >
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="creation_user" property="creationUser" />
+    <result column="laws_id" property="lawsId" />
+    <result column="laws_type" property="lawsType" />
+    <result column="product_id" property="productId" />
+    <result column="id" property="id" />
+  </resultMap>
+
+  <!-- SAR_PRODUCT_LAWS table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, creation_user, laws_id, laws_type, product_id, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="creationUser != null" >
+        and creation_user ${creationUserOperator} #{creationUser}
+      </if>
+      <if test="lawsId != null" >
+        and laws_id ${lawsIdOperator} #{lawsId}
+      </if>
+      <if test="lawsType != null" >
+        and laws_type ${lawsTypeOperator} #{lawsType}
+      </if>
+      <if test="productId != null" >
+        and product_id ${productIdOperator} #{productId}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="id1 != null" >
+        and id &gt;= #{id1}
+      </if>
+      <if test="id2 != null" >
+        and id &lt;= #{id2}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarProductLawsEO" >
+    insert into SAR_PRODUCT_LAWS(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{lawsId, jdbcType=VARCHAR}, #{lawsType, jdbcType=VARCHAR}, #{productId, jdbcType=VARCHAR}, #{id, jdbcType=TIMESTAMP})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarProductLawsEO" >
+        insert into SAR_PRODUCT_LAWS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="creationUser != null" >creation_user,</if>
+                <if test="lawsId != null" >laws_id,</if>
+                <if test="lawsType != null" >laws_type,</if>
+                <if test="productId != null" >product_id,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="creationUser != null" >#{creationUser, jdbcType=VARCHAR},</if>
+                <if test="lawsId != null" >#{lawsId, jdbcType=VARCHAR},</if>
+                <if test="lawsType != null" >#{lawsType, jdbcType=VARCHAR},</if>
+                <if test="productId != null" >#{productId, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=TIMESTAMP},</if>
+            </trim>
+  </insert>
+
+  <!-- SAR_PRODUCT_LAWS 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_PRODUCT_LAWS
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_PRODUCT_LAWS列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_PRODUCT_LAWS
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_PRODUCT_LAWS
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

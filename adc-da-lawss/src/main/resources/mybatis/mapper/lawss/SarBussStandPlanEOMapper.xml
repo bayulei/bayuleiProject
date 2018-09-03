@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarBussStandPlanEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarBussStandPlanEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="approval_draft_time" property="approvalDraftTime" />
+    <result column="start_flow_time" property="startFlowTime" />
+    <result column="review_modify_time" property="reviewModifyTime" />
+    <result column="review_meet_time" property="reviewMeetTime" />
+    <result column="review_submit_time" property="reviewSubmitTime" />
+    <result column="finish_review_time" property="finishReviewTime" />
+    <result column="compilers_user" property="compilersUser" />
+    <result column="review_level" property="reviewLevel" />
+    <result column="compile_unit" property="compileUnit" />
+    <result column="replace_stand_num" property="replaceStandNum" />
+    <result column="make_revison_type" property="makeRevisonType" />
+    <result column="stand_name" property="standName" />
+  </resultMap>
+
+  <!-- SAR_BUSS_STAND_PLAN table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, approval_draft_time, start_flow_time, review_modify_time, review_meet_time, review_submit_time, finish_review_time, compilers_user, review_level, compile_unit, replace_stand_num, make_revison_type, stand_name, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="approvalDraftTime != null" >
+        and approval_draft_time ${approvalDraftTimeOperator} #{approvalDraftTime}
+      </if>
+      <if test="approvalDraftTime1 != null" >
+        and approval_draft_time &gt;= #{approvalDraftTime1}
+      </if>
+      <if test="approvalDraftTime2 != null" >
+        and approval_draft_time &lt;= #{approvalDraftTime2}
+      </if>
+      <if test="startFlowTime != null" >
+        and start_flow_time ${startFlowTimeOperator} #{startFlowTime}
+      </if>
+      <if test="startFlowTime1 != null" >
+        and start_flow_time &gt;= #{startFlowTime1}
+      </if>
+      <if test="startFlowTime2 != null" >
+        and start_flow_time &lt;= #{startFlowTime2}
+      </if>
+      <if test="reviewModifyTime != null" >
+        and review_modify_time ${reviewModifyTimeOperator} #{reviewModifyTime}
+      </if>
+      <if test="reviewModifyTime1 != null" >
+        and review_modify_time &gt;= #{reviewModifyTime1}
+      </if>
+      <if test="reviewModifyTime2 != null" >
+        and review_modify_time &lt;= #{reviewModifyTime2}
+      </if>
+      <if test="reviewMeetTime != null" >
+        and review_meet_time ${reviewMeetTimeOperator} #{reviewMeetTime}
+      </if>
+      <if test="reviewMeetTime1 != null" >
+        and review_meet_time &gt;= #{reviewMeetTime1}
+      </if>
+      <if test="reviewMeetTime2 != null" >
+        and review_meet_time &lt;= #{reviewMeetTime2}
+      </if>
+      <if test="reviewSubmitTime != null" >
+        and review_submit_time ${reviewSubmitTimeOperator} #{reviewSubmitTime}
+      </if>
+      <if test="reviewSubmitTime1 != null" >
+        and review_submit_time &gt;= #{reviewSubmitTime1}
+      </if>
+      <if test="reviewSubmitTime2 != null" >
+        and review_submit_time &lt;= #{reviewSubmitTime2}
+      </if>
+      <if test="finishReviewTime != null" >
+        and finish_review_time ${finishReviewTimeOperator} #{finishReviewTime}
+      </if>
+      <if test="finishReviewTime1 != null" >
+        and finish_review_time &gt;= #{finishReviewTime1}
+      </if>
+      <if test="finishReviewTime2 != null" >
+        and finish_review_time &lt;= #{finishReviewTime2}
+      </if>
+      <if test="compilersUser != null" >
+        and compilers_user ${compilersUserOperator} #{compilersUser}
+      </if>
+      <if test="reviewLevel != null" >
+        and review_level ${reviewLevelOperator} #{reviewLevel}
+      </if>
+      <if test="compileUnit != null" >
+        and compile_unit ${compileUnitOperator} #{compileUnit}
+      </if>
+      <if test="replaceStandNum != null" >
+        and replace_stand_num ${replaceStandNumOperator} #{replaceStandNum}
+      </if>
+      <if test="makeRevisonType != null" >
+        and make_revison_type ${makeRevisonTypeOperator} #{makeRevisonType}
+      </if>
+      <if test="standName != null" >
+        and stand_name ${standNameOperator} #{standName}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarBussStandPlanEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_BUSS_STAND_PLAN.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_BUSS_STAND_PLAN(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{approvalDraftTime, jdbcType=TIMESTAMP}, #{startFlowTime, jdbcType=TIMESTAMP}, #{reviewModifyTime, jdbcType=TIMESTAMP}, #{reviewMeetTime, jdbcType=TIMESTAMP}, #{reviewSubmitTime, jdbcType=TIMESTAMP}, #{finishReviewTime, jdbcType=TIMESTAMP}, #{compilersUser, jdbcType=VARCHAR}, #{reviewLevel, jdbcType=VARCHAR}, #{compileUnit, jdbcType=VARCHAR}, #{replaceStandNum, jdbcType=VARCHAR}, #{makeRevisonType, jdbcType=VARCHAR}, #{standName, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarBussStandPlanEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_BUSS_STAND_PLAN.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_BUSS_STAND_PLAN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="approvalDraftTime != null" >approval_draft_time,</if>
+                <if test="startFlowTime != null" >start_flow_time,</if>
+                <if test="reviewModifyTime != null" >review_modify_time,</if>
+                <if test="reviewMeetTime != null" >review_meet_time,</if>
+                <if test="reviewSubmitTime != null" >review_submit_time,</if>
+                <if test="finishReviewTime != null" >finish_review_time,</if>
+                <if test="compilersUser != null" >compilers_user,</if>
+                <if test="reviewLevel != null" >review_level,</if>
+                <if test="compileUnit != null" >compile_unit,</if>
+                <if test="replaceStandNum != null" >replace_stand_num,</if>
+                <if test="makeRevisonType != null" >make_revison_type,</if>
+                <if test="standName != null" >stand_name,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="approvalDraftTime != null" >#{approvalDraftTime, jdbcType=TIMESTAMP},</if>
+                <if test="startFlowTime != null" >#{startFlowTime, jdbcType=TIMESTAMP},</if>
+                <if test="reviewModifyTime != null" >#{reviewModifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="reviewMeetTime != null" >#{reviewMeetTime, jdbcType=TIMESTAMP},</if>
+                <if test="reviewSubmitTime != null" >#{reviewSubmitTime, jdbcType=TIMESTAMP},</if>
+                <if test="finishReviewTime != null" >#{finishReviewTime, jdbcType=TIMESTAMP},</if>
+                <if test="compilersUser != null" >#{compilersUser, jdbcType=VARCHAR},</if>
+                <if test="reviewLevel != null" >#{reviewLevel, jdbcType=VARCHAR},</if>
+                <if test="compileUnit != null" >#{compileUnit, jdbcType=VARCHAR},</if>
+                <if test="replaceStandNum != null" >#{replaceStandNum, jdbcType=VARCHAR},</if>
+                <if test="makeRevisonType != null" >#{makeRevisonType, jdbcType=VARCHAR},</if>
+                <if test="standName != null" >#{standName, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarBussStandPlanEO" >
+    update SAR_BUSS_STAND_PLAN
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            approval_draft_time = #{approvalDraftTime},
+            start_flow_time = #{startFlowTime},
+            review_modify_time = #{reviewModifyTime},
+            review_meet_time = #{reviewMeetTime},
+            review_submit_time = #{reviewSubmitTime},
+            finish_review_time = #{finishReviewTime},
+            compilers_user = #{compilersUser},
+            review_level = #{reviewLevel},
+            compile_unit = #{compileUnit},
+            replace_stand_num = #{replaceStandNum},
+            make_revison_type = #{makeRevisonType},
+            stand_name = #{standName}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarBussStandPlanEO" >
+    update SAR_BUSS_STAND_PLAN
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="approvalDraftTime != null" >
+        approval_draft_time = #{approvalDraftTime},
+      </if>
+      <if test="startFlowTime != null" >
+        start_flow_time = #{startFlowTime},
+      </if>
+      <if test="reviewModifyTime != null" >
+        review_modify_time = #{reviewModifyTime},
+      </if>
+      <if test="reviewMeetTime != null" >
+        review_meet_time = #{reviewMeetTime},
+      </if>
+      <if test="reviewSubmitTime != null" >
+        review_submit_time = #{reviewSubmitTime},
+      </if>
+      <if test="finishReviewTime != null" >
+        finish_review_time = #{finishReviewTime},
+      </if>
+      <if test="compilersUser != null" >
+        compilers_user = #{compilersUser},
+      </if>
+      <if test="reviewLevel != null" >
+        review_level = #{reviewLevel},
+      </if>
+      <if test="compileUnit != null" >
+        compile_unit = #{compileUnit},
+      </if>
+      <if test="replaceStandNum != null" >
+        replace_stand_num = #{replaceStandNum},
+      </if>
+      <if test="makeRevisonType != null" >
+        make_revison_type = #{makeRevisonType},
+      </if>
+      <if test="standName != null" >
+        stand_name = #{standName},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_BUSS_STAND_PLAN -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_BUSS_STAND_PLAN
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_BUSS_STAND_PLAN
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_BUSS_STAND_PLAN 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_BUSS_STAND_PLAN
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_BUSS_STAND_PLAN列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_BUSS_STAND_PLAN
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_BUSS_STAND_PLAN
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

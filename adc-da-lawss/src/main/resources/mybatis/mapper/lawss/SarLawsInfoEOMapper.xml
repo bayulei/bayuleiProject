@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarLawsInfoEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarLawsInfoEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="creation_user" property="creationUser" />
+    <result column="relevance_file" property="relevanceFile" />
+    <result column="opinion_file" property="opinionFile" />
+    <result column="laws_file" property="lawsFile" />
+    <result column="link_uri" property="linkUri" />
+    <result column="responsible_unit" property="responsibleUnit" />
+    <result column="apply_auth" property="applyAuth" />
+    <result column="energy_kind" property="energyKind" />
+    <result column="apply_arctic" property="applyArctic" />
+    <result column="replace_laws_num" property="replaceLawsNum" />
+    <result column="put_time" property="putTime" />
+    <result column="issue_time" property="issueTime" />
+    <result column="laws_state" property="lawsState" />
+    <result column="issue_unit" property="issueUnit" />
+    <result column="laws_name" property="lawsName" />
+    <result column="laws_number" property="lawsNumber" />
+    <result column="laws_property" property="lawsProperty" />
+    <result column="country" property="country" />
+    <result column="laws_type" property="lawsType" />
+  </resultMap>
+
+  <!-- SAR_LAWS_INFO table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, creation_user, relevance_file, opinion_file, laws_file, link_uri, responsible_unit, apply_auth, energy_kind, apply_arctic, replace_laws_num, put_time, issue_time, laws_state, issue_unit, laws_name, laws_number, laws_property, country, laws_type, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="creationUser != null" >
+        and creation_user ${creationUserOperator} #{creationUser}
+      </if>
+      <if test="relevanceFile != null" >
+        and relevance_file ${relevanceFileOperator} #{relevanceFile}
+      </if>
+      <if test="opinionFile != null" >
+        and opinion_file ${opinionFileOperator} #{opinionFile}
+      </if>
+      <if test="lawsFile != null" >
+        and laws_file ${lawsFileOperator} #{lawsFile}
+      </if>
+      <if test="linkUri != null" >
+        and link_uri ${linkUriOperator} #{linkUri}
+      </if>
+      <if test="responsibleUnit != null" >
+        and responsible_unit ${responsibleUnitOperator} #{responsibleUnit}
+      </if>
+      <if test="applyAuth != null" >
+        and apply_auth ${applyAuthOperator} #{applyAuth}
+      </if>
+      <if test="energyKind != null" >
+        and energy_kind ${energyKindOperator} #{energyKind}
+      </if>
+      <if test="applyArctic != null" >
+        and apply_arctic ${applyArcticOperator} #{applyArctic}
+      </if>
+      <if test="replaceLawsNum != null" >
+        and replace_laws_num ${replaceLawsNumOperator} #{replaceLawsNum}
+      </if>
+      <if test="putTime != null" >
+        and put_time ${putTimeOperator} #{putTime}
+      </if>
+      <if test="putTime1 != null" >
+        and put_time &gt;= #{putTime1}
+      </if>
+      <if test="putTime2 != null" >
+        and put_time &lt;= #{putTime2}
+      </if>
+      <if test="issueTime != null" >
+        and issue_time ${issueTimeOperator} #{issueTime}
+      </if>
+      <if test="issueTime1 != null" >
+        and issue_time &gt;= #{issueTime1}
+      </if>
+      <if test="issueTime2 != null" >
+        and issue_time &lt;= #{issueTime2}
+      </if>
+      <if test="lawsState != null" >
+        and laws_state ${lawsStateOperator} #{lawsState}
+      </if>
+      <if test="issueUnit != null" >
+        and issue_unit ${issueUnitOperator} #{issueUnit}
+      </if>
+      <if test="lawsName != null" >
+        and laws_name ${lawsNameOperator} #{lawsName}
+      </if>
+      <if test="lawsNumber != null" >
+        and laws_number ${lawsNumberOperator} #{lawsNumber}
+      </if>
+      <if test="lawsProperty != null" >
+        and laws_property ${lawsPropertyOperator} #{lawsProperty}
+      </if>
+      <if test="country != null" >
+        and country ${countryOperator} #{country}
+      </if>
+      <if test="lawsType != null" >
+        and laws_type ${lawsTypeOperator} #{lawsType}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarLawsInfoEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_LAWS_INFO.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_LAWS_INFO(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{relevanceFile, jdbcType=VARCHAR}, #{opinionFile, jdbcType=VARCHAR}, #{lawsFile, jdbcType=VARCHAR}, #{linkUri, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{applyAuth, jdbcType=VARCHAR}, #{energyKind, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{replaceLawsNum, jdbcType=VARCHAR}, #{putTime, jdbcType=TIMESTAMP}, #{issueTime, jdbcType=TIMESTAMP}, #{lawsState, jdbcType=VARCHAR}, #{issueUnit, jdbcType=VARCHAR}, #{lawsName, jdbcType=VARCHAR}, #{lawsNumber, jdbcType=VARCHAR}, #{lawsProperty, jdbcType=VARCHAR}, #{country, jdbcType=VARCHAR}, #{lawsType, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarLawsInfoEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_LAWS_INFO.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_LAWS_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="creationUser != null" >creation_user,</if>
+                <if test="relevanceFile != null" >relevance_file,</if>
+                <if test="opinionFile != null" >opinion_file,</if>
+                <if test="lawsFile != null" >laws_file,</if>
+                <if test="linkUri != null" >link_uri,</if>
+                <if test="responsibleUnit != null" >responsible_unit,</if>
+                <if test="applyAuth != null" >apply_auth,</if>
+                <if test="energyKind != null" >energy_kind,</if>
+                <if test="applyArctic != null" >apply_arctic,</if>
+                <if test="replaceLawsNum != null" >replace_laws_num,</if>
+                <if test="putTime != null" >put_time,</if>
+                <if test="issueTime != null" >issue_time,</if>
+                <if test="lawsState != null" >laws_state,</if>
+                <if test="issueUnit != null" >issue_unit,</if>
+                <if test="lawsName != null" >laws_name,</if>
+                <if test="lawsNumber != null" >laws_number,</if>
+                <if test="lawsProperty != null" >laws_property,</if>
+                <if test="country != null" >country,</if>
+                <if test="lawsType != null" >laws_type,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="creationUser != null" >#{creationUser, jdbcType=VARCHAR},</if>
+                <if test="relevanceFile != null" >#{relevanceFile, jdbcType=VARCHAR},</if>
+                <if test="opinionFile != null" >#{opinionFile, jdbcType=VARCHAR},</if>
+                <if test="lawsFile != null" >#{lawsFile, jdbcType=VARCHAR},</if>
+                <if test="linkUri != null" >#{linkUri, jdbcType=VARCHAR},</if>
+                <if test="responsibleUnit != null" >#{responsibleUnit, jdbcType=VARCHAR},</if>
+                <if test="applyAuth != null" >#{applyAuth, jdbcType=VARCHAR},</if>
+                <if test="energyKind != null" >#{energyKind, jdbcType=VARCHAR},</if>
+                <if test="applyArctic != null" >#{applyArctic, jdbcType=VARCHAR},</if>
+                <if test="replaceLawsNum != null" >#{replaceLawsNum, jdbcType=VARCHAR},</if>
+                <if test="putTime != null" >#{putTime, jdbcType=TIMESTAMP},</if>
+                <if test="issueTime != null" >#{issueTime, jdbcType=TIMESTAMP},</if>
+                <if test="lawsState != null" >#{lawsState, jdbcType=VARCHAR},</if>
+                <if test="issueUnit != null" >#{issueUnit, jdbcType=VARCHAR},</if>
+                <if test="lawsName != null" >#{lawsName, jdbcType=VARCHAR},</if>
+                <if test="lawsNumber != null" >#{lawsNumber, jdbcType=VARCHAR},</if>
+                <if test="lawsProperty != null" >#{lawsProperty, jdbcType=VARCHAR},</if>
+                <if test="country != null" >#{country, jdbcType=VARCHAR},</if>
+                <if test="lawsType != null" >#{lawsType, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarLawsInfoEO" >
+    update SAR_LAWS_INFO
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            creation_user = #{creationUser},
+            relevance_file = #{relevanceFile},
+            opinion_file = #{opinionFile},
+            laws_file = #{lawsFile},
+            link_uri = #{linkUri},
+            responsible_unit = #{responsibleUnit},
+            apply_auth = #{applyAuth},
+            energy_kind = #{energyKind},
+            apply_arctic = #{applyArctic},
+            replace_laws_num = #{replaceLawsNum},
+            put_time = #{putTime},
+            issue_time = #{issueTime},
+            laws_state = #{lawsState},
+            issue_unit = #{issueUnit},
+            laws_name = #{lawsName},
+            laws_number = #{lawsNumber},
+            laws_property = #{lawsProperty},
+            country = #{country},
+            laws_type = #{lawsType}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarLawsInfoEO" >
+    update SAR_LAWS_INFO
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="creationUser != null" >
+        creation_user = #{creationUser},
+      </if>
+      <if test="relevanceFile != null" >
+        relevance_file = #{relevanceFile},
+      </if>
+      <if test="opinionFile != null" >
+        opinion_file = #{opinionFile},
+      </if>
+      <if test="lawsFile != null" >
+        laws_file = #{lawsFile},
+      </if>
+      <if test="linkUri != null" >
+        link_uri = #{linkUri},
+      </if>
+      <if test="responsibleUnit != null" >
+        responsible_unit = #{responsibleUnit},
+      </if>
+      <if test="applyAuth != null" >
+        apply_auth = #{applyAuth},
+      </if>
+      <if test="energyKind != null" >
+        energy_kind = #{energyKind},
+      </if>
+      <if test="applyArctic != null" >
+        apply_arctic = #{applyArctic},
+      </if>
+      <if test="replaceLawsNum != null" >
+        replace_laws_num = #{replaceLawsNum},
+      </if>
+      <if test="putTime != null" >
+        put_time = #{putTime},
+      </if>
+      <if test="issueTime != null" >
+        issue_time = #{issueTime},
+      </if>
+      <if test="lawsState != null" >
+        laws_state = #{lawsState},
+      </if>
+      <if test="issueUnit != null" >
+        issue_unit = #{issueUnit},
+      </if>
+      <if test="lawsName != null" >
+        laws_name = #{lawsName},
+      </if>
+      <if test="lawsNumber != null" >
+        laws_number = #{lawsNumber},
+      </if>
+      <if test="lawsProperty != null" >
+        laws_property = #{lawsProperty},
+      </if>
+      <if test="country != null" >
+        country = #{country},
+      </if>
+      <if test="lawsType != null" >
+        laws_type = #{lawsType},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_LAWS_INFO -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_LAWS_INFO
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_LAWS_INFO
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_LAWS_INFO 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_LAWS_INFO
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_LAWS_INFO列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_LAWS_INFO
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_LAWS_INFO
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>
