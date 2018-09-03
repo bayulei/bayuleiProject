@@ -36,7 +36,7 @@
     <result column="stand_nature" property="standNature" />
     <result column="stand_state" property="standState" />
     <result column="stand_en_name" property="standEnName" />
-    <result column="syand_name" property="syandName" />
+    <result column="stand_name" property="standName" />
     <result column="stand_year" property="standYear" />
     <result column="stand_number" property="standNumber" />
     <result column="apply_arctic" property="applyArctic" />
@@ -47,7 +47,7 @@
 
   <!-- SAR_STANDARDS_INFO table all fields -->
   <sql id="Base_Column_List" >
-     modify_time, creation_time, valid_flag, creation_user, remark, category, responsible_unit, synopsis, tags, relevance_file, approval_file, sent_screen_file, opinion_file, draft_file, stand_modify_file, stand_file, draft_user, drafting_unit, newproduct_put_time, product_put_time, newcar_put_time, put_time, issue_time, apply_auth, emergy_kind, adopt_extent, inter_stand_num, replaced_stand_num, replace_stand_num, stand_nature, stand_state, stand_en_name, syand_name, stand_year, stand_number, apply_arctic, stand_sort, country, stand_type, id
+     modify_time, creation_time, valid_flag, creation_user, remark, category, responsible_unit, synopsis, tags, relevance_file, approval_file, sent_screen_file, opinion_file, draft_file, stand_modify_file, stand_file, draft_user, drafting_unit, newproduct_put_time, product_put_time, newcar_put_time, put_time, issue_time, apply_auth, emergy_kind, adopt_extent, inter_stand_num, replaced_stand_num, replace_stand_num, stand_nature, stand_state, stand_en_name, stand_name, stand_year, stand_number, apply_arctic, stand_sort, country, stand_type, id
   </sql>
 
   <!-- 查询条件 -->
@@ -192,8 +192,8 @@
       <if test="standEnName != null" >
         and stand_en_name ${standEnNameOperator} #{standEnName}
       </if>
-      <if test="syandName != null" >
-        and syand_name ${syandNameOperator} #{syandName}
+      <if test="standName != null" >
+        and stand_name ${standNameOperator} #{standName}
       </if>
       <if test="standYear != null" >
         and stand_year ${standYearOperator} #{standYear}
@@ -225,7 +225,7 @@
         SELECT SEQ_SAR_STANDARDS_INFO.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into SAR_STANDARDS_INFO(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{remark, jdbcType=VARCHAR}, #{category, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{synopsis, jdbcType=VARCHAR}, #{tags, jdbcType=VARCHAR}, #{relevanceFile, jdbcType=VARCHAR}, #{approvalFile, jdbcType=VARCHAR}, #{sentScreenFile, jdbcType=VARCHAR}, #{opinionFile, jdbcType=VARCHAR}, #{draftFile, jdbcType=VARCHAR}, #{standModifyFile, jdbcType=VARCHAR}, #{standFile, jdbcType=VARCHAR}, #{draftUser, jdbcType=VARCHAR}, #{draftingUnit, jdbcType=VARCHAR}, #{newproductPutTime, jdbcType=TIMESTAMP}, #{productPutTime, jdbcType=TIMESTAMP}, #{newcarPutTime, jdbcType=TIMESTAMP}, #{putTime, jdbcType=TIMESTAMP}, #{issueTime, jdbcType=TIMESTAMP}, #{applyAuth, jdbcType=VARCHAR}, #{emergyKind, jdbcType=VARCHAR}, #{adoptExtent, jdbcType=VARCHAR}, #{interStandNum, jdbcType=VARCHAR}, #{replacedStandNum, jdbcType=VARCHAR}, #{replaceStandNum, jdbcType=VARCHAR}, #{standNature, jdbcType=VARCHAR}, #{standState, jdbcType=VARCHAR}, #{standEnName, jdbcType=VARCHAR}, #{syandName, jdbcType=VARCHAR}, #{standYear, jdbcType=VARCHAR}, #{standNumber, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{standSort, jdbcType=VARCHAR}, #{country, jdbcType=VARCHAR}, #{standType, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{remark, jdbcType=VARCHAR}, #{category, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{synopsis, jdbcType=VARCHAR}, #{tags, jdbcType=VARCHAR}, #{relevanceFile, jdbcType=VARCHAR}, #{approvalFile, jdbcType=VARCHAR}, #{sentScreenFile, jdbcType=VARCHAR}, #{opinionFile, jdbcType=VARCHAR}, #{draftFile, jdbcType=VARCHAR}, #{standModifyFile, jdbcType=VARCHAR}, #{standFile, jdbcType=VARCHAR}, #{draftUser, jdbcType=VARCHAR}, #{draftingUnit, jdbcType=VARCHAR}, #{newproductPutTime, jdbcType=TIMESTAMP}, #{productPutTime, jdbcType=TIMESTAMP}, #{newcarPutTime, jdbcType=TIMESTAMP}, #{putTime, jdbcType=TIMESTAMP}, #{issueTime, jdbcType=TIMESTAMP}, #{applyAuth, jdbcType=VARCHAR}, #{emergyKind, jdbcType=VARCHAR}, #{adoptExtent, jdbcType=VARCHAR}, #{interStandNum, jdbcType=VARCHAR}, #{replacedStandNum, jdbcType=VARCHAR}, #{replaceStandNum, jdbcType=VARCHAR}, #{standNature, jdbcType=VARCHAR}, #{standState, jdbcType=VARCHAR}, #{standEnName, jdbcType=VARCHAR}, #{standName, jdbcType=VARCHAR}, #{standYear, jdbcType=VARCHAR}, #{standNumber, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{standSort, jdbcType=VARCHAR}, #{country, jdbcType=VARCHAR}, #{standType, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -267,7 +267,7 @@
                 <if test="standNature != null" >stand_nature,</if>
                 <if test="standState != null" >stand_state,</if>
                 <if test="standEnName != null" >stand_en_name,</if>
-                <if test="syandName != null" >syand_name,</if>
+                <if test="standName != null" >stand_name,</if>
                 <if test="standYear != null" >stand_year,</if>
                 <if test="standNumber != null" >stand_number,</if>
                 <if test="applyArctic != null" >apply_arctic,</if>
@@ -309,7 +309,7 @@
                 <if test="standNature != null" >#{standNature, jdbcType=VARCHAR},</if>
                 <if test="standState != null" >#{standState, jdbcType=VARCHAR},</if>
                 <if test="standEnName != null" >#{standEnName, jdbcType=VARCHAR},</if>
-                <if test="syandName != null" >#{syandName, jdbcType=VARCHAR},</if>
+                <if test="standName != null" >#{standName, jdbcType=VARCHAR},</if>
                 <if test="standYear != null" >#{standYear, jdbcType=VARCHAR},</if>
                 <if test="standNumber != null" >#{standNumber, jdbcType=VARCHAR},</if>
                 <if test="applyArctic != null" >#{applyArctic, jdbcType=VARCHAR},</if>
@@ -355,7 +355,7 @@
             stand_nature = #{standNature},
             stand_state = #{standState},
             stand_en_name = #{standEnName},
-            syand_name = #{syandName},
+            stand_name = #{standName},
             stand_year = #{standYear},
             stand_number = #{standNumber},
             apply_arctic = #{applyArctic},
@@ -465,8 +465,8 @@
       <if test="standEnName != null" >
         stand_en_name = #{standEnName},
       </if>
-      <if test="syandName != null" >
-        syand_name = #{syandName},
+      <if test="standName != null" >
+        stand_name = #{standName},
       </if>
       <if test="standYear != null" >
         stand_year = #{standYear},
