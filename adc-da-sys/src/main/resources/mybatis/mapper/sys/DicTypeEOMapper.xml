@@ -6,13 +6,14 @@
 		<id column="id" property="id" />
 		<result column="dic_type_code" property="dicTypeCode" />
 		<result column="dic_type_name" property="dicTypeName" />
+		<result column="parent_id" property="parentId" />
 		<result column="dic_id" property="dicId" />
-		<result column="del_flag" property="delFlag" />
+		<result column="valid_flag" property="validFlag" />
 	</resultMap>
 
 	<!-- TS_DICTYPE table all fields -->
 	<sql id="Base_Column_List">
-		id, dic_type_code, dic_type_name, dic_id,del_flag
+		id,parent_id, dic_type_code, dic_type_name, dic_id,valid_flag
 	</sql>
 
 	<resultMap id="DicTypeMap" extends="BaseResultMap" type="com.adc.da.sys.entity.DictionaryEO">
@@ -21,7 +22,8 @@
 			<result column="dic_type_code" property="dicTypeCode" />
 			<result column="dic_type_name" property="dicTypeName" />
 			<result column="dic_id" property="dicId" />
-			<result column="type_del_flag" property="delFlag" />
+			<result column="parent_id" property="parentId" />
+			<result column="type_valid_flag" property="validFlag" />
 		</collection>
 	</resultMap>
 
@@ -30,12 +32,13 @@
 		ur.dic_type_code as dic_type_code,
 		ur.dic_type_name as dic_type_name,
 		ur.dic_id as dic_id,
-		ur.del_flag as type_del_flag
+		ur.parent_id as parent_id,
+		ur.valid_flag as type_valid_flag
 	</sql>
 
 	<!-- 查询条件 -->
 	<sql id="Base_Where_Clause">
-		where del_flag = 0 
+		where valid_flag = 0 
 		<trim suffixOverrides=",">
 			<if test="id != null">
 				and id ${idOperator} #{id}
@@ -46,7 +49,12 @@
 			<if test="dicTypeName != null">
 				and dic_type_name ${dicTypeNameOperator} concat(concat('%',#{dicTypeName}),'%')
 			</if>
-			
+			<if test="validFlag != null" >
+        		and valid_flag ${validFlagOperator} #{validFlag}
+      		</if>
+      		<if test="parentId != null" >
+        		and parent_id ${parentIdOperator} #{parentId}
+      		</if>
 		</trim>
 	</sql>
 
@@ -54,7 +62,7 @@
 	<update id="updateByPrimaryKeySelective" parameterType="com.adc.da.sys.entity.DicTypeEO">
 		update TS_DICTYPE
 		<set>
-			dic_type_code = #{dicTypeCode},dic_type_name = #{dicTypeName},dic_id = #{dicId}
+			dic_type_code = #{dicTypeCode},dic_type_name = #{dicTypeName},dic_id = #{dicId},valid_flag = #{validFlag},parent_id = #{parentId}
 		</set>
 		where id = #{id}
 	</update>
@@ -89,21 +97,23 @@
 		insert into TS_DICTYPE(
 		<include refid="Base_Column_List" />
 		)
-		values (#{id}, #{dicTypeCode}, #{dicTypeName}, #{dicId}, #{delFlag})
+		values (#{id},#{parentId}, #{dicTypeCode}, #{dicTypeName}, #{dicId}, #{validFlag})
 	</insert>
 
     <insert id="insertSelective" parameterType="com.adc.da.sys.entity.DicTypeEO">
 		insert into TS_DICTYPE
 		<trim prefix="(" suffix=")" suffixOverrides="," >
 			<if test="id != null" >ID,</if>
-			<if test="delFlag != null" >DEL_FLAG,</if>
+			<if test="parentId != null" >parent_id,</if>
+			<if test="validFlag != null" >valid_flag,</if>
 			<if test="dicId != null" >DIC_ID,</if>
 			<if test="dicTypeName != null" >DIC_TYPE_NAME,</if>
 			<if test="dicTypeCode != null" >DIC_TYPE_CODE,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
 			<if test="id != null" >#{id},</if>
-			<if test="delFlag != null" >#{delFlag},</if>
+			<if test="parentId != null" >#{parentId},</if>
+			<if test="validFlag != null" >#{validFlag},</if>
 			<if test="dicId != null" >#{dicId},</if>
 			<if test="dicTypeName != null" >#{dicTypeName},</if>
 			<if test="dicTypeCode != null" >#{dicTypeCode},</if>
@@ -116,7 +126,7 @@
 		parameterType="com.adc.da.base.page.BasePage">
 		select count(distinct u0.id) from TS_DICTYPE u0
 		<include refid="Base_Where_Clause" />
-		and u0.del_flag != 1
+		and u0.valid_flag != 1
 	</select>
 
 	<!-- 查询TS_DICTYPE列表 -->
@@ -145,25 +155,25 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_DICTYPE
-		where DIC_TYPE_NAME = #{typeName} AND DIC_ID = #{dicId} AND DEL_FLAG = 0
+		where DIC_TYPE_NAME = #{typeName} AND DIC_ID = #{dicId} AND valid_flag = 0
 	</select>
 
 	<insert id="batchInsertTypeEo" >
-		INSERT INTO TS_DICTYPE  ("ID", "DEL_FLAG", "DIC_ID", "DIC_TYPE_NAME")
+		INSERT INTO TS_DICTYPE  ("ID","parent_id","valid_flag", "DIC_ID", "DIC_TYPE_NAME")
 		VALUES
 		<foreach collection="ModelType" item="eo" separator=",">
-			(#{eo.id},#{eo.delFlag},#{eo.dicId},#{eo.dicTypeName})
+			(#{eo.id},#{eo.parentId},#{eo.validFlag},#{eo.dicId},#{eo.dicTypeName})
 		</foreach>
 	</insert>
 	
 	<update id="deleteDicTypeByDicId" parameterType="java.lang.String">
 		update TS_DICTYPE
-		set del_flag = 1
+		set valid_flag = 1
 		where DIC_ID = #{id}
 	</update>
 	<update id="deleteFlagTo1" parameterType="java.lang.String">
 		update TS_DICTYPE
-		set del_flag = 1
+		set valid_flag = 1
 		where id = #{id}
 	</update>
 </mapper>

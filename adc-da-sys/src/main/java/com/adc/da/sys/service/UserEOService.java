@@ -53,20 +53,21 @@ public class UserEOService extends BaseService<UserEO, String> {
 
 	public UserEO save(UserEO userEO) {
 		userEO.setUsid(UUID.randomUUID10());
-		userEO.setDelFlag(DeleteFlagEnum.NORMAL.getValue());
-		userEO.setInsertTime(new Date(System.currentTimeMillis()));
-		userEO.setUpdateTime(new Date(System.currentTimeMillis()));
+		userEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
+		userEO.setCreationTime(new Date(System.currentTimeMillis()));
+		userEO.setModifyTime(new Date(System.currentTimeMillis()));
 		userEO.setPassword(PasswordUtils.encryptPassword(userEO.getPassword()));
 		if(userEO.getExtInfo() == null){
 			userEO.setExtInfo("");
 		}
 		dao.insert(userEO);
-		if(userEO.getUseCorpId() != null && !"".equals(userEO.getUseCorpId())) {
+		//TODO 此处需要维护用户的组织机构
+/*		if(userEO.getUseCorpId() != null && !"".equals(userEO.getUseCorpId())) {
 			UserOrgEO userOrgEO = new UserOrgEO();
 			userOrgEO.setUserId(userEO.getUsid());
 			userOrgEO.setOrgId(userEO.getUseCorpId());
 			orgDao.addOrgRelatedUser(userOrgEO);
-		}
+		}*/
 		return userEO;
 	}
 
@@ -136,14 +137,15 @@ public class UserEOService extends BaseService<UserEO, String> {
 	
 	//修改用户组织机构关联
 	public void updateUserOrg(UserEO userEO) {
-		if(StringUtils.isNotBlank(userEO.getUseCorpId())) {
+		//TODO  此处需要修改
+/*		if(StringUtils.isNotBlank(userEO.getUseCorpId())) {
 			UserOrgEO userOrgEO = new UserOrgEO();
 			userOrgEO.setUserId(userEO.getUsid());
 			userOrgEO.setOrgId(userEO.getUseCorpId());
 			int line = orgDao.updateUserOrg(userOrgEO);
 			if(line == 0) 
 				orgDao.addOrgRelatedUser(userOrgEO);
-		}
+		}*/
 	}
 	
 	/*public  List<UserEO> usnamesel(String usname){

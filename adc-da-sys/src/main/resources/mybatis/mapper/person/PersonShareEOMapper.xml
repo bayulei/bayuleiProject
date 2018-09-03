@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.person.dao.PersonShareEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.person.entity.PersonShareEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="read_flag" property="readFlag" />
+    <result column="res_title" property="resTitle" />
+    <result column="res_uri" property="resUri" />
+    <result column="res_id" property="resId" />
+    <result column="res_type" property="resType" />
+    <result column="share_user_id" property="shareUserId" />
+    <result column="recipient_id" property="recipientId" />
+  </resultMap>
+
+  <!-- TS_PERSON_SHARE table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, read_flag, res_title, res_uri, res_id, res_type, share_user_id, recipient_id, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="readFlag != null" >
+        and read_flag ${readFlagOperator} #{readFlag}
+      </if>
+      <if test="resTitle != null" >
+        and res_title ${resTitleOperator} #{resTitle}
+      </if>
+      <if test="resUri != null" >
+        and res_uri ${resUriOperator} #{resUri}
+      </if>
+      <if test="resId != null" >
+        and res_id ${resIdOperator} #{resId}
+      </if>
+      <if test="resType != null" >
+        and res_type ${resTypeOperator} #{resType}
+      </if>
+      <if test="shareUserId != null" >
+        and share_user_id ${shareUserIdOperator} #{shareUserId}
+      </if>
+      <if test="recipientId != null" >
+        and recipient_id ${recipientIdOperator} #{recipientId}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.person.entity.PersonShareEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_TS_PERSON_SHARE.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into TS_PERSON_SHARE(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{readFlag, jdbcType=INTEGER}, #{resTitle, jdbcType=VARCHAR}, #{resUri, jdbcType=VARCHAR}, #{resId, jdbcType=VARCHAR}, #{resType, jdbcType=VARCHAR}, #{shareUserId, jdbcType=VARCHAR}, #{recipientId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.person.entity.PersonShareEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_TS_PERSON_SHARE.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into TS_PERSON_SHARE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="readFlag != null" >read_flag,</if>
+                <if test="resTitle != null" >res_title,</if>
+                <if test="resUri != null" >res_uri,</if>
+                <if test="resId != null" >res_id,</if>
+                <if test="resType != null" >res_type,</if>
+                <if test="shareUserId != null" >share_user_id,</if>
+                <if test="recipientId != null" >recipient_id,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="readFlag != null" >#{readFlag, jdbcType=INTEGER},</if>
+                <if test="resTitle != null" >#{resTitle, jdbcType=VARCHAR},</if>
+                <if test="resUri != null" >#{resUri, jdbcType=VARCHAR},</if>
+                <if test="resId != null" >#{resId, jdbcType=VARCHAR},</if>
+                <if test="resType != null" >#{resType, jdbcType=VARCHAR},</if>
+                <if test="shareUserId != null" >#{shareUserId, jdbcType=VARCHAR},</if>
+                <if test="recipientId != null" >#{recipientId, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.person.entity.PersonShareEO" >
+    update TS_PERSON_SHARE
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            read_flag = #{readFlag},
+            res_title = #{resTitle},
+            res_uri = #{resUri},
+            res_id = #{resId},
+            res_type = #{resType},
+            share_user_id = #{shareUserId},
+            recipient_id = #{recipientId}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.person.entity.PersonShareEO" >
+    update TS_PERSON_SHARE
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="readFlag != null" >
+        read_flag = #{readFlag},
+      </if>
+      <if test="resTitle != null" >
+        res_title = #{resTitle},
+      </if>
+      <if test="resUri != null" >
+        res_uri = #{resUri},
+      </if>
+      <if test="resId != null" >
+        res_id = #{resId},
+      </if>
+      <if test="resType != null" >
+        res_type = #{resType},
+      </if>
+      <if test="shareUserId != null" >
+        share_user_id = #{shareUserId},
+      </if>
+      <if test="recipientId != null" >
+        recipient_id = #{recipientId},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 TS_PERSON_SHARE -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from TS_PERSON_SHARE
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TS_PERSON_SHARE
+     where id = #{value}
+
+  </delete>
+
+  <!-- TS_PERSON_SHARE 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from TS_PERSON_SHARE
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询TS_PERSON_SHARE列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from TS_PERSON_SHARE
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from TS_PERSON_SHARE
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

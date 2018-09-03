@@ -14,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.adc.da.base.service.BaseService;
 import com.adc.da.sys.dao.OrgEODao;
-import com.adc.da.sys.dao.SysCorpEODao;
 import com.adc.da.sys.entity.OrgEO;
-import com.adc.da.sys.entity.SysCorpEO;
 import com.adc.da.sys.entity.UserOrgEO;
 import com.adc.da.util.constant.DeleteFlagEnum;
 import com.adc.da.util.http.ResponseMessage;
@@ -30,8 +28,6 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrgEOService.class);
 	
-	@Autowired
-	private SysCorpEODao sCorpEODao;
 	@Autowired
 	private OrgEODao dao;
 	
@@ -56,22 +52,11 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 	}
 	
 	public ResponseMessage save(OrgEO orgEO) {
-		if("2".equals(orgEO.getParentId()) || "3".equals(orgEO.getParentId())) {
-			int corpType = Integer.valueOf(orgEO.getParentId());
-			SysCorpEO corpEO = new SysCorpEO();
-			corpEO.setId(UUID.randomUUID10());
-			corpEO.setCorpName(orgEO.getName());
-			corpEO.setCorpType((corpType-2)+"");
-			corpEO.setDelFlag(0);
-			corpEO.setActiveFlag(0);
-			sCorpEODao.insert(corpEO);
-			orgEO.setCorpId(corpEO.getId());
-		}
 		orgEO.setId(UUID.randomUUID10());
-		orgEO.setDelFlag(DeleteFlagEnum.NORMAL.getValue());
+		orgEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 		orgEO.setIsShow(0);
-		orgEO.setInsertTime(new Date());
-		orgEO.setUpdateTime(new Date());
+		orgEO.setCreationTime(new Date());
+		orgEO.setModifyTime(new Date());
 		int line = dao.insert(orgEO);
 		if(line > 0) {
 			return Result.success();
@@ -101,19 +86,6 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 			return Result.error("r0031", "该组织机构下有子机构，不能删除");
 		}
 		int line = dao.deleteLogic(id);
-		dao.deleteUserOrgByOrgId(id);
-		if(ids.length == 2) {
-			String corpId = ids[1];
-			if(StringUtils.isNotBlank(corpId)) {
-				SysCorpEO corpEO=new SysCorpEO();
-				corpEO.setId(corpId);
-				corpEO.setActiveFlag(DeleteFlagEnum.DELETE.getValue());
-				corpEO.setDelFlag(DeleteFlagEnum.DELETE.getValue());
-				corpEO.setUpdateTime(new Date());
-				//更新组织机构信息
-				sCorpEODao.updateByPrimaryKeySelective(corpEO);
-			}
-		}
 		if(line > 0) {
 			return Result.success();
 		} else {
@@ -151,13 +123,7 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 	}
 
 	public ResponseMessage updateById(OrgEO orgEO) {
-		if("1".equals(orgEO.getLevel()) && StringUtils.isNotEmpty(orgEO.getCorpId())) {
-			SysCorpEO corpEO = new SysCorpEO();
-			corpEO.setId(orgEO.getCorpId());
-			corpEO.setCorpName(orgEO.getName());
-			sCorpEODao.updateByPrimaryKeySelective(corpEO);
-		}
-		orgEO.setUpdateTime(new Date());
+		orgEO.setModifyTime(new Date());
 		int line = dao.updateByPrimaryKeySelective(orgEO);
 		if(line > 0) {
 			return Result.success();
@@ -189,7 +155,7 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 		LinkedList<OrgEO> rootNodes = new LinkedList<OrgEO>();
 		OrgEO orgEO = new OrgEO();
 		orgEO.setId(id);
-		orgEO.setName(userCorpName);
+		orgEO.setOrgName(userCorpName);
 		rootNodes.add(orgEO);
 		addNodes(rootNodes, 0);
 		return rootNodes;

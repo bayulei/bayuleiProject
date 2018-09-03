@@ -36,9 +36,9 @@ public class DicEOService extends BaseService<DictionaryEO,String>{
 	
 	public DictionaryEO save(DictionaryEO dicEO) {
 		dicEO.setId(UUID.randomUUID10());
-		dicEO.setDelFlag(DeleteFlagEnum.NORMAL.getValue());
-		dicEO.setInsertTime(new Date());
-		dicEO.setUpdateTime(new Date());
+		dicEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
+		dicEO.setCreationTime(new Date());
+		dicEO.setModifyTime(new Date());
 		dicEODao.insert(dicEO);
 		return dicEO;
 	}
@@ -78,7 +78,7 @@ public class DicEOService extends BaseService<DictionaryEO,String>{
 	}
 
 	public void updateById(DictionaryEO dictionaryEO) {
-		dictionaryEO.setUpdateTime(new Date());
+		dictionaryEO.setModifyTime(new Date());
 		dicEODao.updateByPrimaryKey(dictionaryEO);
 	}
 

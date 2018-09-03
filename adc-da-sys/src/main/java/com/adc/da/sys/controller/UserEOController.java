@@ -83,11 +83,11 @@ public class UserEOController extends BaseController<UserEO> {
 		String userId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 		if(userId != null || userId != ""){
 			UserEO getUser = userEOService.selectOrgByPrimaryKey(userId);
-			if(getUser != null){
+			/*if(getUser != null){
 				if(!("").equals(getUser.getUseCorpId()) && getUser.getUseCorpId() != null){
 					page.setGetCorpId(getUser.getUseCorpId());
 				}
-			}
+			}*/
 		}
 		page.setPager(new Pager());
 		
@@ -116,7 +116,7 @@ public class UserEOController extends BaseController<UserEO> {
 	@RequiresPermissions("sys:user:update")
 	public ResponseMessage<UserVO> update(@RequestBody UserVO userVO) throws Exception {
 		UserEO userEO = beanMapper.map(userVO, UserEO.class);
-		userEO.setUpdateTime(new Date());
+		userEO.setModifyTime(new Date());
 		userEO.setPassword(null);
 		userEOService.updateByPrimaryKeySelective(userEO);
 		//userEOService.saveUserRole(userEO);

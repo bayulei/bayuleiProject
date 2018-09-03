@@ -4,7 +4,7 @@
     <!-- Result Map-->
     <resultMap id="BaseResultMap" type="com.adc.da.sys.entity.MenuEO">
         <id column="id" property="id"/>
-        <result column="del_flag" property="delFlag"/>
+        <result column="valid_flag" property="validFlag"/>
         <result column="name" property="name"/>
         <result column="parent_id" property="parentId"/>
         <result column="parent_ids" property="parentIds"/>
@@ -13,13 +13,13 @@
         <result column="is_show" property="isShow"/>
         <result column="permission" property="permission"/>
         <result column="remarks" property="remarks"/>
-        <result column="sort" property="sort"/>
-        <result column="ext_info" property="extInfo" />
+        <result column="modify_time" property="modifyTime" />
+    	<result column="creation_time" property="creationTime" />
     </resultMap>
 
     <!-- TS_MENU table all fields -->
     <sql id="Base_Column_List">
-        id, del_flag, name, parent_id, parent_ids, href, icon, is_show, permission, remarks, sort, ext_info
+        id, valid_flag, name, parent_id, parent_ids, href, icon, is_show, permission, remarks,modify_time, creation_time
     </sql>
 
     <!-- 查询条件 -->
@@ -29,8 +29,8 @@
             <if test="id != null">
                 and id ${idOperator} #{id}
             </if>
-            <if test="delFlag != null">
-                and del_flag ${delFlagOperator} #{delFlag}
+            <if test="validFlag != null">
+                and valid_flag ${validFlagOperator} #{validFlag}
             </if>
             <if test="name != null">
                 and name ${nameOperator} #{name}
@@ -56,24 +56,39 @@
             <if test="remarks != null">
                 and remarks ${remarksOperator} #{remarks}
             </if>
-            <if test="sort != null">
-                and sort ${sortOperator} #{sort}
-            </if>
+      		<if test="modifyTime != null" >
+        		and modify_time ${modifyTimeOperator} #{modifyTime}
+      		</if>
+      		<if test="modifyTime1 != null" >
+        		and modify_time &gt;= #{modifyTime1}
+      		</if>
+      		<if test="modifyTime2 != null" >
+        		and modify_time &lt;= #{modifyTime2}
+      		</if>
+      		<if test="creationTime != null" >
+        		and creation_time ${creationTimeOperator} #{creationTime}
+      		</if>
+      		<if test="creationTime1 != null" >
+        		and creation_time &gt;= #{creationTime1}
+      		</if>
+      		<if test="creationTime2 != null" >
+        		and creation_time &lt;= #{creationTime2}
+      		</if>            
         </trim>
     </sql>
 
     <!-- 插入记录 -->
     <insert id="insert" parameterType="com.adc.da.sys.entity.MenuEO">
 		insert into TS_MENU(<include refid="Base_Column_List"/>)
-        values (#{id}, #{delFlag}, #{name}, #{parentId}, #{parentIds}, #{href}, #{icon}, #{isShow}, #{permission}, #{remarks}, #{sort}, #{extInfo})
+        values (#{id}, #{validFlag}, #{name}, #{parentId}, #{parentIds}, #{href}, #{icon}, #{isShow}, #{permission}, #{remarks},#{modifyTime}, #{creationTime})
     </insert>
 
 	<!-- 动态插入记录 主键是序列 -->
 	<insert id="insertSelective" parameterType="com.adc.da.sys.entity.MenuEO" >
 		insert into TS_MENU
 		<trim prefix="(" suffix=")" suffixOverrides="," >
-	        <if test="extInfo != null" >ext_info,</if>
-	        <if test="sort != null" >sort,</if>
+			<if test="modifyTime != null" >modify_time,</if>
+            <if test="creationTime != null" >creation_time,</if>
 	        <if test="remarks != null" >remarks,</if>
 	        <if test="permission != null" >permission,</if>
 	        <if test="isShow != null" >is_show,</if>
@@ -82,12 +97,12 @@
 	        <if test="parentIds != null" >parent_ids,</if>
 	        <if test="parentId != null" >parent_id,</if>
 	        <if test="name != null" >name,</if>
-	        <if test="delFlag != null" >del_flag,</if>
+	        <if test="validFlag != null" >valid_flag,</if>
 	        <if test="id != null" >id,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
-	        <if test="extInfo != null" >#{extInfo},</if>
-	        <if test="sort != null" >#{sort},</if>
+			<if test="modifyTime != null" >#{modifyTime},</if>
+            <if test="creationTime != null" >#{creationTime},</if>
 	        <if test="remarks != null" >#{remarks},</if>
 	        <if test="permission != null" >#{permission},</if>
 	        <if test="isShow != null" >#{isShow},</if>
@@ -96,7 +111,7 @@
 	        <if test="parentIds != null" >#{parentIds},</if>
 	        <if test="parentId != null" >#{parentId},</if>
 	        <if test="name != null" >#{name},</if>
-	        <if test="delFlag != null" >#{delFlag},</if>
+	        <if test="validFlag != null" >#{validFlag},</if>
 	        <if test="id != null" >#{id},</if>
 		</trim>
 	</insert>
@@ -104,7 +119,7 @@
     <!-- 根据pk，修改记录-->
     <update id="updateByPrimaryKey" parameterType="com.adc.da.sys.entity.MenuEO">
         UPDATE TS_MENU
-        SET del_flag = #{delFlag},
+        SET valid_flag = #{validFlag},
         NAME = #{name},
         parent_id = #{parentId},
         parent_ids = #{parentIds},
@@ -113,7 +128,8 @@
         is_show = #{isShow},
         PERMISSION = #{permission},
         remarks = #{remarks},
-        SORT = #{sort}
+        modify_time = #{modifyTime},
+        creation_time = #{creationTime}
         WHERE ID = #{id}
     </update>
 
@@ -121,11 +137,14 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.sys.entity.MenuEO">
         update TS_MENU
         <set>
-			<if test="extInfo != null" >
-				ext_info = #{extInfo},
-			</if>
-            <if test="delFlag != null">
-                del_flag = #{delFlag},
+        	<if test="modifyTime != null" >
+        		modify_time = #{modifyTime},
+      		</if>
+      		<if test="creationTime != null" >
+        		creation_time = #{creationTime},
+      		</if>
+            <if test="validFlag != null">
+                valid_flag = #{validFlag},
             </if>
             <if test="name != null">
                 name = #{name},
@@ -151,15 +170,12 @@
             <if test="remarks != null">
                 remarks = #{remarks},
             </if>
-            <if test="sort != null">
-                sort = #{sort},
-            </if>
         </set>
         where id = #{id}
     </update>
 
     <update id="deleteMenuLogic">
-        UPDATE TS_MENU set DEL_FLAG = ${@com.adc.da.util.constant.DeleteFlagEnum@DELETE.getValue()}
+        UPDATE TS_MENU set valid_flag = ${@com.adc.da.util.constant.DeleteFlagEnum@DELETE.getValue()}
         WHERE id in
         <foreach collection="array" item="id" open="(" separator="," close=")">
             #{id}
@@ -171,7 +187,7 @@
         select
         <include refid="Base_Column_List"/>
         from TS_MENU
-        where id = #{value} and del_flag = ${@com.adc.da.util.constant.DeleteFlagEnum@NORMAL.getValue()}
+        where id = #{value} and valid_flag = ${@com.adc.da.util.constant.DeleteFlagEnum@NORMAL.getValue()}
 
     </select>
 
@@ -214,14 +230,14 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM TS_MENU
-        WHERE del_flag = ${@com.adc.da.util.constant.DeleteFlagEnum@NORMAL.getValue()} 
+        WHERE valid_flag = ${@com.adc.da.util.constant.DeleteFlagEnum@NORMAL.getValue()} 
         ORDER BY IS_SHOW ASC
     </select>
 	
 	<!-- 屏蔽掉 禁止的，只显示启动的 菜单 -->
     <select id="listMenuEOByUserId" resultMap="BaseResultMap">
         SELECT distinct
-        M.id, M.del_flag, M.name, M.parent_id, M.parent_ids, M.href, M.icon, M.is_show, M.permission, M.remarks, M.sort, M.ext_info
+        M.id, M.valid_flag, M.name, M.parent_id, M.parent_ids, M.href, M.icon, M.is_show, M.permission, M.remarks, M.sort, M.ext_info
         FROM TS_MENU M
             LEFT JOIN TR_ROLE_MENU RM ON RM.MENU_ID = M.ID
             LEFT JOIN TR_USER_ROLE UR ON UR.ROLE_ID = RM.ROLE_ID 

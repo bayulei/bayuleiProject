@@ -29,8 +29,6 @@ public interface OrgEODao extends BaseDao<OrgEO>{
 
 	public LinkedList<OrgEO> selectNodeByPid(String id);
 	
-	public LinkedList<OrgEO> selectNodeByCoreId(String id);
-	
 	public List<OrgEO> queryByObject(OrgEO eo);
 
 	public int delOrgRelatedUser(UserOrgEO userOrgEO);
@@ -42,9 +40,5 @@ public interface OrgEODao extends BaseDao<OrgEO>{
 	public void addOrgRelatedUser(UserOrgEO userOrgEO);
 
 	public int updateUserOrg(UserOrgEO userOrgEO);
-
-	public void deleteUserOrgByOrgId(String id);
-
-	public List<OrgEO> queryOrgChildsByCorpId(String id);
 	
 }

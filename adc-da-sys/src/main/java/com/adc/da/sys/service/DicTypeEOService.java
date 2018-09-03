@@ -29,7 +29,7 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
 
     public DicTypeEO save(DicTypeEO dicTypeEO) {
         dicTypeEO.setId(UUID.randomUUID10());
-        dicTypeEO.setDelFlag(DeleteFlagEnum.NORMAL.getValue());
+        dicTypeEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 
         dicTypeEODao.insert(dicTypeEO);
         return dicTypeEO;

@@ -6,16 +6,17 @@
 		<id column="id" property="id" />
 		<result column="dictionary_code" property="dictionaryCode" />
 		<result column="dictionary_name" property="dictionaryName" />
-		<result column="del_flag" property="delFlag" />
+		<result column="dictionary_seq" property="dictionarySeq" />
+		<result column="valid_flag" property="validFlag" />
 		<result column="dic_type_name" property="dicTypeName" />
 		<result column="dic_id" property="dicId" />
-		<result column="insert_time" property="insertTime" />
-		<result column="update_time" property="updateTime" />
+		<result column="creation_time" property="creationTime" />
+		<result column="modify_time" property="modifyTime" />
 	</resultMap>
 
 	<!-- TS_DICTIONARY table all fields -->
 	<sql id="Base_Column_List">
-		id, dictionary_code, dictionary_name, del_flag
+		modify_time, creation_time, valid_flag, dictionary_seq, dictionary_name, dictionary_code, id
 	</sql>
 
 	<resultMap id="DicTypeMap" extends="BaseResultMap" type="com.adc.da.sys.entity.DictionaryEO">
@@ -24,7 +25,8 @@
 			<result column="dic_type_code" property="dicTypeCode" />
 			<result column="dic_type_name" property="dicTypeName" />
 			<result column="dic_id" property="dicId" />
-			<result column="type_del_flag" property="delFlag" />
+			<result column="parent_id" property="parentId" />
+			<result column="type_valid_flag" property="validFlag" />
 		</collection>
 	</resultMap>
 
@@ -33,7 +35,8 @@
 		ur.dic_type_code as dic_type_code,
 		ur.dic_type_name as dic_type_name,
 		ur.dic_id as dic_id,
-		ur.del_flag as type_del_flag
+		ur.parent_id as parent_id,
+		ur.valid_flag as type_valid_flag
 	</sql>
 
 	<!-- 查询条件 -->
@@ -49,14 +52,37 @@
 			<if test="dictionaryName != null and dictionaryName != ''">
 				and u0.dictionary_name ${dictionaryNameOperator} '%${dictionaryName}%'
 			</if>
-			
+			<if test="validFlag != null" >
+        		and u0.valid_flag ${validFlagOperator} #{validFlag}
+      		</if>
+      		<if test="dictionarySeq != null" >
+        		and u0.dictionary_seq ${dictionarySeqOperator} #{dictionarySeq}
+      		</if>
+	      	<if test="modifyTime != null" >
+	        	and u0.modify_time ${modifyTimeOperator} #{modifyTime}
+	      	</if>
+	      	<if test="modifyTime1 != null" >
+	        	and u0.modify_time &gt;= #{modifyTime1}
+	      	</if>
+	      	<if test="modifyTime2 != null" >
+	        	and u0.modify_time &lt;= #{modifyTime2}
+	      	</if>
+	      	<if test="creationTime != null" >
+	        	and u0.creation_time ${creationTimeOperator} #{creationTime}
+	      	</if>
+	      	<if test="creationTime1 != null" >
+	        	and u0.creation_time &gt;= #{creationTime1}
+	      	</if>
+	      	<if test="creationTime2 != null" >
+	        	and u0.creation_time &lt;= #{creationTime2}
+	      	</if>			
 		</trim>
 	</sql>
 
 	<update id="updateByPrimaryKey" parameterType="com.adc.da.sys.entity.DictionaryEO">
 		update TS_DICTIONARY
 		<set>
-			dictionary_code = #{dictionaryCode},dictionary_name = #{dictionaryName}, update_time = #{updateTime}
+			dictionary_code = #{dictionaryCode},dictionary_name = #{dictionaryName}, modify_time = #{modifyTime},dictionary_seq = #{dictionarySeq},valid_flag = #{validFlag}
 		</set>
 		where id = #{id}
 	</update>
@@ -65,7 +91,7 @@
 
 	<update id="deleteLogicInBatch" parameterType="java.util.List">
 		update TS_USER
-		set del_flag = 1
+		set valid_flag = 1
 		where usid in
 		<foreach item="usid" collection="list" open="(" separator=","
 			close=")" index="index">
@@ -86,7 +112,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_DICTIONARY
-		where dictionary_code = #{dictionaryCode} AND DEL_FLAG = 0
+		where dictionary_code = #{dictionaryCode} AND valid_flag = 0
 	</select>
 
 	<!--杜云宝: 根据字典代码查询其详情（俩表）-->
@@ -95,7 +121,7 @@
 		select
 		<include refid="Dic_Type_List" />
 		from TS_DICTIONARY u LEFT JOIN TS_DICTYPE ur ON u.ID = ur.DIC_ID
-		where dictionary_code = #{dictionaryCode} AND u.DEL_FLAG = 0 AND ur.DEL_FLAG = 0
+		where dictionary_code = #{dictionaryCode} AND u.valid_flag = 0 AND ur.valid_flag = 0
 	</select>
 
 
@@ -109,17 +135,15 @@
 
 	<!-- 插入记录 -->
 	<insert id="insert" parameterType="com.adc.da.sys.entity.DictionaryEO">
-		insert into TS_DICTIONARY(
-		id, dictionary_code, dictionary_name, del_flag, insert_time, update_time
-		)
-		values (#{id}, #{dictionaryCode}, #{dictionaryName}, #{delFlag}, #{insertTime}, #{updateTime})
+		insert into TS_DICTIONARY(<include refid="Base_Column_List" />)
+	    values (#{modifyTime}, #{creationTime}, #{validFlag}, #{dictionarySeq}, #{dictionaryName}, #{dictionaryCode}, #{id})
 	</insert>
 
 	<!-- 删除记录 -->
 	
 	<update id="deleteDic" parameterType="java.lang.String">
 		update TS_DICTIONARY
-		set del_Flag = 1
+		set valid_flag = 1
 		where id = #{id}
 	</update>
 
@@ -129,7 +153,7 @@
 		select count(distinct u0.id) from TS_DICTIONARY u0
 		left join TS_DICTYPE ur0 on u0.id = ur0.dic_id
 		<include refid="Base_Where_Clause" />
-		and u0.del_flag != 1
+		and u0.valid_flag != 1
 	</select>
 
 	<!-- 查询TS_USER列表 -->
@@ -139,7 +163,7 @@
 			  (select distinct u0.* from TS_DICTIONARY u0
 			   left join TS_DICTYPE ur0 on u0.id = ur0.dic_id
 			   <include refid="Base_Where_Clause"/>
-			   and u0.del_flag != 1
+			   and u0.valid_flag != 1
 			   <if test="pager.orderCondition != null and pager.orderCondition != ''" >
 			 	  ${pager.orderCondition}
 			   </if>
