@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarBusSarCompileEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarBusSarCompileEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="creation_user" property="creationUser" />
+    <result column="duty_unit" property="dutyUnit" />
+    <result column="replace_stand_num" property="replaceStandNum" />
+    <result column="remarks" property="remarks" />
+    <result column="put_year" property="putYear" />
+    <result column="put_time" property="putTime" />
+    <result column="issue_time" property="issueTime" />
+    <result column="stand_name" property="standName" />
+    <result column="stand_year" property="standYear" />
+    <result column="stand_number" property="standNumber" />
+    <result column="stand_code" property="standCode" />
+    <result column="classify_code" property="classifyCode" />
+    <result column="bus_stand_subclass" property="busStandSubclass" />
+    <result column="bus_stand_classify" property="busStandClassify" />
+  </resultMap>
+
+  <!-- SAR_BUS_SAR_COMPILE table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, creation_user, duty_unit, replace_stand_num, remarks, put_year, put_time, issue_time, stand_name, stand_year, stand_number, stand_code, classify_code, bus_stand_subclass, bus_stand_classify, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="creationUser != null" >
+        and creation_user ${creationUserOperator} #{creationUser}
+      </if>
+      <if test="dutyUnit != null" >
+        and duty_unit ${dutyUnitOperator} #{dutyUnit}
+      </if>
+      <if test="replaceStandNum != null" >
+        and replace_stand_num ${replaceStandNumOperator} #{replaceStandNum}
+      </if>
+      <if test="remarks != null" >
+        and remarks ${remarksOperator} #{remarks}
+      </if>
+      <if test="putYear != null" >
+        and put_year ${putYearOperator} #{putYear}
+      </if>
+      <if test="putTime != null" >
+        and put_time ${putTimeOperator} #{putTime}
+      </if>
+      <if test="putTime1 != null" >
+        and put_time &gt;= #{putTime1}
+      </if>
+      <if test="putTime2 != null" >
+        and put_time &lt;= #{putTime2}
+      </if>
+      <if test="issueTime != null" >
+        and issue_time ${issueTimeOperator} #{issueTime}
+      </if>
+      <if test="issueTime1 != null" >
+        and issue_time &gt;= #{issueTime1}
+      </if>
+      <if test="issueTime2 != null" >
+        and issue_time &lt;= #{issueTime2}
+      </if>
+      <if test="standName != null" >
+        and stand_name ${standNameOperator} #{standName}
+      </if>
+      <if test="standYear != null" >
+        and stand_year ${standYearOperator} #{standYear}
+      </if>
+      <if test="standNumber != null" >
+        and stand_number ${standNumberOperator} #{standNumber}
+      </if>
+      <if test="standCode != null" >
+        and stand_code ${standCodeOperator} #{standCode}
+      </if>
+      <if test="classifyCode != null" >
+        and classify_code ${classifyCodeOperator} #{classifyCode}
+      </if>
+      <if test="busStandSubclass != null" >
+        and bus_stand_subclass ${busStandSubclassOperator} #{busStandSubclass}
+      </if>
+      <if test="busStandClassify != null" >
+        and bus_stand_classify ${busStandClassifyOperator} #{busStandClassify}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarBusSarCompileEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_BUS_SAR_COMPILE.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_BUS_SAR_COMPILE(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{dutyUnit, jdbcType=VARCHAR}, #{replaceStandNum, jdbcType=VARCHAR}, #{remarks, jdbcType=CLOB}, #{putYear, jdbcType=VARCHAR}, #{putTime, jdbcType=TIMESTAMP}, #{issueTime, jdbcType=TIMESTAMP}, #{standName, jdbcType=VARCHAR}, #{standYear, jdbcType=VARCHAR}, #{standNumber, jdbcType=VARCHAR}, #{standCode, jdbcType=VARCHAR}, #{classifyCode, jdbcType=VARCHAR}, #{busStandSubclass, jdbcType=VARCHAR}, #{busStandClassify, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarBusSarCompileEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_BUS_SAR_COMPILE.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_BUS_SAR_COMPILE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="creationUser != null" >creation_user,</if>
+                <if test="dutyUnit != null" >duty_unit,</if>
+                <if test="replaceStandNum != null" >replace_stand_num,</if>
+                <if test="remarks != null" >remarks,</if>
+                <if test="putYear != null" >put_year,</if>
+                <if test="putTime != null" >put_time,</if>
+                <if test="issueTime != null" >issue_time,</if>
+                <if test="standName != null" >stand_name,</if>
+                <if test="standYear != null" >stand_year,</if>
+                <if test="standNumber != null" >stand_number,</if>
+                <if test="standCode != null" >stand_code,</if>
+                <if test="classifyCode != null" >classify_code,</if>
+                <if test="busStandSubclass != null" >bus_stand_subclass,</if>
+                <if test="busStandClassify != null" >bus_stand_classify,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="creationUser != null" >#{creationUser, jdbcType=VARCHAR},</if>
+                <if test="dutyUnit != null" >#{dutyUnit, jdbcType=VARCHAR},</if>
+                <if test="replaceStandNum != null" >#{replaceStandNum, jdbcType=VARCHAR},</if>
+                <if test="remarks != null" >#{remarks, jdbcType=CLOB},</if>
+                <if test="putYear != null" >#{putYear, jdbcType=VARCHAR},</if>
+                <if test="putTime != null" >#{putTime, jdbcType=TIMESTAMP},</if>
+                <if test="issueTime != null" >#{issueTime, jdbcType=TIMESTAMP},</if>
+                <if test="standName != null" >#{standName, jdbcType=VARCHAR},</if>
+                <if test="standYear != null" >#{standYear, jdbcType=VARCHAR},</if>
+                <if test="standNumber != null" >#{standNumber, jdbcType=VARCHAR},</if>
+                <if test="standCode != null" >#{standCode, jdbcType=VARCHAR},</if>
+                <if test="classifyCode != null" >#{classifyCode, jdbcType=VARCHAR},</if>
+                <if test="busStandSubclass != null" >#{busStandSubclass, jdbcType=VARCHAR},</if>
+                <if test="busStandClassify != null" >#{busStandClassify, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarBusSarCompileEO" >
+    update SAR_BUS_SAR_COMPILE
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            creation_user = #{creationUser},
+            duty_unit = #{dutyUnit},
+            replace_stand_num = #{replaceStandNum},
+            remarks = #{remarks},
+            put_year = #{putYear},
+            put_time = #{putTime},
+            issue_time = #{issueTime},
+            stand_name = #{standName},
+            stand_year = #{standYear},
+            stand_number = #{standNumber},
+            stand_code = #{standCode},
+            classify_code = #{classifyCode},
+            bus_stand_subclass = #{busStandSubclass},
+            bus_stand_classify = #{busStandClassify}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarBusSarCompileEO" >
+    update SAR_BUS_SAR_COMPILE
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="creationUser != null" >
+        creation_user = #{creationUser},
+      </if>
+      <if test="dutyUnit != null" >
+        duty_unit = #{dutyUnit},
+      </if>
+      <if test="replaceStandNum != null" >
+        replace_stand_num = #{replaceStandNum},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks},
+      </if>
+      <if test="putYear != null" >
+        put_year = #{putYear},
+      </if>
+      <if test="putTime != null" >
+        put_time = #{putTime},
+      </if>
+      <if test="issueTime != null" >
+        issue_time = #{issueTime},
+      </if>
+      <if test="standName != null" >
+        stand_name = #{standName},
+      </if>
+      <if test="standYear != null" >
+        stand_year = #{standYear},
+      </if>
+      <if test="standNumber != null" >
+        stand_number = #{standNumber},
+      </if>
+      <if test="standCode != null" >
+        stand_code = #{standCode},
+      </if>
+      <if test="classifyCode != null" >
+        classify_code = #{classifyCode},
+      </if>
+      <if test="busStandSubclass != null" >
+        bus_stand_subclass = #{busStandSubclass},
+      </if>
+      <if test="busStandClassify != null" >
+        bus_stand_classify = #{busStandClassify},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_BUS_SAR_COMPILE -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_BUS_SAR_COMPILE
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_BUS_SAR_COMPILE
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_BUS_SAR_COMPILE 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_BUS_SAR_COMPILE
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_BUS_SAR_COMPILE列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_BUS_SAR_COMPILE
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_BUS_SAR_COMPILE
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

@@ -49,7 +49,7 @@ public class MenuEOService extends BaseService<MenuEO, String> {
 	 */
 	public MenuEO insertMenu(MenuEO menuEO) throws Exception {
 		menuEO.setId(UUID.randomUUID(10));
-		menuEO.setDelFlag(DeleteFlagEnum.NORMAL.getValue());
+		menuEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 		TreeEntity parent = menuEO.getParent();
 		if (parent != null) {
 			menuEO.setParentId(parent.getId());

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.search.dao.PartProductEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.search.entity.PartProductEO" >
+    <id column="id" property="id" />
+    <result column="corp_id" property="corpId" />
+    <result column="part_type" property="partType" />
+    <result column="part_name" property="partName" />
+    <result column="part_nummber" property="partNummber" />
+    <result column="risk_grade" property="riskGrade" />
+    <result column="suit_model" property="suitModel" />
+    <result column="moto_model" property="motoModel" />
+    <result column="moto_type" property="motoType" />
+    <result column="oem_code" property="oemCode" />
+    <result column="cert_number" property="certNumber" />
+    <result column="del_flag" property="delFlag" />
+    <result column="insert_time" property="insertTime" />
+    <result column="update_time" property="updateTime" />
+    <result column="corp_model" property="corpModel" />
+    <result column="part_sup" property="partSup" />
+    <result column="qr_code_status" property="qrCodeStatus" />
+  </resultMap>
+
+  <!-- PART_PRODUCT table all fields -->
+  <sql id="Base_Column_List" >
+     id, corp_id, part_type, part_name, part_nummber, risk_grade, suit_model, moto_model, moto_type, oem_code, cert_number, del_flag, insert_time, update_time, corp_model, part_sup, qr_code_status
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="corpId != null" >
+        and corp_id ${corpIdOperator} #{corpId}
+      </if>
+      <if test="partType != null" >
+        and part_type ${partTypeOperator} #{partType}
+      </if>
+      <if test="partName != null" >
+        and part_name ${partNameOperator} #{partName}
+      </if>
+      <if test="partNummber != null" >
+        and part_nummber ${partNummberOperator} #{partNummber}
+      </if>
+      <if test="riskGrade != null" >
+        and risk_grade ${riskGradeOperator} #{riskGrade}
+      </if>
+      <if test="suitModel != null" >
+        and suit_model ${suitModelOperator} #{suitModel}
+      </if>
+      <if test="motoModel != null" >
+        and moto_model ${motoModelOperator} #{motoModel}
+      </if>
+      <if test="motoType != null" >
+        and moto_type ${motoTypeOperator} #{motoType}
+      </if>
+      <if test="oemCode != null" >
+        and oem_code ${oemCodeOperator} #{oemCode}
+      </if>
+      <if test="certNumber != null" >
+        and cert_number ${certNumberOperator} #{certNumber}
+      </if>
+      <if test="delFlag != null" >
+        and del_flag ${delFlagOperator} #{delFlag}
+      </if>
+      <if test="insertTime != null" >
+        and insert_time ${insertTimeOperator} #{insertTime}
+      </if>
+      <if test="insertTime1 != null" >
+        and insert_time &gt;= #{insertTime1}
+      </if>
+      <if test="insertTime2 != null" >
+        and insert_time &lt;= #{insertTime2}
+      </if>
+      <if test="updateTime != null" >
+        and update_time ${updateTimeOperator} #{updateTime}
+      </if>
+      <if test="updateTime1 != null" >
+        and update_time &gt;= #{updateTime1}
+      </if>
+      <if test="updateTime2 != null" >
+        and update_time &lt;= #{updateTime2}
+      </if>
+      <if test="corpModel != null" >
+        and corp_model ${corpModelOperator} #{corpModel}
+      </if>
+      <if test="partSup != null" >
+        and part_sup ${partSupOperator} #{partSup}
+      </if>
+      <if test="qrCodeStatus != null" >
+        and qr_code_status ${qrCodeStatusOperator} #{qrCodeStatus}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.search.entity.PartProductEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_PART_PRODUCT.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into PART_PRODUCT(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=VARCHAR}, #{corpId, jdbcType=VARCHAR}, #{partType, jdbcType=VARCHAR}, #{partName, jdbcType=VARCHAR}, #{partNummber, jdbcType=VARCHAR}, #{riskGrade, jdbcType=VARCHAR}, #{suitModel, jdbcType=VARCHAR}, #{motoModel, jdbcType=VARCHAR}, #{motoType, jdbcType=VARCHAR}, #{oemCode, jdbcType=VARCHAR}, #{certNumber, jdbcType=VARCHAR}, #{delFlag, jdbcType=INTEGER}, #{insertTime, jdbcType=TIMESTAMP}, #{updateTime, jdbcType=TIMESTAMP}, #{corpModel, jdbcType=VARCHAR}, #{partSup, jdbcType=VARCHAR}, #{qrCodeStatus, jdbcType=INTEGER})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.search.entity.PartProductEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_PART_PRODUCT.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into PART_PRODUCT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="corpId != null" >corp_id,</if>
+                <if test="partType != null" >part_type,</if>
+                <if test="partName != null" >part_name,</if>
+                <if test="partNummber != null" >part_nummber,</if>
+                <if test="riskGrade != null" >risk_grade,</if>
+                <if test="suitModel != null" >suit_model,</if>
+                <if test="motoModel != null" >moto_model,</if>
+                <if test="motoType != null" >moto_type,</if>
+                <if test="oemCode != null" >oem_code,</if>
+                <if test="certNumber != null" >cert_number,</if>
+                <if test="delFlag != null" >del_flag,</if>
+                <if test="insertTime != null" >insert_time,</if>
+                <if test="updateTime != null" >update_time,</if>
+                <if test="corpModel != null" >corp_model,</if>
+                <if test="partSup != null" >part_sup,</if>
+                <if test="qrCodeStatus != null" >qr_code_status,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+                <if test="corpId != null" >#{corpId, jdbcType=VARCHAR},</if>
+                <if test="partType != null" >#{partType, jdbcType=VARCHAR},</if>
+                <if test="partName != null" >#{partName, jdbcType=VARCHAR},</if>
+                <if test="partNummber != null" >#{partNummber, jdbcType=VARCHAR},</if>
+                <if test="riskGrade != null" >#{riskGrade, jdbcType=VARCHAR},</if>
+                <if test="suitModel != null" >#{suitModel, jdbcType=VARCHAR},</if>
+                <if test="motoModel != null" >#{motoModel, jdbcType=VARCHAR},</if>
+                <if test="motoType != null" >#{motoType, jdbcType=VARCHAR},</if>
+                <if test="oemCode != null" >#{oemCode, jdbcType=VARCHAR},</if>
+                <if test="certNumber != null" >#{certNumber, jdbcType=VARCHAR},</if>
+                <if test="delFlag != null" >#{delFlag, jdbcType=INTEGER},</if>
+                <if test="insertTime != null" >#{insertTime, jdbcType=TIMESTAMP},</if>
+                <if test="updateTime != null" >#{updateTime, jdbcType=TIMESTAMP},</if>
+                <if test="corpModel != null" >#{corpModel, jdbcType=VARCHAR},</if>
+                <if test="partSup != null" >#{partSup, jdbcType=VARCHAR},</if>
+                <if test="qrCodeStatus != null" >#{qrCodeStatus, jdbcType=INTEGER},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.search.entity.PartProductEO" >
+    update PART_PRODUCT
+       set  corp_id = #{corpId},
+            part_type = #{partType},
+            part_name = #{partName},
+            part_nummber = #{partNummber},
+            risk_grade = #{riskGrade},
+            suit_model = #{suitModel},
+            moto_model = #{motoModel},
+            moto_type = #{motoType},
+            oem_code = #{oemCode},
+            cert_number = #{certNumber},
+            del_flag = #{delFlag},
+            insert_time = #{insertTime},
+            update_time = #{updateTime},
+            corp_model = #{corpModel},
+            part_sup = #{partSup},
+            qr_code_status = #{qrCodeStatus}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.search.entity.PartProductEO" >
+    update PART_PRODUCT
+    <set >
+      <if test="corpId != null" >
+        corp_id = #{corpId},
+      </if>
+      <if test="partType != null" >
+        part_type = #{partType},
+      </if>
+      <if test="partName != null" >
+        part_name = #{partName},
+      </if>
+      <if test="partNummber != null" >
+        part_nummber = #{partNummber},
+      </if>
+      <if test="riskGrade != null" >
+        risk_grade = #{riskGrade},
+      </if>
+      <if test="suitModel != null" >
+        suit_model = #{suitModel},
+      </if>
+      <if test="motoModel != null" >
+        moto_model = #{motoModel},
+      </if>
+      <if test="motoType != null" >
+        moto_type = #{motoType},
+      </if>
+      <if test="oemCode != null" >
+        oem_code = #{oemCode},
+      </if>
+      <if test="certNumber != null" >
+        cert_number = #{certNumber},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag},
+      </if>
+      <if test="insertTime != null" >
+        insert_time = #{insertTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="corpModel != null" >
+        corp_model = #{corpModel},
+      </if>
+      <if test="partSup != null" >
+        part_sup = #{partSup},
+      </if>
+      <if test="qrCodeStatus != null" >
+        qr_code_status = #{qrCodeStatus},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 PART_PRODUCT -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from PART_PRODUCT
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PART_PRODUCT
+     where id = #{value}
+
+  </delete>
+
+  <!-- PART_PRODUCT 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from PART_PRODUCT
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询PART_PRODUCT列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from PART_PRODUCT
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from PART_PRODUCT
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

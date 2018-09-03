@@ -17,9 +17,66 @@ public class CodeUtil {
 
 
 
-        entityPackage = "project";
+        entityPackage = "lawss";
 
-        DbCodeGenerateFactory.codeGenerate("PART_PRODUCT", entityPackage);
+
+        DbCodeGenerateFactory.codeGenerate("MSG_BROWSE_INFO", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("MSG_DYNAMIC_INFO", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("MSG_FILE", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("MSG_MODULE", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("MSG_SAR_PUT_TIME", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("OT_CONVERT_MQ", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("OT_STAND_ITEM", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BROWSE_INFO", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUS_SAR_COMPILE", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUSS_STAND_FILE", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUSS_STAND_ITEM_VAL", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUSS_STAND_ITEMS", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUSS_STAND_MENU", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUSS_STAND_PLAN", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUSS_STAND_RES", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUSS_STAND_VAL", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_BUSSIONESS_STAND", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_LAWS_FILE", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_LAWS_INFO", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_LAWS_ITEM_VAL", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_LAWS_MENU", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_LAWS_RES", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_LAWS_VAL", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_MENU", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_INFO", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_LAWS", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_STAND", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_TEST", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_VAL", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_SAR_ACCESS", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_SAR_ACCESS_INFO", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_STAND_FILE", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_STAND_ITEM_VAL", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_STAND_ITEMS", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_STAND_MENU", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_STAND_RES", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_STAND_VAL", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_STANDARDS_INFO", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_TEST_ITEM", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_TEST_ITEM_VAL", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("UT_CAR_CCC", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("UT_CAR_ENVIRON", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("UT_CAR_EXEMPTION", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("UT_CAR_EXPAND", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("UT_CAR_NOTICE", entityPackage);
+
+
+
+
+
+
+
+
+
+
+
+
 //        DbCodeGenerateFactory.codeGenerate("TS_ROLE", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_MENU", entityPackage);
 

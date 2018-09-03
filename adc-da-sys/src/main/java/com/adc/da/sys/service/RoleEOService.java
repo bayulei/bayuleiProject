@@ -45,9 +45,9 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 	
 	public RoleEO save(RoleEO sysRoleEO) {
 		sysRoleEO.setId(UUID.randomUUID10());
-		sysRoleEO.setDelFlag(DeleteFlagEnum.NORMAL.getValue());
-		sysRoleEO.setInsertTime(new Date());
-		sysRoleEO.setUpdateTime(new Date());
+		sysRoleEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
+		sysRoleEO.setCreationTime(new Date());
+		sysRoleEO.setModifyTime(new Date());
 		dao.insertSelective(sysRoleEO);
 		return sysRoleEO;
 	}

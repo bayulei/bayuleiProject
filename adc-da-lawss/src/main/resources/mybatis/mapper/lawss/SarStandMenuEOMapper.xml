@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarStandMenuEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarStandMenuEO" >
+    <id column="id" property="id" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="menu_id" property="menuId" />
+    <result column="stand_id" property="standId" />
+  </resultMap>
+
+  <!-- SAR_STAND_MENU table all fields -->
+  <sql id="Base_Column_List" >
+     valid_flag, menu_id, stand_id, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="menuId != null" >
+        and menu_id ${menuIdOperator} #{menuId}
+      </if>
+      <if test="standId != null" >
+        and stand_id ${standIdOperator} #{standId}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarStandMenuEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_STAND_MENU.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_STAND_MENU(<include refid="Base_Column_List" />)
+    values (#{validFlag, jdbcType=INTEGER}, #{menuId, jdbcType=VARCHAR}, #{standId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarStandMenuEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_STAND_MENU.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_STAND_MENU
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="menuId != null" >menu_id,</if>
+                <if test="standId != null" >stand_id,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="menuId != null" >#{menuId, jdbcType=VARCHAR},</if>
+                <if test="standId != null" >#{standId, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarStandMenuEO" >
+    update SAR_STAND_MENU
+       set  valid_flag = #{validFlag},
+            menu_id = #{menuId},
+            stand_id = #{standId}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarStandMenuEO" >
+    update SAR_STAND_MENU
+    <set >
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="menuId != null" >
+        menu_id = #{menuId},
+      </if>
+      <if test="standId != null" >
+        stand_id = #{standId},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_STAND_MENU -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_STAND_MENU
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_STAND_MENU
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_STAND_MENU 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_STAND_MENU
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_STAND_MENU列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_STAND_MENU
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_STAND_MENU
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

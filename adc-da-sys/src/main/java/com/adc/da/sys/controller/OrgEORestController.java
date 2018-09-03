@@ -90,11 +90,11 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		String userId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 		if(userId != null && !userId.isEmpty()){
 			UserEO getUser = userEOService.selectOrgByPrimaryKey(userId);
-			if(getUser != null){
+			/*if(getUser != null){
 				if(!("").equals(getUser.getUseCorpId()) && getUser.getUseCorpId() != null){
 					orgEO.setCorpId(getUser.getUseCorpId());
 				}
-			}
+			}*/
 		}
 		List<OrgEO> eos = orgEOService.selectOrgAllNode(orgEO);
 		return Result.success(eos);

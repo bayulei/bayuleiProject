@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarBussStandFileEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarBussStandFileEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="use_module" property="useModule" />
+    <result column="att_id" property="attId" />
+    <result column="res_id" property="resId" />
+    <result column="stand_id" property="standId" />
+  </resultMap>
+
+  <!-- SAR_BUSS_STAND_FILE table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, use_module, att_id, res_id, stand_id, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="useModule != null" >
+        and use_module ${useModuleOperator} #{useModule}
+      </if>
+      <if test="attId != null" >
+        and att_id ${attIdOperator} #{attId}
+      </if>
+      <if test="resId != null" >
+        and res_id ${resIdOperator} #{resId}
+      </if>
+      <if test="standId != null" >
+        and stand_id ${standIdOperator} #{standId}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarBussStandFileEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_BUSS_STAND_FILE.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_BUSS_STAND_FILE(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{useModule, jdbcType=VARCHAR}, #{attId, jdbcType=VARCHAR}, #{resId, jdbcType=VARCHAR}, #{standId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarBussStandFileEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_BUSS_STAND_FILE.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_BUSS_STAND_FILE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="useModule != null" >use_module,</if>
+                <if test="attId != null" >att_id,</if>
+                <if test="resId != null" >res_id,</if>
+                <if test="standId != null" >stand_id,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="useModule != null" >#{useModule, jdbcType=VARCHAR},</if>
+                <if test="attId != null" >#{attId, jdbcType=VARCHAR},</if>
+                <if test="resId != null" >#{resId, jdbcType=VARCHAR},</if>
+                <if test="standId != null" >#{standId, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarBussStandFileEO" >
+    update SAR_BUSS_STAND_FILE
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            use_module = #{useModule},
+            att_id = #{attId},
+            res_id = #{resId},
+            stand_id = #{standId}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarBussStandFileEO" >
+    update SAR_BUSS_STAND_FILE
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="useModule != null" >
+        use_module = #{useModule},
+      </if>
+      <if test="attId != null" >
+        att_id = #{attId},
+      </if>
+      <if test="resId != null" >
+        res_id = #{resId},
+      </if>
+      <if test="standId != null" >
+        stand_id = #{standId},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_BUSS_STAND_FILE -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_BUSS_STAND_FILE
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_BUSS_STAND_FILE
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_BUSS_STAND_FILE 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_BUSS_STAND_FILE
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_BUSS_STAND_FILE列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_BUSS_STAND_FILE
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_BUSS_STAND_FILE
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

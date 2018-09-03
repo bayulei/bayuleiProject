@@ -5,19 +5,17 @@
 	<resultMap id="BaseResultMap" type="com.adc.da.sys.entity.UserEO">
 		<id column="usid" property="usid" />
 		<result column="account" property="account" />
-		<result column="del_flag" property="delFlag" />
+		<result column="valid_flag" property="validFlag" />
 		<result column="password" property="password" />
-		<result column="usname" property="usname" />
+		<result column="uname" property="uname" />
 		<result column="ext_info" property="extInfo" />
 		<result column="dept_name" property="deptName" />
 		<result column="orgUseName" property="orgUseName" />
 		<result column="useCorpId" property="useCorpId" />
 		<result column="email" property="email" />
 		<result column="work_num" property="workNum" />
-		<result column="insert_time" property="insertTime" />
-		<result column="update_time" property="updateTime" />
-
-		<result column="corpName" property="corpName" />
+		<result column="creation_time" property="creationTime" />
+		<result column="modify_time" property="modifyTime" />
 		<result column="type" property="type" />
 		<result column="userRoleName" property="userRoleName" />
 		<result column="roleExtInfo" property="roleExtInfo" />
@@ -26,14 +24,14 @@
 
 	<!-- TS_USER table all fields -->
 	<sql id="Base_Column_List">
-		usid, account, del_flag, password, usname, ext_info,email,work_num,insert_time,update_time
+		usid, account, valid_flag, password, uname, ext_info,email,work_num,creation_time,modify_time
 	</sql>
 
 	<resultMap id="UserRoleMap" extends="BaseResultMap" type="com.adc.da.sys.entity.UserEO">
 		<collection property="roleEOList" ofType="com.adc.da.sys.entity.RoleEO">
 			<id column="id" property="id" />
 			<result column="data_scope" property="dataScope" />
-			<result column="r_delFlag" property="delFlag" />
+			<result column="r_validFlag" property="validFlag" />
 			<result column="is_default" property="isDefault" />
 			<result column="name" property="name" />
 			<result column="remarks" property="remarks" />
@@ -48,7 +46,7 @@
 			<result column="org_parent_id" property="parentId" />
 			<result column="org_remarks" property="remarks" />
 			<result column="org_isshow" property="isShow" />
-			<result column="org_delFlag" property="delFlag" />
+			<result column="org_validFlag" property="validFlag" />
 			<result column="org_parentIds" property="parentIds" />
 		</collection>
 	</resultMap>
@@ -58,7 +56,7 @@
 	<sql id="User_Role_List">
 		u.*, r.id as id,
 		r.data_scope as dataScope,
-		r.del_flag as r_delFlag,
+		r.valid_flag as r_validFlag,
 		r.is_default as isDefault,
 		r.name as name,
 		r.remarks as remarks,
@@ -71,7 +69,7 @@
 		ORG.PARENT_ID AS org_parent_id,
 		ORG.REMARKS AS org_remarks,
 		ORG.IS_SHOW AS org_isshow,
-		ORG.DEL_FLAG AS org_delFlag,
+		ORG.valid_flag AS org_validFlag,
 		ORG.PARENT_IDS AS org_parentIds
 	</sql>
 
@@ -88,8 +86,8 @@
 			<if test="password != null">
 				and u0.password ${passwordOperator} #{password}
 			</if>
-			<if test="usname != null">
-				and u0.usname ${usnameOperator} ${usname}
+			<if test="uname != null">
+				and u0.uname ${unameOperator} ${uname}
 			</if>
 			<if test="workNum != null" >
 				and u0.work_num ${workNumOperator} ${workNum}
@@ -114,7 +112,7 @@
 	<update id="updateUserEO" parameterType="com.adc.da.sys.entity.UserEO">
 		update TS_USER
 		<set>
-			usname = #{usname}
+			uname = #{uname}
 		</set>
 		where usid = #{usid}
 	</update>
@@ -148,7 +146,7 @@
 
 	<update id="deleteLogicInBatch" parameterType="java.util.List">
 		update TS_USER
-		set del_flag = 1
+		set valid_flag = 1
 		where usid in
 		<foreach item="usid" collection="list" open="(" separator=","
 			close=")" index="index">
@@ -179,7 +177,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_USER
-		where account = #{account} AND del_flag=0
+		where account = #{account} AND valid_flag=0
 	</select>
 
 	<select id="getUserWithRoles" resultMap="UserRoleMap" parameterType="java.lang.String">
@@ -206,16 +204,16 @@
 		insert into TS_USER(
 		<include refid="Base_Column_List" />
 		)
-		values (#{usid}, #{account}, #{delFlag}, #{password}, #{usname}, #{extInfo},#{email},#{workNum},#{insertTime},#{updateTime})
+		values (#{usid}, #{account}, #{validFlag}, #{password}, #{uname}, #{extInfo},#{email},#{workNum},#{creationTime},#{modifyTime})
 	</insert>
 
 	<!-- 根据pk，修改记录 -->
 	<update id="updateByPrimaryKey" parameterType="com.adc.da.sys.entity.UserEO">
 		update TS_USER
 		set account = #{account},
-		del_flag = #{delFlag},
+		valid_flag = #{validFlag},
 		password = #{password},
-		usname = #{usname},
+		uname = #{uname},
 		where usid = #{usid}
 	</update>
 
@@ -223,8 +221,8 @@
 	<update id="updateByPrimaryKeySelective" parameterType="com.adc.da.sys.entity.UserEO">
 		update TS_USER
 		<set>
-			<if test="usname != null">
-				usname = #{usname},
+			<if test="uname != null">
+				uname = #{uname},
 			</if>
 			<if test="account != null">
 				account = #{account},
@@ -238,8 +236,8 @@
 			<if test="email != null" >
 				email = #{email},
 			</if>
-			<if test="updateTime != null" >
-				update_time = #{updateTime},
+			<if test="modifyTime != null" >
+				modify_time = #{modifyTime},
 			</if>
 			<if test="extInfo != null" >
 				ext_info = #{extInfo}
@@ -280,7 +278,7 @@
 		left join TR_USER_ORG UORG0 on u0.usid = UORG0.user_id
 		left join TS_ORG ORG0 on UORG0.org_id = ORG0.id
 		<include refid="Base_Where_Clause" />
-		and u0.del_flag != 1
+		and u0.valid_flag != 1
 	</select>
 
 	<!-- 查询TS_USER列表 -->
@@ -293,7 +291,7 @@
 			   left join TR_USER_ORG UORG0 on u0.usid = UORG0.user_id
 			   left join TS_ORG ORG0 on UORG0.org_id = ORG0.id
 			   <include refid="Base_Where_Clause"/>
-			   and u0.del_flag != 1
+			   and u0.valid_flag != 1
 			   <if test="pager.orderCondition != null and pager.orderCondition != ''" >
 			 	  ${pager.orderCondition}
 			   </if>
@@ -321,11 +319,11 @@
 	<select id="selectOrgByPrimaryKey" resultMap="BaseResultMap"
 			parameterType="java.lang.String">
 		select
-		  TS_USER.usid,TS_USER.usname,TS_ORG.org_name as orgUseName,TS_ORG.corp_id as useCorpId,SYS_CORP.corp_type as corpType
+		  TS_USER.usid,TS_USER.uname,TS_ORG.org_name as orgUseName,TS_ORG.corp_id as useCorpId,SYS_CORP.corp_type as corpType
 		from TR_USER_ORG right join TS_USER on TS_USER.usid = TR_USER_ORG.user_id
 			left join TS_ORG on TR_USER_ORG.org_id = TS_ORG.id
 			left join SYS_CORP on TS_ORG.corp_id = SYS_CORP.id
-		where TS_USER.del_flag = 0 and TS_USER.usid = #{value}
+		where TS_USER.valid_flag = 0 and TS_USER.usid = #{value}
 	</select>
 
 	<!--根据当前登录用户id查询个人角色信息-->
@@ -335,7 +333,7 @@
 		TS_ROLE.name as userRoleName,TS_ROLE.ext_info as roleExtInfo
 		from TR_USER_ROLE right join TS_USER on TS_USER.usid = TR_USER_ROLE.user_id
 		left join TS_ROLE on TR_USER_ROLE.role_id = TS_ROLE.id
-		where TS_USER.del_flag = 0 and TS_ROLE.del_flag = 0 and TS_USER.usid = #{value}
+		where TS_USER.valid_flag = 0 and TS_ROLE.valid_flag = 0 and TS_USER.usid = #{value}
 	</select>
 
 	<select id="selectByUnameAndPwd" resultMap="BaseResultMap"
@@ -344,7 +342,7 @@
 		from TS_USER  LEFT JOIN TR_USER_ORG  ON  TS_USER.USID = TR_USER_ORG.USER_ID
 			  LEFT JOIN  TS_ORG   ON  TR_USER_ORG.ORG_ID = TS_ORG.ID
 			  LEFT JOIN  SYS_CORP  ON  SYS_CORP.ID = TS_ORG.CORP_ID
-		where TS_USER.DEL_FLAG = 0 and account = #{account}
+		where TS_USER.valid_flag = 0 and account = #{account}
 	</select>
 	
 	<select id="findBySetOrgCount" resultType="java.lang.Integer"
@@ -352,18 +350,18 @@
 		SELECT count(1) 
 			FROM TS_USER tu 
 			LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
-		WHERE tu.DEL_FLAG = '0' AND tuo.user_id is null
+		WHERE tu.valid_flag = '0' AND tuo.user_id is null
 	</select>
 	<select id="findBySetOrg"  resultMap="BaseUserRoleMap"
 			parameterType="com.adc.da.base.page.BasePage">
 		SELECT * FROM 
 			(SELECT  tmp_tb.* , rownum rn FROM 
-				(SELECT tu.usid, tu.usname, tu.account, tu.work_num AS workNum, tu.email, 
-					tu.update_time AS updateTime 
+				(SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email, 
+					tu.modify_time AS modifyTime 
 						FROM TS_USER tu 
 						LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
-					WHERE tu.DEL_FLAG = 0 AND tuo.user_id is null
-					order by tu.update_time desc
+					WHERE tu.valid_flag = 0 AND tuo.user_id is null
+					order by tu.modify_time desc
 				) tmp_tb WHERE rownum &lt;= ${pager.endIndex}
 			) WHERE rn &gt;= ${pager.startIndex}
 	</select>
@@ -373,22 +371,22 @@
 			parameterType="com.adc.da.base.page.BasePage">
 		SELECT count(1) 
 			FROM (
-		SELECT tu.usid, tu.usname, tu.account, tu.work_num AS workNum, tu.email, tu.ext_info,
-		tu.update_time AS updateTime, tso.org_name AS orgUseName, tso.id AS deptId
+		SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email, tu.ext_info,
+		tu.modify_time AS modifyTime, tso.org_name AS orgUseName, tso.id AS deptId
 		FROM TS_USER tu
 		LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
-		LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.DEL_FLAG = 0
+		LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.valid_flag = 0
 		LEFT JOIN TR_USER_ROLE tur ON tur.user_id = tu.usid
 		LEFT JOIN TS_ROLE tr ON tr.id = tur.role_id
-		WHERE tu.DEL_FLAG = '0'
+		WHERE tu.valid_flag = '0'
 		<if test="useCorpId != null and useCorpId != ''">
 			and tuo.org_id = #{useCorpId}
 		</if>
 		<if test="getCorpId != null and getCorpId != ''" >
 			and (tso.CORP_ID = #{getCorpId} or tso.CORP_ID = null)
 		</if>
-		<if test="usname != null and usname != ''" >
-			and tu.usname like #{usname}
+		<if test="uname != null and uname != ''" >
+			and tu.uname like #{uname}
 		</if>
 		<if test="deptId != null and deptId != ''">
 			and tso.id = #{deptId}
@@ -399,16 +397,16 @@
 		UNION (
 		SELECT
 		tu.usid,
-		tu.usname,
+		tu.uname,
 		tu.account,
 		tu.work_num AS workNum,
 		tu.email,
 		tu.ext_info,
-		tu.update_time AS updateTime,null,null
+		tu.modify_time AS modifyTime,null,null
 		FROM
-		TS_USER tu  where tu.DEL_FLAG = 0 and NOT EXISTS (select * from TR_USER_ORG tuo where tuo.user_id = tu.usid)
-		<if test="usname != null and usname != ''" >
-			and tu.usname like #{usname}
+		TS_USER tu  where tu.valid_flag = 0 and NOT EXISTS (select * from TR_USER_ORG tuo where tuo.user_id = tu.usid)
+		<if test="uname != null and uname != ''" >
+			and tu.uname like #{uname}
 		</if>
 		))
 	</select>
@@ -417,22 +415,22 @@
 		SELECT * FROM
 		(SELECT tmp_tb.* , rownum rn FROM (
 		SELECT * FROM
-		(SELECT tu.usid, tu.usname, tu.account, tu.work_num AS workNum, tu.email, tu.ext_info,
-		tu.update_time AS updateTime, tso.org_name AS orgUseName, tso.id AS deptId
+		(SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email, tu.ext_info,
+		tu.modify_time AS modifyTime, tso.org_name AS orgUseName, tso.id AS deptId
 		FROM TS_USER tu
 		LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
-		LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.DEL_FLAG = 0
+		LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.valid_flag = 0
 		LEFT JOIN TR_USER_ROLE tur ON tur.user_id = tu.usid
 		LEFT JOIN TS_ROLE tr ON tr.id = tur.role_id
-		WHERE tu.DEL_FLAG = '0'
+		WHERE tu.valid_flag = '0'
 		<if test="useCorpId != null and useCorpId != ''">
 			and tuo.org_id = #{useCorpId}
 		</if>
 					<if test="getCorpId != null and getCorpId != ''" >
 						and (tso.CORP_ID = #{getCorpId} or tso.CORP_ID = null)
 					</if>
-					<if test="usname != null and usname != ''" >
-						and tu.usname like #{usname}  
+					<if test="uname != null and uname != ''" >
+						and tu.uname like #{uname}  
 					</if>
 					<if test="deptId != null and deptId != ''">
 						and tso.id = #{deptId}
@@ -443,19 +441,19 @@
 						UNION (
 						SELECT
 						tu.usid,
-						tu.usname,
+						tu.uname,
 						tu.account,
 						tu.work_num AS workNum,
 						tu.email,
 						tu.ext_info,
-						tu.update_time AS updateTime,null,null
+						tu.modify_time AS modifyTime,null,null
 						FROM
-						TS_USER tu  where tu.DEL_FLAG = 0 and NOT EXISTS (select * from TR_USER_ORG tuo where tuo.user_id = tu.usid)
-						<if test="usname != null and usname != ''" >
-							and tu.usname like #{usname}
+						TS_USER tu  where tu.valid_flag = 0 and NOT EXISTS (select * from TR_USER_ORG tuo where tuo.user_id = tu.usid)
+						<if test="uname != null and uname != ''" >
+							and tu.uname like #{uname}
 						</if>
 						) )getAll
-					order by getAll.updateTime desc
+					order by getAll.modifyTime desc
 				) tmp_tb WHERE rownum &lt;= ${pager.endIndex}
 			) WHERE rn &gt;= ${pager.startIndex}
 	</select>
@@ -467,9 +465,9 @@
 			LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
 			LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id
 			LEFT JOIN TR_USER_ROLE tur ON tur.user_id = tu.usid
-		WHERE tu.DEL_FLAG = '0' and tuo.org_id in (${useCorpId})
-			<if test="usname != null and usname != ''" >
-				and tu.usname like  #{usname} 
+		WHERE tu.valid_flag = '0' and tuo.org_id in (${useCorpId})
+			<if test="uname != null and uname != ''" >
+				and tu.uname like  #{uname} 
 			</if>
 			<if test="deptId != null and deptId != ''">
 				and tso.id = #{deptId}
@@ -483,15 +481,15 @@
 			parameterType="com.adc.da.base.page.BasePage">
 		SELECT * FROM 
 			(SELECT  tmp_tb.* , rownum rn FROM 
-				(SELECT tu.usid, tu.usname, tu.account, tu.work_num AS workNum, tu.email, 
-					tu.update_time AS updateTime, tso.org_name AS orgUseName, tso.id AS deptId  
+				(SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email, 
+					tu.modify_time AS modifyTime, tso.org_name AS orgUseName, tso.id AS deptId  
 					FROM TS_USER tu 
 					LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
-					LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.DEL_FLAG = 0
+					LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.valid_flag = 0
 					LEFT JOIN TR_USER_ROLE tur ON tur.user_id = tu.usid
-				WHERE tu.DEL_FLAG = '0' and tuo.org_id in (${useCorpId})
-					<if test="usname != null and usname != ''" >
-						and tu.usname like #{usname}  
+				WHERE tu.valid_flag = '0' and tuo.org_id in (${useCorpId})
+					<if test="uname != null and uname != ''" >
+						and tu.uname like #{uname}  
 					</if>
 					<if test="deptId != null and deptId != ''">
 						and tso.id = #{deptId}
@@ -499,8 +497,8 @@
 					<if test="roleId != null and roleId != ''">
 						and tur.role_id = #{roleId}
 					</if>
-					GROUP BY tu.usid,tu.usname,tu.ACCOUNT,tu.work_num,tu.email,tu.update_time,tso.org_name,tso.ID 
-					order by tu.update_time desc 
+					GROUP BY tu.usid,tu.uname,tu.ACCOUNT,tu.work_num,tu.email,tu.modify_time,tso.org_name,tso.ID 
+					order by tu.modify_time desc 
 				) tmp_tb WHERE rownum &lt;= ${pager.endIndex}
 			) WHERE rn &gt;= ${pager.startIndex}
 	</select>
@@ -510,20 +508,20 @@
 		SELECT TS_ORG.org_name as orgUseName
 		FROM TS_USER LEFT JOIN TR_USER_ORG ON TS_USER.USID = TR_USER_ORG.USER_ID
 		LEFT JOIN TS_ORG ON TR_USER_ORG.ORG_ID = TS_ORG.ID
-		WHERE TS_USER.del_flag = 0 and TS_ORG.del_flag = 0 and TS_USER.account = #{account}
+		WHERE TS_USER.valid_flag = 0 and TS_ORG.valid_flag = 0 and TS_USER.account = #{account}
 	</select>
 
 	<resultMap id="BaseUserRoleMap" type="com.adc.da.sys.entity.UserEO">
 		<id column="usid" property="usid" />
 		<result column="account" property="account" />
-		<result column="usname" property="usname" />
+		<result column="uname" property="uname" />
 		<result column="ext_info" property="extInfo" />
 		<result column="dept_name" property="deptName" />
 		<result column="orgUseName" property="orgUseName" />
 		<result column="useCorpId" property="useCorpId" />
 		<result column="email" property="email" />
 		<result column="work_num" property="workNum" />
-		<result column="update_time" property="updateTime" />
+		<result column="modify_time" property="modifyTime" />
 		<result column="corpName" property="corpName" />
 		<result column="type" property="type" />
 		<collection property="roleEOList" column="usid" javaType="ArrayList" 

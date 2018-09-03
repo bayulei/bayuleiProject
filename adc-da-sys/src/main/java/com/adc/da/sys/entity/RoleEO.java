@@ -1,69 +1,66 @@
 package com.adc.da.sys.entity;
 
-import java.io.Serializable;
+import com.adc.da.base.entity.BaseEntity;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.adc.da.base.entity.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-
 /**
  * <b>功能：</b>TS_ROLE RoleEOEntity<br>
  * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2017-12-21 <br>
+ * <b>日期：</b> 2018-09-03 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
-public class RoleEO extends BaseEntity implements Serializable{
+public class RoleEO extends BaseEntity {
 
-	private static final long serialVersionUID = -1386892031737294731L;
-
-	private Integer isDefault;
-    private Integer delFlag;
-    private Integer dataScope;
-    private String id;
+    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date modifyTime;
+    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date creationTime;
+    private Integer validFlag;
+    private String operUser;
+    private Object extInfo;
     private String remarks;
-    private String name;
-    // 扩展字段
-    private String extInfo;
-    
+    private Integer isDefault;
     private Integer useFlag;
-    private String oprUser;
-    private String operUserName;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date insertTime;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
-    
+    private String roleType;
+    private String name;
+    private String id;
+
     private List<MenuEO> menuEOList = new ArrayList<>();
     private List<String> menuEOIdList = new ArrayList<>();
-
+    
+    
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
-     * <li>isDefault -> is_default</li>
-     * <li>delFlag -> del_flag</li>
-     * <li>dataScope -> data_scope</li>
-     * <li>id -> id</li>
+     * <li>modifyTime -> modify_time</li>
+     * <li>creationTime -> creation_time</li>
+     * <li>validFlag -> valid_flag</li>
+     * <li>operUser -> oper_user</li>
      * <li>extInfo -> ext_info</li>
      * <li>remarks -> remarks</li>
+     * <li>isDefault -> is_default</li>
+     * <li>useFlag -> use_flag</li>
+     * <li>roleType -> role_type</li>
      * <li>name -> name</li>
+     * <li>id -> id</li>
      */
     public static String fieldToColumn(String fieldName) {
         if (fieldName == null) return null;
         switch (fieldName) {
-            case "isDefault": return "is_default";
-            case "delFlag": return "del_flag";
-            case "dataScope": return "data_scope";
-            case "id": return "id";
+            case "modifyTime": return "modify_time";
+            case "creationTime": return "creation_time";
+            case "validFlag": return "valid_flag";
+            case "operUser": return "oper_user";
             case "extInfo": return "ext_info";
             case "remarks": return "remarks";
-            case "name": return "name";
+            case "isDefault": return "is_default";
             case "useFlag": return "use_flag";
-            case "oprUser": return "opr_user";
-            case "insertTime": return "insert_time";
-            case "updateTime": return "update_time";
+            case "roleType": return "role_type";
+            case "name": return "name";
+            case "id": return "id";
             default: return null;
         }
     }
@@ -71,79 +68,83 @@ public class RoleEO extends BaseEntity implements Serializable{
     /**
      * 原始数据库列名转换为java字段名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
-     * <li>is_default -> isDefault</li>
-     * <li>del_flag -> delFlag</li>
-     * <li>data_scope -> dataScope</li>
-     * <li>id -> id</li>
+     * <li>modify_time -> modifyTime</li>
+     * <li>creation_time -> creationTime</li>
+     * <li>valid_flag -> validFlag</li>
+     * <li>oper_user -> operUser</li>
      * <li>ext_info -> extInfo</li>
      * <li>remarks -> remarks</li>
+     * <li>is_default -> isDefault</li>
+     * <li>use_flag -> useFlag</li>
+     * <li>role_type -> roleType</li>
      * <li>name -> name</li>
+     * <li>id -> id</li>
      */
     public static String columnToField(String columnName) {
         if (columnName == null) return null;
         switch (columnName) {
-            case "is_default": return "isDefault";
-            case "del_flag": return "delFlag";
-            case "data_scope": return "dataScope";
-            case "id": return "id";
+            case "modify_time": return "modifyTime";
+            case "creation_time": return "creationTime";
+            case "valid_flag": return "validFlag";
+            case "oper_user": return "operUser";
             case "ext_info": return "extInfo";
             case "remarks": return "remarks";
-            case "name": return "name";
+            case "is_default": return "isDefault";
             case "use_flag": return "useFlag";
-            case "opr_user": return "oprUser";
-            case "insert_time": return "insertTime";
-            case "update_time": return "updateTime";
+            case "role_type": return "roleType";
+            case "name": return "name";
+            case "id": return "id";
             default: return null;
         }
     }
     
     /**  **/
-    public Integer getIsDefault() {
-        return this.isDefault;
+    public Date getModifyTime() {
+        return this.modifyTime;
     }
 
     /**  **/
-    public void setIsDefault(Integer isDefault) {
-        this.isDefault = isDefault;
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
     }
 
     /**  **/
-    public Integer getDelFlag() {
-        return this.delFlag;
+    public Date getCreationTime() {
+        return this.creationTime;
     }
 
     /**  **/
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
     }
 
     /**  **/
-    public Integer getDataScope() {
-        return this.dataScope;
+    public Integer getValidFlag() {
+        return this.validFlag;
     }
 
     /**  **/
-    public void setDataScope(Integer dataScope) {
-        this.dataScope = dataScope;
+    public void setValidFlag(Integer validFlag) {
+        this.validFlag = validFlag;
     }
 
     /**  **/
-    public String getId() {
-        return this.id;
+    public String getOperUser() {
+        return this.operUser;
     }
 
     /**  **/
-    public void setId(String id) {
-        this.id = id;
+    public void setOperUser(String operUser) {
+        this.operUser = operUser;
     }
 
     /**  **/
-    public String getExtInfo() {
+    public Object getExtInfo() {
         return this.extInfo;
     }
 
     /**  **/
-    public void setExtInfo(String extInfo) {
+    public void setExtInfo(Object extInfo) {
         this.extInfo = extInfo;
     }
 
@@ -158,6 +159,36 @@ public class RoleEO extends BaseEntity implements Serializable{
     }
 
     /**  **/
+    public Integer getIsDefault() {
+        return this.isDefault;
+    }
+
+    /**  **/
+    public void setIsDefault(Integer isDefault) {
+        this.isDefault = isDefault;
+    }
+
+    /**  **/
+    public Integer getUseFlag() {
+        return this.useFlag;
+    }
+
+    /**  **/
+    public void setUseFlag(Integer useFlag) {
+        this.useFlag = useFlag;
+    }
+
+    /**  **/
+    public String getRoleType() {
+        return this.roleType;
+    }
+
+    /**  **/
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
+
+    /**  **/
     public String getName() {
         return this.name;
     }
@@ -165,6 +196,16 @@ public class RoleEO extends BaseEntity implements Serializable{
     /**  **/
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**  **/
+    public String getId() {
+        return this.id;
+    }
+
+    /**  **/
+    public void setId(String id) {
+        this.id = id;
     }
 
 	public List<MenuEO> getMenuEOList() {
@@ -183,46 +224,7 @@ public class RoleEO extends BaseEntity implements Serializable{
 		this.menuEOIdList = menuEOIdList;
 	}
 
-	public Integer getUseFlag() {
-		return useFlag;
-	}
-
-	public void setUseFlag(Integer useFlag) {
-		this.useFlag = useFlag;
-	}
-
-	public String getOprUser() {
-		return oprUser;
-	}
-
-	public void setOprUser(String oprUser) {
-		this.oprUser = oprUser;
-	}
-
-	public Date getInsertTime() {
-		return insertTime;
-	}
-
-	public void setInsertTime(Date insertTime) {
-		this.insertTime = insertTime;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getOperUserName() {
-		return operUserName;
-	}
-
-	public void setOperUserName(String operUserName) {
-		this.operUserName = operUserName;
-	}
-
-	
-	
+    
+    
+    
 }

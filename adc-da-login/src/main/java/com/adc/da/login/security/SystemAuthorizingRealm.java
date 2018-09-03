@@ -164,7 +164,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
         public Principal(UserEO user) {
             this.id = user.getUsid()==null?"":String.valueOf(user.getUsid());
             this.loginName = user.getAccount();
-            this.name = user.getUsname();
+            this.name = user.getUname();
         }
 
         public String getId() {

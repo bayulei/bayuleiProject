@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarBussionessStandEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarBussionessStandEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_time" property="validTime" />
+    <result column="put_user" property="putUser" />
+    <result column="citation_user" property="citationUser" />
+    <result column="responsible_unit" property="responsibleUnit" />
+    <result column="stand_file" property="standFile" />
+    <result column="tags" property="tags" />
+    <result column="stand_status" property="standStatus" />
+    <result column="replaced_stand_num" property="replacedStandNum" />
+    <result column="replace_stand_num" property="replaceStandNum" />
+    <result column="quote_stand" property="quoteStand" />
+    <result column="first_put_time" property="firstPutTime" />
+    <result column="put_year" property="putYear" />
+    <result column="put_time" property="putTime" />
+    <result column="issue_time" property="issueTime" />
+    <result column="energy_kind" property="energyKind" />
+    <result column="apply_arctic" property="applyArctic" />
+    <result column="stand_en_name" property="standEnName" />
+    <result column="stand_name" property="standName" />
+    <result column="stand_code" property="standCode" />
+    <result column="classify_code" property="classifyCode" />
+    <result column="stand_subclass" property="standSubclass" />
+    <result column="stand_genera" property="standGenera" />
+  </resultMap>
+
+  <!-- SAR_BUSSIONESS_STAND table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_time, put_user, citation_user, responsible_unit, stand_file, tags, stand_status, replaced_stand_num, replace_stand_num, quote_stand, first_put_time, put_year, put_time, issue_time, energy_kind, apply_arctic, stand_en_name, stand_name, stand_code, classify_code, stand_subclass, stand_genera, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validTime != null" >
+        and valid_time ${validTimeOperator} #{validTime}
+      </if>
+      <if test="putUser != null" >
+        and put_user ${putUserOperator} #{putUser}
+      </if>
+      <if test="citationUser != null" >
+        and citation_user ${citationUserOperator} #{citationUser}
+      </if>
+      <if test="responsibleUnit != null" >
+        and responsible_unit ${responsibleUnitOperator} #{responsibleUnit}
+      </if>
+      <if test="standFile != null" >
+        and stand_file ${standFileOperator} #{standFile}
+      </if>
+      <if test="tags != null" >
+        and tags ${tagsOperator} #{tags}
+      </if>
+      <if test="standStatus != null" >
+        and stand_status ${standStatusOperator} #{standStatus}
+      </if>
+      <if test="replacedStandNum != null" >
+        and replaced_stand_num ${replacedStandNumOperator} #{replacedStandNum}
+      </if>
+      <if test="replaceStandNum != null" >
+        and replace_stand_num ${replaceStandNumOperator} #{replaceStandNum}
+      </if>
+      <if test="quoteStand != null" >
+        and quote_stand ${quoteStandOperator} #{quoteStand}
+      </if>
+      <if test="firstPutTime != null" >
+        and first_put_time ${firstPutTimeOperator} #{firstPutTime}
+      </if>
+      <if test="firstPutTime1 != null" >
+        and first_put_time &gt;= #{firstPutTime1}
+      </if>
+      <if test="firstPutTime2 != null" >
+        and first_put_time &lt;= #{firstPutTime2}
+      </if>
+      <if test="putYear != null" >
+        and put_year ${putYearOperator} #{putYear}
+      </if>
+      <if test="putYear1 != null" >
+        and put_year &gt;= #{putYear1}
+      </if>
+      <if test="putYear2 != null" >
+        and put_year &lt;= #{putYear2}
+      </if>
+      <if test="putTime != null" >
+        and put_time ${putTimeOperator} #{putTime}
+      </if>
+      <if test="putTime1 != null" >
+        and put_time &gt;= #{putTime1}
+      </if>
+      <if test="putTime2 != null" >
+        and put_time &lt;= #{putTime2}
+      </if>
+      <if test="issueTime != null" >
+        and issue_time ${issueTimeOperator} #{issueTime}
+      </if>
+      <if test="issueTime1 != null" >
+        and issue_time &gt;= #{issueTime1}
+      </if>
+      <if test="issueTime2 != null" >
+        and issue_time &lt;= #{issueTime2}
+      </if>
+      <if test="energyKind != null" >
+        and energy_kind ${energyKindOperator} #{energyKind}
+      </if>
+      <if test="applyArctic != null" >
+        and apply_arctic ${applyArcticOperator} #{applyArctic}
+      </if>
+      <if test="standEnName != null" >
+        and stand_en_name ${standEnNameOperator} #{standEnName}
+      </if>
+      <if test="standName != null" >
+        and stand_name ${standNameOperator} #{standName}
+      </if>
+      <if test="standCode != null" >
+        and stand_code ${standCodeOperator} #{standCode}
+      </if>
+      <if test="classifyCode != null" >
+        and classify_code ${classifyCodeOperator} #{classifyCode}
+      </if>
+      <if test="standSubclass != null" >
+        and stand_subclass ${standSubclassOperator} #{standSubclass}
+      </if>
+      <if test="standGenera != null" >
+        and stand_genera ${standGeneraOperator} #{standGenera}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarBussionessStandEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_BUSSIONESS_STAND.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_BUSSIONESS_STAND(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validTime, jdbcType=INTEGER}, #{putUser, jdbcType=VARCHAR}, #{citationUser, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{standFile, jdbcType=VARCHAR}, #{tags, jdbcType=VARCHAR}, #{standStatus, jdbcType=VARCHAR}, #{replacedStandNum, jdbcType=VARCHAR}, #{replaceStandNum, jdbcType=VARCHAR}, #{quoteStand, jdbcType=VARCHAR}, #{firstPutTime, jdbcType=TIMESTAMP}, #{putYear, jdbcType=TIMESTAMP}, #{putTime, jdbcType=TIMESTAMP}, #{issueTime, jdbcType=TIMESTAMP}, #{energyKind, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{standEnName, jdbcType=VARCHAR}, #{standName, jdbcType=VARCHAR}, #{standCode, jdbcType=VARCHAR}, #{classifyCode, jdbcType=VARCHAR}, #{standSubclass, jdbcType=VARCHAR}, #{standGenera, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarBussionessStandEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_BUSSIONESS_STAND.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_BUSSIONESS_STAND
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validTime != null" >valid_time,</if>
+                <if test="putUser != null" >put_user,</if>
+                <if test="citationUser != null" >citation_user,</if>
+                <if test="responsibleUnit != null" >responsible_unit,</if>
+                <if test="standFile != null" >stand_file,</if>
+                <if test="tags != null" >tags,</if>
+                <if test="standStatus != null" >stand_status,</if>
+                <if test="replacedStandNum != null" >replaced_stand_num,</if>
+                <if test="replaceStandNum != null" >replace_stand_num,</if>
+                <if test="quoteStand != null" >quote_stand,</if>
+                <if test="firstPutTime != null" >first_put_time,</if>
+                <if test="putYear != null" >put_year,</if>
+                <if test="putTime != null" >put_time,</if>
+                <if test="issueTime != null" >issue_time,</if>
+                <if test="energyKind != null" >energy_kind,</if>
+                <if test="applyArctic != null" >apply_arctic,</if>
+                <if test="standEnName != null" >stand_en_name,</if>
+                <if test="standName != null" >stand_name,</if>
+                <if test="standCode != null" >stand_code,</if>
+                <if test="classifyCode != null" >classify_code,</if>
+                <if test="standSubclass != null" >stand_subclass,</if>
+                <if test="standGenera != null" >stand_genera,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validTime != null" >#{validTime, jdbcType=INTEGER},</if>
+                <if test="putUser != null" >#{putUser, jdbcType=VARCHAR},</if>
+                <if test="citationUser != null" >#{citationUser, jdbcType=VARCHAR},</if>
+                <if test="responsibleUnit != null" >#{responsibleUnit, jdbcType=VARCHAR},</if>
+                <if test="standFile != null" >#{standFile, jdbcType=VARCHAR},</if>
+                <if test="tags != null" >#{tags, jdbcType=VARCHAR},</if>
+                <if test="standStatus != null" >#{standStatus, jdbcType=VARCHAR},</if>
+                <if test="replacedStandNum != null" >#{replacedStandNum, jdbcType=VARCHAR},</if>
+                <if test="replaceStandNum != null" >#{replaceStandNum, jdbcType=VARCHAR},</if>
+                <if test="quoteStand != null" >#{quoteStand, jdbcType=VARCHAR},</if>
+                <if test="firstPutTime != null" >#{firstPutTime, jdbcType=TIMESTAMP},</if>
+                <if test="putYear != null" >#{putYear, jdbcType=TIMESTAMP},</if>
+                <if test="putTime != null" >#{putTime, jdbcType=TIMESTAMP},</if>
+                <if test="issueTime != null" >#{issueTime, jdbcType=TIMESTAMP},</if>
+                <if test="energyKind != null" >#{energyKind, jdbcType=VARCHAR},</if>
+                <if test="applyArctic != null" >#{applyArctic, jdbcType=VARCHAR},</if>
+                <if test="standEnName != null" >#{standEnName, jdbcType=VARCHAR},</if>
+                <if test="standName != null" >#{standName, jdbcType=VARCHAR},</if>
+                <if test="standCode != null" >#{standCode, jdbcType=VARCHAR},</if>
+                <if test="classifyCode != null" >#{classifyCode, jdbcType=VARCHAR},</if>
+                <if test="standSubclass != null" >#{standSubclass, jdbcType=VARCHAR},</if>
+                <if test="standGenera != null" >#{standGenera, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarBussionessStandEO" >
+    update SAR_BUSSIONESS_STAND
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_time = #{validTime},
+            put_user = #{putUser},
+            citation_user = #{citationUser},
+            responsible_unit = #{responsibleUnit},
+            stand_file = #{standFile},
+            tags = #{tags},
+            stand_status = #{standStatus},
+            replaced_stand_num = #{replacedStandNum},
+            replace_stand_num = #{replaceStandNum},
+            quote_stand = #{quoteStand},
+            first_put_time = #{firstPutTime},
+            put_year = #{putYear},
+            put_time = #{putTime},
+            issue_time = #{issueTime},
+            energy_kind = #{energyKind},
+            apply_arctic = #{applyArctic},
+            stand_en_name = #{standEnName},
+            stand_name = #{standName},
+            stand_code = #{standCode},
+            classify_code = #{classifyCode},
+            stand_subclass = #{standSubclass},
+            stand_genera = #{standGenera}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarBussionessStandEO" >
+    update SAR_BUSSIONESS_STAND
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validTime != null" >
+        valid_time = #{validTime},
+      </if>
+      <if test="putUser != null" >
+        put_user = #{putUser},
+      </if>
+      <if test="citationUser != null" >
+        citation_user = #{citationUser},
+      </if>
+      <if test="responsibleUnit != null" >
+        responsible_unit = #{responsibleUnit},
+      </if>
+      <if test="standFile != null" >
+        stand_file = #{standFile},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags},
+      </if>
+      <if test="standStatus != null" >
+        stand_status = #{standStatus},
+      </if>
+      <if test="replacedStandNum != null" >
+        replaced_stand_num = #{replacedStandNum},
+      </if>
+      <if test="replaceStandNum != null" >
+        replace_stand_num = #{replaceStandNum},
+      </if>
+      <if test="quoteStand != null" >
+        quote_stand = #{quoteStand},
+      </if>
+      <if test="firstPutTime != null" >
+        first_put_time = #{firstPutTime},
+      </if>
+      <if test="putYear != null" >
+        put_year = #{putYear},
+      </if>
+      <if test="putTime != null" >
+        put_time = #{putTime},
+      </if>
+      <if test="issueTime != null" >
+        issue_time = #{issueTime},
+      </if>
+      <if test="energyKind != null" >
+        energy_kind = #{energyKind},
+      </if>
+      <if test="applyArctic != null" >
+        apply_arctic = #{applyArctic},
+      </if>
+      <if test="standEnName != null" >
+        stand_en_name = #{standEnName},
+      </if>
+      <if test="standName != null" >
+        stand_name = #{standName},
+      </if>
+      <if test="standCode != null" >
+        stand_code = #{standCode},
+      </if>
+      <if test="classifyCode != null" >
+        classify_code = #{classifyCode},
+      </if>
+      <if test="standSubclass != null" >
+        stand_subclass = #{standSubclass},
+      </if>
+      <if test="standGenera != null" >
+        stand_genera = #{standGenera},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_BUSSIONESS_STAND -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_BUSSIONESS_STAND
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_BUSSIONESS_STAND
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_BUSSIONESS_STAND 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_BUSSIONESS_STAND
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_BUSSIONESS_STAND列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_BUSSIONESS_STAND
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_BUSSIONESS_STAND
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

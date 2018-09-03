@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarMenuEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarMenuEO" >
+    <id column="id" property="id" />
+    <result column="parent_id" property="parentId" />
+    <result column="menu_name" property="menuName" />
+    <result column="sor_divide" property="sorDivide" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="display_seq" property="displaySeq" />
+    <result column="parent_ids" property="parentIds" />
+  </resultMap>
+
+  <!-- SAR_MENU table all fields -->
+  <sql id="Base_Column_List" >
+     parent_id, menu_name, sor_divide, id, modify_time, creation_time, valid_flag, display_seq, parent_ids
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="parentId != null" >
+        and parent_id ${parentIdOperator} #{parentId}
+      </if>
+      <if test="menuName != null" >
+        and menu_name ${menuNameOperator} #{menuName}
+      </if>
+      <if test="sorDivide != null" >
+        and sor_divide ${sorDivideOperator} #{sorDivide}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="displaySeq != null" >
+        and display_seq ${displaySeqOperator} #{displaySeq}
+      </if>
+      <if test="parentIds != null" >
+        and parent_ids ${parentIdsOperator} #{parentIds}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarMenuEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_MENU.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_MENU(<include refid="Base_Column_List" />)
+    values (#{parentId, jdbcType=VARCHAR}, #{menuName, jdbcType=VARCHAR}, #{sorDivide, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR}, #{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{displaySeq, jdbcType=INTEGER}, #{parentIds, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarMenuEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_MENU.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_MENU
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="parentId != null" >parent_id,</if>
+                <if test="menuName != null" >menu_name,</if>
+                <if test="sorDivide != null" >sor_divide,</if>
+                <if test="id != null" >id,</if>
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="displaySeq != null" >display_seq,</if>
+                <if test="parentIds != null" >parent_ids,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="parentId != null" >#{parentId, jdbcType=VARCHAR},</if>
+                <if test="menuName != null" >#{menuName, jdbcType=VARCHAR},</if>
+                <if test="sorDivide != null" >#{sorDivide, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="displaySeq != null" >#{displaySeq, jdbcType=INTEGER},</if>
+                <if test="parentIds != null" >#{parentIds, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarMenuEO" >
+    update SAR_MENU
+       set  parent_id = #{parentId},
+            menu_name = #{menuName},
+            sor_divide = #{sorDivide},
+            modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            display_seq = #{displaySeq},
+            parent_ids = #{parentIds}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarMenuEO" >
+    update SAR_MENU
+    <set >
+      <if test="parentId != null" >
+        parent_id = #{parentId},
+      </if>
+      <if test="menuName != null" >
+        menu_name = #{menuName},
+      </if>
+      <if test="sorDivide != null" >
+        sor_divide = #{sorDivide},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="displaySeq != null" >
+        display_seq = #{displaySeq},
+      </if>
+      <if test="parentIds != null" >
+        parent_ids = #{parentIds},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_MENU -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_MENU
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_MENU
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_MENU 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_MENU
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_MENU列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_MENU
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_MENU
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

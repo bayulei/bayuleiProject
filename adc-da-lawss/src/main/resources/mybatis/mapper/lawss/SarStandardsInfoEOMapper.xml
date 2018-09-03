@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.SarStandardsInfoEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarStandardsInfoEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="creation_user" property="creationUser" />
+    <result column="remark" property="remark" />
+    <result column="category" property="category" />
+    <result column="responsible_unit" property="responsibleUnit" />
+    <result column="synopsis" property="synopsis" />
+    <result column="tags" property="tags" />
+    <result column="relevance_file" property="relevanceFile" />
+    <result column="approval_file" property="approvalFile" />
+    <result column="sent_screen_file" property="sentScreenFile" />
+    <result column="opinion_file" property="opinionFile" />
+    <result column="draft_file" property="draftFile" />
+    <result column="stand_modify_file" property="standModifyFile" />
+    <result column="stand_file" property="standFile" />
+    <result column="draft_user" property="draftUser" />
+    <result column="drafting_unit" property="draftingUnit" />
+    <result column="newproduct_put_time" property="newproductPutTime" />
+    <result column="product_put_time" property="productPutTime" />
+    <result column="newcar_put_time" property="newcarPutTime" />
+    <result column="put_time" property="putTime" />
+    <result column="issue_time" property="issueTime" />
+    <result column="apply_auth" property="applyAuth" />
+    <result column="emergy_kind" property="emergyKind" />
+    <result column="adopt_extent" property="adoptExtent" />
+    <result column="inter_stand_num" property="interStandNum" />
+    <result column="replaced_stand_num" property="replacedStandNum" />
+    <result column="replace_stand_num" property="replaceStandNum" />
+    <result column="stand_nature" property="standNature" />
+    <result column="stand_state" property="standState" />
+    <result column="stand_en_name" property="standEnName" />
+    <result column="stand_name" property="standName" />
+    <result column="stand_year" property="standYear" />
+    <result column="stand_number" property="standNumber" />
+    <result column="apply_arctic" property="applyArctic" />
+    <result column="stand_sort" property="standSort" />
+    <result column="country" property="country" />
+    <result column="stand_type" property="standType" />
+  </resultMap>
+
+  <!-- SAR_STANDARDS_INFO table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, creation_user, remark, category, responsible_unit, synopsis, tags, relevance_file, approval_file, sent_screen_file, opinion_file, draft_file, stand_modify_file, stand_file, draft_user, drafting_unit, newproduct_put_time, product_put_time, newcar_put_time, put_time, issue_time, apply_auth, emergy_kind, adopt_extent, inter_stand_num, replaced_stand_num, replace_stand_num, stand_nature, stand_state, stand_en_name, stand_name, stand_year, stand_number, apply_arctic, stand_sort, country, stand_type, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="creationUser != null" >
+        and creation_user ${creationUserOperator} #{creationUser}
+      </if>
+      <if test="remark != null" >
+        and remark ${remarkOperator} #{remark}
+      </if>
+      <if test="category != null" >
+        and category ${categoryOperator} #{category}
+      </if>
+      <if test="responsibleUnit != null" >
+        and responsible_unit ${responsibleUnitOperator} #{responsibleUnit}
+      </if>
+      <if test="synopsis != null" >
+        and synopsis ${synopsisOperator} #{synopsis}
+      </if>
+      <if test="tags != null" >
+        and tags ${tagsOperator} #{tags}
+      </if>
+      <if test="relevanceFile != null" >
+        and relevance_file ${relevanceFileOperator} #{relevanceFile}
+      </if>
+      <if test="approvalFile != null" >
+        and approval_file ${approvalFileOperator} #{approvalFile}
+      </if>
+      <if test="sentScreenFile != null" >
+        and sent_screen_file ${sentScreenFileOperator} #{sentScreenFile}
+      </if>
+      <if test="opinionFile != null" >
+        and opinion_file ${opinionFileOperator} #{opinionFile}
+      </if>
+      <if test="draftFile != null" >
+        and draft_file ${draftFileOperator} #{draftFile}
+      </if>
+      <if test="standModifyFile != null" >
+        and stand_modify_file ${standModifyFileOperator} #{standModifyFile}
+      </if>
+      <if test="standFile != null" >
+        and stand_file ${standFileOperator} #{standFile}
+      </if>
+      <if test="draftUser != null" >
+        and draft_user ${draftUserOperator} #{draftUser}
+      </if>
+      <if test="draftingUnit != null" >
+        and drafting_unit ${draftingUnitOperator} #{draftingUnit}
+      </if>
+      <if test="newproductPutTime != null" >
+        and newproduct_put_time ${newproductPutTimeOperator} #{newproductPutTime}
+      </if>
+      <if test="newproductPutTime1 != null" >
+        and newproduct_put_time &gt;= #{newproductPutTime1}
+      </if>
+      <if test="newproductPutTime2 != null" >
+        and newproduct_put_time &lt;= #{newproductPutTime2}
+      </if>
+      <if test="productPutTime != null" >
+        and product_put_time ${productPutTimeOperator} #{productPutTime}
+      </if>
+      <if test="productPutTime1 != null" >
+        and product_put_time &gt;= #{productPutTime1}
+      </if>
+      <if test="productPutTime2 != null" >
+        and product_put_time &lt;= #{productPutTime2}
+      </if>
+      <if test="newcarPutTime != null" >
+        and newcar_put_time ${newcarPutTimeOperator} #{newcarPutTime}
+      </if>
+      <if test="newcarPutTime1 != null" >
+        and newcar_put_time &gt;= #{newcarPutTime1}
+      </if>
+      <if test="newcarPutTime2 != null" >
+        and newcar_put_time &lt;= #{newcarPutTime2}
+      </if>
+      <if test="putTime != null" >
+        and put_time ${putTimeOperator} #{putTime}
+      </if>
+      <if test="putTime1 != null" >
+        and put_time &gt;= #{putTime1}
+      </if>
+      <if test="putTime2 != null" >
+        and put_time &lt;= #{putTime2}
+      </if>
+      <if test="issueTime != null" >
+        and issue_time ${issueTimeOperator} #{issueTime}
+      </if>
+      <if test="issueTime1 != null" >
+        and issue_time &gt;= #{issueTime1}
+      </if>
+      <if test="issueTime2 != null" >
+        and issue_time &lt;= #{issueTime2}
+      </if>
+      <if test="applyAuth != null" >
+        and apply_auth ${applyAuthOperator} #{applyAuth}
+      </if>
+      <if test="emergyKind != null" >
+        and emergy_kind ${emergyKindOperator} #{emergyKind}
+      </if>
+      <if test="adoptExtent != null" >
+        and adopt_extent ${adoptExtentOperator} #{adoptExtent}
+      </if>
+      <if test="interStandNum != null" >
+        and inter_stand_num ${interStandNumOperator} #{interStandNum}
+      </if>
+      <if test="replacedStandNum != null" >
+        and replaced_stand_num ${replacedStandNumOperator} #{replacedStandNum}
+      </if>
+      <if test="replaceStandNum != null" >
+        and replace_stand_num ${replaceStandNumOperator} #{replaceStandNum}
+      </if>
+      <if test="standNature != null" >
+        and stand_nature ${standNatureOperator} #{standNature}
+      </if>
+      <if test="standState != null" >
+        and stand_state ${standStateOperator} #{standState}
+      </if>
+      <if test="standEnName != null" >
+        and stand_en_name ${standEnNameOperator} #{standEnName}
+      </if>
+      <if test="standName != null" >
+        and stand_name ${standNameOperator} #{standName}
+      </if>
+      <if test="standYear != null" >
+        and stand_year ${standYearOperator} #{standYear}
+      </if>
+      <if test="standNumber != null" >
+        and stand_number ${standNumberOperator} #{standNumber}
+      </if>
+      <if test="applyArctic != null" >
+        and apply_arctic ${applyArcticOperator} #{applyArctic}
+      </if>
+      <if test="standSort != null" >
+        and stand_sort ${standSortOperator} #{standSort}
+      </if>
+      <if test="country != null" >
+        and country ${countryOperator} #{country}
+      </if>
+      <if test="standType != null" >
+        and stand_type ${standTypeOperator} #{standType}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarStandardsInfoEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_STANDARDS_INFO.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into SAR_STANDARDS_INFO(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{remark, jdbcType=VARCHAR}, #{category, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{synopsis, jdbcType=VARCHAR}, #{tags, jdbcType=VARCHAR}, #{relevanceFile, jdbcType=VARCHAR}, #{approvalFile, jdbcType=VARCHAR}, #{sentScreenFile, jdbcType=VARCHAR}, #{opinionFile, jdbcType=VARCHAR}, #{draftFile, jdbcType=VARCHAR}, #{standModifyFile, jdbcType=VARCHAR}, #{standFile, jdbcType=VARCHAR}, #{draftUser, jdbcType=VARCHAR}, #{draftingUnit, jdbcType=VARCHAR}, #{newproductPutTime, jdbcType=TIMESTAMP}, #{productPutTime, jdbcType=TIMESTAMP}, #{newcarPutTime, jdbcType=TIMESTAMP}, #{putTime, jdbcType=TIMESTAMP}, #{issueTime, jdbcType=TIMESTAMP}, #{applyAuth, jdbcType=VARCHAR}, #{emergyKind, jdbcType=VARCHAR}, #{adoptExtent, jdbcType=VARCHAR}, #{interStandNum, jdbcType=VARCHAR}, #{replacedStandNum, jdbcType=VARCHAR}, #{replaceStandNum, jdbcType=VARCHAR}, #{standNature, jdbcType=VARCHAR}, #{standState, jdbcType=VARCHAR}, #{standEnName, jdbcType=VARCHAR}, #{standName, jdbcType=VARCHAR}, #{standYear, jdbcType=VARCHAR}, #{standNumber, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{standSort, jdbcType=VARCHAR}, #{country, jdbcType=VARCHAR}, #{standType, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarStandardsInfoEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_SAR_STANDARDS_INFO.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into SAR_STANDARDS_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="creationUser != null" >creation_user,</if>
+                <if test="remark != null" >remark,</if>
+                <if test="category != null" >category,</if>
+                <if test="responsibleUnit != null" >responsible_unit,</if>
+                <if test="synopsis != null" >synopsis,</if>
+                <if test="tags != null" >tags,</if>
+                <if test="relevanceFile != null" >relevance_file,</if>
+                <if test="approvalFile != null" >approval_file,</if>
+                <if test="sentScreenFile != null" >sent_screen_file,</if>
+                <if test="opinionFile != null" >opinion_file,</if>
+                <if test="draftFile != null" >draft_file,</if>
+                <if test="standModifyFile != null" >stand_modify_file,</if>
+                <if test="standFile != null" >stand_file,</if>
+                <if test="draftUser != null" >draft_user,</if>
+                <if test="draftingUnit != null" >drafting_unit,</if>
+                <if test="newproductPutTime != null" >newproduct_put_time,</if>
+                <if test="productPutTime != null" >product_put_time,</if>
+                <if test="newcarPutTime != null" >newcar_put_time,</if>
+                <if test="putTime != null" >put_time,</if>
+                <if test="issueTime != null" >issue_time,</if>
+                <if test="applyAuth != null" >apply_auth,</if>
+                <if test="emergyKind != null" >emergy_kind,</if>
+                <if test="adoptExtent != null" >adopt_extent,</if>
+                <if test="interStandNum != null" >inter_stand_num,</if>
+                <if test="replacedStandNum != null" >replaced_stand_num,</if>
+                <if test="replaceStandNum != null" >replace_stand_num,</if>
+                <if test="standNature != null" >stand_nature,</if>
+                <if test="standState != null" >stand_state,</if>
+                <if test="standEnName != null" >stand_en_name,</if>
+                <if test="standName != null" >stand_name,</if>
+                <if test="standYear != null" >stand_year,</if>
+                <if test="standNumber != null" >stand_number,</if>
+                <if test="applyArctic != null" >apply_arctic,</if>
+                <if test="standSort != null" >stand_sort,</if>
+                <if test="country != null" >country,</if>
+                <if test="standType != null" >stand_type,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="creationUser != null" >#{creationUser, jdbcType=VARCHAR},</if>
+                <if test="remark != null" >#{remark, jdbcType=VARCHAR},</if>
+                <if test="category != null" >#{category, jdbcType=VARCHAR},</if>
+                <if test="responsibleUnit != null" >#{responsibleUnit, jdbcType=VARCHAR},</if>
+                <if test="synopsis != null" >#{synopsis, jdbcType=VARCHAR},</if>
+                <if test="tags != null" >#{tags, jdbcType=VARCHAR},</if>
+                <if test="relevanceFile != null" >#{relevanceFile, jdbcType=VARCHAR},</if>
+                <if test="approvalFile != null" >#{approvalFile, jdbcType=VARCHAR},</if>
+                <if test="sentScreenFile != null" >#{sentScreenFile, jdbcType=VARCHAR},</if>
+                <if test="opinionFile != null" >#{opinionFile, jdbcType=VARCHAR},</if>
+                <if test="draftFile != null" >#{draftFile, jdbcType=VARCHAR},</if>
+                <if test="standModifyFile != null" >#{standModifyFile, jdbcType=VARCHAR},</if>
+                <if test="standFile != null" >#{standFile, jdbcType=VARCHAR},</if>
+                <if test="draftUser != null" >#{draftUser, jdbcType=VARCHAR},</if>
+                <if test="draftingUnit != null" >#{draftingUnit, jdbcType=VARCHAR},</if>
+                <if test="newproductPutTime != null" >#{newproductPutTime, jdbcType=TIMESTAMP},</if>
+                <if test="productPutTime != null" >#{productPutTime, jdbcType=TIMESTAMP},</if>
+                <if test="newcarPutTime != null" >#{newcarPutTime, jdbcType=TIMESTAMP},</if>
+                <if test="putTime != null" >#{putTime, jdbcType=TIMESTAMP},</if>
+                <if test="issueTime != null" >#{issueTime, jdbcType=TIMESTAMP},</if>
+                <if test="applyAuth != null" >#{applyAuth, jdbcType=VARCHAR},</if>
+                <if test="emergyKind != null" >#{emergyKind, jdbcType=VARCHAR},</if>
+                <if test="adoptExtent != null" >#{adoptExtent, jdbcType=VARCHAR},</if>
+                <if test="interStandNum != null" >#{interStandNum, jdbcType=VARCHAR},</if>
+                <if test="replacedStandNum != null" >#{replacedStandNum, jdbcType=VARCHAR},</if>
+                <if test="replaceStandNum != null" >#{replaceStandNum, jdbcType=VARCHAR},</if>
+                <if test="standNature != null" >#{standNature, jdbcType=VARCHAR},</if>
+                <if test="standState != null" >#{standState, jdbcType=VARCHAR},</if>
+                <if test="standEnName != null" >#{standEnName, jdbcType=VARCHAR},</if>
+                <if test="standName != null" >#{standName, jdbcType=VARCHAR},</if>
+                <if test="standYear != null" >#{standYear, jdbcType=VARCHAR},</if>
+                <if test="standNumber != null" >#{standNumber, jdbcType=VARCHAR},</if>
+                <if test="applyArctic != null" >#{applyArctic, jdbcType=VARCHAR},</if>
+                <if test="standSort != null" >#{standSort, jdbcType=VARCHAR},</if>
+                <if test="country != null" >#{country, jdbcType=VARCHAR},</if>
+                <if test="standType != null" >#{standType, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarStandardsInfoEO" >
+    update SAR_STANDARDS_INFO
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            creation_user = #{creationUser},
+            remark = #{remark},
+            category = #{category},
+            responsible_unit = #{responsibleUnit},
+            synopsis = #{synopsis},
+            tags = #{tags},
+            relevance_file = #{relevanceFile},
+            approval_file = #{approvalFile},
+            sent_screen_file = #{sentScreenFile},
+            opinion_file = #{opinionFile},
+            draft_file = #{draftFile},
+            stand_modify_file = #{standModifyFile},
+            stand_file = #{standFile},
+            draft_user = #{draftUser},
+            drafting_unit = #{draftingUnit},
+            newproduct_put_time = #{newproductPutTime},
+            product_put_time = #{productPutTime},
+            newcar_put_time = #{newcarPutTime},
+            put_time = #{putTime},
+            issue_time = #{issueTime},
+            apply_auth = #{applyAuth},
+            emergy_kind = #{emergyKind},
+            adopt_extent = #{adoptExtent},
+            inter_stand_num = #{interStandNum},
+            replaced_stand_num = #{replacedStandNum},
+            replace_stand_num = #{replaceStandNum},
+            stand_nature = #{standNature},
+            stand_state = #{standState},
+            stand_en_name = #{standEnName},
+            stand_name = #{standName},
+            stand_year = #{standYear},
+            stand_number = #{standNumber},
+            apply_arctic = #{applyArctic},
+            stand_sort = #{standSort},
+            country = #{country},
+            stand_type = #{standType}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarStandardsInfoEO" >
+    update SAR_STANDARDS_INFO
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="creationUser != null" >
+        creation_user = #{creationUser},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="category != null" >
+        category = #{category},
+      </if>
+      <if test="responsibleUnit != null" >
+        responsible_unit = #{responsibleUnit},
+      </if>
+      <if test="synopsis != null" >
+        synopsis = #{synopsis},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags},
+      </if>
+      <if test="relevanceFile != null" >
+        relevance_file = #{relevanceFile},
+      </if>
+      <if test="approvalFile != null" >
+        approval_file = #{approvalFile},
+      </if>
+      <if test="sentScreenFile != null" >
+        sent_screen_file = #{sentScreenFile},
+      </if>
+      <if test="opinionFile != null" >
+        opinion_file = #{opinionFile},
+      </if>
+      <if test="draftFile != null" >
+        draft_file = #{draftFile},
+      </if>
+      <if test="standModifyFile != null" >
+        stand_modify_file = #{standModifyFile},
+      </if>
+      <if test="standFile != null" >
+        stand_file = #{standFile},
+      </if>
+      <if test="draftUser != null" >
+        draft_user = #{draftUser},
+      </if>
+      <if test="draftingUnit != null" >
+        drafting_unit = #{draftingUnit},
+      </if>
+      <if test="newproductPutTime != null" >
+        newproduct_put_time = #{newproductPutTime},
+      </if>
+      <if test="productPutTime != null" >
+        product_put_time = #{productPutTime},
+      </if>
+      <if test="newcarPutTime != null" >
+        newcar_put_time = #{newcarPutTime},
+      </if>
+      <if test="putTime != null" >
+        put_time = #{putTime},
+      </if>
+      <if test="issueTime != null" >
+        issue_time = #{issueTime},
+      </if>
+      <if test="applyAuth != null" >
+        apply_auth = #{applyAuth},
+      </if>
+      <if test="emergyKind != null" >
+        emergy_kind = #{emergyKind},
+      </if>
+      <if test="adoptExtent != null" >
+        adopt_extent = #{adoptExtent},
+      </if>
+      <if test="interStandNum != null" >
+        inter_stand_num = #{interStandNum},
+      </if>
+      <if test="replacedStandNum != null" >
+        replaced_stand_num = #{replacedStandNum},
+      </if>
+      <if test="replaceStandNum != null" >
+        replace_stand_num = #{replaceStandNum},
+      </if>
+      <if test="standNature != null" >
+        stand_nature = #{standNature},
+      </if>
+      <if test="standState != null" >
+        stand_state = #{standState},
+      </if>
+      <if test="standEnName != null" >
+        stand_en_name = #{standEnName},
+      </if>
+      <if test="standName != null" >
+        stand_name = #{standName},
+      </if>
+      <if test="standYear != null" >
+        stand_year = #{standYear},
+      </if>
+      <if test="standNumber != null" >
+        stand_number = #{standNumber},
+      </if>
+      <if test="applyArctic != null" >
+        apply_arctic = #{applyArctic},
+      </if>
+      <if test="standSort != null" >
+        stand_sort = #{standSort},
+      </if>
+      <if test="country != null" >
+        country = #{country},
+      </if>
+      <if test="standType != null" >
+        stand_type = #{standType},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 SAR_STANDARDS_INFO -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from SAR_STANDARDS_INFO
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SAR_STANDARDS_INFO
+     where id = #{value}
+
+  </delete>
+
+  <!-- SAR_STANDARDS_INFO 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from SAR_STANDARDS_INFO
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询SAR_STANDARDS_INFO列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from SAR_STANDARDS_INFO
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from SAR_STANDARDS_INFO
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

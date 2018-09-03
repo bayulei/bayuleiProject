@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.person.dao.PersonMsgEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.person.entity.PersonMsgEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="read_flag" property="readFlag" />
+    <result column="msg_content" property="msgContent" />
+    <result column="msg_title" property="msgTitle" />
+    <result column="user_id" property="userId" />
+  </resultMap>
+
+  <!-- TS_PERSON_MSG table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, read_flag, msg_content, msg_title, user_id, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="readFlag != null" >
+        and read_flag ${readFlagOperator} #{readFlag}
+      </if>
+      <if test="msgContent != null" >
+        and msg_content ${msgContentOperator} #{msgContent}
+      </if>
+      <if test="msgTitle != null" >
+        and msg_title ${msgTitleOperator} #{msgTitle}
+      </if>
+      <if test="userId != null" >
+        and user_id ${userIdOperator} #{userId}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.person.entity.PersonMsgEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_TS_PERSON_MSG.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into TS_PERSON_MSG(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{readFlag, jdbcType=INTEGER}, #{msgContent, jdbcType=VARCHAR}, #{msgTitle, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.person.entity.PersonMsgEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_TS_PERSON_MSG.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into TS_PERSON_MSG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="readFlag != null" >read_flag,</if>
+                <if test="msgContent != null" >msg_content,</if>
+                <if test="msgTitle != null" >msg_title,</if>
+                <if test="userId != null" >user_id,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="readFlag != null" >#{readFlag, jdbcType=INTEGER},</if>
+                <if test="msgContent != null" >#{msgContent, jdbcType=VARCHAR},</if>
+                <if test="msgTitle != null" >#{msgTitle, jdbcType=VARCHAR},</if>
+                <if test="userId != null" >#{userId, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.person.entity.PersonMsgEO" >
+    update TS_PERSON_MSG
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            read_flag = #{readFlag},
+            msg_content = #{msgContent},
+            msg_title = #{msgTitle},
+            user_id = #{userId}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.person.entity.PersonMsgEO" >
+    update TS_PERSON_MSG
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="readFlag != null" >
+        read_flag = #{readFlag},
+      </if>
+      <if test="msgContent != null" >
+        msg_content = #{msgContent},
+      </if>
+      <if test="msgTitle != null" >
+        msg_title = #{msgTitle},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 TS_PERSON_MSG -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from TS_PERSON_MSG
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TS_PERSON_MSG
+     where id = #{value}
+
+  </delete>
+
+  <!-- TS_PERSON_MSG 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from TS_PERSON_MSG
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询TS_PERSON_MSG列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from TS_PERSON_MSG
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from TS_PERSON_MSG
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

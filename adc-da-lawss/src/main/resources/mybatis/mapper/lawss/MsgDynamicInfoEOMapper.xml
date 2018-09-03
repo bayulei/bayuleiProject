@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.lawss.dao.MsgDynamicInfoEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.MsgDynamicInfoEO" >
+    <id column="id" property="id" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="creation_time" property="creationTime" />
+    <result column="valid_flag" property="validFlag" />
+    <result column="pub_org" property="pubOrg" />
+    <result column="pub_user" property="pubUser" />
+    <result column="pub_time" property="pubTime" />
+    <result column="link_uri" property="linkUri" />
+    <result column="content" property="content" />
+    <result column="title" property="title" />
+    <result column="msg_mode" property="msgMode" />
+    <result column="msg_type" property="msgType" />
+  </resultMap>
+
+  <!-- MSG_DYNAMIC_INFO table all fields -->
+  <sql id="Base_Column_List" >
+     modify_time, creation_time, valid_flag, pub_org, pub_user, pub_time, link_uri, content, title, msg_mode, msg_type, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="modifyTime != null" >
+        and modify_time ${modifyTimeOperator} #{modifyTime}
+      </if>
+      <if test="modifyTime1 != null" >
+        and modify_time &gt;= #{modifyTime1}
+      </if>
+      <if test="modifyTime2 != null" >
+        and modify_time &lt;= #{modifyTime2}
+      </if>
+      <if test="creationTime != null" >
+        and creation_time ${creationTimeOperator} #{creationTime}
+      </if>
+      <if test="creationTime1 != null" >
+        and creation_time &gt;= #{creationTime1}
+      </if>
+      <if test="creationTime2 != null" >
+        and creation_time &lt;= #{creationTime2}
+      </if>
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
+      </if>
+      <if test="pubOrg != null" >
+        and pub_org ${pubOrgOperator} #{pubOrg}
+      </if>
+      <if test="pubUser != null" >
+        and pub_user ${pubUserOperator} #{pubUser}
+      </if>
+      <if test="pubTime != null" >
+        and pub_time ${pubTimeOperator} #{pubTime}
+      </if>
+      <if test="pubTime1 != null" >
+        and pub_time &gt;= #{pubTime1}
+      </if>
+      <if test="pubTime2 != null" >
+        and pub_time &lt;= #{pubTime2}
+      </if>
+      <if test="linkUri != null" >
+        and link_uri ${linkUriOperator} #{linkUri}
+      </if>
+      <if test="content != null" >
+        and content ${contentOperator} #{content}
+      </if>
+      <if test="title != null" >
+        and title ${titleOperator} #{title}
+      </if>
+      <if test="msgMode != null" >
+        and msg_mode ${msgModeOperator} #{msgMode}
+      </if>
+      <if test="msgType != null" >
+        and msg_type ${msgTypeOperator} #{msgType}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.MsgDynamicInfoEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_MSG_DYNAMIC_INFO.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into MSG_DYNAMIC_INFO(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{pubOrg, jdbcType=VARCHAR}, #{pubUser, jdbcType=VARCHAR}, #{pubTime, jdbcType=TIMESTAMP}, #{linkUri, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{title, jdbcType=VARCHAR}, #{msgMode, jdbcType=VARCHAR}, #{msgType, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.MsgDynamicInfoEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_MSG_DYNAMIC_INFO.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into MSG_DYNAMIC_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >modify_time,</if>
+                <if test="creationTime != null" >creation_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
+                <if test="pubOrg != null" >pub_org,</if>
+                <if test="pubUser != null" >pub_user,</if>
+                <if test="pubTime != null" >pub_time,</if>
+                <if test="linkUri != null" >link_uri,</if>
+                <if test="content != null" >content,</if>
+                <if test="title != null" >title,</if>
+                <if test="msgMode != null" >msg_mode,</if>
+                <if test="msgType != null" >msg_type,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
+                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
+                <if test="pubOrg != null" >#{pubOrg, jdbcType=VARCHAR},</if>
+                <if test="pubUser != null" >#{pubUser, jdbcType=VARCHAR},</if>
+                <if test="pubTime != null" >#{pubTime, jdbcType=TIMESTAMP},</if>
+                <if test="linkUri != null" >#{linkUri, jdbcType=VARCHAR},</if>
+                <if test="content != null" >#{content, jdbcType=VARCHAR},</if>
+                <if test="title != null" >#{title, jdbcType=VARCHAR},</if>
+                <if test="msgMode != null" >#{msgMode, jdbcType=VARCHAR},</if>
+                <if test="msgType != null" >#{msgType, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.MsgDynamicInfoEO" >
+    update MSG_DYNAMIC_INFO
+       set  modify_time = #{modifyTime},
+            creation_time = #{creationTime},
+            valid_flag = #{validFlag},
+            pub_org = #{pubOrg},
+            pub_user = #{pubUser},
+            pub_time = #{pubTime},
+            link_uri = #{linkUri},
+            content = #{content},
+            title = #{title},
+            msg_mode = #{msgMode},
+            msg_type = #{msgType}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.MsgDynamicInfoEO" >
+    update MSG_DYNAMIC_INFO
+    <set >
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime},
+      </if>
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
+      </if>
+      <if test="pubOrg != null" >
+        pub_org = #{pubOrg},
+      </if>
+      <if test="pubUser != null" >
+        pub_user = #{pubUser},
+      </if>
+      <if test="pubTime != null" >
+        pub_time = #{pubTime},
+      </if>
+      <if test="linkUri != null" >
+        link_uri = #{linkUri},
+      </if>
+      <if test="content != null" >
+        content = #{content},
+      </if>
+      <if test="title != null" >
+        title = #{title},
+      </if>
+      <if test="msgMode != null" >
+        msg_mode = #{msgMode},
+      </if>
+      <if test="msgType != null" >
+        msg_type = #{msgType},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 MSG_DYNAMIC_INFO -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from MSG_DYNAMIC_INFO
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from MSG_DYNAMIC_INFO
+     where id = #{value}
+
+  </delete>
+
+  <!-- MSG_DYNAMIC_INFO 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from MSG_DYNAMIC_INFO
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询MSG_DYNAMIC_INFO列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from MSG_DYNAMIC_INFO
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from MSG_DYNAMIC_INFO
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

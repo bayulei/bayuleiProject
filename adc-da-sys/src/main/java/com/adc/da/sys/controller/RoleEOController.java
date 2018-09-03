@@ -68,18 +68,18 @@ public class RoleEOController extends BaseController<RoleEO> {
 		if(StringUtils.isNotEmpty(useFlag)){
 			page.setUseFlag(useFlag);
 		}
-		page.setDelFlag(DeleteFlagEnum.NORMAL.getValue()+"");
+		page.setValidFlag(DeleteFlagEnum.NORMAL.getValue()+"");
 		page.setPager(new Pager());
 		page.setOrderBy("update_time desc");
 		List<RoleEO> rows = roleEOService.queryByPage(page);
 		//此处加载用户名称到前台
-		if(rows!=null && rows.size()>0){
+/*		if(rows!=null && rows.size()>0){
 			for(RoleEO role:rows){
 				String userId = role.getOprUser();
 				UserEO user = userService.selectByPrimaryKey(userId);
 				role.setOperUserName(user!=null?user.getUsname():null);
 			}
-		}
+		}*/
 		PageInfo<RoleVO> mapPage = beanMapper.mapPage(getPageInfo(page.getPager(), rows), RoleVO.class);
 		return new LayUiResult<RoleVO>(mapPage);
 	}
@@ -100,14 +100,14 @@ public class RoleEOController extends BaseController<RoleEO> {
 		String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 		if(loginUserId != null && !loginUserId.isEmpty()){
 			UserEO getUser = userService.selectOrgByPrimaryKey(loginUserId);
-			if(getUser != null){
+/*			if(getUser != null){
 				if(("0").equals(getUser.getCorpType())){
 					setRole.setExtInfo("0");
 				} else if(("1").equals(getUser.getCorpType())){
 					setRole.setExtInfo("1");
 				}
 
-			}
+			}*/
 		}
 		List<RoleVO> roleVOs = beanMapper.mapList(roleEOService.findAll(setRole), RoleVO.class);
 		if (userId != null) {
@@ -172,7 +172,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 				String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 				if(loginUserId != null || loginUserId != ""){
 					UserEO getUser = userService.selectRoleMessageByPrimaryKey(loginUserId);
-					if(getUser != null && ! ("3").equals(getUser.getRoleExtInfo())){
+					/*if(getUser != null && ! ("3").equals(getUser.getRoleExtInfo())){
 						RoleEO getRole = roleEOService.selectByPrimaryKey(id);
 						if(!("").equals(getRole.getExtInfo()) && getRole.getExtInfo() != null){
 							if(! getRole.getExtInfo().equals(getUser.getRoleExtInfo())){
@@ -180,7 +180,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 							}
 						}
 
-					}
+					}*/
 				}
 				roleEOService.delete(id);
 			}
@@ -216,14 +216,14 @@ public class RoleEOController extends BaseController<RoleEO> {
 		String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 		if(loginUserId != null && !loginUserId.isEmpty()){
 			UserEO getUser = userService.selectOrgByPrimaryKey(loginUserId);
-			if(getUser != null){
+			/*if(getUser != null){
 				if(("0").equals(getUser.getCorpType())){
 					setRole.setExtInfo("0");
 				} else if(("1").equals(getUser.getCorpType())){
 					setRole.setExtInfo("1");
 				}
 
-			}
+			}*/
 		}
 		List<RoleVO> roleVOs = beanMapper.mapList(roleEOService.findAll(setRole), RoleVO.class);
 		return Result.success(roleVOs);

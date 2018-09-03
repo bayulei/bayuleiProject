@@ -90,7 +90,7 @@ public class UserUtils {
 
             if (StringUtils.isNotEmpty(userId)) {
                 UserEO userInDb = userService.selectByPrimaryKey(userId);
-                userInDb.setUsname(userVo.getUsname());
+                userInDb.setUname(userVo.getUname());
                 userService.save(userInDb);
 
                 CacheUtils.removeCache(CURRENT_USER);
