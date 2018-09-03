@@ -11,54 +11,98 @@ import java.util.Date;
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public class SarStandardsInfoEO extends BaseEntity {
-
+    //修改时间
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
+    //创建时间
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
+    //是否有效
     private Integer validFlag;
+    //创建人
     private String creationUser;
+    //备注
     private String remark;
+    //所属类别     多选
     private String category;
+    //责任部门
     private String responsibleUnit;
+    //内容摘要
     private Object synopsis;
+    //关键词
     private String tags;
+    //关联文件  支持PDF、doc、docx文件，
     private String relevanceFile;
+    //报批稿  支持PDF、doc、docx文件，
     private String approvalFile;
+    //送审稿  支持PDF、doc、docx文件，
     private String sentScreenFile;
+    //征求意见稿  支持PDF、doc、docx文件，
     private String opinionFile;
+    //草案 支持PDF、doc、docx文件，
     private String draftFile;
+    //标准修改单 支持PDF、doc、docx文件，
     private String standModifyFile;
+    //标准文本 支持PDF、doc、docx文件，
     private String standFile;
+    //起草人
     private String draftUser;
+    //起草单位
     private String draftingUnit;
+    //新生产车实施日期
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date newproductPutTime;
+    //在产车实施日期
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date productPutTime;
+    //新定型车实施日期
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date newcarPutTime;
+    //实施日期
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date putTime;
+    //发布日期
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date issueTime;
+    //适用认证  多选
     private String applyAuth;
+    //能源种类  多选
     private String emergyKind;
+    //采标程度
     private String adoptExtent;
+    //采用国际标准号
     private String interStandNum;
+    //被代替标准号
     private String replacedStandNum;
+    //代替标准号   手动输入可以多个，用","隔开
     private String replaceStandNum;
+    //标准性质
     private String standNature;
+    //标准状态
     private String standState;
+    //标准英文名称
     private String standEnName;
-    private String syandName;
+    //标准名称
+    private String standName;
+    //标准年份
     private String standYear;
+    //标准编号
     private String standNumber;
+    //适用车型 多选，用“，”隔开
     private String applyArctic;
+    //标准类别
     private String standSort;
+    //国家、地区
     private String country;
+    //标准分类
     private String standType;
+    //主键
     private String id;
+
+    //目录ID   非标准信息表中的字段
+    private String  menuId;
+
+
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -95,7 +139,7 @@ public class SarStandardsInfoEO extends BaseEntity {
      * <li>standNature -> stand_nature</li>
      * <li>standState -> stand_state</li>
      * <li>standEnName -> stand_en_name</li>
-     * <li>syandName -> syand_name</li>
+     * <li>standName -> stand_name</li>
      * <li>standYear -> stand_year</li>
      * <li>standNumber -> stand_number</li>
      * <li>applyArctic -> apply_arctic</li>
@@ -139,7 +183,7 @@ public class SarStandardsInfoEO extends BaseEntity {
             case "standNature": return "stand_nature";
             case "standState": return "stand_state";
             case "standEnName": return "stand_en_name";
-            case "syandName": return "syand_name";
+            case "standName": return "stand_name";
             case "standYear": return "stand_year";
             case "standNumber": return "stand_number";
             case "applyArctic": return "apply_arctic";
@@ -186,7 +230,7 @@ public class SarStandardsInfoEO extends BaseEntity {
      * <li>stand_nature -> standNature</li>
      * <li>stand_state -> standState</li>
      * <li>stand_en_name -> standEnName</li>
-     * <li>syand_name -> syandName</li>
+     * <li>stand_name -> standName</li>
      * <li>stand_year -> standYear</li>
      * <li>stand_number -> standNumber</li>
      * <li>apply_arctic -> applyArctic</li>
@@ -230,7 +274,7 @@ public class SarStandardsInfoEO extends BaseEntity {
             case "stand_nature": return "standNature";
             case "stand_state": return "standState";
             case "stand_en_name": return "standEnName";
-            case "syand_name": return "syandName";
+            case "stand_name": return "standName";
             case "stand_year": return "standYear";
             case "stand_number": return "standNumber";
             case "apply_arctic": return "applyArctic";
@@ -563,13 +607,13 @@ public class SarStandardsInfoEO extends BaseEntity {
     }
 
     /**  **/
-    public String getSyandName() {
-        return this.syandName;
+    public String getStandName() {
+        return this.standName;
     }
 
     /**  **/
-    public void setSyandName(String syandName) {
-        this.syandName = syandName;
+    public void setStandName(String standName) {
+        this.standName = standName;
     }
 
     /**  **/
@@ -642,4 +686,11 @@ public class SarStandardsInfoEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
 }
