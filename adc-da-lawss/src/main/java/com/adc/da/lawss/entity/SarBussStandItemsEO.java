@@ -18,7 +18,7 @@ public class SarBussStandItemsEO extends BaseEntity {
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private Integer validFlag;
-    private Clob remarks;
+    private String remarks;
     private String responsibleUnit;
     private String energyKind;
     private String applyArctic;
@@ -135,12 +135,12 @@ public class SarBussStandItemsEO extends BaseEntity {
     }
 
     /**  **/
-    public Clob getRemarks() {
+    public String getRemarks() {
         return this.remarks;
     }
 
     /**  **/
-    public void setRemarks(Clob remarks) {
+    public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
 

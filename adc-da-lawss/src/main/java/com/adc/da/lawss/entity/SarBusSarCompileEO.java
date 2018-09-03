@@ -21,7 +21,7 @@ public class SarBusSarCompileEO extends BaseEntity {
     private String creationUser;
     private String dutyUnit;
     private String replaceStandNum;
-    private Clob remarks;
+    private String remarks;
     private String putYear;
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date putTime;
@@ -191,12 +191,12 @@ public class SarBusSarCompileEO extends BaseEntity {
     }
 
     /**  **/
-    public Clob getRemarks() {
+    public String getRemarks() {
         return this.remarks;
     }
 
     /**  **/
-    public void setRemarks(Clob remarks) {
+    public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
 
