@@ -33,4 +33,9 @@ public class SarStandItemValEOService extends BaseService<SarStandItemValEO, Str
         return dao;
     }
 
+    //根据标准条目ID删除标准条目关联
+    public int  deleteSarStandItemValByItemid(String itemid){
+      return   dao.deleteSarStandItemValByItemid(itemid);
+    }
+
 }

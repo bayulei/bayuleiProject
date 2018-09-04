@@ -90,8 +90,8 @@ public class SarStandardsInfoEOPage extends BasePage {
     private String standStateOperator = "=";
     private String standEnName;
     private String standEnNameOperator = "=";
-    private String syandName;
-    private String syandNameOperator = "=";
+    private String standName;
+    private String standNameOperator = "=";
     private String standYear;
     private String standYearOperator = "=";
     private String standNumber;
@@ -731,20 +731,20 @@ public class SarStandardsInfoEOPage extends BasePage {
         this.standEnNameOperator = standEnNameOperator;
     }
 
-    public String getSyandName() {
-        return this.syandName;
+    public String getStandName() {
+        return this.standName;
     }
 
-    public void setSyandName(String syandName) {
-        this.syandName = syandName;
+    public void setStandName(String standName) {
+        this.standName = standName;
     }
 
-    public String getSyandNameOperator() {
-        return this.syandNameOperator;
+    public String getStandNameOperator() {
+        return this.standNameOperator;
     }
 
-    public void setSyandNameOperator(String syandNameOperator) {
-        this.syandNameOperator = syandNameOperator;
+    public void setStandNameOperator(String standNameOperator) {
+        this.standNameOperator = standNameOperator;
     }
 
     public String getStandYear() {

@@ -4,7 +4,8 @@
  * @date: 2018-08-29 10:17:59
  */
 
-import dateFormat from '../plugins/date'
+import dateFormat from './date'
+import loading from './loading'
 
 const install = function (Vue) {
   if (install.installed) return
@@ -13,6 +14,13 @@ const install = function (Vue) {
     $dateFormat: {
       get () {
         return dateFormat
+      }
+    }
+  })
+  Object.defineProperties(Vue.prototype, {
+    $loading: {
+      get () {
+        return loading
       }
     }
   })

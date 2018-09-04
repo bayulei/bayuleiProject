@@ -3,7 +3,7 @@
   <div class="regulations-manage">
     <panel-header :tabs="tabsList" @activated="showComponent" :active="active"></panel-header>
     <panel-content>
-      <transition enter-active-class="animated zoomInLeft" leave-active-class="animated zoomOutRight">
+      <transition enter-active-class="" leave-active-class="">
         <components :is="active"></components>
       </transition>
     </panel-content>
@@ -65,6 +65,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  @import 'animate.css';
   .regulations-manage{
     width: 100%;
     height: 100%;
