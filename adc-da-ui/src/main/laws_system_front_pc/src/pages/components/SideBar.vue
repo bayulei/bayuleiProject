@@ -62,12 +62,18 @@ export default {
     height: 100%;
     position: relative;
     float: left;
+    &:hover{
+      .side-bar-left{
+        box-shadow: -1px 17px 20px 0px #CCC;
+      }
+    }
     .side-bar-left{
       width: 5.2rem;
       height: 100%;
       border-top: 1px solid #EDEDED;
       border-right: 1px solid #EDEDED;
       background: @sideBarColor;
+      transition: box-shadow .3s linear;
       .content{
         width: 3.8rem;
         margin: 0 auto;
@@ -104,6 +110,36 @@ export default {
                 transition: all linear .2s;
                 color: @baseColor;
                 background: #F0F0F0;
+                box-shadow: 2px 2px 5px #DDD;
+                span{
+                  text-shadow: 2px 2px 5px #DDD;
+                  &::before{
+                    display: none;
+                  }
+                }
+              }
+              &:hover{
+                span{
+                  &::before{
+                    left: 0;
+                    width: 100%;
+                    transform: translate(0);
+                  }
+                }
+              }
+              span{
+                position: relative;
+                &::before{
+                  content: '';
+                  position: absolute;
+                  width: 0;
+                  left: 50%;
+                  top: 125%;
+                  transform: translate(-50%);
+                  height: 2px;
+                  background: @baseColor;
+                  transition: all .2s ease-in-out;
+                }
               }
             }
           }

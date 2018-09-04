@@ -56,6 +56,8 @@
 ```
 
 ### 开发环境:
++ 1 nodejs(百度下载) 
++ 2 git(百度下载)
 
 ## 注意:
 + 1 项目引用组件时，会自动识别文件夹下的index.js / index.vue 例如引入src/pages/home组件 import Home from '@/pages/home' 即可引入, home下的index.vue则为home组件
