@@ -79,7 +79,7 @@ public class BuyApprovalService {
             String userId, String processDefinitionKey,String processInstanceId){
         //如果有流程Id，那么就删除这个流程，重新赋值流程变量再启动流程
         if(!StringUtils.isEmpty(processInstanceId)){
-            flowProcessUtil.deleteProcess(processInstanceId);
+            flowProcessUtil.deleteByProcessInstance(processInstanceId);
         }
         //设置流程发起人id
         identityService.setAuthenticatedUserId(userId);
