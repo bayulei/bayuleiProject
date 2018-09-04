@@ -1,4 +1,5 @@
 @import './style';
+@import '/mixins';
 @import '~iview/src/styles/index.less';
 @primary-color: @baseColor;
 /**
@@ -83,6 +84,9 @@
     background: @baseColor;
   }
 }
+@font-face {
+  .icon-font()
+}
 .i-icon {
   display: inline-block;
   font-family: 'custom-font' !important;
@@ -96,4 +100,22 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   vertical-align: middle;
+}
+.spin-loading{
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  from { transform: rotate(0deg);}
+  50%  { transform: rotate(180deg);}
+  to   { transform: rotate(360deg);}
+}
+.loading-tips{
+  min-width: 100px;
+  margin-top: 0.1rem;
+}
+.ivu-page-item-active{
+  background: @baseColor;
+  a{
+    color: #FFF !important;
+  }
 }
