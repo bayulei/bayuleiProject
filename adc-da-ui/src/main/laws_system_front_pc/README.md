@@ -55,6 +55,8 @@
     └─state
 ```
 
+### 开发环境:
+
 ## 注意:
 + 1 项目引用组件时，会自动识别文件夹下的index.js / index.vue 例如引入src/pages/home组件 import Home from '@/pages/home' 即可引入, home下的index.vue则为home组件
 + 2 如果没有index.vue 则需要具体的组件名， 比如组件名是Home.vue 则 import Home from '@/pages/home/Home' .vue/.js 可省略
