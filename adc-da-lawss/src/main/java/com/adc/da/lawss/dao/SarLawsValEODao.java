@@ -2,6 +2,10 @@ package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarLawsValEO;
+import com.adc.da.lawss.page.SarLawsValEOPage;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -12,4 +16,12 @@ import com.adc.da.lawss.entity.SarLawsValEO;
  */
 public interface SarLawsValEODao extends BaseDao<SarLawsValEO> {
 
+    /**
+     * @Author yangxuenan
+     * @Description 根据法规信息查询关联表数据
+     * Date 2018/9/4 9:29
+     * @Param [sarLawsValEO]
+     * @return java.util.List<com.adc.da.lawss.entity.SarLawsValEO>
+     **/
+    List<SarLawsValEO> selectByLawsVal(SarLawsValEOPage sarLawsValEO);
 }

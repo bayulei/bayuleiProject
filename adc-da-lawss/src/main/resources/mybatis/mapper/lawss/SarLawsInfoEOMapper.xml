@@ -77,13 +77,13 @@
         and responsible_unit ${responsibleUnitOperator} #{responsibleUnit}
       </if>
       <if test="applyAuth != null" >
-        and apply_auth ${applyAuthOperator} #{applyAuth}
+        and apply_auth ${applyAuthOperator} concat(concat('%',#{applyAuth}),'%')
       </if>
       <if test="energyKind != null" >
-        and energy_kind ${energyKindOperator} #{energyKind}
+        and energy_kind ${energyKindOperator} concat(concat('%',#{energyKind}),'%')
       </if>
       <if test="applyArctic != null" >
-        and apply_arctic ${applyArcticOperator} #{applyArctic}
+        and apply_arctic ${applyArcticOperator} concat(concat('%',#{applyArctic}),'%')
       </if>
       <if test="replaceLawsNum != null" >
         and replace_laws_num ${replaceLawsNumOperator} #{replaceLawsNum}
@@ -113,10 +113,10 @@
         and issue_unit ${issueUnitOperator} #{issueUnit}
       </if>
       <if test="lawsName != null" >
-        and laws_name ${lawsNameOperator} #{lawsName}
+        and laws_name ${lawsNameOperator} concat(concat('%',#{lawsName}),'%')
       </if>
       <if test="lawsNumber != null" >
-        and laws_number ${lawsNumberOperator} #{lawsNumber}
+        and laws_number ${lawsNumberOperator} concat(concat('%',#{lawsNumber}),'%')
       </if>
       <if test="lawsProperty != null" >
         and laws_property ${lawsPropertyOperator} #{lawsProperty}

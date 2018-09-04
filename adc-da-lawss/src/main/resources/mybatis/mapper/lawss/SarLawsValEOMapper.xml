@@ -172,4 +172,12 @@
     </if>
   </select>
 
+    <!-- 根据法规信息查询 SAR_LAWS_VAL -->
+    <select id="selectByLawsVal" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarLawsValEOPage">
+        select <include refid="Base_Column_List" />
+        from SAR_LAWS_VAL
+        <include refid="Base_Where_Clause"/>
+
+    </select>
+
 </mapper>
