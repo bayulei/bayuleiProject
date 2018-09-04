@@ -285,8 +285,12 @@ export default {
 			})
 		}
 	}
+```
+
 
 > #### v-show (和v-if显示效果相同 只是v-show不成立的时候 元素会出现在dom结构中 display:none)
+```
+
 
 
 > #### router(路由配置)
