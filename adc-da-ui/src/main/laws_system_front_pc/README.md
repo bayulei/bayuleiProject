@@ -33,7 +33,7 @@
 │  ├─home			—————————————————————————————————————————————————————— 项目一级菜单
 │  ├─login			—————————————————————————————————————————————————————— 项目一级菜单
 │  └─personal		—————————————————————————————————————————————————————— 项目一级菜单
-│      ├─components	
+│      ├─components
 │      └─pages
 │          ├─individual-plate
 │          │  └─components
@@ -56,8 +56,13 @@
 ```
 
 ### 开发环境:
-+ 1 nodejs(百度下载) 
++ 1 nodejs(百度下载)
 + 2 git(百度下载)
+
+### 通用方法:
++ 1 表单验证: 使用src/common下的verify方法，结合iview的form组件
++ 2 ajax: 使用src/common下的axios方法 this.$http('接口地址(无需ip和端口号) 例如 user/useradd',{ key: value ... },res => { 成功回调 }, err => { 失败回调 })
++ 3 日期转换: 使用src/common/plugins下的date方法 this.$dateFormat('时间戳','yyyy-MM-dd hh:mm:ss')
 
 ## 注意:
 + 1 项目引用组件时，会自动识别文件夹下的index.js / index.vue 例如引入src/pages/home组件 import Home from '@/pages/home' 即可引入, home下的index.vue则为home组件
@@ -73,22 +78,22 @@
 <template>
  <div class="example"> // -----> template外层需要有一个div包裹元素
 	<input type="text" v-model="username">
-	
+
 	<input type="checkbox" v-model="checkedName" value="tom">tom</checkbox>
 	<input type="checkbox" v-model="checkedName" value="jerry">jerry</checkbox>
 	<input type="checkbox" v-model="checkedName" value="john">john</checkbox>
-	
+
 	<span>{{ checkedName }}</span> 此时选中tom jerrry checkName就是 ['tom','jerry']
-	
+
 	<select v-model="sex">
 	<option value="1">男</option>
 	<option value="2">女</option>
 	</select>
-	
+
 	// 子组件解释看下面
 	<com-header :giveChild="username" @fromChild="process"> 我是com-header组件插槽的内容(vue子组件，可以直接使用，也可以在中间插入东西,具体解释看下面子组件的介绍) </com-header> // 在components里写ComHeader的行为叫作注册组件 注册后才能使用 否则控制台会警告 did you register component <com-header> .... ?
  </div>
-<template>  
+<template>
 <script>
 import ComHeader from '@/pages/components/Header' // --------------> 引入组件(引入要在script顶部,import引入的模块不能用h5标签，如header,footer,可使用别名代替)
 export default {
@@ -133,11 +138,11 @@ export default {
 </script>
 ```
 
-> #### v-model(双向数据绑定): 
+> #### v-model(双向数据绑定):
 > 在这里的输入框内容改变时data里的username会同时更改,同理通过js给修改data里的username，输入框内的数据也会改变
-> 
+>
 > select也可以使用v-model进行数据绑定,选男后data里的sex就是1,选女后sex就是2
-> 
+>
 
 > #### @click(点击事件)
 ```
@@ -186,10 +191,10 @@ export default {
 			console.log('子组件发来消息啦')
 		}
 	}
-```	
-	
+```
+
 > #### computed(计算属性)
-``` 
+```
 	data () {
 		return {
 			a: 1,
@@ -225,7 +230,7 @@ export default {
 		c: {
 			deep: true,
 			handler (newVal,oldVal) {}
-		}	
+		}
 	}
 ```
 
@@ -235,7 +240,7 @@ export default {
 	<template>
 		<div class="template">
 			<ul>
-				<li v-for="(item,index) in navList" 
+				<li v-for="(item,index) in navList"
 				:key="index"
 				@click="open(item.name)"
 				:class="{ '你要加的class(例如给当前激活的导航加一个class)': active === item.name   }">{{ item.name }}</li> // :后面是一个true或者false的判断
@@ -318,8 +323,8 @@ const routes = [
 
 路由跳转 <router-link to="路由的地址">跳转</router-link> 动态绑定的都用 :to :title 和 a href差不多
 <router-link tag="div"></router-link> router-link默认渲染为a标签 tag可以改变渲染
-js路由跳转 
-this.$router.push(路由的path/ { path: '路由的path', params: { name: 'tom' }}) 
+js路由跳转
+this.$router.push(路由的path/ { path: '路由的path', params: { name: 'tom' }})
 this.$router.push({ name:'路由的名称',query:{ name:'tom' } })
 路由传参的params需要在routes中配置
     {
@@ -328,4 +333,3 @@ this.$router.push({ name:'路由的名称',query:{ name:'tom' } })
 在页面里使用路由传来的参数
 	this.$route.params
 	this.$route.query
- 
