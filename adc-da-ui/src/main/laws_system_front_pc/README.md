@@ -55,6 +55,8 @@
     └─state
 ```
 
+### 开发环境:
+
 ## 注意:
 + 1 项目引用组件时，会自动识别文件夹下的index.js / index.vue 例如引入src/pages/home组件 import Home from '@/pages/home' 即可引入, home下的index.vue则为home组件
 + 2 如果没有index.vue 则需要具体的组件名， 比如组件名是Home.vue 则 import Home from '@/pages/home/Home' .vue/.js 可省略
@@ -153,7 +155,6 @@ export default {
 	<template>
 		<div class="header">
 			{{ giveChild }} ---> 输出父组件的username
-			
 			<input type="button" @click="send" value="子组件向父组件通信" />
 		</div>
 	</template>
@@ -161,9 +162,7 @@ export default {
 		export default {
 			name: 'template',
 			data () {
-				return {
-					
-				}
+				return {}
 			},
 			methods: {
 				send () {
@@ -174,12 +173,9 @@ export default {
 			props: {
 				giveChild: String ---> 这里可以定义一个类型(规范)
 			},
-			mounted: {
-				
-			}
+			mounted: {}
 		}
 	</script>
-	
 	父组件里:
 	<com-header :giveChild="username" @fromChild="process"></com-header> ---> giveChild是随便起的一个名字 username是父组件data中的属性
 	methods: {
@@ -188,8 +184,8 @@ export default {
 			console.log('子组件发来消息啦')
 		}
 	}
-```
-
+```	
+	
 > #### computed(计算属性)
 ``` 
 	data () {
@@ -244,7 +240,6 @@ export default {
 			</ul>
 		</div>
 	</template>
-	
 	data () {
 		return {
 			active: 'UserCenter'
@@ -266,8 +261,6 @@ export default {
 	}
 ```
 
-
-
 > #### v-if v-else-if v-else 和 java的 c:if 差不多
 > #### v-if可以触发数据的重新渲染， 比如某个数组有数据后再加载 v-if不成立的时候 元素不会出现在dom结构中
 ```
@@ -276,13 +269,11 @@ export default {
 			<ul>
 				<li v-for="(item, index) in navList" :key="index">{{ item.name }}</li>
 			</ul>
-			
 			<div v-if="navList"> // navList为空 则v-if返回false 这个div不显示
 				当前的路由name是 {{ active }}
 			</div>
 		</div>
 	</template>
-	
 	data () {
 		return {
 			active: 'UserCenter'
@@ -298,12 +289,14 @@ export default {
 	}
 ```
 
+
 > #### v-show (和v-if显示效果相同 只是v-show不成立的时候 元素会出现在dom结构中 display:none)
 
 
 > #### router(路由配置)
 > ##### 每新建一个页面 都需要对router下的index.js进行配置
 
+```
 import Home from '@/pages/home'
 const routes = [
 	{
@@ -321,16 +314,15 @@ const routes = [
 	}
 ]
 
-> 路由跳转 <router-link to="路由的地址">跳转</router-link> 动态绑定的都用 :to :title 和 a href差不多
-> <router-link tag="div"></router-link> router-link默认渲染为a标签 tag可以改变渲染
-> js路由跳转 
-> this.$router.push(路由的path/ { path: '路由的path', params: { name: 'tom' }}) 
-> this.$router.push({ name:'路由的名称',query:{ name:'tom' } })
-> 
-> 路由传参的params需要在routes中配置
-{
-	path: '/user/:name' query不用配置
-}
+路由跳转 <router-link to="路由的地址">跳转</router-link> 动态绑定的都用 :to :title 和 a href差不多
+<router-link tag="div"></router-link> router-link默认渲染为a标签 tag可以改变渲染
+js路由跳转 
+this.$router.push(路由的path/ { path: '路由的path', params: { name: 'tom' }}) 
+this.$router.push({ name:'路由的名称',query:{ name:'tom' } })
+路由传参的params需要在routes中配置
+    {
+	    path: '/user/:name' query不用配置
+    }
 在页面里使用路由传来的参数
 	this.$route.params
 	this.$route.query
