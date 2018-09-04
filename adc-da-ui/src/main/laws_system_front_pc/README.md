@@ -188,9 +188,8 @@ export default {
 			console.log('子组件发来消息啦')
 		}
 	}
-```
-
-> #### computed(计算属性)
+``
+#### computed(计算属性)
 ``` 
 	data () {
 		return {
@@ -205,7 +204,7 @@ export default {
 	}
 ```
 
-> #### watch(监视者)
+#### watch(监视者)
 ```
 	data () {
 		return {
