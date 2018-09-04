@@ -47,19 +47,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .personal{
-    width: 100%;
-    height: 100%;
-    .main{
-      width: 100%;
-      height: calc(~'100% - 1.6rem');
-      display: flex;
-    }
-    .sub-container{
-      top: 1.6rem;
-      flex: 1;
-      height: calc(~'100% - 0.4rem');
-      margin: 0 0.4rem 0.4rem 0.4rem;
-    }
-  }
+  .personal{}
 </style>

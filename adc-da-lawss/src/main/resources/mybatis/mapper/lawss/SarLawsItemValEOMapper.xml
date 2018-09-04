@@ -9,12 +9,12 @@
     <result column="valid_flag" property="validFlag" />
     <result column="property_val" property="propertyVal" />
     <result column="property_type" property="propertyType" />
-    <result column="laws_id" property="lawsId" />
+    <result column="laws_item_id" property="lawsItemId" />
   </resultMap>
 
   <!-- SAR_LAWS_ITEM_VAL table all fields -->
   <sql id="Base_Column_List" >
-     modify_time, creation_time, valid_flag, property_val, property_type, laws_id, id
+     modify_time, creation_time, valid_flag, property_val, property_type, laws_item_id, id
   </sql>
 
   <!-- 查询条件 -->
@@ -48,8 +48,8 @@
       <if test="propertyType != null" >
         and property_type ${propertyTypeOperator} #{propertyType}
       </if>
-      <if test="lawsId != null" >
-        and laws_id ${lawsIdOperator} #{lawsId}
+      <if test="lawsItemId != null" >
+        and laws_item_id ${lawsItemIdOperator} #{lawsItemId}
       </if>
       <if test="id != null" >
         and id ${idOperator} #{id}
@@ -63,7 +63,7 @@
         SELECT SEQ_SAR_LAWS_ITEM_VAL.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into SAR_LAWS_ITEM_VAL(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{propertyVal, jdbcType=VARCHAR}, #{propertyType, jdbcType=VARCHAR}, #{lawsId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{propertyVal, jdbcType=VARCHAR}, #{propertyType, jdbcType=VARCHAR}, #{lawsItemId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -78,7 +78,7 @@
                 <if test="validFlag != null" >valid_flag,</if>
                 <if test="propertyVal != null" >property_val,</if>
                 <if test="propertyType != null" >property_type,</if>
-                <if test="lawsId != null" >laws_id,</if>
+                <if test="lawsItemId != null" >laws_item_id,</if>
                 <if test="id != null" >id,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -87,7 +87,7 @@
                 <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
                 <if test="propertyVal != null" >#{propertyVal, jdbcType=VARCHAR},</if>
                 <if test="propertyType != null" >#{propertyType, jdbcType=VARCHAR},</if>
-                <if test="lawsId != null" >#{lawsId, jdbcType=VARCHAR},</if>
+                <if test="lawsItemId != null" >#{lawsItemId, jdbcType=VARCHAR},</if>
                 <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
             </trim>
   </insert>
@@ -100,7 +100,7 @@
             valid_flag = #{validFlag},
             property_val = #{propertyVal},
             property_type = #{propertyType},
-            laws_id = #{lawsId}
+            laws_item_id = #{lawsItemId}
      where  id = #{id}
   </update>
 
@@ -123,8 +123,8 @@
       <if test="propertyType != null" >
         property_type = #{propertyType},
       </if>
-      <if test="lawsId != null" >
-        laws_id = #{lawsId},
+      <if test="lawsItemId != null" >
+          laws_item_id = #{lawsItemId},
       </if>
     </set>
      where id = #{id}
