@@ -188,7 +188,7 @@ export default {
 			console.log('子组件发来消息啦')
 		}
 	}
-``
+	
 > #### computed(计算属性)
 ``` 
 	data () {
@@ -263,7 +263,6 @@ export default {
 			})
 		}
 	}
-``
 
 > #### v-if v-else-if v-else 和 java的 c:if 差不多
 > #### v-if可以触发数据的重新渲染， 比如某个数组有数据后再加载 v-if不成立的时候 元素不会出现在dom结构中
@@ -293,7 +292,6 @@ export default {
 			})
 		}
 	}
-``
 
 > #### v-show (和v-if显示效果相同 只是v-show不成立的时候 元素会出现在dom结构中 display:none)
 
