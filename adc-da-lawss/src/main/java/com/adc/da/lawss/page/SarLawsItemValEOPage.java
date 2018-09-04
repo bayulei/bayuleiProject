@@ -26,8 +26,8 @@ public class SarLawsItemValEOPage extends BasePage {
     private String propertyValOperator = "=";
     private String propertyType;
     private String propertyTypeOperator = "=";
-    private String lawsId;
-    private String lawsIdOperator = "=";
+    private String lawsItemId;
+    private String lawsItemIdOperator = "=";
     private String id;
     private String idOperator = "=";
 
@@ -143,20 +143,20 @@ public class SarLawsItemValEOPage extends BasePage {
         this.propertyTypeOperator = propertyTypeOperator;
     }
 
-    public String getLawsId() {
-        return this.lawsId;
+    public String getLawsItemId() {
+        return lawsItemId;
     }
 
-    public void setLawsId(String lawsId) {
-        this.lawsId = lawsId;
+    public void setLawsItemId(String lawsItemId) {
+        this.lawsItemId = lawsItemId;
     }
 
-    public String getLawsIdOperator() {
-        return this.lawsIdOperator;
+    public String getLawsItemIdOperator() {
+        return lawsItemIdOperator;
     }
 
-    public void setLawsIdOperator(String lawsIdOperator) {
-        this.lawsIdOperator = lawsIdOperator;
+    public void setLawsItemIdOperator(String lawsItemIdOperator) {
+        this.lawsItemIdOperator = lawsItemIdOperator;
     }
 
     public String getId() {

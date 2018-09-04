@@ -19,8 +19,9 @@ public class SarLawsItemValEO extends BaseEntity {
     private Integer validFlag;
     private String propertyVal;
     private String propertyType;
-    private String lawsId;
+    private String lawsItemId;
     private String id;
+
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -41,7 +42,7 @@ public class SarLawsItemValEO extends BaseEntity {
             case "validFlag": return "valid_flag";
             case "propertyVal": return "property_val";
             case "propertyType": return "property_type";
-            case "lawsId": return "laws_id";
+            case "lawsItemId": return "laws_item_id";
             case "id": return "id";
             default: return null;
         }
@@ -66,7 +67,7 @@ public class SarLawsItemValEO extends BaseEntity {
             case "valid_flag": return "validFlag";
             case "property_val": return "propertyVal";
             case "property_type": return "propertyType";
-            case "laws_id": return "lawsId";
+            case "laws_item_id": return "lawsItemId";
             case "id": return "id";
             default: return null;
         }
@@ -122,14 +123,12 @@ public class SarLawsItemValEO extends BaseEntity {
         this.propertyType = propertyType;
     }
 
-    /**  **/
-    public String getLawsId() {
-        return this.lawsId;
+    public String getLawsItemId() {
+        return lawsItemId;
     }
 
-    /**  **/
-    public void setLawsId(String lawsId) {
-        this.lawsId = lawsId;
+    public void setLawsItemId(String lawsItemId) {
+        this.lawsItemId = lawsItemId;
     }
 
     /**  **/
