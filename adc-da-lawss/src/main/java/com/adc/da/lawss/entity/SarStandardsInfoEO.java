@@ -104,6 +104,7 @@ public class SarStandardsInfoEO extends BaseEntity {
 
 
 
+
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>

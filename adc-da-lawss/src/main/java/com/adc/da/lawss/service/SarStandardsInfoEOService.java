@@ -8,6 +8,7 @@ import com.adc.da.lawss.entity.SarStandValEO;
 import com.adc.da.sys.constant.ValueStateEnum;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
+import com.adc.da.util.utils.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,11 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.SarStandardsInfoEODao;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-import java.util.UUID;
+import java.util.List;
 
 
 /**
@@ -55,18 +58,13 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
         return sarStandardsInfoEOdao;
     }
 
-
-
-
-
-    public ResponseMessage<SarStandardsInfoEO> createSarStandardsInfo(@RequestBody SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
+    public ResponseMessage<SarStandardsInfoEO> createSarStandardsInfo(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
         //标准信息表中插入一条数据
-        // TODO: 2018/9/3
         sarStandardsInfoEO.setCreationUser("gaoyan");
         sarStandardsInfoEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
         sarStandardsInfoEO.setCreationTime(new Date());
         sarStandardsInfoEO.setModifyTime(new Date());
-        sarStandardsInfoEO.setId(UUID.randomUUID().toString());
+        sarStandardsInfoEO.setId(UUID.randomUUID(20));
         int insertresult = sarStandardsInfoEOdao.insertSelective(sarStandardsInfoEO);
         if(insertresult>=1){
             //根据新建标准所在目录，确定此处是否需要在标准目录关联表中插入数据
@@ -75,7 +73,7 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
                 sarStandMenuEO.setStandId(sarStandardsInfoEO.getId());
                 sarStandMenuEO.setMenuId(sarStandardsInfoEO.getMenuId());
                 sarStandMenuEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
-                sarStandMenuEO.setId(UUID.randomUUID().toString());
+                sarStandMenuEO.setId(UUID.randomUUID(20));
                 sarStandMenuEODao.insertSelective(sarStandMenuEO);
             }
 
@@ -85,10 +83,11 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
             sarStandValEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
             sarStandValEO.setCreationTime(new Date());
             sarStandValEO.setModifyTime(new Date());
+            sarStandValEO.setStandId(sarStandardsInfoEO.getId());
             if(StringUtils.isNotEmpty(sarStandardsInfoEO.getApplyArctic())){
                String []applyarr = sarStandardsInfoEO.getApplyArctic().trim().split(",");
                 for (String apply:applyarr){
-                    sarStandValEO.setId(UUID.randomUUID().toString());
+                    sarStandValEO.setId(UUID.randomUUID(20));
                     sarStandValEO.setPropertyType(PropertyTypeEnum.APPLY_ARCTIC.getValue());
                     sarStandValEO.setPropertyVal(apply);
                     sarStandValEODao.insertSelective(sarStandValEO);
@@ -97,7 +96,7 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
             if(StringUtils.isNotEmpty(sarStandardsInfoEO.getEmergyKind())){
                 String []emergyKindarr = sarStandardsInfoEO.getEmergyKind().trim().split(",");
                 for (String emergyKind:emergyKindarr){
-                    sarStandValEO.setId(UUID.randomUUID().toString());
+                    sarStandValEO.setId(UUID.randomUUID(20));
                     sarStandValEO.setPropertyType(PropertyTypeEnum.ENERGY_KIND.getValue());
                     sarStandValEO.setPropertyVal(emergyKind);
                     sarStandValEODao.insertSelective(sarStandValEO);
@@ -106,7 +105,7 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
             if(StringUtils.isNotEmpty(sarStandardsInfoEO.getApplyAuth())){
                 String []applyAutharr = sarStandardsInfoEO.getApplyAuth().trim().split(",");
                 for (String applyAuth:applyAutharr){
-                    sarStandValEO.setId(UUID.randomUUID().toString());
+                    sarStandValEO.setId(UUID.randomUUID(20));
                     sarStandValEO.setPropertyType(PropertyTypeEnum.APPLY_AUTH.getValue());
                     sarStandValEO.setPropertyVal(applyAuth);
                     sarStandValEODao.insertSelective(sarStandValEO);
@@ -115,7 +114,7 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
             if(StringUtils.isNotEmpty(sarStandardsInfoEO.getCategory())){
                 String []categoryarr = sarStandardsInfoEO.getCategory().trim().split(",");
                 for (String category:categoryarr){
-                    sarStandValEO.setId(UUID.randomUUID().toString());
+                    sarStandValEO.setId(UUID.randomUUID(20));
                     sarStandValEO.setPropertyType(PropertyTypeEnum.CATEGORY.getValue());
                     sarStandValEO.setPropertyVal(category);
                     sarStandValEODao.insertSelective(sarStandValEO);
@@ -132,6 +131,12 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
         else {
             return Result.error("01","插入输入过程中出错");
         }
+    }
+
+    public ResponseMessage<SarStandardsInfoEO> importSarStandardsInfoData(List<SarStandardsInfoEO> list){
+        //此处需要做各种验证，数据库操作
+        SarStandardsInfoEO sarStandardsInfoEO = new SarStandardsInfoEO();
+        return Result.success(sarStandardsInfoEO);
     }
 
 }
