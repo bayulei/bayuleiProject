@@ -312,8 +312,8 @@ const routes = [
 	}
 ]
 
-+ 1 路由跳转 <router-link to="路由的地址">跳转</router-link> 动态绑定的都用 :to :title 和 a href差不多
-+ 2 <router-link tag="div"></router-link> router-link默认渲染为a标签 tag可以改变渲染
+++ 路由跳转 <router-link to="路由的地址">跳转</router-link> 动态绑定的都用 :to :title 和 a href差不多
+++ <router-link tag="div"></router-link> router-link默认渲染为a标签 tag可以改变渲染
 + 3. js路由跳转 
 + 4. this.$router.push(路由的path/ { path: '路由的path', params: { name: 'tom' }}) 
 + 5. this.$router.push({ name:'路由的名称',query:{ name:'tom' } })
