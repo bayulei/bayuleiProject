@@ -153,7 +153,6 @@ export default {
 	<template>
 		<div class="header">
 			{{ giveChild }} ---> 输出父组件的username
-			
 			<input type="button" @click="send" value="子组件向父组件通信" />
 		</div>
 	</template>
@@ -161,9 +160,7 @@ export default {
 		export default {
 			name: 'template',
 			data () {
-				return {
-					
-				}
+				return {}
 			},
 			methods: {
 				send () {
@@ -174,12 +171,9 @@ export default {
 			props: {
 				giveChild: String ---> 这里可以定义一个类型(规范)
 			},
-			mounted: {
-				
-			}
+			mounted: {}
 		}
 	</script>
-	
 	父组件里:
 	<com-header :giveChild="username" @fromChild="process"></com-header> ---> giveChild是随便起的一个名字 username是父组件data中的属性
 	methods: {
@@ -188,6 +182,7 @@ export default {
 			console.log('子组件发来消息啦')
 		}
 	}
+```	
 	
 > #### computed(计算属性)
 ``` 
