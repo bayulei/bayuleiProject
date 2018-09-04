@@ -243,7 +243,6 @@ export default {
 			</ul>
 		</div>
 	</template>
-	
 	data () {
 		return {
 			active: 'UserCenter'
@@ -272,13 +271,11 @@ export default {
 			<ul>
 				<li v-for="(item, index) in navList" :key="index">{{ item.name }}</li>
 			</ul>
-			
 			<div v-if="navList"> // navList为空 则v-if返回false 这个div不显示
 				当前的路由name是 {{ active }}
 			</div>
 		</div>
 	</template>
-	
 	data () {
 		return {
 			active: 'UserCenter'
@@ -298,7 +295,6 @@ export default {
 
 > #### router(路由配置)
 > ##### 每新建一个页面 都需要对router下的index.js进行配置
-
 import Home from '@/pages/home'
 const routes = [
 	{
