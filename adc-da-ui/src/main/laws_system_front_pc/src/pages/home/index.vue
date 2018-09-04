@@ -22,7 +22,8 @@
               <div class="nav-item router-item">分析工具</div>
               <div class="nav-item router-item">数据分析</div>
             </div>
-            <div class="nav-top-right router-item">本地标准法规库</div>
+            <router-link tag="div"  class="nav-top-right router-item" to="/statuteBank">本地标准法规库</router-link>
+            <!--<router-link tag="div" class="nav-item router-item" to="/config">-->
           </div>
           <div class="nav-group nav-top">
             <div class="nav-top-item router-item">资源中心</div>

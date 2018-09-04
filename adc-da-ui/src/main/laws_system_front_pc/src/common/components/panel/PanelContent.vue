@@ -1,6 +1,6 @@
 <template>
   <div class="panel-content">
-    <slot></slot>
+      <slot></slot>
   </div>
 </template>
 
@@ -10,13 +10,13 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   @import '~styles/style';
   .panel-content{
+    width: 100%;
     height: calc(~'100% - 0.9rem');
-    overflow: hidden;
     position: relative;
-    padding: 0.56rem 0.8rem;
     background: @subContainerContentColor;
+    overflow: hidden;
   }
 </style>

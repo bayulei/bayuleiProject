@@ -13,7 +13,7 @@ import java.util.Date;
 public class SarStandItemValEO extends BaseEntity {
 
     private String propertyType;
-    private String standId;
+    private String itemId;
     private String id;
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
@@ -26,7 +26,7 @@ public class SarStandItemValEO extends BaseEntity {
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
      * <li>propertyType -> property_type</li>
-     * <li>standId -> stand_id</li>
+     * <li>itemId -> item_id</li>
      * <li>id -> id</li>
      * <li>modifyTime -> modify_time</li>
      * <li>creationTime -> creation_time</li>
@@ -37,7 +37,7 @@ public class SarStandItemValEO extends BaseEntity {
         if (fieldName == null) return null;
         switch (fieldName) {
             case "propertyType": return "property_type";
-            case "standId": return "stand_id";
+            case "itemId": return "item_id";
             case "id": return "id";
             case "modifyTime": return "modify_time";
             case "creationTime": return "creation_time";
@@ -51,7 +51,7 @@ public class SarStandItemValEO extends BaseEntity {
      * 原始数据库列名转换为java字段名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
      * <li>property_type -> propertyType</li>
-     * <li>stand_id -> standId</li>
+     * <li>item_id -> itemId</li>
      * <li>id -> id</li>
      * <li>modify_time -> modifyTime</li>
      * <li>creation_time -> creationTime</li>
@@ -62,7 +62,7 @@ public class SarStandItemValEO extends BaseEntity {
         if (columnName == null) return null;
         switch (columnName) {
             case "property_type": return "propertyType";
-            case "stand_id": return "standId";
+            case "item_id": return "itemId";
             case "id": return "id";
             case "modify_time": return "modifyTime";
             case "creation_time": return "creationTime";
@@ -83,13 +83,13 @@ public class SarStandItemValEO extends BaseEntity {
     }
 
     /**  **/
-    public String getStandId() {
-        return this.standId;
+    public String getItemId() {
+        return this.itemId;
     }
 
     /**  **/
-    public void setStandId(String standId) {
-        this.standId = standId;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     /**  **/

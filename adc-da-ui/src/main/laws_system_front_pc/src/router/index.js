@@ -174,6 +174,42 @@ const routes = [
         }
       }
     ]
+  },
+  // **************************   法规库   ******************************* //
+  {
+    path: '/statuteBank',
+    name: 'StatuteBank',
+    redirect: '/domesticInformationBase',
+    component: resolve => require(['pages/statuteBank'], resolve),
+    children: [
+      {
+        path: '/domesticInformationBase',
+        name: 'DomesticInformationBase',
+        component: resolve => require(['pages/statuteBank/pages/domesticInformationBase'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '国内标准库'
+        }
+      },
+      {
+        path: '/foreignInformationBase',
+        name: 'ForeignInformationBase',
+        component: resolve => require(['pages/statuteBank/pages/foreignInformationBase'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '国外信息库'
+        }
+      },
+      {
+        path: '/cloudAdaptationAnalysis',
+        name: 'CloudAdaptationAnalysis',
+        component: resolve => require(['pages/statuteBank/pages/cloudAdaptationAnalysis'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '云端适应性分析'
+        }
+      }
+    ]
   }
 ]
 

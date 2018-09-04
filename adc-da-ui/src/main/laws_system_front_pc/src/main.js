@@ -14,7 +14,7 @@ import 'styles/reset.css'
 // 全局样式文件
 import 'styles/common.less'
 // iconfont字体库
-// import 'styles/iconfont.css'
+import 'styles/iconfont.css'
 // jQuery
 import $ from 'jquery'
 // vuex
@@ -23,11 +23,14 @@ import store from './store'
 import plugins from '@/common/plugins'
 // 自定义全局组件
 import components from '@/common/components'
+// 表单验证
+import verify from '@/common/verify'
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.prototype.$ = $
 Vue.use(plugins)
 Vue.use(components)
+Vue.prototype.verify = verify
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
