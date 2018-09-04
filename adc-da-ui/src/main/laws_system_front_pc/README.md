@@ -262,6 +262,7 @@ export default {
 			})
 		}
 	}
+	
 
 > #### v-if v-else-if v-else 和 java的 c:if 差不多
 > #### v-if可以触发数据的重新渲染， 比如某个数组有数据后再加载 v-if不成立的时候 元素不会出现在dom结构中
