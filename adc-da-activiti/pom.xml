@@ -39,7 +39,7 @@
 			</snapshots>
 		</repository>
 
-		<repository>
+	<!--	<repository>
 			<id>activiti</id>
 			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
 			<releases>
@@ -48,7 +48,7 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</repository>
+		</repository>-->
 	</repositories>
 
 	<distributionManagement>
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-spring-boot-starter-basic</artifactId>
-			<version>6.0.0</version>
+			<version>5.22.0</version>
 		</dependency>
 
 		<dependency>
@@ -71,6 +71,13 @@
 			<artifactId>adc-da-swagger</artifactId>
 			<version>2.0.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.adc</groupId>
+			<artifactId>adc-da-sys</artifactId>
+			<version>2.2.02</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.adc</groupId>
 			<artifactId>adc-da-base</artifactId>

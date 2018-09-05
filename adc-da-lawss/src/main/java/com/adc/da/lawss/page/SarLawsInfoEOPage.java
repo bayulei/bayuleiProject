@@ -5,11 +5,12 @@ import com.adc.da.base.page.BasePage;
 import java.util.Date;
 
 /**
- * <b>功能：</b>SAR_LAWS_INFO SarLawsInfoEOPage<br>
- * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2018-09-03 <br>
- * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
- */
+ * @Author yangxuenan
+ * @Description 法规信息
+ * Date 2018/9/3 16:37
+ * @Param
+ * @return
+ **/
 public class SarLawsInfoEOPage extends BasePage {
 
     private String modifyTime;
@@ -35,11 +36,11 @@ public class SarLawsInfoEOPage extends BasePage {
     private String responsibleUnit;
     private String responsibleUnitOperator = "=";
     private String applyAuth;
-    private String applyAuthOperator = "=";
+    private String applyAuthOperator = "like";
     private String energyKind;
-    private String energyKindOperator = "=";
+    private String energyKindOperator = "like";
     private String applyArctic;
-    private String applyArcticOperator = "=";
+    private String applyArcticOperator = "like";
     private String replaceLawsNum;
     private String replaceLawsNumOperator = "=";
     private String putTime;
@@ -55,9 +56,9 @@ public class SarLawsInfoEOPage extends BasePage {
     private String issueUnit;
     private String issueUnitOperator = "=";
     private String lawsName;
-    private String lawsNameOperator = "=";
+    private String lawsNameOperator = "like";
     private String lawsNumber;
-    private String lawsNumberOperator = "=";
+    private String lawsNumberOperator = "like";
     private String lawsProperty;
     private String lawsPropertyOperator = "=";
     private String country;

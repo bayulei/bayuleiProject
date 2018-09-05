@@ -1,7 +1,9 @@
 package com.adc.da.activiti.controller;
 
 
+import com.adc.da.activiti.common.FlowProcessUtil;
 import com.adc.da.activiti.entity.VehicleApprovalEO;
+import com.adc.da.activiti.service.VehicleApprovalService;
 import com.adc.da.activiti.vo.ProcessInformationVO;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
@@ -17,12 +19,14 @@ import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +43,15 @@ public class VehicleApprovalController{
     private HistoryService historyService;
 
     @Autowired
-    private RepositoryService repositoryService;
-
-
-    @Autowired
-    private RuntimeService runtimeService;
+    private FlowProcessUtil flowProcessUtil;
 
     @Autowired
-    private TaskService taskService;
+    private VehicleApprovalService vehicleApprovalService;
 
     /**
      *  整车认可试验计划下达及验证流程的流程图Key
      */
-    private   static  final String processDefinitionKey = "VerificationProcess";
+    public  static  final String ProcessDefinitionKey = "VerificationProcess";
 
 
 
@@ -67,6 +67,7 @@ public class VehicleApprovalController{
     @ApiOperation(value = "查询项目组总体经理自己发起的流程")
     @PostMapping("/queryStandardApprovalProcess")
     public ResponseMessage<List<ProcessInformationVO>> queryStandardApprovalProcess(){
+
         //从session取当前登录人Id
         String userId = "dyb";
         //查询当前登录人历史流程
@@ -113,45 +114,24 @@ public class VehicleApprovalController{
 
 
     /**
-     *  项目组总体经理发起流程
+     *  项目组总体经理提交或者保存流程
      * @MethodName:startStandardApprovalProcess
      * @author: DuYunbao
      * @param:[vehicleApprovalEO, userIds]
      * @return:void
      * date: 2018/8/27 15:01
      */
-    @ApiOperation(value = "项目组总体经理发起流程")
-    @PostMapping ("/startStandardApprovalProcess")
-    public ResponseMessage<String> StandardApprovalProcess(VehicleApprovalEO vehicleApprovalEO, String userIds){
-        String[] userArrary = userIds.split(",");
+    @ApiOperation(value = "项目组总体经理提交或者保存流程")
+    @PostMapping ("/submitOrSaveStandardApprovalProcess")
+    public ResponseMessage<String> submitOrSaveStandardApprovalProcess(VehicleApprovalEO vehicleApprovalEO, MultipartFile file
+    ,String flag,String ProcessInstanceId) throws Exception {
 
-        //遍历责任工程师,给每一个工程师开启一个流程
-        for (int i = 0 ;i<userArrary.length;i++){
+        //调用上传附件的接口
+        String url = "附件地址";
+        vehicleApprovalEO.setFileUrl(url);
+        return  vehicleApprovalService.submitOrSaveStandardApprovalProcess(vehicleApprovalEO,flag,ProcessInstanceId);
 
-            //从session取当前登录人Id
-            String userId = "dyb";
-
-            //设置流程发起人id
-            Authentication.setAuthenticatedUserId(userId);
-            //与正在执行的流程实例和执行对象相关的Service
-            ProcessInstance pi = runtimeService
-                    //使用流程定义的key启动流程实例，key对应bpmn文件中id的属性值，使用key值启动，默认是按照最新版本的流程定义启动
-                    .startProcessInstanceByKey(processDefinitionKey);
-
-            //获取当前执行的任务
-            Task task = taskService.createTaskQuery()
-                    .processInstanceId(pi.getProcessInstanceId())
-                    .singleResult();
-
-            //设置流程变量
-            taskService.setVariable(task.getId(),"项目组总体经理发起流程表单",vehicleApprovalEO);
-
-            //设置受理人
-            taskService.setAssignee(task.getId(),"dyb提交申请");
-
-            //将提交申请第一步任务走完 即向后执行一步
-            taskService.complete(task.getId());
-        }
-        return Result.success();
     }
+
+
 }

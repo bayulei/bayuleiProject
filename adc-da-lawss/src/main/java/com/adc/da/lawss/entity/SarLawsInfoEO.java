@@ -5,11 +5,12 @@ import com.adc.da.base.entity.BaseEntity;
 import java.util.Date;
 
 /**
- * <b>功能：</b>SAR_LAWS_INFO SarLawsInfoEOEntity<br>
- * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2018-09-03 <br>
- * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
- */
+ * @Author yangxuenan
+ * @Description 法规信息
+ * Date 2018/9/3 16:37
+ * @Param
+ * @return
+ **/
 public class SarLawsInfoEO extends BaseEntity {
 
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -39,6 +40,7 @@ public class SarLawsInfoEO extends BaseEntity {
     private String country;
     private String lawsType;
     private String id;
+    private String menuId;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -93,6 +95,7 @@ public class SarLawsInfoEO extends BaseEntity {
             case "country": return "country";
             case "lawsType": return "laws_type";
             case "id": return "id";
+            case "menuId": return "menu_id";
             default: return null;
         }
     }
@@ -150,6 +153,7 @@ public class SarLawsInfoEO extends BaseEntity {
             case "country": return "country";
             case "laws_type": return "lawsType";
             case "id": return "id";
+            case "menu_id": return "menuId";
             default: return null;
         }
     }
@@ -384,4 +388,11 @@ public class SarLawsInfoEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
 }
