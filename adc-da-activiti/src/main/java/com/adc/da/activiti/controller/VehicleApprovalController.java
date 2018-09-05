@@ -134,4 +134,29 @@ public class VehicleApprovalController{
     }
 
 
+    @ApiOperation(value = "提交或保存试验计划及验证结果")
+    @PostMapping ("/saveOrSubmitTestProgram")
+    public ResponseMessage<String> saveOrSubmitTestProgram(MultipartFile file
+            ,String flag,String taskId) throws Exception {
+        //调用上传附件的接口
+        String url = "附件地址";
+        return  vehicleApprovalService.writeTestProgram(flag,taskId);
+
+    }
+
+    @ApiOperation(value = "委托")
+    @PostMapping ("/entrustTask")
+    public ResponseMessage<String> entrustTask(String taskId,String userId,String userName) throws Exception {
+        //调用上传附件的接口
+        String url = "附件地址";
+      // return  vehicleApprovalService.writeTestProgram(flag,taskId);
+        return  Result.success();
+    }
+
+    @ApiOperation(value = "项目组总体经理确认结果")
+    @PostMapping ("/quiteResult")
+    public ResponseMessage<String> quiteResult(String taskId) throws Exception {
+        return  vehicleApprovalService.quiteResult(taskId);
+
+    }
 }

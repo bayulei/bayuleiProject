@@ -122,7 +122,7 @@
 
   <select id="selectByEO" resultMap="BaseResultMap" parameterType="com.adc.da.activiti.entity.BusExecuProcessEO">
     select <include refid="Base_Column_List" />
-    from BUS_PROCESS
+    from BUS_EXECU_PROCESS
     where 1=1
     <trim suffixOverrides="," >
       <if test="processId != null" >
