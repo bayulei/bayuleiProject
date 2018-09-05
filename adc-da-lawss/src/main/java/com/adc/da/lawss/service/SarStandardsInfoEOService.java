@@ -5,6 +5,8 @@ import com.adc.da.lawss.dao.SarStandMenuEODao;
 import com.adc.da.lawss.dao.SarStandValEODao;
 import com.adc.da.lawss.entity.SarStandMenuEO;
 import com.adc.da.lawss.entity.SarStandValEO;
+import com.adc.da.lawss.page.SarStandardsInfoEOPage;
+import com.adc.da.lawss.vo.SarStandExcelVO;
 import com.adc.da.sys.constant.ValueStateEnum;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
@@ -139,4 +141,20 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
         return Result.success(sarStandardsInfoEO);
     }
 
+    /**
+     * 自定义分页查询
+     * @param page  标准信息
+     * @return
+     * @author gaoyan
+     * date 2018-09-04
+     */
+    public List<SarStandardsInfoEO> getSarStandardsInfoPage(SarStandardsInfoEOPage page){
+        Integer rowCount = sarStandardsInfoEOdao.getSarStandardsInfoCount(page);
+        page.getPager().setRowCount(rowCount);
+        return  sarStandardsInfoEOdao.getSarStandardsInfoPage(page);
+    }
+
+    public List<SarStandardsInfoEO> getSarStandardsInfo(SarStandardsInfoEOPage page){
+        return  sarStandardsInfoEOdao.getSarStandardsInfo(page);
+    }
 }
