@@ -568,12 +568,14 @@
   <sql id="SarStandardsInfo_Where_Clause">
         where 1=1
         <trim suffixOverrides="," >
+            <!-- 标准分类 国内标准，国外标准  必要搜索项                 -->
             <if test="standType != null" >
-                and stand_type ${standTypeOperator} #{standType}
+                and stand_type = #{standType}
             </if>
-            <!-- 标准种类 -->
-            <if test="standSort != null" >
-                and stand_sort = #{standSort}
+            <!--                     基本搜索项                         -->
+            <!-- 国家、地区 -->
+            <if test="country != null" >
+                and country = #{country}
             </if>
             <!-- 标准编号 -->
             <if test="standNumber != null" >
@@ -583,90 +585,16 @@
             <if test="standName != null" >
                 and stand_name  like  concat(concat('%',#{standName}),'%')
             </if>
-
-
-
-            <!--<if test="creationUser != null" >
-                and creation_user ${creationUserOperator} #{creationUser}
+            <!-- 标准状态 -->
+            <if test="standState != null" >
+                and stand_state = #{standState}
             </if>
-            <if test="remark != null" >
-                and remark ${remarkOperator} #{remark}
+            <!--                   高级检索项                          -->
+            <!--  标准性质 -->
+            <if test="standNature != null" >
+                and stand_nature = #{standNature}
             </if>
-            <if test="category != null" >
-                and category ${categoryOperator} #{category}
-            </if>
-            <if test="responsibleUnit != null" >
-                and responsible_unit ${responsibleUnitOperator} #{responsibleUnit}
-            </if>
-            <if test="synopsis != null" >
-                and synopsis ${synopsisOperator} #{synopsis}
-            </if>
-            <if test="tags != null" >
-                and tags ${tagsOperator} #{tags}
-            </if>
-            <if test="relevanceFile != null" >
-                and relevance_file ${relevanceFileOperator} #{relevanceFile}
-            </if>
-            <if test="approvalFile != null" >
-                and approval_file ${approvalFileOperator} #{approvalFile}
-            </if>
-            <if test="sentScreenFile != null" >
-                and sent_screen_file ${sentScreenFileOperator} #{sentScreenFile}
-            </if>
-            <if test="opinionFile != null" >
-                and opinion_file ${opinionFileOperator} #{opinionFile}
-            </if>
-            <if test="draftFile != null" >
-                and draft_file ${draftFileOperator} #{draftFile}
-            </if>
-            <if test="standModifyFile != null" >
-                and stand_modify_file ${standModifyFileOperator} #{standModifyFile}
-            </if>
-            <if test="standFile != null" >
-                and stand_file ${standFileOperator} #{standFile}
-            </if>
-            <if test="draftUser != null" >
-                and draft_user ${draftUserOperator} #{draftUser}
-            </if>
-            <if test="draftingUnit != null" >
-                and drafting_unit ${draftingUnitOperator} #{draftingUnit}
-            </if>
-            <if test="newproductPutTime != null" >
-                and newproduct_put_time ${newproductPutTimeOperator} #{newproductPutTime}
-            </if>
-            <if test="newproductPutTime1 != null" >
-                and newproduct_put_time &gt;= #{newproductPutTime1}
-            </if>
-            <if test="newproductPutTime2 != null" >
-                and newproduct_put_time &lt;= #{newproductPutTime2}
-            </if>
-            <if test="productPutTime != null" >
-                and product_put_time ${productPutTimeOperator} #{productPutTime}
-            </if>
-            <if test="productPutTime1 != null" >
-                and product_put_time &gt;= #{productPutTime1}
-            </if>
-            <if test="productPutTime2 != null" >
-                and product_put_time &lt;= #{productPutTime2}
-            </if>
-            <if test="newcarPutTime != null" >
-                and newcar_put_time ${newcarPutTimeOperator} #{newcarPutTime}
-            </if>
-            <if test="newcarPutTime1 != null" >
-                and newcar_put_time &gt;= #{newcarPutTime1}
-            </if>
-            <if test="newcarPutTime2 != null" >
-                and newcar_put_time &lt;= #{newcarPutTime2}
-            </if>
-            <if test="putTime != null" >
-                and put_time ${putTimeOperator} #{putTime}
-            </if>
-            <if test="putTime1 != null" >
-                and put_time &gt;= #{putTime1}
-            </if>
-            <if test="putTime2 != null" >
-                and put_time &lt;= #{putTime2}
-            </if>
+            <!--  发布日期 需要修改 -->
             <if test="issueTime != null" >
                 and issue_time ${issueTimeOperator} #{issueTime}
             </if>
@@ -676,54 +604,145 @@
             <if test="issueTime2 != null" >
                 and issue_time &lt;= #{issueTime2}
             </if>
-            <if test="applyAuth != null" >
-                and apply_auth ${applyAuthOperator} #{applyAuth}
-            </if>
-            <if test="emergyKind != null" >
-                and emergy_kind ${emergyKindOperator} #{emergyKind}
-            </if>
-            <if test="adoptExtent != null" >
-                and adopt_extent ${adoptExtentOperator} #{adoptExtent}
-            </if>
-            <if test="interStandNum != null" >
-                and inter_stand_num ${interStandNumOperator} #{interStandNum}
-            </if>
-            <if test="replacedStandNum != null" >
-                and replaced_stand_num ${replacedStandNumOperator} #{replacedStandNum}
-            </if>
-            <if test="replaceStandNum != null" >
-                and replace_stand_num ${replaceStandNumOperator} #{replaceStandNum}
-            </if>
-            <if test="standNature != null" >
-                and stand_nature ${standNatureOperator} #{standNature}
-            </if>
-            <if test="standState != null" >
-                and stand_state ${standStateOperator} #{standState}
-            </if>
-            <if test="standEnName != null" >
-                and stand_en_name ${standEnNameOperator} #{standEnName}
-            </if>
-
-            <if test="standYear != null" >
-                and stand_year ${standYearOperator} #{standYear}
-            </if>
-
+            <!--  适用车型  多选需要修改-->
             <if test="applyArctic != null" >
                 and apply_arctic ${applyArcticOperator} #{applyArctic}
             </if>
-
-            <if test="country != null" >
-                and country ${countryOperator} #{country}
+            <!--  代替标准  允许输入的时候输入多个-->
+            <if test="replaceStandNum != null" >
+                and replace_stand_num ${replaceStandNumOperator} #{replaceStandNum}
+            </if>
+            <!--  被代替标准 -->
+            <if test="replacedStandNum != null" >
+                and replaced_stand_num like concat(concat('%',#{replacedStandNum}),'%')
             </if>
 
-            <if test="id != null" >
-                and id ${idOperator} #{id}
-            </if>
-            <if test="validFlag != null" >
-                and valid_flag ${validFlagOperator} #{validFlag}
-            </if>-->
+
+            <!--
+             < 标准种类 >
+             <if test="standSort != null" >
+                 and stand_sort = #{standSort}
+             </if>
+             <if test="creationUser != null" >
+                 and creation_user ${creationUserOperator} #{creationUser}
+             </if>
+             <if test="remark != null" >
+                 and remark ${remarkOperator} #{remark}
+             </if>
+             <if test="category != null" >
+                 and category ${categoryOperator} #{category}
+             </if>
+             <if test="responsibleUnit != null" >
+                 and responsible_unit ${responsibleUnitOperator} #{responsibleUnit}
+             </if>
+             <if test="synopsis != null" >
+                 and synopsis ${synopsisOperator} #{synopsis}
+             </if>
+             <if test="tags != null" >
+                 and tags ${tagsOperator} #{tags}
+             </if>
+             <if test="relevanceFile != null" >
+                 and relevance_file ${relevanceFileOperator} #{relevanceFile}
+             </if>
+             <if test="approvalFile != null" >
+                 and approval_file ${approvalFileOperator} #{approvalFile}
+             </if>
+             <if test="sentScreenFile != null" >
+                 and sent_screen_file ${sentScreenFileOperator} #{sentScreenFile}
+             </if>
+             <if test="opinionFile != null" >
+                 and opinion_file ${opinionFileOperator} #{opinionFile}
+             </if>
+             <if test="draftFile != null" >
+                 and draft_file ${draftFileOperator} #{draftFile}
+             </if>
+             <if test="standModifyFile != null" >
+                 and stand_modify_file ${standModifyFileOperator} #{standModifyFile}
+             </if>
+             <if test="standFile != null" >
+                 and stand_file ${standFileOperator} #{standFile}
+             </if>
+             <if test="draftUser != null" >
+                 and draft_user ${draftUserOperator} #{draftUser}
+             </if>
+             <if test="draftingUnit != null" >
+                 and drafting_unit ${draftingUnitOperator} #{draftingUnit}
+             </if>
+             <if test="newproductPutTime != null" >
+                 and newproduct_put_time ${newproductPutTimeOperator} #{newproductPutTime}
+             </if>
+             <if test="newproductPutTime1 != null" >
+                 and newproduct_put_time &gt;= #{newproductPutTime1}
+             </if>
+             <if test="newproductPutTime2 != null" >
+                 and newproduct_put_time &lt;= #{newproductPutTime2}
+             </if>
+             <if test="productPutTime != null" >
+                 and product_put_time ${productPutTimeOperator} #{productPutTime}
+             </if>
+             <if test="productPutTime1 != null" >
+                 and product_put_time &gt;= #{productPutTime1}
+             </if>
+             <if test="productPutTime2 != null" >
+                 and product_put_time &lt;= #{productPutTime2}
+             </if>
+             <if test="newcarPutTime != null" >
+                 and newcar_put_time ${newcarPutTimeOperator} #{newcarPutTime}
+             </if>
+             <if test="newcarPutTime1 != null" >
+                 and newcar_put_time &gt;= #{newcarPutTime1}
+             </if>
+             <if test="newcarPutTime2 != null" >
+                 and newcar_put_time &lt;= #{newcarPutTime2}
+             </if>
+             <if test="putTime != null" >
+                 and put_time ${putTimeOperator} #{putTime}
+             </if>
+             <if test="putTime1 != null" >
+                 and put_time &gt;= #{putTime1}
+             </if>
+             <if test="putTime2 != null" >
+                 and put_time &lt;= #{putTime2}
+             </if>
+
+             <if test="applyAuth != null" >
+                 and apply_auth ${applyAuthOperator} #{applyAuth}
+             </if>
+             <if test="emergyKind != null" >
+                 and emergy_kind ${emergyKindOperator} #{emergyKind}
+             </if>
+             <if test="adoptExtent != null" >
+                 and adopt_extent ${adoptExtentOperator} #{adoptExtent}
+             </if>
+             <if test="interStandNum != null" >
+                 and inter_stand_num ${interStandNumOperator} #{interStandNum}
+             </if>
+
+
+
+
+             <if test="standEnName != null" >
+                 and stand_en_name ${standEnNameOperator} #{standEnName}
+             </if>
+
+             <if test="standYear != null" >
+                 and stand_year ${standYearOperator} #{standYear}
+             </if>
+
+
+
+             <if test="country != null" >
+                 and country ${countryOperator} #{country}
+             </if>
+
+             <if test="id != null" >
+                 and id ${idOperator} #{id}
+             </if>
+             <if test="validFlag != null" >
+                 and valid_flag ${validFlagOperator} #{validFlag}
+             </if>-->
         </trim>
-    </sql>
+  </sql>
   <!-- 分页查询条件当页数据 -->
   <select id="getSarStandardsInfoPage" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarStandardsInfoEOPage">
       select <include refid="Base_Column_List" /> from
