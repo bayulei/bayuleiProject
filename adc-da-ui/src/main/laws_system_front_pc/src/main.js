@@ -19,6 +19,8 @@ import 'styles/iconfont.css'
 import $ from 'jquery'
 // vuex
 import store from './store'
+// axios
+import axios from './common/axios'
 // 自定义插件
 import plugins from '@/common/plugins'
 // 自定义全局组件
@@ -31,6 +33,7 @@ Vue.prototype.$ = $
 Vue.use(plugins)
 Vue.use(components)
 Vue.prototype.verify = verify
+Vue.prototype.$http = axios
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
