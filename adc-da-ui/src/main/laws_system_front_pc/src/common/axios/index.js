@@ -80,6 +80,7 @@ module.exports = {
           thenFun.call(this, res.data)
         }
       }
+      thenFun.call(this, res.data)
     }).catch(err => {
       _this[config.loading] = false
       _this.$Notice.error({

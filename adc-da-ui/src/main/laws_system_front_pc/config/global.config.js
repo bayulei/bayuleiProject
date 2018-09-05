@@ -5,7 +5,7 @@
  */
 // 开发环境配置
 const devIp = 'localhost'
-const devInterfacePORT = '8080'
+const devInterfacePORT = '8888'
 
 // 生产环境配置
 const prodIp = 'localhost'
