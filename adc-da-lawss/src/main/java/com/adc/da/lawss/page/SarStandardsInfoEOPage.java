@@ -90,14 +90,17 @@ public class SarStandardsInfoEOPage extends BasePage {
     private String standStateOperator = "=";
     private String standEnName;
     private String standEnNameOperator = "=";
+    //标准名称
     private String standName;
     private String standNameOperator = "=";
     private String standYear;
     private String standYearOperator = "=";
+    //标准编号
     private String standNumber;
     private String standNumberOperator = "=";
     private String applyArctic;
     private String applyArcticOperator = "=";
+    //标准种类
     private String standSort;
     private String standSortOperator = "=";
     private String country;

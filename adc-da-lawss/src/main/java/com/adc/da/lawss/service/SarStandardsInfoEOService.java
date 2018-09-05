@@ -5,6 +5,9 @@ import com.adc.da.lawss.dao.SarStandMenuEODao;
 import com.adc.da.lawss.dao.SarStandValEODao;
 import com.adc.da.lawss.entity.SarStandMenuEO;
 import com.adc.da.lawss.entity.SarStandValEO;
+import com.adc.da.lawss.page.SarStandardsInfoEOPage;
+import com.adc.da.lawss.vo.SarStandExcelDto;
+import com.adc.da.lawss.vo.SarStandExcelEO;
 import com.adc.da.sys.constant.ValueStateEnum;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
@@ -20,9 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.SarStandardsInfoEODao;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -139,4 +139,20 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
         return Result.success(sarStandardsInfoEO);
     }
 
+    /**
+     * 自定义分页查询
+     * @param page  标准信息
+     * @return
+     * @author gaoyan
+     * date 2018-09-04
+     */
+    public List<SarStandardsInfoEO> getSarStandardsInfoPage(SarStandardsInfoEOPage page){
+        Integer rowCount = sarStandardsInfoEOdao.getSarStandardsInfoCount(page);
+        page.getPager().setRowCount(rowCount);
+        return  sarStandardsInfoEOdao.getSarStandardsInfoPage(page);
+    }
+
+    public List<SarStandExcelDto> getSarStandardsInfo(SarStandardsInfoEOPage page){
+        return  sarStandardsInfoEOdao.getSarStandardsInfo(page);
+    }
 }

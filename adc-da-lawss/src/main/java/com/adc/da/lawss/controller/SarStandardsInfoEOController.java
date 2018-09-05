@@ -1,37 +1,45 @@
 package com.adc.da.lawss.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.adc.da.base.web.BaseController;
+import com.adc.da.excel.poi.excel.ExcelExportUtil;
 import com.adc.da.excel.poi.excel.ExcelImportUtil;
+import com.adc.da.excel.poi.excel.entity.ExportParams;
 import com.adc.da.excel.poi.excel.entity.ImportParams;
+import com.adc.da.excel.poi.excel.entity.enums.ExcelType;
 import com.adc.da.excel.poi.excel.entity.result.ExcelImportResult;
 import com.adc.da.lawss.common.ReadExcel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.adc.da.base.web.BaseController;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
 import com.adc.da.lawss.service.SarStandardsInfoEOService;
-
+import com.adc.da.lawss.vo.SarStandExcelDto;
+import com.adc.da.lawss.vo.SarStandExcelEO;
+import com.adc.da.sys.dto.SysCorpExcelDto;
+import com.adc.da.util.exception.AdcDaBaseException;
+import com.adc.da.util.http.PageInfo;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
-import com.adc.da.util.http.PageInfo;
+import com.adc.da.util.utils.Encodes;
+import com.adc.da.util.utils.IOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 /**
  * 用户管理模块相关接口
@@ -44,10 +52,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author gaoyan
  * date 2018/09/03
- * @see UserEOService
- * @see UserEO
- * @see UserVO
- * @see UserEOPage
  * @see com.adc.da.sys.dao.UserEODao
  * @see mybatis.mapper.sys
  */
@@ -66,6 +70,21 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
     @RequiresPermissions("lawss:sarStandardsInfo:page")
     public ResponseMessage<PageInfo<SarStandardsInfoEO>> page(SarStandardsInfoEOPage page) throws Exception {
         List<SarStandardsInfoEO> rows = sarStandardsInfoEOService.queryByPage(page);
+        return Result.success(getPageInfo(page.getPager(), rows));
+    }
+
+    /**
+     * 自定义分页查询
+     * @param page  标准信息
+     * @return
+     * @author gaoyan
+     * date 2018-09-04
+     */
+    @ApiOperation(value = "|SarStandardsInfoEO|自定义分页查询")
+    @GetMapping("/getSarStandardsInfoPage")
+    //@RequiresPermissions("lawss:sarStandardsInfo:page")
+    public ResponseMessage<PageInfo<SarStandardsInfoEO>> getSarStandardsInfoPage(SarStandardsInfoEOPage page) throws Exception {
+        List<SarStandardsInfoEO> rows = sarStandardsInfoEOService.getSarStandardsInfoPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
@@ -92,7 +111,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
      */
     @ApiOperation(value = "|SarStandardsInfoEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE,value = "addarStandardsInfo")
-    //@RequiresPermissions("lawss:sarStandardsInfo:save")
+    @RequiresPermissions("lawss:sarStandardsInfo:save")
     public ResponseMessage<SarStandardsInfoEO> create(@RequestBody SarStandardsInfoEO sarStandardsInfoEO,@RequestParam("idPic") MultipartFile[] multipartfiles) throws Exception {
         sarStandardsInfoEOService.createSarStandardsInfo(sarStandardsInfoEO);
 
@@ -103,7 +122,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
 
     /**
      * EXCEL导入标准
-     * @param sarStandardsInfoEO  标准信息
+     * @param file  标准信息
      * @return
      * @author gaoyan
      * date 2018-09-04
@@ -152,6 +171,46 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         sarStandardsInfoEOService.deleteByPrimaryKey(id);
         logger.info("delete from SAR_STANDARDS_INFO where id = {}", id);
         return Result.success();
+    }
+
+    /**
+     * 将查询出来的数据导出到EXCEL表格中
+     * @param page  标准信息
+     * @return
+     * @author gaoyan
+     * date 2018-09-04
+     */
+    @ApiOperation(value = "|SysCorpEO|导出excel")
+    @GetMapping(value = "/exportStandardsInfoExcel")
+    public void exportStandardsInfoExcel(SarStandardsInfoEOPage page, HttpServletResponse response, HttpServletRequest request) {
+        OutputStream os = null;
+        Workbook workbook = null;
+        try {
+            response.setHeader("Content-Disposition",
+                    "attachment; filename=" + ReadExcel.encodeFileName("下载文件.xlsx",request));
+            response.setContentType("application/force-download");
+            ExportParams exportParams = new ExportParams();
+            exportParams.setType(ExcelType.XSSF);
+
+            List<SarStandExcelDto> datas =  sarStandardsInfoEOService.getSarStandardsInfo(page);
+           /* List<SarStandExcelDto> sarStandExcelVOList = new ArrayList<SarStandExcelDto>();
+            if (datas != null && !datas.isEmpty()) {
+                for (SarStandExcelEO eo : datas) {
+                    SarStandExcelDto dto = new SarStandExcelDto();
+                    BeanUtils.copyProperties(eo, dto);
+                    sarStandExcelVOList.add(dto);
+                }
+            }*/
+            workbook = ExcelExportUtil.exportExcel(exportParams, SarStandExcelDto.class, datas);
+            os = response.getOutputStream();
+            workbook.write(os);
+            os.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new AdcDaBaseException("下载文件失败，请重试");
+        } finally {
+            IOUtils.closeQuietly(os);
+        }
     }
 
 }

@@ -15,6 +15,10 @@
 
 	<name>web</name>
 	<description>web project for Spring Boot</description>
+	<properties>
+		<poi.version>3.9</poi.version>
+		<xerces.version>2.9.1</xerces.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -45,25 +49,6 @@
 			<artifactId>adc-da-login</artifactId>
 			<version>2.2.02</version>
 		</dependency>
-
-
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.adc</groupId> -->
-<!-- 			<artifactId>adc-da-jmetrics</artifactId> -->
-<!-- 			<version>2.0.0</version> -->
-<!-- 		</dependency> -->
-
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.adc</groupId> -->
-<!-- 			<artifactId>adc-da-threadpool</artifactId> -->
-<!-- 			<version>2.0.0</version> -->
-<!-- 		</dependency> -->
-
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.adc</groupId> -->
-<!-- 			<artifactId>adc-da-redis</artifactId> -->
-<!-- 			<version>2.0.0</version> -->
-<!-- 		</dependency> -->
 
 		<dependency>
 			<groupId>com.adc</groupId>
@@ -98,22 +83,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
-		<!-- jdk1.7支持2.4.6版本es客户端,jdk1.8支持6.0版本es客户端 -->
-<!--		<dependency>
-			<groupId>org.elasticsearch</groupId>
-			<artifactId>elasticsearch</artifactId>
-			<version>2.4.6</version>
-		</dependency>-->
-		<!--<dependency>
-			<groupId>org.elasticsearch.client</groupId>
-			<artifaccom.adc.da.ordertId>transport</artifactId>
-			<version>6.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.elasticsearch</groupId>
-			<artifactId>elasticsearch</artifactId>
-			<version>6.3.2</version>
-		</dependency>-->
+
 		<!-- 6.0版本es需添加此依赖，解决依赖冲突 -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -207,10 +177,41 @@
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
 
-		<!-- <dependency> -->
-		<!-- <groupId>commons-lang</groupId> -->
-		<!-- <artifactId>commons-lang</artifactId> -->
-		<!-- </dependency> -->
+		<!-- poi -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>${poi.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- sax 读取时候用到的 -->
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>${xerces.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>${poi.version}</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
