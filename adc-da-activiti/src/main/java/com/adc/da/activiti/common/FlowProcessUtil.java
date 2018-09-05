@@ -50,13 +50,14 @@ public class FlowProcessUtil {
     private HistoryService historyService;
 
     @Autowired
+    private BusExecuProcessEOService busExecuProcessEOService;
+
+    @Autowired
     private TaskService taskService;
 
     @Autowired
     private BusProcessEOService busProcessEOService;
 
-    @Autowired
-    private BusExecuProcessEOService busExecuProcessEOService;
 
     @ApiOperation(value = "部署流程")
     @GetMapping("/deploymentProcessDefinition")
@@ -98,6 +99,17 @@ public class FlowProcessUtil {
        // historyService.deleteHistoricProcessInstance(processInstanceId);
     }
 
+    @ApiOperation(value = "更新业务流程主表")
+    @GetMapping("/updateProcessByProcessInstanceId")
+    public void updateProcessByProcessInstanceId(String processInstanceId,BusProcessEO  busProcessEO) throws Exception {
+        //查询流程和业务关系表
+        BusExecuProcessEO busExecuProcessEO = new BusExecuProcessEO();
+        busExecuProcessEO.setProcInstId(processInstanceId);
+        List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.selectByEO(busExecuProcessEO);
+        //更新业务流程主表
+        busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
+        busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
+    }
     /**
      *  委托
      * @MethodName:entrust

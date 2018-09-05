@@ -13,11 +13,12 @@
       <loading :loading="loading">数据获取中</loading>
       <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
     </div>
-    <pagination :total="total"></pagination>
+    <pagination :total="total" @pageChange="pageChange"></pagination>
    </div>
 </template>
 
 <script>
+import Pagination from 'pages/components/Pagination'
 export default {
   name: 'DomesticRegulationsDatabase',
   data () {
@@ -25,7 +26,9 @@ export default {
       lawsInfo: {
         fileNum: '' // 文件号
       },
-      total: 1000,
+      total: 0,
+      page: 1,
+      rows: 10,
       loading: false,
       tableColumn: [
         {
@@ -52,21 +55,31 @@ export default {
   },
   methods: {
     searchLawsInfo () {
-      this.$http.get('lawss/sarLawsInfo/page', {}, {
+      this.$http.get('lawss/sarLawsInfo/page', {
+        page: this.page,
+        rows: this.rows
+      }, {
         _this: this
       }, res => {
-        this.userData = res.data
+        this.data = res.data.list
       }, err => {
 
       })
+    },
+    pageChange (page) {
+      this.page = page
     }
   },
   components: {
-
+    Pagination
   },
   props: {},
   computed: {},
-  watch: {},
+  watch: {
+    page (newVal, oldVal) {
+      //
+    }
+  },
   mounted () {
     this.searchLawsInfo()
   }
