@@ -2,10 +2,7 @@ package com.adc.da.activiti.common;
 
 import com.adc.da.activiti.entity.BusExecuProcessEO;
 import com.adc.da.activiti.entity.BusProcessEO;
-<<<<<<< HEAD
-=======
 import com.adc.da.activiti.page.BusExecuProcessEOPage;
->>>>>>> b983f981a76f305cc95b271aaf4a281fa491b193
 import com.adc.da.activiti.service.BusExecuProcessEOService;
 import com.adc.da.activiti.service.BusProcessEOService;
 import io.swagger.annotations.Api;
