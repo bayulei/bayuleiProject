@@ -50,8 +50,6 @@ export default {
           title: '发布单位',
           key: 'issueUnit'
         }
-
-
        ],
        data: [],
     }
