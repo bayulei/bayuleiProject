@@ -1,5 +1,9 @@
 package com.adc.da.activiti.common;
 
+import com.adc.da.activiti.entity.BusExecuProcessEO;
+import com.adc.da.activiti.entity.BusProcessEO;
+import com.adc.da.activiti.service.BusExecuProcessEOService;
+import com.adc.da.activiti.service.BusProcessEOService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.activiti.engine.HistoryService;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.zip.ZipInputStream;
 
 @RestController
@@ -29,6 +34,12 @@ public class FlowProcessUtil {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private BusExecuProcessEOService busExecuProcessEOService;
+
+    @Autowired
+    private BusProcessEOService busProcessEOService;
 
     @ApiOperation(value = "部署流程")
     @GetMapping("/deploymentProcessDefinition")
@@ -68,5 +79,17 @@ public class FlowProcessUtil {
     public void deleteByDeployment(String deployment){
         repositoryService.deleteDeployment(deployment,true);
        // historyService.deleteHistoricProcessInstance(processInstanceId);
+    }
+
+    @ApiOperation(value = "更新业务流程主表")
+    @GetMapping("/updateProcessByProcessInstanceId")
+    public void updateProcessByProcessInstanceId(String processInstanceId,BusProcessEO  busProcessEO) throws Exception {
+       //查询流程和业务关系表
+        BusExecuProcessEO busExecuProcessEO = new BusExecuProcessEO();
+        busExecuProcessEO.setProcInstId(processInstanceId);
+        List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.selectByEO(busExecuProcessEO);
+        //更新业务流程主表
+        busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
+        busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
     }
 }
