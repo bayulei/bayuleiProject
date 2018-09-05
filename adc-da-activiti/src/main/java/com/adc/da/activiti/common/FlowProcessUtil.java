@@ -32,13 +32,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
-<<<<<<< HEAD
-import java.util.List;
-=======
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
->>>>>>> b983f981a76f305cc95b271aaf4a281fa491b193
 import java.util.zip.ZipInputStream;
 
 @RestController
