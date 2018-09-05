@@ -81,18 +81,19 @@ export default {
           height: 2.8rem;
           padding: 0.8rem 0;
           box-sizing: border-box;
+          display: flex;
           .user-avator{
             width: 1.2rem;
             height: 1.2rem;
             background: #DDD;
             box-sizing: border-box;
-            float: left;
+            flex: 1;
             img{
               width: 100%;
+              height: 100%;
             }
           }
           .user-info-box{
-            float: left;
             padding: 0 0.5rem;
             box-sizing: border-box;
             height: 100%;

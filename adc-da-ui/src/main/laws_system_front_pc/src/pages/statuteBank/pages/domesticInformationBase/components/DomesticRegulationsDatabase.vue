@@ -56,7 +56,7 @@ export default {
         _this: this
       }, res => {
         this.userData = res.data
-      }, err => {
+      }, e => {
 
       })
     }
