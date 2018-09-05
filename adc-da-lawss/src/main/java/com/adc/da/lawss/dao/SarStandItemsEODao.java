@@ -1,7 +1,6 @@
 package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
-import com.adc.da.base.page.BasePage;
 import com.adc.da.lawss.entity.SarStandItemsEO;
 import com.adc.da.lawss.page.SarStandItemsEOPage;
 import com.adc.da.lawss.vo.SarStandItemsVO;
