@@ -1,57 +1,81 @@
 <template>
-  <div id="test">
-    <h5 class="theme">{{ theme }}</h5>
-    <Select v-model="theme" style="width:200px" @on-change="themeChange">
-      <Option v-for="item in themeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-    </Select>
-    <div class="box">
-      标题
-    </div>
+  <div class="test">
+    <Tree :data="data4" show-checkbox @on-select-change="checkNode"></Tree>
+    <Input :v-model="nodeTitle" clearable class="my-input" />
+    <Button type="primary" @click="save">保存</Button>
   </div>
 </template>
-
 <script>
 export default {
-  name: 'test',
   data () {
     return {
-      theme: 'theme-one',
-      themeList: [{
-        label: '海之蓝',
-        value: 'theme-one'
-      }, {
-        label: '樱桃红',
-        value: 'theme-two'
-      }]
+      data4: [
+        {
+          title: 'parent 1',
+          expand: true,
+          selected: true,
+          children: [
+            {
+              title: 'parent 1-1',
+              expand: true,
+              children: [
+                {
+                  title: 'leaf 1-1-1',
+                  disabled: true
+                },
+                {
+                  title: 'leaf 1-1-2'
+                }
+              ]
+            },
+            {
+              title: 'parent 1-2',
+              expand: true,
+              children: [
+                {
+                  title: 'leaf 1-2-1',
+                  checked: true
+                },
+                {
+                  title: 'leaf 1-2-1'
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      nodeTitle: '',
+      nodeKey: ''
     }
   },
   methods: {
-    themeChange (theme) {
-      document.getElementById('app').className = theme
+    checkNode (treeNode) {
+      this.nodeKey = treeNode[0].nodeKey || ''
+    },
+    save () {
+      console.log(this.nodeKey)
+    },
+    fetchData () {
+      this.$http.get('lawss/sarLawsInfo/page', {
+        //
+      }, {
+        _this: this
+      }, res => {
+        console.log('success')
+      }, err => {
+        console.log('error')
+      })
+      // this.axios.get('http://192.168.1.191:8888/api/lawss/sarLawsInfo/page', {}).then().catch()
     }
   },
   mounted () {
-    this.themeChange(this.theme)
+    this.fetchData()
   }
 }
 </script>
-
-<style lang="less">
-  @import '~styles/style';
-  @import '~styles/mixins';
-  #test{
-    background: #DDD;
-    padding: 20px;
-    .full-screen;
-    .theme{
-      margin-bottom: 20px;
-    }
-    .box{
-      .flex-center;
-      width: 100px;
-      height: 100px;
-      border: 2px solid @baseColor;
-      margin-top: 20px;
-    }
+<style>
+  .my-input{
+    width: 150px;
+    margin-left: 20px;
   }
 </style>
