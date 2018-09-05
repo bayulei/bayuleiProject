@@ -6,7 +6,8 @@ import com.adc.da.lawss.dao.SarStandValEODao;
 import com.adc.da.lawss.entity.SarStandMenuEO;
 import com.adc.da.lawss.entity.SarStandValEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
-import com.adc.da.lawss.vo.SarStandExcelVO;
+import com.adc.da.lawss.vo.SarStandExcelDto;
+import com.adc.da.lawss.vo.SarStandExcelEO;
 import com.adc.da.sys.constant.ValueStateEnum;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
@@ -22,9 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.SarStandardsInfoEODao;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -154,7 +152,7 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
         return  sarStandardsInfoEOdao.getSarStandardsInfoPage(page);
     }
 
-    public List<SarStandardsInfoEO> getSarStandardsInfo(SarStandardsInfoEOPage page){
+    public List<SarStandExcelDto> getSarStandardsInfo(SarStandardsInfoEOPage page){
         return  sarStandardsInfoEOdao.getSarStandardsInfo(page);
     }
 }

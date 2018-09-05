@@ -12,6 +12,7 @@ import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
 import com.adc.da.lawss.service.SarStandardsInfoEOService;
 import com.adc.da.lawss.vo.SarStandExcelDto;
+import com.adc.da.lawss.vo.SarStandExcelEO;
 import com.adc.da.sys.dto.SysCorpExcelDto;
 import com.adc.da.util.exception.AdcDaBaseException;
 import com.adc.da.util.http.PageInfo;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -180,25 +182,26 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
      */
     @ApiOperation(value = "|SysCorpEO|导出excel")
     @GetMapping(value = "/exportStandardsInfoExcel")
-    public void exportStandardsInfoExcel(SarStandardsInfoEOPage page, HttpServletResponse response) {
+    public void exportStandardsInfoExcel(SarStandardsInfoEOPage page, HttpServletResponse response, HttpServletRequest request) {
         OutputStream os = null;
         Workbook workbook = null;
         try {
-            response.setHeader("Content-Disposition", "attachment; filename=" + new String("认证件清单导出.xlsx".getBytes(), "ISO-8859-1"));
+            response.setHeader("Content-Disposition",
+                    "attachment; filename=" + ReadExcel.encodeFileName("下载文件.xlsx",request));
             response.setContentType("application/force-download");
             ExportParams exportParams = new ExportParams();
             exportParams.setType(ExcelType.XSSF);
 
-            List<SarStandardsInfoEO> datas =  sarStandardsInfoEOService.getSarStandardsInfo(page);
-            List<SarStandExcelDto> sarStandExcelVOList = new ArrayList<SarStandExcelDto>();
+            List<SarStandExcelDto> datas =  sarStandardsInfoEOService.getSarStandardsInfo(page);
+           /* List<SarStandExcelDto> sarStandExcelVOList = new ArrayList<SarStandExcelDto>();
             if (datas != null && !datas.isEmpty()) {
-                for (SarStandardsInfoEO eo : datas) {
+                for (SarStandExcelEO eo : datas) {
                     SarStandExcelDto dto = new SarStandExcelDto();
                     BeanUtils.copyProperties(eo, dto);
                     sarStandExcelVOList.add(dto);
                 }
-            }
-            workbook = ExcelExportUtil.exportExcel(exportParams, SarStandExcelDto.class, sarStandExcelVOList);
+            }*/
+            workbook = ExcelExportUtil.exportExcel(exportParams, SarStandExcelDto.class, datas);
             os = response.getOutputStream();
             workbook.write(os);
             os.flush();
