@@ -13,6 +13,7 @@ import com.adc.da.util.utils.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -172,19 +173,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             //将导入数据循环新增至相应表
             for(LawsInfoImportDto importDto : datas){
                 SarLawsInfoEO sarLawsInfoEO = new SarLawsInfoEO();
-                sarLawsInfoEO.setCountry(importDto.getCountry());
-                sarLawsInfoEO.setLawsProperty(importDto.getLawsProperty());
-                sarLawsInfoEO.setLawsNumber(importDto.getLawsNumber());
-                sarLawsInfoEO.setLawsName(importDto.getLawsName());
-                sarLawsInfoEO.setIssueUnit(importDto.getIssueUnit());
-                sarLawsInfoEO.setLawsState(importDto.getLawsStatus());
-                sarLawsInfoEO.setIssueTime(importDto.getIssueTime());
-                sarLawsInfoEO.setPutTime(importDto.getPutTime());
-                sarLawsInfoEO.setReplaceLawsNum(importDto.getReplaceLawsNum());
-                sarLawsInfoEO.setApplyArctic(importDto.getApplyArctic());
-                sarLawsInfoEO.setEnergyKind(importDto.getEnergyKind());
-                sarLawsInfoEO.setApplyAuth(importDto.getApplyAuth());
-                sarLawsInfoEO.setResponsibleUnit(importDto.getResponsibleUnit());
+                BeanUtils.copyProperties(importDto,sarLawsInfoEO);
                 createLawsInfo(sarLawsInfoEO);
             }
             return Result.success();
