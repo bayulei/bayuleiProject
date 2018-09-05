@@ -1,18 +1,30 @@
 package com.adc.da.lawss.controller;
 
+import static com.adc.da.lawss.common.ReadExcel.encodeFileName;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.excel.poi.excel.ExcelExportUtil;
 import com.adc.da.excel.poi.excel.ExcelImportUtil;
+import com.adc.da.excel.poi.excel.entity.ExportParams;
 import com.adc.da.excel.poi.excel.entity.ImportParams;
+import com.adc.da.excel.poi.excel.entity.enums.ExcelType;
 import com.adc.da.excel.poi.excel.entity.result.ExcelImportResult;
 import com.adc.da.lawss.common.ReadExcel;
+import com.adc.da.lawss.dto.LawsInfoExportDto;
 import com.adc.da.lawss.dto.LawsInfoImportDto;
+import com.adc.da.util.exception.AdcDaBaseException;
+import com.adc.da.util.utils.IOUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +40,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author yangxuenan
@@ -187,6 +202,34 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
             }
         }else{
             return Result.error("fail", "没有可导入的数据,请检查!");
+        }
+    }
+
+    @ApiOperation(value = "|SarLawsInfoEO|出法规信息")
+    @GetMapping("/exportLawsInfos")
+    public void exportLawsInfos(HttpServletResponse response, HttpServletRequest request) throws Exception{
+        OutputStream os = null;
+        Workbook workbook = null;
+        try{
+            response.setHeader("Content-Disposition",
+                    "attachment; filename=" + encodeFileName("导出法规信息.xlsx",request));
+            response.setContentType("application/force-download");
+            ExportParams exportParams = new ExportParams();
+            exportParams.setType(ExcelType.XSSF);
+
+            SarLawsInfoEO sarLawsInfoEO = new SarLawsInfoEO();
+            sarLawsInfoEO.setLawsName("11111");
+            List<LawsInfoExportDto> dto = new ArrayList<>();
+            BeanUtils.copyProperties(sarLawsInfoEO, dto);
+
+            workbook = ExcelExportUtil.exportExcel(exportParams, LawsInfoExportDto.class, dto);
+            os = response.getOutputStream();
+            workbook.write(os);
+            os.flush();
+        } catch (Exception e) {
+            throw new AdcDaBaseException("导出法规信息文件失败，请重试");
+        } finally {
+            IOUtils.closeQuietly(os);
         }
     }
 

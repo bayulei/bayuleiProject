@@ -22,9 +22,7 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.SarLawsInfoEODao;
 import com.adc.da.lawss.entity.SarLawsInfoEO;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -162,8 +160,15 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
      * @return com.adc.da.util.http.ResponseMessage
      **/
     public ResponseMessage importLawsInfoDatas(List<LawsInfoImportDto> datas) throws Exception{
-
         try{
+            //验证导入数据是否符合规则
+            Map map = validateImportDatas(datas);
+            boolean isOk = (boolean) map.get("result");
+            if (!isOk) {
+                //验证没有通过
+                String message = (String) map.get("message");
+                return Result.error("fail", message);
+            }
             //将导入数据循环新增至相应表
             for(LawsInfoImportDto importDto : datas){
                 SarLawsInfoEO sarLawsInfoEO = new SarLawsInfoEO();
@@ -188,6 +193,57 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
         }
 
 
+    }
+
+    /**
+     * @Author yangxuenan
+     * @Description 验证导入数据是否符合规则
+     * Date 2018/9/5 10:15
+     * @Param [datas]
+     * @return java.util.Map
+     **/
+    public Map validateImportDatas(List<LawsInfoImportDto> datas){
+        //存放数据验证结果信息
+        List<String>  stringMessage = new ArrayList<>();
+        int i=1;    //记录行号
+        //循环验证数据
+        for(LawsInfoImportDto dto : datas){
+            i++;
+            int countError = 0;   //记录失败数据数量
+            String errorMsg = "第"+ i +"行：";
+            if(StringUtils.isNotEmpty(dto.getLawsNumber())){
+                if(dto.getLawsNumber().length() > 100){
+                    errorMsg += "文件号不能超过100个字符";
+                    countError++;
+                }
+            }
+            if(StringUtils.isNotEmpty(dto.getLawsName())){
+                if(dto.getLawsName().length() > 500){
+                    errorMsg += "文件名称不能超过500个字符";
+                    countError++;
+                }
+            } else {
+                errorMsg += "文件名称不能为空";
+                countError++;
+            }
+
+            if(countError > 0){
+                stringMessage.add(errorMsg);
+            }
+        }
+        Map map = new HashMap();
+        if (stringMessage.isEmpty()) {
+            map.put("result", true);
+            map.put("message", "");
+        } else {
+            map.put("result", false);
+            String html ="";
+            for (String message : stringMessage){
+                html += message +"</br>";
+            }
+            map.put("message", html);
+        }
+        return map;
     }
 
 }
