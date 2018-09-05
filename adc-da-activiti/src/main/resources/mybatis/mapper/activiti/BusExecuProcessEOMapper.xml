@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.activiti.dao.BusExecuProcessEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.activiti.entity.BusExecuProcessEO" >
+    <id column="id" property="id" />
+    <result column="proc_inst_id" property="procInstId" />
+    <result column="process_id" property="processId" />
+  </resultMap>
+
+  <!-- BUS_EXECU_PROCESS table all fields -->
+  <sql id="Base_Column_List" >
+     id, proc_inst_id, process_id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="procInstId != null" >
+        and proc_inst_id ${procInstIdOperator} #{procInstId}
+      </if>
+      <if test="processId != null" >
+        and process_id ${processIdOperator} #{processId}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.activiti.entity.BusExecuProcessEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_BUS_EXECU_PROCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into BUS_EXECU_PROCESS(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=VARCHAR}, #{procInstId, jdbcType=VARCHAR}, #{processId, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.activiti.entity.BusExecuProcessEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_BUS_EXECU_PROCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into BUS_EXECU_PROCESS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="procInstId != null" >proc_inst_id,</if>
+                <if test="processId != null" >process_id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+                <if test="procInstId != null" >#{procInstId, jdbcType=VARCHAR},</if>
+                <if test="processId != null" >#{processId, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.activiti.entity.BusExecuProcessEO" >
+    update BUS_EXECU_PROCESS
+       set  proc_inst_id = #{procInstId},
+            process_id = #{processId}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.activiti.entity.BusExecuProcessEO" >
+    update BUS_EXECU_PROCESS
+    <set >
+      <if test="procInstId != null" >
+        proc_inst_id = #{procInstId},
+      </if>
+      <if test="processId != null" >
+        process_id = #{processId},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 BUS_EXECU_PROCESS -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from BUS_EXECU_PROCESS
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BUS_EXECU_PROCESS
+     where id = #{value}
+
+  </delete>
+
+  <!-- BUS_EXECU_PROCESS 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from BUS_EXECU_PROCESS
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询BUS_EXECU_PROCESS列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from BUS_EXECU_PROCESS
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from BUS_EXECU_PROCESS
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+  <select id="selectByEO" resultMap="BaseResultMap" parameterType="com.adc.da.activiti.entity.BusExecuProcessEO">
+    select <include refid="Base_Column_List" />
+    from BUS_PROCESS
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="processId != null" >
+        and process_id = #{processId}
+      </if>
+      <if test="procInstId != null" >
+        and proc_inst_id = #{procInstId}
+      </if>
+    </trim>
+  </select>
+
+</mapper>
