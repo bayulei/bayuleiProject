@@ -31,6 +31,9 @@ public class BuyApprovalController {
     private RuntimeService runtimeService;
 
     @Autowired
+    private TaskService taskService;
+
+    @Autowired
     private BuyApprovalService buyApprovalService;
 
     @Autowired
@@ -72,11 +75,11 @@ public class BuyApprovalController {
      */
     @ApiOperation(value = "点击申请购买来发起审批")
     @PostMapping ("/startApproval")
-    public ResponseMessage<String> startApproval(BuyApprovalEO buyApprovalEO, String userId,String processInstanceId){
+    public ResponseMessage<String> startApproval(BuyApprovalEO buyApprovalEO, String userId,String processInstanceId,String comment){
         try{
             ProcessInstance processInstance = buyApprovalService.startBuyApprovalProcess(buyApprovalEO,userId,processDefinitionKey,processInstanceId);
-            buyApprovalService.completeApproval(processInstanceId,userId);
-            return Result.success(processInstanceId);
+            buyApprovalService.completeApproval(processInstance.getId(),userId,comment);
+            return Result.success(processInstance.getId());
         }catch(Exception e){
             e.printStackTrace();
             return Result.error("审批失败");
@@ -93,9 +96,9 @@ public class BuyApprovalController {
      */
     @ApiOperation(value = "完成审批")
     @PostMapping ("/completeApproval")
-    public ResponseMessage<String> completeApproval(String processInstanceId,String nowUserId){
+    public ResponseMessage<String> completeApproval(String processInstanceId,String nowUserId,String comment){
         try {
-            buyApprovalService.completeApproval(processInstanceId,nowUserId);
+            buyApprovalService.completeApproval(processInstanceId,nowUserId,comment);
             return Result.success(processInstanceId);
         }catch (Exception e){
             e.printStackTrace();
@@ -115,7 +118,7 @@ public class BuyApprovalController {
     @PostMapping ("/getVariables")
     public ResponseMessage<Map<String,Object>> getVariables(String processInstanceId) {
         Map<String,Object> map = runtimeService.getVariables(processInstanceId);
-
+        List list = taskService.getTaskComments("1");
         return Result.success(map);
     }
 
