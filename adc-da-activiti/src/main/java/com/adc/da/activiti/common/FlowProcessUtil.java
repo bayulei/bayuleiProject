@@ -56,10 +56,17 @@ public class FlowProcessUtil {
     }
 
 
-    @ApiOperation(value = "删除流程")
-    @GetMapping("/deleteProcess")
-    public void deleteProcess(String processInstanceId){
+    @ApiOperation(value = "删除流程实例")
+    @GetMapping("/deleteByProcessInstance")
+    public void deleteByProcessInstance(String processInstanceId){
         runtimeService.deleteProcessInstance(processInstanceId,"想删");
         historyService.deleteHistoricProcessInstance(processInstanceId);
+    }
+
+    @ApiOperation(value = "删除流程部署")
+    @GetMapping("/deleteByeployment")
+    public void deleteByDeployment(String deployment){
+        repositoryService.deleteDeployment(deployment,true);
+       // historyService.deleteHistoricProcessInstance(processInstanceId);
     }
 }
