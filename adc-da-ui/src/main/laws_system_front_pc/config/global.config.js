@@ -4,7 +4,7 @@
  * @date: 2018-09-04 17:47:46
  */
 // 开发环境配置
-const devIp = 'localhost'
+const devIp = '192.168.1.191'
 const devInterfacePORT = '8888'
 
 // 生产环境配置
@@ -17,5 +17,5 @@ const interfacePORT =  process.env.NODE_ENV === 'production'?prodInterfacePORT:d
 
 module.exports = {
   serverUrl: 'http://'+serverIP, // 服务器IP地址
-  interfaceUrl: 'http://'+serverIP+':'+interfacePORT, // 服务器端接口访问地址
+  interfaceUrl: 'http://'+serverIP+':'+interfacePORT+'/api/', // 服务器端接口访问地址
 }
