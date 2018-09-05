@@ -6,19 +6,14 @@
          <FormItem label="文件号" prop="fileNum" class="laws-info-item">
            <Input v-model="lawsInfo.fileNum"></Input>
          </FormItem>
-
          <Button type="primary" icon="ios-search" :loading="searching" @click="searchLawsInfo"></Button>
        </Form>
      </div>
-
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
       <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
     </div>
     <pagination :total="total"></pagination>
-
-
-
    </div>
 </template>
 
@@ -28,11 +23,11 @@ export default {
   data () {
     return {
       lawsInfo: {
-              fileNum: '' // 文件号
-       },
-       total: 1000,
-       loading: false,
-       tableColumn: [
+        fileNum: '' // 文件号
+      },
+      total: 1000,
+      loading: false,
+      tableColumn: [
         {
           type: 'selection',
           width: 60,
@@ -50,13 +45,14 @@ export default {
           title: '发布单位',
           key: 'issueUnit'
         }
-       ],
-       data: [],
+      ],
+      data: [],
+      lawsInfoRules: {}
     }
   },
   methods: {
-    searchLawsInfo(){
-      this.$http.get('lawss/sarLawsInfo/page',{},{
+    searchLawsInfo () {
+      this.$http.get('lawss/sarLawsInfo/page', {}, {
         _this: this
       }, res => {
         this.userData = res.data
@@ -78,13 +74,15 @@ export default {
 </script>
 
 <style lang="less">
-  .searchBtn{
-          width: 2rem;
-          height: 0.72rem;
-          line-height: 0.72rem;
-          margin-left:0.2rem;
-  }
-  .laws-info-item{
-          display:inline-block;
+  .personal-data{
+    .searchBtn{
+      width: 2rem;
+      height: 0.72rem;
+      line-height: 0.72rem;
+      margin-left:0.2rem;
+    }
+    .laws-info-item{
+      display:inline-block;
+    }
   }
 </style>

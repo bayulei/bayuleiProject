@@ -95,10 +95,10 @@ export default {
   },
   mounted () {
     this.$loading.show(this, '正在获取数据...')
-                setTimeout(() => {
-                  this.data = this.userData
-                  this.$loading.remove(this)
-                }, 1000)
+    setTimeout(() => {
+      this.data = this.userData
+      this.$loading.remove(this)
+    }, 1000)
   }
 }
 </script>
