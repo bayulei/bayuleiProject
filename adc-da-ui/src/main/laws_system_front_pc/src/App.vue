@@ -31,6 +31,11 @@ export default {
   },
   mounted () {
     this.setTheme(this.theme)
+    // rem自适应
+    var whdef = 50 / 1920
+    var wW = window.innerWidth
+    var rem = wW * whdef
+    $('html').css('font-size', rem + 'px')
     $(window).resize(function () {
       var whdef = 50 / 1920
       var wW = window.innerWidth
