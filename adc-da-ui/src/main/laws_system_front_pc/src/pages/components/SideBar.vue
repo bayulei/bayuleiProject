@@ -1,4 +1,4 @@
-<!-- 个人中心侧边栏 -->
+<!-- 侧边栏 -->
 <template>
   <div class="side-bar">
     <div class="side-bar-left">
