@@ -24,8 +24,8 @@ export default {
     }
   },
   props: {
-    show:{
-      type: Boolean,
+    show: {
+      type: Boolean
     },
     title: {
       type: String,
@@ -37,7 +37,7 @@ export default {
     show (val) {
       this.showModal = val
     }
-  },
+  }
 }
 </script>
 

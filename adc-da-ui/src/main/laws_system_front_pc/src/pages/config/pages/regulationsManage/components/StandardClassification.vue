@@ -43,28 +43,28 @@
 </template>
 
 <script>
-  export default {
-    name: 'standard-classification',
-    data () {
-      return {
-        modal2: false,
-        modal_loading: false,
-        modal3: false,
-        modal4: false,
-        modal5: false
-      }
-    },
-    methods: {
-      del () {
-        this.modal_loading = true;
-        setTimeout(() => {
-          this.modal_loading = false;
-          this.modal2 = false;
-          this.$Message.success('Successfully delete');
-        }, 2000);
-      }
+export default {
+  name: 'standard-classification',
+  data () {
+    return {
+      modal2: false,
+      modal_loading: false,
+      modal3: false,
+      modal4: false,
+      modal5: false
+    }
+  },
+  methods: {
+    del () {
+      this.modal_loading = true
+      setTimeout(() => {
+        this.modal_loading = false
+        this.modal2 = false
+        this.$Message.success('Successfully delete')
+      }, 2000)
     }
   }
+}
 </script>
 
 <style lang="less" scoped>
