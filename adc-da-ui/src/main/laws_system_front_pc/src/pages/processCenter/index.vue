@@ -15,7 +15,7 @@
 import ComHeader from '@/pages/components/Header'
 import SideBar from '@/pages/components/SideBar'
 export default {
-  name: 'processCenter',
+  name: 'index',
   data () {
     return {
       navList: [{
