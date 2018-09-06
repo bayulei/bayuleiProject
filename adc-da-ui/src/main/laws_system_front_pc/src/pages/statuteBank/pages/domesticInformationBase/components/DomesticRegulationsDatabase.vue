@@ -62,7 +62,7 @@ export default {
         _this: this
       }, res => {
         this.data = res.data.list
-      }, err => {
+      }, e => {
 
       })
     },
