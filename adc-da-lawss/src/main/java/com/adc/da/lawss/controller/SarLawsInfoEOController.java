@@ -72,6 +72,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
     @GetMapping("/page")
     /*@RequiresPermissions("lawss:sarLawsInfo:page")*/
     public ResponseMessage<PageInfo<SarLawsInfoEO>> page(SarLawsInfoEOPage page) throws Exception {
+        page.setValidFlag("0");
         List<SarLawsInfoEO> rows = sarLawsInfoEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
@@ -112,10 +113,11 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
      * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.SarLawsInfoEO>
      **/
     @ApiOperation(value = "|SarLawsInfoEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/createLawsInfo")
     /*@RequiresPermissions("lawss:sarLawsInfo:save")*/
-    public ResponseMessage<SarLawsInfoEO> createLawsInfo(@RequestBody SarLawsInfoEO sarLawsInfoEO) throws Exception {
-        return sarLawsInfoEOService.createLawsInfo(sarLawsInfoEO);
+    public ResponseMessage<SarLawsInfoEO> createLawsInfo(SarLawsInfoEO sarLawsInfoEO) throws Exception {
+        ResponseMessage<SarLawsInfoEO> result = sarLawsInfoEOService.createLawsInfo(sarLawsInfoEO);
+        return result;
     }
 
     /**
@@ -157,7 +159,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
      * @return com.adc.da.util.http.ResponseMessage
      **/
     @ApiOperation(value = "|SarLawsInfoEO|信息及关联表删除")
-    @PutMapping("/deleteLawsInfos")
+    @PostMapping("/deleteLawsInfos")
     /*@RequiresPermissions("lawss:sarLawsInfo:delete")*/
     public ResponseMessage deleteLawsInfos(@RequestParam("id") String id) throws Exception {
         return sarLawsInfoEOService.deleteLawsInfo(id);

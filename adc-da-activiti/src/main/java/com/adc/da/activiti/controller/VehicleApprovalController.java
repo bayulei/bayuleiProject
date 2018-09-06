@@ -64,7 +64,7 @@ public class VehicleApprovalController{
      * @return:com.adc.da.util.http.ResponseMessage<java.util.List<org.activiti.engine.history.HistoricProcessInstance>>
      * date: 2018/8/27 15:47
      */
-    @ApiOperation(value = "查询项目组总体经理自己发起的流程")
+   /* @ApiOperation(value = "查询项目组总体经理自己发起的流程")
     @PostMapping("/queryStandardApprovalProcess")
     public ResponseMessage<List<ProcessInformationVO>> queryStandardApprovalProcess(){
 
@@ -110,7 +110,7 @@ public class VehicleApprovalController{
             processInformationVOList.add(informationVO);
         }
         return  Result.success(processInformationVOList);
-    }
+    }*/
 
 
     /**
@@ -144,19 +144,18 @@ public class VehicleApprovalController{
 
     }
 
-    @ApiOperation(value = "委托")
-    @PostMapping ("/entrustTask")
-    public ResponseMessage<String> entrustTask(String taskId,String userId,String userName) throws Exception {
-        //调用上传附件的接口
-        String url = "附件地址";
-      // return  vehicleApprovalService.writeTestProgram(flag,taskId);
-        return  Result.success();
-    }
 
     @ApiOperation(value = "项目组总体经理确认结果")
     @PostMapping ("/quiteResult")
     public ResponseMessage<String> quiteResult(String taskId) throws Exception {
         return  vehicleApprovalService.quiteResult(taskId);
+
+    }
+
+    @ApiOperation(value = "根据任务id查询流程变量")
+    @PostMapping ("/queryProcessVariable")
+    public ResponseMessage<String> queryProcessVariable(String taskId) throws Exception {
+        return  vehicleApprovalService.queryProcessVariable(taskId);
 
     }
 }
