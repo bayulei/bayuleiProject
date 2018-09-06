@@ -1,6 +1,7 @@
+<!-- 自定义弹窗 -->
 <template>
    <Modal
-     :value="showModal"
+     v-model="showModal"
      :title="title"
      @on-visible-change="visibleChange">
      <slot></slot>
