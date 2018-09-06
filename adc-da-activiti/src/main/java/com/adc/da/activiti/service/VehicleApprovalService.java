@@ -9,6 +9,8 @@ import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -216,11 +218,39 @@ public class VehicleApprovalService {
         return  Result.success();
     }
 
-    public ResponseMessage<String> quiteResult(String taskId) {
+    public ResponseMessage<String> quiteResult(String taskId) throws Exception {
+        //查询当前任务
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         //设置流程审核人
         Authentication.setAuthenticatedUserId("从session取");
         //完成任务
         taskService.complete(taskId);
+        //更新业务流程主表
+        BusProcessEO busProcessEO = new BusProcessEO();
+        busProcessEO.setLastUserId("从session取");
+        if(StringUtils.isNotEmpty(task.getOwner())){
+            busProcessEO.setLastUserName(task.getOwner()+"委托"+task.getAssignee());
+        }else {
+            busProcessEO.setLastUserName("从session取");
+        }
+
+        busProcessEO.setEndTime(new Date());
+        busProcessEO.setProcessStatus("2");
+        flowProcessUtil.updateProcessByProcessInstanceId(task.getProcessInstanceId(),busProcessEO);
         return Result.success();
+    }
+
+    public ResponseMessage<String> queryProcessVariable(String taskId) {
+
+        /*HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
+
+        //查询流程实例绑定的流程变量
+        List<HistoricVariableInstance> historicVariableInstanceList = historyService.createHistoricVariableInstanceQuery()
+                .executionId(task.getProcessInstanceId()).list();
+        //查询子流程执行对象绑定 的流程变量
+        List<HistoricVariableInstance> historicChildrenVariableInstanceList = historyService.createHistoricVariableInstanceQuery()
+                .executionId(task.get).list();
+*/     //  historyService.createHistoricVariableInstanceQuery().
+        return  Result.success();
     }
 }
