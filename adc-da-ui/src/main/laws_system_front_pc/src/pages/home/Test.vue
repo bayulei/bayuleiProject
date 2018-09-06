@@ -62,7 +62,7 @@ export default {
         _this: this
       }, res => {
         console.log('success')
-      }, err => {
+      }, e => {
         console.log('error')
       })
       // this.axios.get('http://192.168.1.191:8888/api/lawss/sarLawsInfo/page', {}).then().catch()

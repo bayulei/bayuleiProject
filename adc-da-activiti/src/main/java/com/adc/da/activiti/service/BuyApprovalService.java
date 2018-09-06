@@ -9,6 +9,7 @@ import com.adc.da.activiti.page.BusExecuProcessEOPage;
 import com.adc.da.activiti.page.BusProcessEOPage;
 import com.adc.da.sys.util.UUIDUtils;
 import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.*;
@@ -125,6 +126,7 @@ public class BuyApprovalService {
             busProcessEO.setId(busprocessId);
             //1代表未完成
             busProcessEO.setProcessStatus("1");
+            busProcessEO.setCreateTime(new Date(System.currentTimeMillis()));
             busProcessEOService.insertSelective(busProcessEO);
             //往流程业务和流程的关联表添加数据
             BusExecuProcessEO busExecuProcessEO = new BusExecuProcessEO();
@@ -144,11 +146,17 @@ public class BuyApprovalService {
      * @return:String
      * date: 2018年9月5日 16:40:26
      */
-    public String completeApproval(String processInstanceId,String nowUserId) throws Exception{
+    public String completeApproval(String processInstanceId,String nowUserId,String comment) throws Exception{
         //获取当前执行的任务
         Task task = taskService.createTaskQuery()
                 .processInstanceId(processInstanceId)
                 .singleResult();
+        if(!StringUtils.isEmpty(comment)){
+            // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
+            Authentication.setAuthenticatedUserId(nowUserId);//批注人的名称  一定要写，不然查看的时候不知道人物信息
+            // 添加批注信息
+            taskService.addComment(task.getId(), null, comment);//comment为批注内容
+        }
 
         //将提交申请第一步任务走完 即向后执行一步
         taskService.complete(task.getId());
