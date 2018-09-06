@@ -35,12 +35,11 @@ module.exports = {
     let _this = config._this
     _this[config.loading] = true
     axios.post('/api/' + url, _formData).then(res => {
-      const code = res.data.code
       _this[config.loading] = false
-      if (code !== undefined) {
-        let type = code === 200 ? 'success' : 'warning'
+      if (res.ok !== undefined) {
+        let type = res.ok ? 'success' : 'warning'
         _this.$Message[type](res.data.message)
-        if (code === 200) {
+        if (res.ok) {
           thenFun.call(this, res.data)
         }
       }
@@ -67,11 +66,10 @@ module.exports = {
     let _this = config._this
     _this[config.loading] = true
     axios.get('/api/' + url, param).then(res => {
-      const code = res.data.code
       _this[config.loading] = false
       // 返回data对象
-      if (code !== undefined) {
-        if (code === 200) {
+      if (res.ok !== undefined) {
+        if (res.ok) {
           thenFun.call(this, res.data)
         }
       } else {
@@ -101,12 +99,11 @@ module.exports = {
     let _this = config._this
     _this[config.loading] = true
     axios.put('/api/' + url, _formData).then(res => {
-      const code = res.data.code
       _this[config.loading] = false
-      if (code !== undefined) {
-        let type = code === 200 ? 'success' : 'warning'
+      if (res.ok !== undefined) {
+        let type = res.ok ? 'success' : 'warning'
         _this.$Message[type](res.data.message)
-        if (code === 200) {
+        if (res.ok === 200) {
           thenFun.call(this, res.data)
         }
       }
