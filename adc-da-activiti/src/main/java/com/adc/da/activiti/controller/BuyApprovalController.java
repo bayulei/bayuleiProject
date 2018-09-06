@@ -118,7 +118,7 @@ public class BuyApprovalController {
     @PostMapping ("/getVariables")
     public ResponseMessage<Map<String,Object>> getVariables(String processInstanceId) {
         Map<String,Object> map = runtimeService.getVariables(processInstanceId);
-        List list = taskService.getTaskComments("1");
+        //List list = taskService.getTaskComments("1");
         return Result.success(map);
     }
 
@@ -142,7 +142,7 @@ public class BuyApprovalController {
      * @MethodName:entrust
      * @author: yuzhong
      * @param:[processInstanceId]
-     * @return:Map
+     * @return:String
      * date: 2018年9月5日 10:12:36
      */
     @ApiOperation(value = "委托")
@@ -150,5 +150,20 @@ public class BuyApprovalController {
     public ResponseMessage<String> entrust(String processInstanceId,String owner) {
         String message = flowProcessUtil.entrust(processInstanceId,owner);
         return Result.success(message);
+    }
+
+    /**
+     * 查看任务详情
+     * @MethodName:getTaskInfo
+     * @author: yuzhong
+     * @param:[taskId]
+     * @return:Map
+     * date: 2018年9月6日 19:07:04
+     */
+    @ApiOperation(value = "查看任务详情")
+    @PostMapping ("/getTaskInfo")
+    public ResponseMessage<Map<String,Object>> getTaskInfo(String taskId,String processInstanceId) {
+        Map<String,Object> map = buyApprovalService.getTaskInfo(taskId,processInstanceId);
+        return Result.success(map);
     }
 }
