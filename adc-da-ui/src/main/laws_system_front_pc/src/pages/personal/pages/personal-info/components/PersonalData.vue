@@ -10,7 +10,7 @@
       <div class="tips"><span class="require">*</span> 图片大小不能超过2M</div>
     </div>
     <div class="user-info-form">
-      <Form ref="userInfo" :model="userInfo" :rules="userInfoRules" :label-width="80">
+      <Form ref="userInfo" :model="userInfo" :rules="userInfoRules" :label-width="80" class="label-input-form">
         <FormItem label="用户名" prop="username" class="user-info-item">
           <Input v-model="userInfo.username"></Input>
         </FormItem>
@@ -124,22 +124,6 @@ export default {
         line-height: 0.72rem;
         margin: 0.5rem 0 0 0.2rem;
       }
-    }
-    .ivu-form-item-label{
-      border: 1px solid #DDD;
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-      border-right: none;
-      height: 32px;
-      line-height: 32px;
-      padding: 0 12px 0 0;
-      position: relative;
-      top: 1px;
-      background: #F4F8FB;
-    }
-    .ivu-input{
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
     }
     .user-info-item{
       .ivu-form-item-content{

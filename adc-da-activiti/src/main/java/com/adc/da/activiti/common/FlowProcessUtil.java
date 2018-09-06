@@ -221,4 +221,17 @@ public class FlowProcessUtil {
             return "驳回失败";
         }
     }
+
+    @ApiOperation(value = "通过任务ID委托人")
+    @GetMapping("/entrustByTaskId")
+    public String entrustByTaskId(String taskId,String owner){
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String oldOwner = task.getOwner();
+        if(!StringUtils.isEmpty(oldOwner)){
+            return "单个任务只能委托一次";
+        }else{
+            taskService.delegateTask(taskId,owner);
+            return "委托成功";
+        }
+    }
 }
