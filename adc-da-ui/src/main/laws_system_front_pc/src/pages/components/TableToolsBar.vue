@@ -1,11 +1,11 @@
 <!-- 表格工具栏 -->
 <template>
   <div class="table-tools-bar">
-    <transition enter-active-class="animated slideInDown" leave-active-class="animated slideOutUp" :duration="1000">
-      <div class="advanced-search" v-if="isAdvancedSearch">
-        高级搜索
-        <Button type="primary" class="toggle-btn" @click="toggleSearch">收起</Button>
-      </div>
+ <transition enter-active-class="animated slideInDown" leave-active-class="animated slideOutUp" :duration="1000">
+    <div class="advanced-search" v-if="isAdvancedSearch">
+      高级搜索
+      <Button type="primary" class="toggle-btn" @click="toggleSearch">收起</Button>
+    </div>
     </transition>
     <div class="tools-bar-wrapper">
       <slot name="left"></slot>
@@ -24,18 +24,18 @@ export default {
     }
   },
   methods: {
-    // 高级搜索关闭
-    toggleSearch () {
-      this.$emit('toggleSearch')
-    }
-  },
-  props: {
-    // 是否为高级搜索
-    isAdvancedSearch: {
-      type: Boolean,
-      default: false
-    }
+  // 高级搜索关闭
+  toggleSearch () {
+    this.$emit('toggleSearch')
   }
+},
+props: {
+  // 是否为高级搜索
+  isAdvancedSearch: {
+    type: Boolean,
+    default: false
+  }
+}
 }
 </script>
 
@@ -69,6 +69,9 @@ export default {
         min-width: 150px;
         margin-right: 0.1rem;
       }
+    }
+    .ivu-form-item{
+      margin-bottom: 0;
     }
   }
 </style>

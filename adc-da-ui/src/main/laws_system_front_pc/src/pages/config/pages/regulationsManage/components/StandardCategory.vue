@@ -1,110 +1,191 @@
 <!-- 标准类别 -->
 <template>
-  <div class="standard-category">
-    <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false">
+  <div class="standard-classification">
+    <table-tools-bar>
       <div slot="left">
-        <Input v-model="keywords1" placeholder="根据用户名查找" clearable class="my-input" />
-        <Input v-model="keywords2" placeholder="根据描述查找" clearable class="my-input" />
-        <Button type="primary" icon="ios-search" :loading="searching" @click="searchData"></Button>
+        <Form ref="formInline" :model="formInline" inline>
+          <FormItem prop="option">
+            <Input type="text" v-model="value1" placeholder="请输入选项">
+            <span slot="prepend">选项</span>
+            </Input>
+          </FormItem>
+          <FormItem prop="describe">
+            <Input type="text" v-model="value2" placeholder="请输入选项">
+            <span slot="prepend">描述</span>
+            </Input>
+          </FormItem>
+          <Button type="info" class="query-button" @click="handleQuery">查询</Button>
+        </Form>
       </div>
       <div slot="right">
-        <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
+        <Button type="success" @click="openAdd">增加</Button>
+        <Button type="warning" @click="openEdit">编辑</Button>
+        <Button type="error">删除</Button>
+        <modal :show="modal" @cancel="modal = false" :title="title">
+          <!--编辑/查看-->
+          <div v-if="!isEdit">
+            <Form :model="formLeft" label-position="right" :label-width="80">
+              <FormItem label="标准">
+                <Input v-model="formLeft.input1" style="width: 300px"></Input>
+              </FormItem>
+              <FormItem label="描述">
+                <Input v-model="formLeft.input2" style="width: 300px"></Input>
+              </FormItem>
+            </Form>
+          </div>
+          <!--新增-->
+          <div v-else>
+            我是新增的内容
+          </div>
+        </modal>
       </div>
     </table-tools-bar>
-    <div class="content">
-      <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
-    </div>
-    <pagination :total="total"></pagination>
+    <Table border ref="selection" :columns="columns1" :data="data1"></Table>
   </div>
 </template>
+
 <script>
-import TableToolsBar from 'pages/components/TableToolsBar'
-import Pagination from 'pages/components/Pagination'
-export default {
-  name: 'standard-category',
-  data () {
-    return {
-      keywords1: '',
-      keywords2: '',
-      searching: false,
-      isAdvancedSearch: false, // 是否为高级搜索
-      total: 1000,
-      loading: false,
-      tableColumn: [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center'
+  import tableToolsBar from 'pages/components/tableToolsBar'
+  import Modal from 'pages/components/Modal'
+  export default {
+    name: 'standard-classification',
+    data() {
+      return {
+        isEdit: false, // 是否为编辑
+        title:'',
+        formInline: {
+          option: '',
+          describe: '',
         },
-        {
-          title: 'Name',
-          key: 'name'
+        formLeft: {
+          input1: '',
+          input2: '',
+          input3: ''
         },
-        {
-          title: 'Age',
-          key: 'age'
+        formRight: {
+          input1: '',
+          input2: '',
+          input3: ''
         },
-        {
-          title: 'Address',
-          key: 'address'
-        }
-      ],
-      data: [],
-      userData: [
-        {
-          name: 'John Brown',
-          age: 18,
-          address: 'New York No. 1 Lake Park',
-          date: '2016-10-03'
-        },
-        {
-          name: 'Jim Green',
-          age: 24,
-          address: 'London No. 1 Lake Park',
-          date: '2016-10-01'
-        },
-        {
-          name: 'Joe Black',
-          age: 30,
-          address: 'Sydney No. 1 Lake Park',
-          date: '2016-10-02'
-        },
-        {
-          name: 'Jon Snow',
-          age: 26,
-          address: 'Ottawa No. 2 Lake Park',
-          date: '2016-10-04'
-        }
-      ]
+        modal: false,
+        value1: '',
+        value2: '',
+        columns1: [
+          {
+            type: 'selection',
+            width: 60,
+            align: 'center'
+          },
+          {
+            title: '选项',
+            key: 'option',
+            align: 'center',
+          },
+          {
+            title: '描述',
+            key: 'describe',
+            width: 300,
+            align: 'center'
+          },
+          {
+            title: '创建日期',
+            key: 'creationDate',
+            align: 'center'
+          },
+          {
+            title: '创建人',
+            key: 'founder',
+            align: 'center'
+          },
+          {
+            title: 'Action',
+            key: 'action',
+            width: 150,
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.viewData(params.index)
+                    }
+                  }
+                }, '查看')
+              ]);
+            }
+          }
+        ],
+        data1: [
+          {
+            option: '中国标准',
+            describe: 'XXXXXXXXXXXXXXXXXXX',
+            founder: 'Mr.li',
+            creationDate: '2018-9-05'
+          },
+          {
+            option: '企业标准',
+            describe:'XXXXXXXXXXXXXXXXXXX',
+            founder: 'Mr.li',
+            creationDate: '2018-9-05'
+          },
+          {
+            option: '欧盟标准',
+            describe:'XXXXXXXXXXXXXXXXXXX',
+            founder: 'Mr.li',
+            creationDate: '2018-9-05'
+          },
+          {
+            option: '美国标准',
+            describe:'XXXXXXXXXXXXXXXXXXX',
+            founder: 'Mr.li',
+            creationDate: '2018-9-05'
+          }
+        ]
+      }
+    },
+    methods: {
+      handleQuery(){
+
+      },
+      openAdd(){
+        this.modal = true
+        this.isEdit = true
+        this.title=this.modalTitle
+      },
+      //编辑
+      openEdit(){
+        this.modal = true
+        this.isEdit = false
+        this.title='编辑标准'
+      },
+      //查看
+      viewData () {
+        this.modal = true
+        this.isEdit = false
+        this.title=this.modalTitle
+      }
+    },
+    components: {
+      tableToolsBar,
+      Modal
+    },
+    computed: {
+      modalTitle () {
+        return this.isEdit ? '新增标准' : '查看标准'
+      }
     }
-  },
-  methods: {
-    searchData () {
-      this.searching = true
-      this.loading = true
-      setTimeout(() => {
-        this.loading = false
-        this.searching = false
-      }, 1000)
-    }
-  },
-  components: {
-    TableToolsBar,
-    Pagination
-  },
-  mounted () {
-    this.$loading.show(this, '正在获取数据...')
-    setTimeout(() => {
-      this.data = this.userData
-      this.$loading.remove(this)
-    }, 1000)
   }
-}
 </script>
 
-<style lang="less">
-  @import '~styles/mixins';
-  .standard-category{
+<style lang="less" scoped>
+  .standard-classification {
   }
+
 </style>
