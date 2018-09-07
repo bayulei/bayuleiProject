@@ -260,8 +260,6 @@ public class DocConverter {
                     fileName.lastIndexOf("."));
             if (outputPath.charAt(outputPath.length()) == '/') {
                 swfFile = new File(outputPath + realName + ".swf");
-            } else {
-                swfFile = new File(outputPath + realName + ".swf");
             }
         }
     }
