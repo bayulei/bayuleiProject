@@ -57,7 +57,8 @@ public class MenuEOController extends BaseController<MenuEO> {
 		if(roleId != null && !"".equals(roleId)){
             for (MenuVO menuVO: menuVOs) {
                 if(menuEOService.isBelong(roleId, menuVO.getId())){
-                    menuVO.setBelong(IsBelongEnum.BELONG.getValue());
+//                	这个字段已经修改
+//                    menuVO.setBelong(IsBelongEnum.BELONG.getValue());
                 }
             }
         }

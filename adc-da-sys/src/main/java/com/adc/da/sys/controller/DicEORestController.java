@@ -44,23 +44,32 @@ public class DicEORestController extends BaseController<DictionaryEO>{
 
 	@Autowired
 	BeanMapper beanMapper;
-	
+
 	@SuppressWarnings("unchecked")
-	@ApiOperation(value = "|DictionaryEO|新增")
+	@ApiOperation(value = "|DictionaryEO|新增数据字典")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-	@RequiresPermissions("sys:dic:save")
+	//@RequiresPermissions("sys:dic:save")
 	public ResponseMessage<DictionaryVO> create(@RequestBody DictionaryVO dicVO) throws Exception {
 		if (StringUtils.isBlank(dicVO.getDictionaryCode())) {
 			return Result.error("r0014", "字典编码不能为空");
-		} else if (dicEOService.getDictionaryByDicCode(dicVO.getDictionaryCode()) != null) {
+		}
+		else if (dicEOService.getDictionaryByDicCode(dicVO.getDictionaryCode()) != null) {
 			return Result.error("r0015", "字典编号已存在");
 		}
 		if (StringUtils.isBlank(dicVO.getDictionaryName())) {
 			return Result.error("r0016", "字典名称不能为空");
+		}else if (dicEOService.getDictionaryByDicName(dicVO.getDictionaryName())!=null) {
+			return Result.error("r0015", "字典名称已经存在");
 		}
+
 		DictionaryEO dicEO = dicEOService.save(beanMapper.map(dicVO, DictionaryEO.class));
 		return Result.success(beanMapper.map(dicEO, DictionaryVO.class));
 	}
+
+
+
+
+
 
 	/**
 	 * 周鑫
@@ -68,18 +77,19 @@ public class DicEORestController extends BaseController<DictionaryEO>{
 	 * @return
 	 * @throws Exception
 	 */
-	@ApiOperation(value = "|DictionaryEO|分页查询")
+///李文轩：数据字典没有分页
+	/*@ApiOperation(value = "|DictionaryEO|分页查询")
 	@GetMapping("/page")
-	 @RequiresPermissions("sys:dic:page")
+//	@RequiresPermissions("sys:dic:page")
 	public LayUiResult page(DictionaryEOPage page) throws Exception {
-		page.setOrderBy("u0.update_time desc");
+		page.setOrderBy("u0.modify_time desc");
 		List<DictionaryEO> rows = dicEOService.queryByPage(page);
 		return new LayUiResult(getPageInfo(page.getPager(), rows));
-	}
+	}*/
 	
 	@ApiOperation(value = "|DictionaryEO|修改")
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-	 @RequiresPermissions("sys:dic:update")
+//	 @RequiresPermissions("sys:dic:update")
 	public ResponseMessage<DictionaryVO> update(@RequestBody DictionaryVO dictionaryVO) throws Exception {
 		DictionaryEO getDic = dicEOService.getDictionaryByDicCode(dictionaryVO.getDictionaryCode());
 		if (StringUtils.isBlank(dictionaryVO.getDictionaryCode())) {
@@ -96,7 +106,7 @@ public class DicEORestController extends BaseController<DictionaryEO>{
 	
 	@ApiOperation(value = "|DictionaryEO|详情")
 	@GetMapping("/{id}")
-	 @RequiresPermissions("sys:dic:get")
+//	 @RequiresPermissions("sys:dic:get")
 	public ResponseMessage<DictionaryVO> getById(@NotNull @PathVariable("id") String id) throws Exception {
 		DictionaryVO dictionaryVO = beanMapper.map(dicEOService.getDictionaryById(id), DictionaryVO.class);
 		return Result.success(dictionaryVO);
@@ -104,7 +114,7 @@ public class DicEORestController extends BaseController<DictionaryEO>{
 	
 	@ApiOperation(value = "|DictionaryEO|删除")
 	@DeleteMapping("/{id}")
-	 @RequiresPermissions("sys:dic:delete")
+//	 @RequiresPermissions("sys:dic:delete")
 	public ResponseMessage delete(@NotNull @PathVariable(value = "id") String id) throws Exception {
 		DicTypeEOPage page = new DicTypeEOPage();
 		if (StringUtils.isNotEmpty(id)) {
@@ -118,10 +128,10 @@ public class DicEORestController extends BaseController<DictionaryEO>{
 		dicEOService.delete(id);
 		return Result.success();
 	}
-	
+
 	@ApiOperation(value = "|DictionaryEO|删除字典和相关明细")
 	@DeleteMapping("/deleteDicAndType/{id}")
-	 @RequiresPermissions("sys:dic:delete")
+//	 @RequiresPermissions("sys:dic:delete")
 	public ResponseMessage deleteDicAndType(@NotNull @PathVariable(value = "id") String id) throws Exception {
 		dicEOService.deleteDicAndType(id);
 		return Result.success();
@@ -135,7 +145,7 @@ public class DicEORestController extends BaseController<DictionaryEO>{
 	 */
 	@ApiOperation(value = "数据字典下拉框接口")
 	@GetMapping("/dicCode/{dicCode}")
-	 @RequiresPermissions("sys:dic:getByDicCode")
+//	 @RequiresPermissions("sys:dic:getByDicCode")
 	public ResponseMessage<DictionaryVO> getByDicCode(@NotNull @PathVariable("dicCode") String dicCode) throws Exception {
 		DictionaryVO dictionaryVO = beanMapper.map(dicEOService.getDicEOAndTypeEoByDicCode(dicCode), DictionaryVO.class);
 		return Result.success(dictionaryVO);

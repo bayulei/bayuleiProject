@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.adc.da.sys.entity.DictionaryEO;
+import com.adc.da.sys.vo.DictionaryVO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -49,21 +51,35 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	
 	@ApiOperation(value = "|DicTypeEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-	@RequiresPermissions("sys:dicType:save")
+//	@RequiresPermissions("sys:dicType:save")
+
+
 	public ResponseMessage<DicTypeVO> create(@RequestBody DicTypeVO dicTypeVO) throws Exception {
-		if(StringUtils.isBlank(dicTypeVO.getDicTypeCode()))
+
+		List<DicTypeEO> dicTypeEOList = dicTypeEOService.getDicTypeEOByDicTypeCode(dicTypeVO.getDicTypeCode());
+		List<DicTypeEO> dicTypeEOS = dicTypeEOService.getTypeIdByDicIdAndTypeName(dicTypeVO.getDicId(),dicTypeVO.getDicTypeName());
+
+		if(StringUtils.isBlank(dicTypeVO.getDicTypeCode())){
 			return Result.error("r0014", "字典类型编码不能为空");
-		if(StringUtils.isBlank(dicTypeVO.getDicTypeName()))
+		}else if(dicTypeEOList!=null && !dicTypeEOList.isEmpty()){
+			return Result.error("r0015","字典类型编码已存在");
+		}
+		if(StringUtils.isBlank(dicTypeVO.getDicTypeName())){
 			return Result.error("r0016", "字典类型名称不能为空");
+		}else if(dicTypeEOS!=null && !dicTypeEOS.isEmpty() ){
+			return Result.error("r0017","字典类型名称存在");
+		}
+
 		DicTypeEO dicTypeEO = dicTypeEOService.save(beanMapper.map(dicTypeVO, DicTypeEO.class));
 		dicTypeVO.setId(dicTypeEO.getId());
 		return Result.success(dicTypeVO);
 	}
+
 	
 	@ApiOperation(value = "|DicTypeEO|分页列表")
 	@GetMapping("/page")
-	@RequiresPermissions("sys:dicType:page")
-    public LayUiResult<DicTypeVO> pageListByDicId(Integer pageNo, Integer pageSize,String dicId, String dicTypeName) throws Exception{
+//	@RequiresPermissions("sys:dicType:page")
+    public ResponseMessage<PageInfo<DicTypeEO>> pageListByDicId(Integer pageNo, Integer pageSize,String dicId, String dicTypeName) throws Exception{
 		DicTypeEOPage page = new DicTypeEOPage();
 		if (pageNo != null) {
 			page.setPage(pageNo);
@@ -80,13 +96,14 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		}
 		page.setPager(new Pager());
 		List<DicTypeEO> rows = dicTypeEOService.queryByPage(page);
-		PageInfo<DicTypeVO> mapPage = beanMapper.mapPage(getPageInfo(page.getPager(), rows), DicTypeVO.class);
-		return new LayUiResult<DicTypeVO>(mapPage);
+		//PageInfo<DicTypeVO> mapPage = beanMapper.mapPage( rows, DicTypeVO.class);
+		// getPageInfo(page.getPager(), rows);
+		return  Result.success(getPageInfo(page.getPager(), rows));
     }
 	
 	@ApiOperation(value = "|DicTypeEO|修改")
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-	@RequiresPermissions("sys:dicType:update")
+//	@RequiresPermissions("sys:dicType:update")
 	public ResponseMessage<DicTypeVO> update(@RequestBody DicTypeVO dicTypeVO) throws Exception {
 		if(StringUtils.isBlank(dicTypeVO.getDicTypeCode()))
 			return Result.error("r0014", "字典类型编码不能为空");
@@ -98,7 +115,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	
 	@ApiOperation(value = "|DicTypeEO|详情")
 	@GetMapping("/{id}")
-	@RequiresPermissions("sys:dicType:get")
+//	@RequiresPermissions("sys:dicType:get")
 	public ResponseMessage<DicTypeVO> getById(@NotNull @PathVariable("id") String id) throws Exception {
 		DicTypeVO dicTypeVO = beanMapper.map(dicTypeEOService.getDicTypeById(id), DicTypeVO.class);
 		return Result.success(dicTypeVO);
@@ -106,7 +123,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	
 	@ApiOperation(value = "|DicTypeEO|删除")
 	@DeleteMapping("/delete/{ids}")
-	@RequiresPermissions("sys:dicType:delete")
+//	@RequiresPermissions("sys:dicType:delete")
 	public ResponseMessage delete(@NotNull @PathVariable("ids") String[] ids) throws Exception {
 		dicTypeEOService.delete(Arrays.asList(ids));
 		return Result.success();
@@ -114,7 +131,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	
 	@ApiOperation(value = "|DicTypeEO|删除")
 	@DeleteMapping("/deleteArr/{ids}")
-	@RequiresPermissions("sys:dicType:deleteArr")
+//	@RequiresPermissions("sys:dicType:deleteArr")
 	public ResponseMessage deleteArr(@NotNull @PathVariable("ids") String ids) throws Exception {
 		String[] idList = ids.split(",");
 		if(idList!=null && idList.length>0){

@@ -1,40 +1,57 @@
 package com.adc.da.sys.vo;
 
+import java.util.Date;
+
 public class MenuVO extends TreeVO<MenuVO> {
 
-	private String href;
-	private String icon;
-	private String sort;
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date modifyTime;
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date creationTime;
+	private Integer validFlag;
+	private Object remarks;
 	private String permission;
-	private String remarks;
-	private Integer belong;
 	private Integer isShow;
+	private String icon;
+	private String href;
+	private String parentIds;
+	private String parentId;
+	private String name;
+	private String id;
 	// 扩展字段
 	private String extInfo;
 	private String checked;
 
-	public String getHref() {
-		return href;
+	public Date getModifyTime() {
+		return modifyTime;
 	}
 
-	public void setHref(String href) {
-		this.href = href;
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
-	public String getIcon() {
-		return icon;
+	public Date getCreationTime() {
+		return creationTime;
 	}
 
-	public void setIcon(String icon) {
-		this.icon = icon;
+	public void setCreationTime(Date creationTime) {
+		this.creationTime = creationTime;
 	}
 
-	public String getSort() {
-		return sort;
+	public Integer getValidFlag() {
+		return validFlag;
 	}
 
-	public void setSort(String sort) {
-		this.sort = sort;
+	public void setValidFlag(Integer validFlag) {
+		this.validFlag = validFlag;
+	}
+
+	public Object getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(Object remarks) {
+		this.remarks = remarks;
 	}
 
 	public String getPermission() {
@@ -45,28 +62,68 @@ public class MenuVO extends TreeVO<MenuVO> {
 		this.permission = permission;
 	}
 
-	public String getRemarks() {
-		return remarks;
-	}
-
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
-	}
-
-	public Integer getBelong() {
-		return belong;
-	}
-
-	public void setBelong(Integer belong) {
-		this.belong = belong;
-	}
-
 	public Integer getIsShow() {
 		return isShow;
 	}
 
 	public void setIsShow(Integer isShow) {
 		this.isShow = isShow;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getHref() {
+		return href;
+	}
+
+	public void setHref(String href) {
+		this.href = href;
+	}
+
+	@Override
+	public String getParentIds() {
+		return parentIds;
+	}
+
+	@Override
+	public void setParentIds(String parentIds) {
+		this.parentIds = parentIds;
+	}
+
+	@Override
+	public String getParentId() {
+		return parentId;
+	}
+
+	@Override
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getExtInfo() {
@@ -84,5 +141,4 @@ public class MenuVO extends TreeVO<MenuVO> {
 	public void setChecked(String checked) {
 		this.checked = checked;
 	}
-
 }

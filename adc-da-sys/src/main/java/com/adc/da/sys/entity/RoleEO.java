@@ -224,7 +224,9 @@ public class RoleEO extends BaseEntity {
 		this.menuEOIdList = menuEOIdList;
 	}
 
-    
-    
-    
+    public RoleEO(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
+
 }

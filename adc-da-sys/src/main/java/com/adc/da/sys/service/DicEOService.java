@@ -1,5 +1,6 @@
 package com.adc.da.sys.service;
 
+import com.adc.da.sys.entity.DicTypeEO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import com.adc.da.util.utils.UUID;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * 新增数据字典属性
+* */
 @Service("dicEOService")
 @Transactional(value = "transactionManager", readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 public class DicEOService extends BaseService<DictionaryEO,String>{
@@ -42,7 +45,10 @@ public class DicEOService extends BaseService<DictionaryEO,String>{
 		dicEODao.insert(dicEO);
 		return dicEO;
 	}
-	
+
+
+
+
 	/**
 	 * 查询字典详情
 	 */

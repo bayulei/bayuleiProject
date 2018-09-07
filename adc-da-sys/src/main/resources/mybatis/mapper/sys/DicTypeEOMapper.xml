@@ -88,7 +88,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_DICTYPE
-		where dicTypeCode = #{dicTypeCode}
+		where dic_type_code = #{dicTypeCode}
 	</select>
 
 
