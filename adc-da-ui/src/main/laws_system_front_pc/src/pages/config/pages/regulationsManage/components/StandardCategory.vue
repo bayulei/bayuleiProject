@@ -18,11 +18,11 @@
         </Form>
       </div>
       <div slot="right">
-        <Button type="success" @click="openAdd">增加</Button>
-        <Button type="warning" @click="openEdit">编辑</Button>
+        <Button type="success" @click="categoryAdd">增加</Button>
+        <Button type="warning" @click="categoryEdit">编辑</Button>
         <Button type="error">删除</Button>
         <!--显示模态框-->
-        <Modal v-model="modal" :title="title" :class="{ 'hide-modal-footer': modalType === 3 }" width="400">
+        <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="400">
           <!--编辑/查看-->
           <div v-if="modalType === 2 || modalType === 3">
             <Form :model="formLeft" label-position="right" :label-width="80">
@@ -44,7 +44,7 @@
         </Modal>
       </div>
     </table-tools-bar>
-    <Table border ref="selection" :columns="columns1" :data="data1"></Table>
+    <Table border ref="selection" :columns="categoryTable" :data="data1"></Table>
   </div>
 </template>
 
@@ -55,7 +55,7 @@ export default {
   data () {
     return {
       modalType: '',
-      title: '',
+      categoryTitle: '',
       formInline: {
         option: '',
         describe: ''
@@ -70,10 +70,10 @@ export default {
         input2: '',
         input3: ''
       },
-      modal: false,
+      categoryModal: false,
       value1: '',
       value2: '',
-      columns1: [
+      categoryTable: [
         {
           type: 'selection',
           width: 60,
@@ -158,22 +158,22 @@ export default {
 
     },
     // 新增
-    openAdd () {
-      this.modal = true
+    categoryAdd () {
+      this.categoryModal = true
       this.modalType = 1
-      this.title = '新增标准'
+      this.categoryTitle = '新增标准'
     },
     // 编辑
-    openEdit () {
-      this.modal = true
+    categoryEdit () {
+      this.categoryModal = true
       this.modalType = 2
-      this.title = '编辑标准'
+      this.categoryTitle = '编辑标准'
     },
     // 查看
     viewData () {
-      this.modal = true
+      this.categoryModal = true
       this.modalType = 3
-      this.title = '查看标准'
+      this.categoryTitle = '查看标准'
       // $('.ivu-modal-footer').addClass('isDisplay')
     }
   },
