@@ -24,6 +24,7 @@
    <!--新增修改模态框-->
    <Modal v-model="modalAdd" title="新增法规信息" @on-ok="saveLawsInfo" @on-cancel="cancelAdd">
      <Form ref="lawsInfoAdd" :model="lawsInfoAdd" :rules="lawsInfoAddRules" :label-width="80">
+       <input v-model="lawsInfoAdd.editLawsId" v-show="false">
        <FormItem label="文件号" prop="lawsNum" class="laws-info-item">
          <Input v-model="lawsInfoAdd.lawsNum"></Input>
        </FormItem>
@@ -54,13 +55,13 @@ export default {
     return {
       modal2: false,
       modalAdd: false,
-      editLawsId: '',
       lawsInfo: {
         fileNum: '' // 文件号
       },
       lawsInfoAdd: {
         lawsNum: '',
-        lawsName: ''
+        lawsName: '',
+        editLawsId: ''
       },
       total: 0,
       page: 1,
@@ -84,6 +85,10 @@ export default {
         {
           title: '发布单位',
           key: 'issueUnit'
+        },
+        {
+          title: '修改时间',
+          key: 'modifyTime'
         },
         {
           title: '操作',
@@ -129,9 +134,8 @@ export default {
   methods: {
     // 分页查询
     searchLawsInfo () {
-      this.$http.get('lawss/sarLawsInfo/page', {
-        page: this.page,
-        rows: this.rows
+      console.log(this.lawsInfo.fileNum)
+      this.$http.get('lawss/sarLawsInfo/page?lawsNumber=' + this.lawsInfo.fileNum, {
       }, {
         _this: this
       }, res => {
@@ -146,21 +150,19 @@ export default {
     // 点击编辑按钮触发
     edit (row) {
       this.modalAdd = true
-      this.editLawsId = row.id
-      console.log(this.editLawsId)
+      this.lawsInfoAdd.editLawsId = row.id
       this.lawsInfoAdd.lawsNum = row.lawsNumber
       this.lawsInfoAdd.lawsName = row.lawsName
     },
     // 提交新增/修改
     saveLawsInfo () {
-      if (this.editLawsId == null || this.editLawsId === '') {
+      if (this.lawsInfoAdd.editLawsId == null || this.lawsInfoAdd.editLawsId === '') {
         this.$http.post('lawss/sarLawsInfo/createLawsInfo', {
           lawsNumber: this.lawsInfoAdd.lawsNum,
           lawsName: this.lawsInfoAdd.lawsName
         }, {
           _this: this
         }, res => {
-          debugger
           alert('新增成功')
           this.searchLawsInfo()
         }, e => {
@@ -168,7 +170,7 @@ export default {
         })
       } else {
         this.$http.put('lawss/sarLawsInfo/updateLawsInfo', {
-          id: this.editLawsId,
+          id: this.lawsInfoAdd.editLawsId,
           lawsNumber: this.lawsInfoAdd.lawsNum,
           lawsName: this.lawsInfoAdd.lawsName
         }, {
@@ -180,13 +182,11 @@ export default {
 
         })
       }
-
     },
     cancelAdd () {
     },
     // 删除
     remove (id) {
-      console.log(id)
       this.$http.put('lawss/sarLawsInfo/deleteLawsInfos', {
         id: id
       }, {
