@@ -63,9 +63,10 @@ module.exports = {
    * @date: 2018-08-14 16:59:56
    */
   get (url, param, config, thenFun, exeFun) {
+    var _formData = formData(param)
     let _this = config._this
     _this[config.loading] = true
-    axios.get('/api/' + url, param).then(res => {
+    axios.get('/api/' + url, _formData).then(res => {
       _this[config.loading] = false
       // 返回data对象
       if (res.ok !== undefined) {
@@ -100,10 +101,10 @@ module.exports = {
     _this[config.loading] = true
     axios.put('/api/' + url, _formData).then(res => {
       _this[config.loading] = false
-      if (res.ok !== undefined) {
-        let type = res.ok ? 'success' : 'warning'
+      if (res.data.ok !== undefined) {
+        let type = res.data.ok ? 'success' : 'warning'
         _this.$Message[type](res.data.message)
-        if (res.ok === 200) {
+        if (res.data.ok) {
           thenFun.call(this, res.data)
         }
       }
