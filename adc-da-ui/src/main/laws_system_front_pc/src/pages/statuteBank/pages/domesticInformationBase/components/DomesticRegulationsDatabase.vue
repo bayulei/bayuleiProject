@@ -135,7 +135,7 @@ export default {
     // 分页查询
     searchLawsInfo () {
       this.$http.get('lawss/sarLawsInfo/page', {
-        lawsNumber: this.lawsInfo.fileNum
+        lawsNumber: this.page
       }, {
         _this: this,
         loading: 'loading'
@@ -148,6 +148,7 @@ export default {
     },
     pageChange (page) {
       this.page = page
+      this.searchLawsInfo()
     },
     // 点击编辑按钮触发
     edit (row) {

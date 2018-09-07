@@ -234,9 +234,14 @@ export default {
       width: 6.1rem;
       height: 100%;
       border-right: 1px solid #DDD;
+      position: relative;
       .ivu-tree{
-        width: 100%;
-        height: 100%;
+        width: calc(~'100% - 8px');
+        height: calc(~'100% - 2px');
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        overflow-x: auto;
       }
     }
     .mechanism-manage-right{
