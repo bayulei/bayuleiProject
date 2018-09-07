@@ -3,7 +3,9 @@
   <div class="config">
     <com-header></com-header>
     <div class="main">
+      <!-- 侧边栏区域 -->
       <side-bar :navList="navList"></side-bar>
+      <!-- view-router视图窗口 -->
       <div class="sub-container">
         <router-view></router-view>
       </div>
