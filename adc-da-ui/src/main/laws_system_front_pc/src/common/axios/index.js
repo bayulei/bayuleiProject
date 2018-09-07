@@ -18,7 +18,7 @@ let formData = (data) => {
   }
   return _formData
 }
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 10000
 axios.defaults.headers['Content-type'] = 'application/json'
 module.exports = {
   /**
@@ -89,10 +89,9 @@ module.exports = {
    * @date: 2018-08-14 16:59:56
    */
   get (url, param, config, thenFun, exeFun) {
-    var _formData = formData(param)
     let _this = config._this
     _this[config.loading] = true
-    axios.get('/api/' + url, _formData).then(res => {
+    axios.get('/api/' + url, { params: param }).then(res => {
       _this[config.loading] = false
       // 返回data对象
       if (res.ok !== undefined) {

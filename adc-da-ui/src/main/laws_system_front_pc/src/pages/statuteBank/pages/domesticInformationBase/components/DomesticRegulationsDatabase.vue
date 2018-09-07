@@ -134,12 +134,14 @@ export default {
   methods: {
     // 分页查询
     searchLawsInfo () {
-      console.log(this.lawsInfo.fileNum)
-      this.$http.get('lawss/sarLawsInfo/page?lawsNumber=' + this.lawsInfo.fileNum, {
+      this.$http.get('lawss/sarLawsInfo/page', {
+        lawsNumber: this.lawsInfo.fileNum
       }, {
-        _this: this
+        _this: this,
+        loading: 'loading'
       }, res => {
-        this.data = res.data.list
+        console.log('执行成功')
+        // this.data = res.data.list
       }, e => {
 
       })
