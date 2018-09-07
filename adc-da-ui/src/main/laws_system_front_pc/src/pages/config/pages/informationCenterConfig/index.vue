@@ -128,16 +128,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
-    .InformationCenterConfig{
-      display: flex;
-      background: #FFF;
-      .container{
-        width: 100%;
-        margin: 1rem;
-      }
-      .header{
-        margin-bottom:0.7rem;
-
-      }
+  .InformationCenterConfig{
+    display: flex;
+    background: #FFF;
+    .container{
+      width: 100%;
+      margin: 1rem;
     }
+    .header{
+      margin-bottom:0.7rem;
+
+    }
+  }
 </style>

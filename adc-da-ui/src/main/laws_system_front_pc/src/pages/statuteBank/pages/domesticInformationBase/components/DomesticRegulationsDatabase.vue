@@ -1,24 +1,30 @@
 <!-- 国内法规库 -->
 <template>
  <div class="personal-data">
-     <div class="laws-info-form">
-       <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80">
-         <FormItem label="文件号" prop="fileNum" class="laws-info-item">
-           <Input v-model="lawsInfo.fileNum"></Input>
-         </FormItem>
-         <Button type="primary" icon="ios-search" @click="searchLawsInfo"></Button>
-         <Button type="primary" @click="modal1 = true">新增</Button>
-       </Form>
-     </div>
+    <table-tools-bar>
+      <div class="laws-info-form" slot="left">
+        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80">
+          <FormItem label="文件号" prop="fileNum" class="laws-info-item">
+            <Input v-model="lawsInfo.fileNum"></Input>
+          </FormItem>
+          <Button type="primary" icon="ios-search" @click="searchLawsInfo"></Button>
+        </Form>
+      </div>
+      <div slot="right">
+        <Button type="primary" @click="modalAdd = true">新增</Button>
+        <Button type="primary" @click="modal2 = true">导入</Button>
+      </div>
+    </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
       <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
     </div>
     <pagination :total="total" @pageChange="pageChange"></pagination>
 
-   <!--新增模态框-->
-   <Modal v-model="modal1" title="新增法规信息" @on-ok="addLawsInfo" @on-cancel="cancelAdd">
+   <!--新增修改模态框-->
+   <Modal v-model="modalAdd" title="新增法规信息" @on-ok="saveLawsInfo" @on-cancel="cancelAdd">
      <Form ref="lawsInfoAdd" :model="lawsInfoAdd" :rules="lawsInfoAddRules" :label-width="80">
+       <input v-model="lawsInfoAdd.editLawsId" v-show="false">
        <FormItem label="文件号" prop="lawsNum" class="laws-info-item">
          <Input v-model="lawsInfoAdd.lawsNum"></Input>
        </FormItem>
@@ -27,27 +33,41 @@
        </FormItem>
      </Form>
    </Modal>
+   <!--导入模态框-->
+   <Modal v-model="modal2" title="导入法规信息" @on-ok="importLawsInfo" @on-cancel="cancelAdd">
+     <Form ref="lawsInfoImport" :model="lawsInfoImport" :label-width="80">
+       <FormItem label="导入文件" prop="fileName" class="laws-info-item">
+         <input type="file" ref="lawsInfoFile" id="lawsInfoFile" @change="lawsInfoFileBeforeUpload">
+         <Button @click="openFile">导入文件</Button>
+       </FormItem>
+     </Form>
+   </Modal>
+
    </div>
 </template>
 
 <script>
 import Pagination from 'pages/components/Pagination'
+import tableToolsBar from 'pages/components/TableToolsBar'
 export default {
   name: 'DomesticRegulationsDatabase',
   data () {
     return {
-      modal1: false,
+      modal2: false,
+      modalAdd: false,
       lawsInfo: {
         fileNum: '' // 文件号
       },
       lawsInfoAdd: {
-        lawsNum: '', // 文件号
-        lawsName: ''
+        lawsNum: '',
+        lawsName: '',
+        editLawsId: ''
       },
       total: 0,
       page: 1,
       rows: 10,
       loading: false,
+      lawsInfoImport: {},
       tableColumn: [
         {
           type: 'selection',
@@ -67,6 +87,10 @@ export default {
           key: 'issueUnit'
         },
         {
+          title: '修改时间',
+          key: 'modifyTime'
+        },
+        {
           title: '操作',
           key: 'action',
           width: 150,
@@ -83,7 +107,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.show(params.index)
+                    this.edit(params.row)
                   }
                 }
               }, '编辑'),
@@ -108,57 +132,100 @@ export default {
     }
   },
   methods: {
+    // 分页查询
     searchLawsInfo () {
       this.$http.get('lawss/sarLawsInfo/page', {
-        page: this.page,
-        rows: this.rows
+        lawsNumber: this.page
       }, {
-        _this: this
+        _this: this,
+        loading: 'loading'
       }, res => {
-        this.data = res.data.list
+        console.log('执行成功')
+        // this.data = res.data.list
       }, e => {
 
       })
     },
     pageChange (page) {
       this.page = page
+      this.searchLawsInfo()
     },
-    addLawsInfo () {
-      this.$http.post('lawss/sarLawsInfo/createLawsInfo', {
-        lawsNumber: this.lawsInfoAdd.lawsNum,
-        lawsName: this.lawsInfoAdd.lawsName
-      }, {
-        _this: this
-      }, res => {
-        alert(res)
-      }, e => {
+    // 点击编辑按钮触发
+    edit (row) {
+      this.modalAdd = true
+      this.lawsInfoAdd.editLawsId = row.id
+      this.lawsInfoAdd.lawsNum = row.lawsNumber
+      this.lawsInfoAdd.lawsName = row.lawsName
+    },
+    // 提交新增/修改
+    saveLawsInfo () {
+      if (this.lawsInfoAdd.editLawsId == null || this.lawsInfoAdd.editLawsId === '') {
+        this.$http.post('lawss/sarLawsInfo/createLawsInfo', {
+          lawsNumber: this.lawsInfoAdd.lawsNum,
+          lawsName: this.lawsInfoAdd.lawsName
+        }, {
+          _this: this
+        }, res => {
+          alert('新增成功')
+          this.searchLawsInfo()
+        }, e => {
 
-      })
+        })
+      } else {
+        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', {
+          id: this.lawsInfoAdd.editLawsId,
+          lawsNumber: this.lawsInfoAdd.lawsNum,
+          lawsName: this.lawsInfoAdd.lawsName
+        }, {
+          _this: this
+        }, res => {
+          alert('修改成功')
+          this.searchLawsInfo()
+        }, e => {
+
+        })
+      }
     },
     cancelAdd () {
-      alert(111)
     },
-    show (index) {
-      alert(111)
-    },
+    // 删除
     remove (id) {
-      console.log(id)
-      this.$http.post('lawss/sarLawsInfo/deleteLawsInfos', {
+      this.$http.put('lawss/sarLawsInfo/deleteLawsInfos', {
         id: id
       }, {
         _this: this
       }, res => {
-        if (res.ok) {
-          alert('删除成功')
-          this.searchLawsInfo()
-        }
+        alert('删除成功')
+        this.searchLawsInfo()
+      }, e => {
+
+      })
+    },
+    openFile () {
+      $('#lawsInfoFile').click()
+    },
+    lawsInfoFileBeforeUpload (val) {
+      let file = this.$refs.lawsInfoFile.files[0].name
+      console.log(file)
+    },
+    // 导入
+    importLawsInfo () {
+      let file = this.$refs.lawsInfoFile.files[0]
+      this.$http.post('lawss/sarLawsInfo/importLawsInfos', {
+        file: file
+      }, {
+        _this: this
+      }, res => {
+        alert('导入成功')
+        this.searchLawsInfo()
       }, e => {
 
       })
     }
   },
   components: {
-    Pagination
+    Pagination,
+    tableToolsBar
   },
   props: {},
   computed: {},
