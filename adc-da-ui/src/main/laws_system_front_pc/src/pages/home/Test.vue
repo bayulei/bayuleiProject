@@ -1,81 +1,171 @@
 <template>
-  <div class="test">
-    <Tree :data="data4" show-checkbox @on-select-change="checkNode"></Tree>
-    <Input :v-model="nodeTitle" clearable class="my-input" />
-    <Button type="primary" @click="save">保存</Button>
+  <div>
+    <Tree :data="data5" :render="renderContent"></Tree>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      data4: [
+      data5: [
         {
           title: 'parent 1',
           expand: true,
-          selected: true,
+          render: (h, { root, node, data }) => {
+            return h('span', {
+              style: {
+                display: 'inline-block',
+                width: '100%'
+              }
+            }, [
+              h('span', [
+                h('Icon', {
+                  props: {
+                    type: 'ios-folder-outline'
+                  },
+                  style: {
+                    marginRight: '8px'
+                  }
+                }),
+                h('span', data.title)
+              ]),
+              h('span', {
+                style: {
+                  display: 'inline-block',
+                  marginLeft: '32px'
+                }
+              }, [
+                h('Button', {
+                  props: Object.assign({}, this.buttonProps, {
+                    icon: 'ios-add',
+                    type: 'primary'
+                  }),
+                  style: {
+                    width: '64px'
+                  },
+                  on: {
+                    click: () => { this.append(data) }
+                  }
+                })
+              ])
+            ])
+          },
           children: [
             {
-              title: 'parent 1-1',
+              title: 'child 1-1',
               expand: true,
               children: [
                 {
                   title: 'leaf 1-1-1',
-                  disabled: true
+                  expand: true
                 },
                 {
-                  title: 'leaf 1-1-2'
+                  title: 'leaf 1-1-2',
+                  expand: true
                 }
               ]
             },
             {
-              title: 'parent 1-2',
+              title: 'child 1-2',
               expand: true,
               children: [
                 {
                   title: 'leaf 1-2-1',
-                  checked: true
+                  expand: true
                 },
                 {
-                  title: 'leaf 1-2-1'
+                  title: 'leaf 1-2-1',
+                  expand: true
                 }
               ]
             }
           ]
         }
       ],
-      nodeTitle: '',
-      nodeKey: ''
+      buttonProps: {
+        type: 'default',
+        size: 'small'
+      }
     }
   },
   methods: {
-    checkNode (treeNode) {
-      this.nodeKey = treeNode[0].nodeKey || ''
+    renderContent (h, { root, node, data }) {
+      return h('span', {
+        style: {
+          display: 'inline-block',
+          width: '100%'
+        }
+      }, [
+        h('span', [
+          h('Icon', {
+            props: {
+              type: 'ios-paper-outline'
+            },
+            style: {
+              marginRight: '8px'
+            }
+          }),
+          h('span', data.title)
+        ]),
+        h('span', {
+          style: {
+            display: 'inline-block',
+            marginLeft: '32px'
+          }
+        }, [
+          h('Button', {
+            props: Object.assign({}, this.buttonProps, {
+              icon: 'ios-add'
+            }),
+            style: {
+              marginRight: '8px'
+            },
+            on: {
+              click: () => {
+                this.$Modal.confirm({
+                  render: (h) => {
+                    return h('Input', {
+                      props: {
+                        value: data.title,
+                        autofocus: true,
+                        placeholder: 'Please enter your name...'
+                      },
+                      on: {
+                        input: (val) => {
+                          data.title = val
+                        }
+                      }
+                    })
+                  }
+                })
+              }
+            }
+          }),
+          h('Button', {
+            props: Object.assign({}, this.buttonProps, {
+              icon: 'ios-remove'
+            }),
+            on: {
+              click: () => { this.remove(root, node, data) }
+            }
+          })
+        ])
+      ])
     },
-    save () {
-      console.log(this.nodeKey)
-    },
-    fetchData () {
-      this.$http.get('lawss/sarLawsInfo/page', {
-        //
-      }, {
-        _this: this
-      }, res => {
-        console.log('success')
-      }, err => {
-        console.log('error')
+    append (data) {
+      const children = data.children || []
+      children.push({
+        title: 'appended node',
+        expand: true
       })
-      // this.axios.get('http://192.168.1.191:8888/api/lawss/sarLawsInfo/page', {}).then().catch()
+      this.$set(data, 'children', children)
+    },
+    remove (root, node, data) {
+      const parentKey = root.find(el => el === node).parent
+      const parent = root.find(el => el.nodeKey === parentKey).node
+      const index = parent.children.indexOf(data)
+      parent.children.splice(index, 1)
     }
-  },
-  mounted () {
-    this.fetchData()
   }
 }
 </script>
-<style>
-  .my-input{
-    width: 150px;
-    margin-left: 20px;
-  }
-</style>

@@ -4,7 +4,7 @@
     <Divider />
     <div class="pagination-slot">
       <slot>
-        <Page :total="total" show-elevator show-sizer />
+        <Page :total="total" show-elevator show-sizer @on-change="pageChange" />
       </slot>
     </div>
   </div>
@@ -13,6 +13,12 @@
 <script>
 export default {
   name: 'pagination',
+  methods: {
+    // 切换页码
+    pageChange (page) {
+      this.$emit('pageChange', page)
+    }
+  },
   props: {
     total: {
       type: Number

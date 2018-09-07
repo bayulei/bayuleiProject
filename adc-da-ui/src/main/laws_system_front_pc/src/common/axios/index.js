@@ -35,12 +35,11 @@ module.exports = {
     let _this = config._this
     _this[config.loading] = true
     axios.post('/api/' + url, _formData).then(res => {
-      const code = res.data.code
       _this[config.loading] = false
-      if (code !== undefined) {
-        let type = code === 200 ? 'success' : 'warning'
+      if (res.ok !== undefined) {
+        let type = res.ok ? 'success' : 'warning'
         _this.$Message[type](res.data.message)
-        if (code === 200) {
+        if (res.ok) {
           thenFun.call(this, res.data)
         }
       }
@@ -67,11 +66,10 @@ module.exports = {
     let _this = config._this
     _this[config.loading] = true
     axios.get('/api/' + url, param).then(res => {
-      const code = res.data.code
       _this[config.loading] = false
       // 返回data对象
-      if (code !== undefined) {
-        if (code === 200) {
+      if (res.ok !== undefined) {
+        if (res.ok) {
           thenFun.call(this, res.data)
         }
       } else {
@@ -81,6 +79,34 @@ module.exports = {
         }
       }
       thenFun.call(this, res.data)
+    }).catch(err => {
+      _this[config.loading] = false
+      _this.$Notice.error({
+        title: '错误',
+        desc: '网络连接错误'
+      })
+      exeFun.call(this, err)
+    })
+  },
+
+  /**
+   * @description: put方法
+   * @author: chenxiaoxi
+   * @date: 2018-09-06 13:28:37
+   */
+  put (url, param, config, thenFun, exeFun) {
+    var _formData = formData(param)
+    let _this = config._this
+    _this[config.loading] = true
+    axios.put('/api/' + url, _formData).then(res => {
+      _this[config.loading] = false
+      if (res.ok !== undefined) {
+        let type = res.ok ? 'success' : 'warning'
+        _this.$Message[type](res.data.message)
+        if (res.ok === 200) {
+          thenFun.call(this, res.data)
+        }
+      }
     }).catch(err => {
       _this[config.loading] = false
       _this.$Notice.error({
