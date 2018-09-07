@@ -113,15 +113,15 @@ export default {
     },
     saveStands(){
       console.log("aaaaaaaaaaaaaaaaaa"+this.sarStandardsInfoEO.standNumber);
-      // this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', {sarStandardsInfoEO:this.sarStandardsInfoEO}, {
-      //   _this: this
-      // }, res => {
-      //   alert("新增成功")
-      // }, err => {
-      // })
-      this.axios.post('http://localhost:8888/api/lawss/sarStandardsInfo/addarStandardsInfo',{
+      this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo',this.sarStandardsInfoEO , {
+         _this: this
+       }, res => {
+         alert("新增成功")
+       }, err => {
+       })
+      /*this.axios.post('http://localhost:8888/api/lawss/sarStandardsInfo/addarStandardsInfo',{
         sarStandardsInfoEO:this.sarStandardsInfoEO
-      }).then().catch()
+      }).then().catch()*/
     }
   },
   components: {
