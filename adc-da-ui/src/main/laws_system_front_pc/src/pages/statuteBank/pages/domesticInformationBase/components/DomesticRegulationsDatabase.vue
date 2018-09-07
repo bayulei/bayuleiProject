@@ -3,7 +3,7 @@
  <div class="personal-data">
     <table-tools-bar>
       <div class="laws-info-form" slot="left">
-        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80">
+        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80" class="label-input-form">
           <FormItem label="文件号" prop="fileNum" class="laws-info-item">
             <Input v-model="lawsInfo.fileNum"></Input>
           </FormItem>
