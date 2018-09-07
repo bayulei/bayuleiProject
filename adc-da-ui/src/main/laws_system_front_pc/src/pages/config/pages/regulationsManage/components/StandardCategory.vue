@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import tableToolsBar from 'pages/components/tableToolsBar'
+import tableToolsBar from 'pages/components/TableToolsBar'
 export default {
   name: 'standard-classification',
   data () {

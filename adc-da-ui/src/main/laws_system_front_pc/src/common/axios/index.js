@@ -35,11 +35,11 @@ module.exports = {
     let _this = config._this
     _this[config.loading] = true
     axios.post('/api/' + url, _formData).then(res => {
-      _this[config.loading] = false
-      if (res.ok !== undefined) {
-        let type = res.ok ? 'success' : 'warning'
+      // _this[config.loading] = false
+      if (res.data.ok !== undefined) {
+        let type = res.data.ok ? 'success' : 'warning'
         _this.$Message[type](res.data.message)
-        if (res.ok) {
+        if (res.data.ok) {
           thenFun.call(this, res.data)
         }
       }

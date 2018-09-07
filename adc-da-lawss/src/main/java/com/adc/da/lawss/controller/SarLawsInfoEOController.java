@@ -116,8 +116,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
     @PostMapping("/createLawsInfo")
     /*@RequiresPermissions("lawss:sarLawsInfo:save")*/
     public ResponseMessage<SarLawsInfoEO> createLawsInfo(SarLawsInfoEO sarLawsInfoEO) throws Exception {
-        ResponseMessage<SarLawsInfoEO> result = sarLawsInfoEOService.createLawsInfo(sarLawsInfoEO);
-        return result;
+        return sarLawsInfoEOService.createLawsInfo(sarLawsInfoEO);
     }
 
     /**
@@ -128,9 +127,9 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
      * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.SarLawsInfoEO>
      **/
     @ApiOperation(value = "|SarLawsInfoEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("lawss:sarLawsInfo:update")
-    public ResponseMessage<SarLawsInfoEO> update(@RequestBody SarLawsInfoEO sarLawsInfoEO) throws Exception {
+    @PutMapping("/updateLawsInfo")
+    /*@RequiresPermissions("lawss:sarLawsInfo:update")*/
+    public ResponseMessage<SarLawsInfoEO> update(SarLawsInfoEO sarLawsInfoEO) throws Exception {
         sarLawsInfoEOService.updateByPrimaryKeySelective(sarLawsInfoEO);
         return Result.success(sarLawsInfoEO);
     }
@@ -159,7 +158,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
      * @return com.adc.da.util.http.ResponseMessage
      **/
     @ApiOperation(value = "|SarLawsInfoEO|信息及关联表删除")
-    @PostMapping("/deleteLawsInfos")
+    @PutMapping("/deleteLawsInfos")
     /*@RequiresPermissions("lawss:sarLawsInfo:delete")*/
     public ResponseMessage deleteLawsInfos(@RequestParam("id") String id) throws Exception {
         return sarLawsInfoEOService.deleteLawsInfo(id);

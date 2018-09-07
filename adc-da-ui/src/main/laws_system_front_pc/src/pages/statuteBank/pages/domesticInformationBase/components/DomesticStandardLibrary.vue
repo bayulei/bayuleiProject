@@ -46,6 +46,12 @@ export default {
   name: 'DomesticStandardLibrary',
   data () {
     return {
+      isAdvancedSearch: false, // 高级检索窗口是否打开
+      keywords1: '',
+      keywords2: '',
+      searching: false,
+      loading: false,
+      total: 0,
       tableColumn: [
         {
           type: 'selection',
@@ -126,7 +132,7 @@ export default {
           }
         }
       ],
-      stahndinfoList:[],
+      stahndinfoList: [],
       modal5: false,
       sarStandardsInfoEO: {
         standNumber: '', // 用户名
@@ -151,28 +157,31 @@ export default {
     }
   },
   methods: {
-    //分页查询国内标准
+    // 分页查询国内标准
     getDomesticStandardTable () {
       this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', {}, {
         _this: this
       }, res => {
         this.stahndinfoList = res.data.list
-      }, err => {
+      }, e => {
       })
     },
+
     //保存标准
-    saveStands(){
-      console.log("aaaaaaaaaaaaaaaaaa"+this.sarStandardsInfoEO.standNumber);
-      this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo',this.sarStandardsInfoEO , {
-         _this: this
-       }, res => {
-         alert("新增成功")
-       }, err => {
-       })
-      /*this.axios.post('http://localhost:8888/api/lawss/sarStandardsInfo/addarStandardsInfo',{
+    saveStands () {
+      console.log('aaaaaaaaaaaaaaaaaa' + this.sarStandardsInfoEO.standNumber)
+      this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
+        _this: this
+      }, res => {
+        alert('新增成功')
+      }, e => {
+      })
+      /* this.axios.post('http://localhost:8888/api/lawss/sarStandardsInfo/addarStandardsInfo',{
         sarStandardsInfoEO:this.sarStandardsInfoEO
-      }).then().catch()*/
+      }).then().catch() */
     },
+    cancel () {},
+    searchData () {},
     //删除标准
     deleteStand(params){
       alert(JSON.stringify(params))
@@ -186,7 +195,7 @@ export default {
   computed: {},
   watch: {},
   mounted () {
-    this.getDomesticStandardTable ()
+    this.getDomesticStandardTable()
   }
 }
 </script>
