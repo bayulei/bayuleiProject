@@ -29,7 +29,7 @@ export default {
     return {
       informationModal: false,
       informationTitle: '',
-      modalType:'',
+      modalType: '',
       informationTable: [
         {
           type: 'selection',
@@ -105,14 +105,14 @@ export default {
     // 新增
     informationAdd () {
       this.informationModal = true
-      this.informationTitle='新增参数'
-      this.modalType=1
+      this.informationTitle = '新增参数'
+      this.modalType = 1
     },
     // 编辑
     informationEdit () {
       this.informationModal = true
-      this.informationTitle='编辑参数'
-      this.modalType=2
+      this.informationTitle = '编辑参数'
+      this.modalType = 2
     },
     show (index) {
       this.$Modal.info({
