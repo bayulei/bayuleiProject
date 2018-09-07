@@ -135,10 +135,7 @@ export default {
     // 分页查询
     searchLawsInfo () {
       console.log(this.lawsInfo.fileNum)
-      this.$http.get('lawss/sarLawsInfo/page', {
-        page: this.page,
-        rows: this.rows,
-        lawsNumber: this.lawsInfo.fileNum
+      this.$http.get('lawss/sarLawsInfo/page?lawsNumber=' + this.lawsInfo.fileNum, {
       }, {
         _this: this
       }, res => {
