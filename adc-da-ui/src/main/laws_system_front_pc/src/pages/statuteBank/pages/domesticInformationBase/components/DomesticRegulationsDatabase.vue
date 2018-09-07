@@ -3,7 +3,7 @@
  <div class="personal-data">
     <table-tools-bar>
       <div class="laws-info-form" slot="left">
-        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80">
+        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80" class="label-input-form">
           <FormItem label="文件号" prop="fileNum" class="laws-info-item">
             <Input v-model="lawsInfo.fileNum"></Input>
           </FormItem>
@@ -135,13 +135,15 @@ export default {
     // 分页查询
     searchLawsInfo () {
       this.$http.get('lawss/sarLawsInfo/page', {
-        lawsNumber: this.page
+        page: this.page,
+        pageSize: this.rows,
+        lawsNumber: this.lawsInfo.fileNum
       }, {
         _this: this,
         loading: 'loading'
       }, res => {
-        console.log('执行成功')
-        // this.data = res.data.list
+        this.data = res.data.list
+        this.total = res.data.count
       }, e => {
 
       })
