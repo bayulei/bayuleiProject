@@ -29,7 +29,6 @@ export default {
     return {
       deptTree: [{
         expand: true,
-        isEdit: false,
         render: (h, { root, node, data }) => {
           return h('span', {
             style: {
@@ -57,7 +56,10 @@ export default {
                 on: {
                   click: () => {
                     // this.append(data)
-                    data.isEdit = true
+                    this.treeFlag = 1
+                    this.isShow.tree = true
+                    this.treeForm.treeNodeTitle = ''
+                    this.treeNode = data
                   }
                 }
               })
@@ -113,7 +115,9 @@ export default {
         treeNodeTitle: [{
           required: true, message: '节点名称不能为空', trigger: 'blur'
         }]
-      }
+      },
+      // 当前节点
+      treeNode: ''
     }
   },
   methods: {
@@ -145,6 +149,7 @@ export default {
                 this.treeFlag = 2
                 this.isShow.tree = true
                 this.treeForm.treeNodeTitle = data.title
+                this.treeNode = data
               }
             }
           }),
@@ -160,6 +165,7 @@ export default {
                 this.treeFlag = 1
                 this.isShow.tree = true
                 this.treeForm.treeNodeTitle = ''
+                this.treeNode = data
               }
             }
           }),
@@ -168,28 +174,40 @@ export default {
               icon: 'ios-remove'
             }),
             on: {
-              click: () => { this.remove(root, node, data) }
+              click: () => { this.treeRemove(root, node, data) }
             }
           })
         ])
       ])
     },
-    append (data) {
-      const children = data.children || []
+    // 添加节点
+    treeAppend () {
+      console.log(this.treeFlag)
+      if (this.treeFlag !== 1) {
+        return false
+      }
+      const children = this.treeNode.children || []
       children.push({
-        title: 'appended node',
+        title: this.treeForm.treeNodeTitle,
         expand: true
       })
-      this.$set(data, 'children', children)
+      this.$set(this.treeNode, 'children', children)
     },
-    remove (root, node, data) {
+    // 修改节点
+    treeEditSave () {
+      this.treeNode.title = this.treeForm.treeNodeTitle
+    },
+    // 移除节点
+    treeRemove (root, node, data) {
       const parentKey = root.find(el => el === node).parent
       const parent = root.find(el => el.nodeKey === parentKey).node
       const index = parent.children.indexOf(data)
       parent.children.splice(index, 1)
     },
     // 树弹窗确认
-    treeOk () {},
+    treeOk () {
+      this.treeFlag === 1 ? this.treeAppend() : this.treeEditSave()
+    },
     // 树弹窗取消
     treeCancel () {},
     // 重置树结构表单
@@ -216,7 +234,15 @@ export default {
       width: 6.1rem;
       height: 100%;
       border-right: 1px solid #DDD;
-      padding: 0.2rem 0.3rem;
+      position: relative;
+      .ivu-tree{
+        width: calc(~'100% - 8px');
+        height: calc(~'100% - 2px');
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        overflow-x: auto;
+      }
     }
     .mechanism-manage-right{
       flex: 1;
