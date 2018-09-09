@@ -86,6 +86,7 @@ export default {
   .user-manage{
     display: flex;
     background: #FFF;
+    padding: 15px;
     .header{
       width: 100%;
       height:3.5rem ;
