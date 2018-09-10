@@ -9,9 +9,10 @@
   <div id="labelSelect">
     <label>{{ label }}</label>
     <div class="label-select-content" :style="{ width: width + 'px' }">
-      <Select :value="value" @on-change="handleChange"  :placeholder="placeholder" :clearable="clearable">
+      <Select :value="value" @on-change="handleChange" :placeholder="placeholder" :clearable="clearable" v-if="type === 'select'">
         <Option v-for="opt in options" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
       </Select>
+      <DatePicker type="date" :value="value" :placeholder="placeholder" v-else-if="type === 'datePicker'" @on-change="handleChange"></DatePicker>
     </div>
   </div>
 </template>
@@ -39,10 +40,19 @@ export default {
       type: Number,
       default: 200
     },
-    placeholder: String,
+    placeholder: {
+      type: String,
+      default: this.type === 'select' ? '请选择' : '请选择日期'
+
+    },
     clearable: {
       type: Boolean,
       default: true
+    },
+    // 内容类型(select: 下拉选择框 datePicker: 日期选择框)
+    type: {
+      type: String,
+      default: 'select'
     }
   },
   computed: {},
@@ -80,6 +90,12 @@ export default {
     }
     .label-select-content{
       display: inline-block;
+    }
+    .ivu-date-picker{
+      .ivu-input{
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
     }
   }
 </style>

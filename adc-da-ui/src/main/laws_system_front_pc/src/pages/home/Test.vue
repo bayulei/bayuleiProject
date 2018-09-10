@@ -1,7 +1,7 @@
 <template>
   <div class="test">
     <label-input :label="123"></label-input>
-    <label-select v-model="userId" :options="options" label="管理员"></label-select>
+    <label-select v-model="userId" type="datePicker" label="管理员"></label-select>
     <span>{{ userId }}</span>
   </div>
 </template>

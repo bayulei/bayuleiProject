@@ -197,8 +197,7 @@ export default {
         _this: this
       }, res => {
         this.stahndinfoList = res.data.list
-      }, e => {
-      })
+      }, e => {})
     },
     addModal () {
       this.modalshowflag = true
