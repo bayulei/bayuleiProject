@@ -64,10 +64,24 @@ export default {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.1rem;
+      &>div{
+        &>div{
+          display: inline-block;
+          margin-right: 0.2rem;
+        }
+      }
       .ivu-input-wrapper{
         width: auto;
         min-width: 150px;
         margin-right: 0.1rem;
+      }
+      .label-select-content{
+        min-width: 150px;
+        width: auto !important;
+      }
+      .label-input-content{
+        min-width: 150px;
+        width: auto !important;
       }
     }
     .ivu-form-item{
