@@ -5,6 +5,20 @@
       <Tree :data="deptTree" :render="renderContent"></Tree>
     </div>
     <div class="mechanism-manage-right"></div>
+    <!-- tree弹窗 -->
+    <Modal
+      v-model="isShow.tree"
+      :title="treeTitle"
+      class="mechanism-tree-modal"
+      @on-visible-change="resetTree"
+      @on-ok="treeOk"
+      @on-cancel="treeCancel">
+      <Form ref="treeForm" :model="treeForm" :rules="treeRules">
+        <FormItem label=" " prop="treeNodeTitle">
+          <Input v-model="treeForm.treeNodeTitle" placeholder="请输入节点名称" clearable />
+        </FormItem>
+      </Form>
+    </Modal>
   </div>
 </template>
 
@@ -14,69 +28,47 @@ export default {
   data () {
     return {
       deptTree: [{
-        title: 'parent 1',
         expand: true,
-        isEdit: false,
         render: (h, { root, node, data }) => {
-          if (!data.isEdit) {
-            return h('span', {
+          return h('span', {
+            style: {
+              display: 'inline-block',
+              width: '100%'
+            }
+          }, [
+            h('span', [
+              h('span', '广汽研究院')
+            ]),
+            h('span', {
               style: {
                 display: 'inline-block',
-                width: '100%'
+                marginLeft: '32px'
               }
             }, [
-              h('span', [
-                h('Icon', {
-                  props: {
-                    type: 'ios-folder-outline'
-                  },
-                  style: {
-                    marginRight: '8px'
-                  }
+              h('Button', {
+                props: Object.assign({}, this.buttonProps, {
+                  icon: 'ios-add',
+                  type: 'primary'
                 }),
-                h('span', data.title)
-              ]),
-              h('span', {
                 style: {
-                  display: 'inline-block',
-                  marginLeft: '32px'
-                }
-              }, [
-                h('Button', {
-                  props: Object.assign({}, this.buttonProps, {
-                    icon: 'ios-add',
-                    type: 'primary'
-                  }),
-                  style: {
-                    width: '64px'
-                  },
-                  on: {
-                    click: () => {
-                      // this.append(data)
-                      data.isEdit = true
-                    }
+                  width: '64px'
+                },
+                on: {
+                  click: () => {
+                    // this.append(data)
+                    this.treeFlag = 1
+                    this.isShow.tree = true
+                    this.treeForm.treeNodeTitle = ''
+                    this.treeNode = data
                   }
-                })
-              ])
-            ])
-          } else {
-            return h('Input', {
-              props: {
-                value: data.title,
-                autofocus: true,
-                placeholder: 'Please enter your name...'
-              },
-              on: {
-                input: (val) => {
-                  data.title = val
                 }
-              }
-            })
-          }
+              })
+            ])
+          ])
         },
         children: [
           {
-            title: 'child 1-1',
+            title: '技术部',
             expand: true,
             children: [
               {
@@ -90,7 +82,7 @@ export default {
             ]
           },
           {
-            title: 'child 1-2',
+            title: '认证科',
             expand: true,
             children: [
               {
@@ -105,10 +97,27 @@ export default {
           }
         ]
       }],
+      treeFlag: 1, // 1为新增 2为编辑
       buttonProps: {
         type: 'default',
         size: 'small'
-      }
+      },
+      // 显示条件
+      isShow: {
+        tree: false
+      },
+      // 树弹窗表单
+      treeForm: {
+        treeNodeTitle: '' // 树节点名称
+      },
+      // 树弹窗表单验证
+      treeRules: {
+        treeNodeTitle: [{
+          required: true, message: '节点名称不能为空', trigger: 'blur'
+        }]
+      },
+      // 当前节点
+      treeNode: ''
     }
   },
   methods: {
@@ -120,14 +129,6 @@ export default {
         }
       }, [
         h('span', [
-          h('Icon', {
-            props: {
-              type: 'ios-paper-outline'
-            },
-            style: {
-              marginRight: '8px'
-            }
-          }),
           h('span', data.title)
         ]),
         h('span', {
@@ -138,6 +139,22 @@ export default {
         }, [
           h('Button', {
             props: Object.assign({}, this.buttonProps, {
+              icon: 'ios-create-outline'
+            }),
+            style: {
+              marginRight: '8px'
+            },
+            on: {
+              click: () => {
+                this.treeFlag = 2
+                this.isShow.tree = true
+                this.treeForm.treeNodeTitle = data.title
+                this.treeNode = data
+              }
+            }
+          }),
+          h('Button', {
+            props: Object.assign({}, this.buttonProps, {
               icon: 'ios-add'
             }),
             style: {
@@ -145,22 +162,10 @@ export default {
             },
             on: {
               click: () => {
-                this.$Modal.confirm({
-                  render: (h) => {
-                    return h('Input', {
-                      props: {
-                        value: data.title,
-                        autofocus: true,
-                        placeholder: 'Please enter your name...'
-                      },
-                      on: {
-                        input: (val) => {
-                          data.title = val
-                        }
-                      }
-                    })
-                  }
-                })
+                this.treeFlag = 1
+                this.isShow.tree = true
+                this.treeForm.treeNodeTitle = ''
+                this.treeNode = data
               }
             }
           }),
@@ -169,25 +174,53 @@ export default {
               icon: 'ios-remove'
             }),
             on: {
-              click: () => { this.remove(root, node, data) }
+              click: () => { this.treeRemove(root, node, data) }
             }
           })
         ])
       ])
     },
-    append (data) {
-      const children = data.children || []
+    // 添加节点
+    treeAppend () {
+      console.log(this.treeFlag)
+      if (this.treeFlag !== 1) {
+        return false
+      }
+      const children = this.treeNode.children || []
       children.push({
-        title: 'appended node',
+        title: this.treeForm.treeNodeTitle,
         expand: true
       })
-      this.$set(data, 'children', children)
+      this.$set(this.treeNode, 'children', children)
     },
-    remove (root, node, data) {
+    // 修改节点
+    treeEditSave () {
+      this.treeNode.title = this.treeForm.treeNodeTitle
+    },
+    // 移除节点
+    treeRemove (root, node, data) {
       const parentKey = root.find(el => el === node).parent
       const parent = root.find(el => el.nodeKey === parentKey).node
       const index = parent.children.indexOf(data)
       parent.children.splice(index, 1)
+    },
+    // 树弹窗确认
+    treeOk () {
+      this.treeFlag === 1 ? this.treeAppend() : this.treeEditSave()
+    },
+    // 树弹窗取消
+    treeCancel () {},
+    // 重置树结构表单
+    resetTree (show) {
+      if (!show) {
+        this.$refs.treeForm.resetFields()
+      }
+    }
+  },
+  computed: {
+    // modal弹窗标题
+    treeTitle () {
+      return this.treeFlag === 1 ? '节点新增' : '节点维护'
     }
   }
 }
@@ -201,11 +234,29 @@ export default {
       width: 6.1rem;
       height: 100%;
       border-right: 1px solid #DDD;
-      padding: 0.2rem 0.3rem;
+      position: relative;
+      .ivu-tree{
+        width: calc(~'100% - 8px');
+        height: calc(~'100% - 2px');
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        overflow-x: auto;
+      }
     }
     .mechanism-manage-right{
       flex: 1;
       height: 100%;
+    }
+    .ivu-tree-children{
+      .ivu-tree-arrow{
+        margin-right: 5px;
+      }
+    }
+  }
+  .mechanism-tree-modal{
+    .ivu-input-wrapper{
+      width: 90%;
     }
   }
 </style>

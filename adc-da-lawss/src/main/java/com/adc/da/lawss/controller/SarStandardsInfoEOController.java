@@ -105,13 +105,11 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
      * date 2018-09-04
      */
     @ApiOperation(value = "|SarStandardsInfoEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE,value = "addarStandardsInfo")
-    @RequiresPermissions("lawss:sarStandardsInfo:save")
-    public ResponseMessage<SarStandardsInfoEO> create(@RequestBody SarStandardsInfoEO sarStandardsInfoEO,@RequestParam("idPic") MultipartFile[] multipartfiles) throws Exception {
+    @PostMapping("/addarStandardsInfo")
+    //@RequiresPermissions("lawss:sarStandardsInfo:save")
+    public ResponseMessage<SarStandardsInfoEO> create(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
         sarStandardsInfoEOService.createSarStandardsInfo(sarStandardsInfoEO);
-
         //标准文件资源表，标准文件详情表中插入数据，需要下载文件，并保存数据
-
         return Result.success(sarStandardsInfoEO);
     }
 
@@ -152,17 +150,17 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
     }
 
     @ApiOperation(value = "|SarStandardsInfoEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("lawss:sarStandardsInfo:update")
-    public ResponseMessage<SarStandardsInfoEO> update(@RequestBody SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
+    @PostMapping(value="/updateSarStandardsInfo")
+    //@RequiresPermissions("lawss:sarStandardsInfo:update")
+    public ResponseMessage<SarStandardsInfoEO> update(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
         sarStandardsInfoEOService.updateByPrimaryKeySelective(sarStandardsInfoEO);
-        return Result.success(sarStandardsInfoEO);
+        return Result.success("","修改成功",sarStandardsInfoEO);
     }
 
     @ApiOperation(value = "|SarStandardsInfoEO|删除")
-    @DeleteMapping("/{id}")
-    @RequiresPermissions("lawss:sarStandardsInfo:delete")
-    public ResponseMessage delete(@PathVariable String id) throws Exception {
+    @PostMapping("/deleteSarStandards")
+    //@RequiresPermissions("lawss:sarStandardsInfo:delete")
+    public ResponseMessage delete(String id) throws Exception {
         sarStandardsInfoEOService.deleteByPrimaryKey(id);
         logger.info("delete from SAR_STANDARDS_INFO where id = {}", id);
         return Result.success();
@@ -207,5 +205,6 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
             IOUtils.closeQuietly(os);
         }
     }
+
 
 }

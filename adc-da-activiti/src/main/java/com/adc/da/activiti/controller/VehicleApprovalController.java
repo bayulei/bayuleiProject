@@ -1,35 +1,25 @@
 package com.adc.da.activiti.controller;
 
 
-import com.adc.da.activiti.common.FlowProcessUtil;
 import com.adc.da.activiti.entity.VehicleApprovalEO;
 import com.adc.da.activiti.service.VehicleApprovalService;
-import com.adc.da.activiti.vo.ProcessInformationVO;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
-import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/${restPath}/WorkFlow/VehicleApproval")
@@ -38,12 +28,6 @@ public class VehicleApprovalController{
 
     private static final Logger logger = LoggerFactory.getLogger(VehicleApprovalController.class);
 
-
-    @Autowired
-    private HistoryService historyService;
-
-    @Autowired
-    private FlowProcessUtil flowProcessUtil;
 
     @Autowired
     private VehicleApprovalService vehicleApprovalService;
@@ -123,8 +107,8 @@ public class VehicleApprovalController{
      */
     @ApiOperation(value = "项目组总体经理提交或者保存流程")
     @PostMapping ("/submitOrSaveStandardApprovalProcess")
-    public ResponseMessage<String> submitOrSaveStandardApprovalProcess(VehicleApprovalEO vehicleApprovalEO, MultipartFile file
-    ,String flag,String ProcessInstanceId) throws Exception {
+    public ResponseMessage<String> submitOrSaveStandardApprovalProcess( @RequestBody VehicleApprovalEO vehicleApprovalEO, MultipartFile file
+    , String flag, String ProcessInstanceId) throws Exception {
 
         //调用上传附件的接口
         String url = "附件地址";
@@ -133,7 +117,14 @@ public class VehicleApprovalController{
 
     }
 
-
+    /**
+     *  提交或保存试验计划及验证结果
+     * @MethodName:saveOrSubmitTestProgram
+     * @author: DuYunbao
+     * @param:[file, flag, taskId]
+     * @return:com.adc.da.util.http.ResponseMessage<java.lang.String>
+     * date: 2018/9/10 9:10
+     */
     @ApiOperation(value = "提交或保存试验计划及验证结果")
     @PostMapping ("/saveOrSubmitTestProgram")
     public ResponseMessage<String> saveOrSubmitTestProgram(MultipartFile file
@@ -145,6 +136,14 @@ public class VehicleApprovalController{
     }
 
 
+    /**
+     *  项目组总体经理确认结果
+     * @MethodName:quiteResult
+     * @author: DuYunbao
+     * @param:[taskId]
+     * @return:com.adc.da.util.http.ResponseMessage<java.lang.String>
+     * date: 2018/9/10 9:10
+     */
     @ApiOperation(value = "项目组总体经理确认结果")
     @PostMapping ("/quiteResult")
     public ResponseMessage<String> quiteResult(String taskId) throws Exception {
@@ -152,10 +151,28 @@ public class VehicleApprovalController{
 
     }
 
+
+    /**
+     *  根据任务id查询流程变量
+     * @MethodName:queryProcessVariable
+     * @author: DuYunbao
+     * @param:[taskId]
+     * @return:com.adc.da.util.http.ResponseMessage<java.util.Map<java.lang.String,java.lang.Object>>
+     * date: 2018/9/10 9:10
+     */
     @ApiOperation(value = "根据任务id查询流程变量")
     @PostMapping ("/queryProcessVariable")
-    public ResponseMessage<String> queryProcessVariable(String taskId) throws Exception {
-        return  vehicleApprovalService.queryProcessVariable(taskId);
-
+    public ResponseMessage<Map<String,Object>> queryProcessVariable(String taskId) throws Exception {
+        List<HistoricVariableInstance>  list = vehicleApprovalService.queryProcessVariable(taskId);
+        Map<String,Object> map = new HashMap<>();
+        for (HistoricVariableInstance variableInstance :list){
+            if("项目组总体经理发起流程表单".equals(variableInstance.getVariableName())){
+                map.put("项目组总体经理发起流程表单",(VehicleApprovalEO)variableInstance.getValue());
+            }
+            if("填写后的附件".equals(variableInstance.getVariableName())){
+                map.put("附件",variableInstance.getValue());
+            }
+        }
+        return  Result.success(map);
     }
 }
