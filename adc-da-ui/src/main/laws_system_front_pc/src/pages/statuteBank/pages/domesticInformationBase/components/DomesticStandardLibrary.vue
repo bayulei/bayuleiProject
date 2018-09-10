@@ -163,7 +163,6 @@ export default {
         }
       ],
       stahndinfoList: [],
-
       modalshowflag: false,
       modalshowtitle: '新增标准',
       addOrUPdateFlag: 1, // 新增：1， 修改：2
@@ -198,8 +197,7 @@ export default {
         _this: this
       }, res => {
         this.stahndinfoList = res.data.list
-      }, e => {
-      })
+      }, e => {})
     },
     addModal () {
       this.modalshowflag = true
@@ -218,6 +216,7 @@ export default {
         }, e => {
         })
       } else {
+        // 修改
         console.log(JSON.stringify(this.sarStandardsInfoEO))
         alert(this.sarStandardsInfoEO.id)
         /* let ogje;
