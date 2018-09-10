@@ -46,4 +46,9 @@ public interface RoleEODao extends BaseDao<RoleEO> {
 	 public int isBelong(@Param("userId")String userId,@Param("roleId")String roleId);
 	 
 	 public List<RoleEO> findByUserId(String userId);
+
+/**
+ * 通过用户名查询所有用户信息
+ * */
+   public List<RoleEO> queryNameExistenceByName(String name);
 }

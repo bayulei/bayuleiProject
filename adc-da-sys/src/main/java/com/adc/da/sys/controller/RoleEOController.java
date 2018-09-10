@@ -52,7 +52,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 
 	@ApiOperation(value = "|RoleEO|分页查询")
 	@GetMapping("/page")
-	@RequiresPermissions("sys:role:pageList")
+//	@RequiresPermissions("sys:role:pageList")
 	public LayUiResult<RoleVO> page(Integer pageNo, Integer pageSize, String roleName,String useFlag) throws Exception {
 		RoleEOPage page = new RoleEOPage();
 		if (pageNo != null) {
@@ -86,7 +86,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 
 	@ApiOperation(value = "|RoleEO|详情")
 	@GetMapping("/{id}")
-	@RequiresPermissions("sys:role:get")
+//	@RequiresPermissions("sys:role:get")
 	public ResponseMessage<RoleVO> getById(@NotNull @PathVariable("id") String id) throws Exception {
 		RoleEO roleEO = roleEOService.getRoleWithMenus(id);
 		return Result.success(beanMapper.map(roleEO, RoleVO.class));
@@ -94,7 +94,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 
 	@ApiOperation(value = "|RoleEO|列表")
 	@GetMapping("")
-	@RequiresPermissions("sys:role:list")
+//	@RequiresPermissions("sys:role:list")
 	public ResponseMessage<List<RoleVO>> list(String userId) {
 		RoleVO setRole = new RoleVO();
 		String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
@@ -123,11 +123,23 @@ public class RoleEOController extends BaseController<RoleEO> {
 
 	@ApiOperation(value = "|RoleEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-	@RequiresPermissions("sys:role:save")
+//	@RequiresPermissions("sys:role:save")
 	public ResponseMessage<RoleVO> create(@RequestBody RoleVO roleVO) throws Exception {
-		roleVO.setOprUser(LoginUserUtil.getUserId());
+
+		   Integer useFlag =  roleVO.getUseFlag();
+
+		if(useFlag!=0 && useFlag !=1){
+			return Result.error("0000","使用状态不能为空");
+		}
+		if(StringUtils.isBlank(roleVO.getName())){
+			return  Result.error("1111","新增角色名不能为空");
+		}else if(roleEOService.queryNameExistenceByName(roleVO.getName())){
+              return  Result.error("2222","新增角色名已经存在");
+		}
+
+//		roleVO.setOprUser(LoginUserUtil.getUserId());
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
-		map.setRemarks(roleVO.getRemarks());
+		map.setRemarks(roleVO.getRemarks());//前台传入（前台的角色描述）
 		RoleEO roleEO = roleEOService.save(map);
 		roleVO.setRid(roleEO.getId());
 		return Result.success(roleVO);
@@ -135,7 +147,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 
 	@ApiOperation(value = "|RoleEO|修改")
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-	@RequiresPermissions("sys:role:update")
+//	@RequiresPermissions("sys:role:update")
 	public ResponseMessage<RoleVO> update(@RequestBody RoleVO roleVO) throws Exception {
 		roleVO.setUpdateTime(new Date());
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
@@ -146,7 +158,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 
 	@ApiOperation(value = "|RoleEO|删除")
 	@DeleteMapping("/{id}")
-	@RequiresPermissions("sys:role:delete")
+//	@RequiresPermissions("sys:role:delete")
 	public ResponseMessage delete(@NotNull @PathVariable("id") String id) throws Exception {
 		List<UserRoleEO> list = roleEOService.getUserRoleListByRoleId(id);
 		// 如果角色有对应用户，则不允许删除
@@ -159,7 +171,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 	
 	@ApiOperation(value = "|RoleEO|批量删除")
 	@DeleteMapping("/deleteList/{idList}")
-	@RequiresPermissions("sys:role:deleteList")
+//	@RequiresPermissions("sys:role:deleteList")
 	public ResponseMessage deleteList(@NotNull @PathVariable("idList") String ids) throws Exception {
 		String[] idList=ids.split(",");
 		if(idList!=null && idList.length>0){
@@ -191,7 +203,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 	
 	@ApiOperation(value = "配置角色菜单|RoleEO|")
 	@PostMapping("/saveRoleMenu")
-	@RequiresPermissions("sys:role:saveRoleMenu")
+//	@RequiresPermissions("sys:role:saveRoleMenu")
 	public ResponseMessage<RoleVO> saveRoleMenu(@RequestBody RoleVO roleVO) throws Exception {
 		String roleIds = roleVO.getRid();
 		if(roleIds!=null && roleIds.length()>0){
@@ -210,7 +222,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 	
 	@ApiOperation(value = "|RoleEO|全部")
 	@GetMapping("/findAll")
-	@RequiresPermissions("sys:role:list")
+//	@RequiresPermissions("sys:role:list")
 	public ResponseMessage<List<RoleVO>> findAll(String userId) {
 		RoleVO setRole = new RoleVO();
 		String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
