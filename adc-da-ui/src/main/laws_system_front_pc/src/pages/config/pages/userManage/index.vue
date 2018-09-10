@@ -1,42 +1,28 @@
 <!-- 用户管理 -->
 <template>
-  <div class="user-manage">
+  <div id="user-manage">
     <table-tools-bar>
-      <Row slot="left">
-        <Col span="6" style="padding-right:10px">
-          <Select v-model="model11" filterable>
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
-        <Col span="6" style="padding-right:10px">
-          <Select v-model="model11" filterable>
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
-        <Col span="6" style="padding-right:10px">
-          <Select v-model="model11" filterable>
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
-        <Col span="6" style="padding-right:10px">
-          <Select v-model="model11" filterable>
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
-      </Row>
-      <div class="btnGroup" slot="right">
-        <Button type="info" style="margin-right: 0.7rem">查询</Button>
-        <Button type="primary">清空</Button>
+      <div slot="left">
+        <label-select v-model="search.type" :options="search.typeOptions" placeholder="请选择类型" label="类型"></label-select>
+        <label-input v-model="search.userName" placeholder="请输入用户名" label="用户名称"></label-input>
+        <label-select v-model="search.roleName" :options="search.roleOptions" placeholder="请选择角色" label="角色名称"></label-select>
+        <!--<Form ref="searchForm" :model="search" inline>-->
+          <!--<FormItem prop="type">-->
+            <!--<Select v-model="search.type" placeholder="请选择类型">-->
+              <!--<Option :value="opt.value" v-for="opt in search.typeOptions" :key="opt.value">{{ opt.label }}</Option>-->
+              <!--<span slot="prepend">类型</span>-->
+            <!--</Select>-->
+          <!--</FormItem>-->
+          <!--<FormItem prop="userName">-->
+            <!--<Input v-model="search.userName" placeholder="请输入用户名" clearable>-->
+              <!--<span slot="prepend">用户名</span>-->
+            <!--</Input>-->
+          <!--</FormItem>-->
+        <!--</Form>-->
       </div>
+      <div slot="right"></div>
     </table-tools-bar>
-    <div class="content">
-        <div class="btnGroup">
-          <Button type="info">Info</Button>
-          <Button type="success">Success</Button>
-          <Button type="warning">Warning</Button>
-          <Button type="error">Error</Button>
-        </div>
-    </div>
+    <div class="content"></div>
   </div>
 </template>
 
@@ -46,36 +32,29 @@ export default {
   name: 'user-manage',
   data () {
     return {
-      cityList: [
-        {
-          value: 'New York',
-          label: 'New York'
-        },
-        {
-          value: 'London',
-          label: 'London'
-        },
-        {
-          value: 'Sydney',
-          label: 'Sydney'
-        },
-        {
-          value: 'Ottawa',
-          label: 'Ottawa'
-        },
-        {
-          value: 'Paris',
-          label: 'Paris'
-        },
-        {
-          value: 'Canberra',
-          label: 'Canberra'
-        }
-      ],
-      model11: '',
-      model12: []
+      // 搜索框
+      search: {
+        type: '',
+        typeOptions: [{
+          label: '类型1',
+          value: 1
+        }, {
+          label: '类型2',
+          value: 2
+        }],
+        userName: '',
+        roleName: '',
+        roleOptions: [{
+          label: '管理员',
+          value: 1
+        }, {
+          label: '普通用户',
+          value: 2
+        }]
+      }
     }
   },
+  methods: {},
   components: {
     tableToolsBar
   }
@@ -83,26 +62,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .user-manage{
-    display: flex;
+  #user-manage{
     background: #FFF;
-    padding: 15px;
-    .header{
-      width: 100%;
-      height:3.5rem ;
-      border-bottom: 1px solid #DDD;
-      padding: 0.5rem;
-    }
-    .btnGroup{
-      float: right;
-      margin: 0.5rem;
-    }
-    .btnGroup Button{
-      width: 2.5rem;
-    }
-    .content{
-      width: 100%;
-      overflow: hidden;
-    }
+    padding: 0.2rem 0.3rem;
   }
 </style>
