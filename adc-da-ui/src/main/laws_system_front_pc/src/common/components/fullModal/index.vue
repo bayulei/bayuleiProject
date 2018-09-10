@@ -2,6 +2,7 @@
 <template>
   <div id="fullModal">
     <div class="full-modal-content">
+      <span class="modal-close-btn rotate-icon" @click="toggleClose">&times;</span>
       <slot></slot>
     </div>
   </div>
@@ -32,8 +33,15 @@ export default {
   computed: {},
   watch: {},
   mounted () {
+    let _this = this
     this.$nextTick(() => {
       $('.full-modal-content').stop().animate({ left: '20%' }, 500)
+      $('#fullModal').click(function () {
+        _this.toggleClose()
+      })
+      $('.full-modal-content').click(function (e) {
+        e.stopPropagation()
+      })
     })
   }
 }
@@ -51,7 +59,7 @@ export default {
     .full-modal-content{
       width: 80%;
       height: 100%;
-      background: rgba(255,255,255,.85);
+      background: rgba(255,255,255,.95);
       position: absolute;
       top: 0;
       left: 100%;
@@ -59,6 +67,28 @@ export default {
       padding: 0.2rem;
       z-index: 10000;
       box-shadow: -1px -1px 20px 5px #DDD;
+      .modal-close-btn{
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 0.8rem;
+        cursor: pointer;
+        z-index: 101;
+        color: rgba(0,0,0,.55);
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        &:hover{
+          color: rgba(0,0,0,85);
+        }
+      }
     }
   }
 </style>
