@@ -217,9 +217,7 @@ export default {
           this.getDomesticStandardTable()
         }, e => {
         })
-      }
-      // 修改
-      else {
+      } else {
         console.log(JSON.stringify(this.sarStandardsInfoEO))
         alert(this.sarStandardsInfoEO.id)
         /* let ogje;
