@@ -22,7 +22,7 @@
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
     <!-- 新增、编辑模态窗 -->
     <full-modal v-model="showFullModal" v-if="showFullModal" ref="showFullModal">
-      <input type="button" value="关闭" @click="closeModal">
+      <Button @click="closeModal">关闭</Button>
     </full-modal>
   </div>
 </template>
