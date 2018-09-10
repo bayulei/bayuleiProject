@@ -17,9 +17,9 @@
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
+      <Table border ref="selection" :columns="tableColumn" :data="data" :height="550"></Table>
     </div>
-    <pagination :total="total" @pageChange="pageChange"></pagination>
+    <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
    <!--新增修改模态框-->
    <Modal v-model="modalAdd" title="新增法规信息" @on-ok="saveLawsInfo" @on-cancel="cancelAdd">
@@ -79,12 +79,40 @@ export default {
           key: 'lawsNumber'
         },
         {
+          title: '文件性质',
+          key: 'lawsProperty'
+        },
+        {
           title: '文件名称',
           key: 'lawsName'
         },
         {
           title: '发布单位',
           key: 'issueUnit'
+        },
+        {
+          title: '文件状态',
+          key: 'lawsStatus'
+        },
+        {
+          title: '发布日期',
+          key: 'issueTime'
+        },
+        {
+          title: '实施日期',
+          key: 'putTime'
+        },
+        {
+          title: '适用车型',
+          key: 'applyArctic'
+        },
+        {
+          title: '能源种类',
+          key: 'energyKind'
+        },
+        {
+          title: '适用认证',
+          key: 'applyAuth'
         },
         {
           title: '修改时间',
@@ -152,6 +180,10 @@ export default {
       this.page = page
       this.searchLawsInfo()
     },
+    pageSizeChange (pageSize) {
+      this.rows = pageSize
+      this.searchLawsInfo()
+    },
     // 点击编辑按钮触发
     edit (row) {
       this.modalAdd = true
@@ -168,7 +200,6 @@ export default {
         }, {
           _this: this
         }, res => {
-          alert('新增成功')
           this.searchLawsInfo()
         }, e => {
 
@@ -181,7 +212,6 @@ export default {
         }, {
           _this: this
         }, res => {
-          alert('修改成功')
           this.searchLawsInfo()
         }, e => {
 
@@ -192,15 +222,21 @@ export default {
     },
     // 删除
     remove (id) {
-      this.$http.put('lawss/sarLawsInfo/deleteLawsInfos', {
-        id: id
-      }, {
-        _this: this
-      }, res => {
-        alert('删除成功')
-        this.searchLawsInfo()
-      }, e => {
-
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.put('lawss/sarLawsInfo/deleteLawsInfos', {
+            id: id
+          }, {
+            _this: this
+          }, res => {
+            this.searchLawsInfo()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
       })
     },
     openFile () {
@@ -218,7 +254,6 @@ export default {
       }, {
         _this: this
       }, res => {
-        alert('导入成功')
         this.searchLawsInfo()
       }, e => {
 
