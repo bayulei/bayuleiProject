@@ -64,7 +64,6 @@ export default {
 <style lang="less">
   #labelSelect{
     vertical-align: top;
-    min-width: 250px;
     label{
       display: inline-block;
       border: 1px solid #DDD;
@@ -73,14 +72,13 @@ export default {
       border-right: none;
       height: 32px;
       line-height: 32px;
-      background: #F4F8FB;
-      min-width: 80px;
+      background: #F8F8F9;
+      padding: 0 7px;
       text-align: center;
       vertical-align: middle;
       float: left;
       font-size: 12px;
       color: #515a6e;
-      padding: 0;
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
     }
