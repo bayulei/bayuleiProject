@@ -18,7 +18,7 @@ let formData = (data) => {
   }
   return _formData
 }
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 10000
 axios.defaults.headers['Content-type'] = 'application/json'
 module.exports = {
   /**
@@ -91,7 +91,7 @@ module.exports = {
   get (url, param, config, thenFun, exeFun) {
     let _this = config._this
     _this[config.loading] = true
-    axios.get('/api/' + url, param).then(res => {
+    axios.get('/api/' + url, { params: param }).then(res => {
       _this[config.loading] = false
       // 返回data对象
       if (res.ok !== undefined) {
@@ -126,10 +126,10 @@ module.exports = {
     _this[config.loading] = true
     axios.put('/api/' + url, _formData).then(res => {
       _this[config.loading] = false
-      if (res.ok !== undefined) {
-        let type = res.ok ? 'success' : 'warning'
+      if (res.data.ok !== undefined) {
+        let type = res.data.ok ? 'success' : 'warning'
         _this.$Message[type](res.data.message)
-        if (res.ok === 200) {
+        if (res.data.ok) {
           thenFun.call(this, res.data)
         }
       }

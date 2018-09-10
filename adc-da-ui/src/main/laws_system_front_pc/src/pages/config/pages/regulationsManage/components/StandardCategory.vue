@@ -192,7 +192,4 @@ export default {
       display: none;
     }
   }
-  .unable-edit{
-    disabled:disabled
-  }
 </style>

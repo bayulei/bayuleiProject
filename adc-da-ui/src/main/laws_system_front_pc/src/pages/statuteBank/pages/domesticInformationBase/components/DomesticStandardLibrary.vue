@@ -81,6 +81,55 @@ export default {
         {
           title: '实施日期',
           key: 'putTime'
+        },
+        {
+          title: '操作',
+          key: 'action',
+          width: 200,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.show(params.index)
+                  }
+                }
+              }, '查看'),
+              h('Button', {
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.remove(params.index)
+                  }
+                }
+              }, '编辑'),
+              h('Button', {
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.deleteStand(params.rows);
+                  }
+                }
+              }, '删除')
+            ]);
+          }
         }
       ],
       stahndinfoList: [],
@@ -117,6 +166,8 @@ export default {
       }, e => {
       })
     },
+
+    //保存标准
     saveStands () {
       console.log('aaaaaaaaaaaaaaaaaa' + this.sarStandardsInfoEO.standNumber)
       this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
@@ -130,7 +181,11 @@ export default {
       }).then().catch() */
     },
     cancel () {},
-    searchData () {}
+    searchData () {},
+    //删除标准
+    deleteStand(params){
+      alert(JSON.stringify(params))
+    }
   },
   components: {
     TableToolsBar,

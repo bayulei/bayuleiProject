@@ -5,12 +5,14 @@
 
 <script>
 export default {
-  name: 'role-manage'
+  name: 'role-manage',
+  data () {
+    return {
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
-  .role-manage{
-
-  }
+  .role-manage{}
 </style>
