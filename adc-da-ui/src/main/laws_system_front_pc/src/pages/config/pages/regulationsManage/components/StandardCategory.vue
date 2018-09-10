@@ -6,12 +6,12 @@
         <Form ref="formInline" :model="formInline" inline>
           <FormItem prop="option">
             <Input type="text" v-model="value1" placeholder="请输入选项">
-            <span slot="prepend">选项</span>
+              <span slot="prepend">选项</span>
             </Input>
           </FormItem>
           <FormItem prop="describe">
             <Input type="text" v-model="value2" placeholder="请输入选项">
-            <span slot="prepend">描述</span>
+              <span slot="prepend">描述</span>
             </Input>
           </FormItem>
           <Button type="info" class="query-button" @click="handleQuery">查询</Button>
