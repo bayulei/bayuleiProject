@@ -66,15 +66,27 @@
 		</set>
 		where id = #{id}
 	</update>
-
-	<delete id="deleteDicTypeByIdInBatch" parameterType="java.util.List">
+<!--李文轩：这个是把数据整整删除了，应该是把validflag改成1-->
+	<!--<delete id="deleteDicTypeByIdInBatch" parameterType="java.util.List">
 		delete from TS_DICTYPE
 		where id in
 		<foreach item="id" collection="list" open="(" separator=","
 			close=")" index="index">
 			#{id}
 		</foreach>
-	</delete>
+	</delete>-->
+
+	<!--李文轩：删除多条数据-->
+	<update id="deleteDicTypeByIdInBatch"  parameterType="java.util.List">
+			update TS_DICTYPE
+		SET  valid_flag = 1
+		where id in
+		<foreach item="id" collection="list" open="(" separator=","
+				 close=")" index="index">
+		#{id}
+		</foreach>
+	</update>
+
 
 	<select id="getDicTypeEOById" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -88,7 +100,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_DICTYPE
-		where dicTypeCode = #{dicTypeCode}
+		where dic_type_code = #{dicTypeCode}
 	</select>
 
 
@@ -171,9 +183,10 @@
 		set valid_flag = 1
 		where DIC_ID = #{id}
 	</update>
-	<update id="deleteFlagTo1" parameterType="java.lang.String">
+	<!--李文轩：这是删除一条数据和上面的写重复了-->
+	<!--<update id="deleteFlagTo1" parameterType="java.lang.String">
 		update TS_DICTYPE
 		set valid_flag = 1
 		where id = #{id}
-	</update>
+	</update>-->
 </mapper>

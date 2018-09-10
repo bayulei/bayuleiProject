@@ -8,7 +8,7 @@
 		<result column="valid_flag" property="validFlag" />
 		<result column="password" property="password" />
 		<result column="uname" property="uname" />
-		<result column="ext_info" property="extInfo" />
+		<result column="r_extInfo" property="extInfo" />
 		<result column="dept_name" property="deptName" />
 		<result column="orgUseName" property="orgUseName" />
 		<result column="useCorpId" property="useCorpId" />
@@ -21,16 +21,17 @@
 		<result column="roleExtInfo" property="roleExtInfo" />
 		<result column="corpType" property="corpType" />
 	</resultMap>
-
+<!--liwenxuan:oper_user,user_source这两个字段为数据库新加的字段-->
 	<!-- TS_USER table all fields -->
 	<sql id="Base_Column_List">
-		usid, account, valid_flag, password, uname, ext_info,email,work_num,creation_time,modify_time
+		usid, account, valid_flag, password, uname, ext_info,email,work_num,creation_time,modify_time,oper_user,user_source
 	</sql>
 
 	<resultMap id="UserRoleMap" extends="BaseResultMap" type="com.adc.da.sys.entity.UserEO">
 		<collection property="roleEOList" ofType="com.adc.da.sys.entity.RoleEO">
 			<id column="id" property="id" />
-			<result column="data_scope" property="dataScope" />
+			<!--这个字段已经取消-->
+			<!--<result column="data_scope" property="dataScope" />-->
 			<result column="r_validFlag" property="validFlag" />
 			<result column="is_default" property="isDefault" />
 			<result column="name" property="name" />
@@ -50,12 +51,11 @@
 			<result column="org_parentIds" property="parentIds" />
 		</collection>
 	</resultMap>
-	
-	
 
+
+	<!--	r.data_scope as dataScope,-->
 	<sql id="User_Role_List">
 		u.*, r.id as id,
-		r.data_scope as dataScope,
 		r.valid_flag as r_validFlag,
 		r.is_default as isDefault,
 		r.name as name,
@@ -125,22 +125,22 @@
 	</select>
 
 	<insert id="saveUserRole">
-		insert into TR_USER_ROLE(user_id,role_id) values (#{usid}, #{roleId})
+		insert into TS_USER_ROLE(user_id,role_id) values (#{usid}, #{roleId})
 	</insert>
 	
 	<insert id="saveUserOrg">
-		insert into TR_USER_ORG(user_id,org_id) values (#{usid}, #{orgId})
+		insert into TS_USER_ORG(user_id,org_id) values (#{usid}, #{orgId})
 	</insert>
 
 	<delete id="deleteUserRoleByUsid" parameterType="java.lang.String">
 		delete from
-		TR_USER_ROLE
+		TS_USER_ROLE
 		where user_id = #{usid}
 	</delete>
 	
 	<delete id="deleteUserOrgByUsid" parameterType="java.lang.String">
 		delete from
-		TR_USER_ORG
+		TS_USER_ORG
 		where user_id = #{usid}
 	</delete>
 
@@ -155,7 +155,7 @@
 	</update>
 
 	<delete id="deleteUserRoleByUsidInBatch" parameterType="java.util.List">
-		delete from TR_USER_ROLE
+		delete from TS_USER_ROLE
 		where user_id in
 		<foreach item="usid" collection="list" open="(" separator=","
 			close=")" index="index">
@@ -164,7 +164,7 @@
 	</delete>
 	
 	<delete id="deleteUserOrgByUsidInBatch" parameterType="java.util.List">
-		delete from TR_USER_ORG
+		delete from TS_USER_ORG
 		where user_id in
 		<foreach item="usid" collection="list" open="(" separator=","
 			close=")" index="index">
@@ -183,9 +183,9 @@
 	<select id="getUserWithRoles" resultMap="UserRoleMap" parameterType="java.lang.String">
 		select <include refid="User_Role_List" />
 		from TS_USER u
-		left join TR_USER_ROLE ur on u.usid = ur.user_id
+		left join TS_USER_ROLE ur on u.usid = ur.user_id
 		left join TS_ROLE r on ur.role_id = r.id
-		left join TR_USER_ORG UORG on u.usid = UORG.user_id
+		left join TS_USER_ORG UORG on u.usid = UORG.user_id
 	    left join TS_ORG ORG on UORG.org_id = ORG.id
 		where u.usid = #{id}
 	</select>
@@ -194,17 +194,17 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_USER u
-		left join TR_USER_ROLE ur
+
+		left join TS_USER_ROLE ur
 		on u.usid = ur.role_id
 		where ur.roleId = #{id}
 	</select>
-
 	<!-- 插入记录 -->
 	<insert id="insert" parameterType="com.adc.da.sys.entity.UserEO">
 		insert into TS_USER(
 		<include refid="Base_Column_List" />
 		)
-		values (#{usid}, #{account}, #{validFlag}, #{password}, #{uname}, #{extInfo},#{email},#{workNum},#{creationTime},#{modifyTime})
+		values (#{usid}, #{account}, #{validFlag}, #{password}, #{uname}, #{extInfo},#{email},#{workNum},#{creationTime},#{modifyTime},#{operUser},#{userSource})
 	</insert>
 
 	<!-- 根据pk，修改记录 -->
@@ -273,9 +273,9 @@
 	<select id="queryByCount" resultType="java.lang.Integer"
 		parameterType="com.adc.da.base.page.BasePage">
 		select count(distinct u0.usid) from TS_USER u0
-		left join TR_USER_ROLE ur0 on u0.usid = ur0.user_id
+		left join TS_USER_ROLE ur0 on u0.usid = ur0.user_id
 		left join TS_ROLE r0 on ur0.role_id = r0.id
-		left join TR_USER_ORG UORG0 on u0.usid = UORG0.user_id
+		left join TS_USER_ORG UORG0 on u0.usid = UORG0.user_id
 		left join TS_ORG ORG0 on UORG0.org_id = ORG0.id
 		<include refid="Base_Where_Clause" />
 		and u0.valid_flag != 1
@@ -286,9 +286,9 @@
 	  select <include refid="User_Role_List" /> from
 		  (select tmp_tb.* , rownum rn from
 			  (select distinct u0.* from TS_USER u0
-			   left join TR_USER_ROLE ur0 on u0.usid = ur0.user_id
+			   left join TS_USER_ROLE ur0 on u0.usid = ur0.user_id
 			   left join TS_ROLE r0 on ur0.role_id = r0.id
-			   left join TR_USER_ORG UORG0 on u0.usid = UORG0.user_id
+			   left join TS_USER_ORG UORG0 on u0.usid = UORG0.user_id
 			   left join TS_ORG ORG0 on UORG0.org_id = ORG0.id
 			   <include refid="Base_Where_Clause"/>
 			   and u0.valid_flag != 1
@@ -296,9 +296,9 @@
 			 	  ${pager.orderCondition}
 			   </if>
 			  ) tmp_tb where rownum &lt;= ${pager.endIndex}) u
-			  left join TR_USER_ROLE ur on u.usid = ur.user_id
+			  left join TS_USER_ROLE ur on u.usid = ur.user_id
 			  left join TS_ROLE r on ur.role_id = r.id
-			  left join TR_USER_ORG UORG on u.usid = UORG.user_id
+			  left join TS_USER_ORG UORG on u.usid = UORG.user_id
 			  left join TS_ORG ORG on UORG.org_id = ORG.id
 			  where rn &gt;= ${pager.startIndex}
     </select>
@@ -312,7 +312,7 @@
 	</select>
 	<!--多表查询-->
 	<select id="selectUserDetailsByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-		select * from TS_ROLE r left join TR_USER_ROLE ur on r.id=ur.role_id left join TS_USER u on u.usid=ur.user_id left join SYS_CORP co on co.id=r.id
+		select * from TS_ROLE r left join TS_USER_ROLE ur on r.id=ur.role_id left join TS_USER u on u.usid=ur.user_id left join SYS_CORP co on co.id=r.id
 	</select>
 
 	<!--根据当前登录用户id查询个人信息及部门-->
@@ -320,8 +320,8 @@
 			parameterType="java.lang.String">
 		select
 		  TS_USER.usid,TS_USER.uname,TS_ORG.org_name as orgUseName,TS_ORG.corp_id as useCorpId,SYS_CORP.corp_type as corpType
-		from TR_USER_ORG right join TS_USER on TS_USER.usid = TR_USER_ORG.user_id
-			left join TS_ORG on TR_USER_ORG.org_id = TS_ORG.id
+		from TS_USER_ORG right join TS_USER on TS_USER.usid = TS_USER_ORG.user_id
+			left join TS_ORG on TS_USER_ORG.org_id = TS_ORG.id
 			left join SYS_CORP on TS_ORG.corp_id = SYS_CORP.id
 		where TS_USER.valid_flag = 0 and TS_USER.usid = #{value}
 	</select>
@@ -331,16 +331,16 @@
 			parameterType="java.lang.String">
 		select
 		TS_ROLE.name as userRoleName,TS_ROLE.ext_info as roleExtInfo
-		from TR_USER_ROLE right join TS_USER on TS_USER.usid = TR_USER_ROLE.user_id
-		left join TS_ROLE on TR_USER_ROLE.role_id = TS_ROLE.id
+		from TS_USER_ROLE right join TS_USER on TS_USER.usid = TS_USER_ROLE.user_id
+		left join TS_ROLE on TS_USER_ROLE.role_id = TS_ROLE.id
 		where TS_USER.valid_flag = 0 and TS_ROLE.valid_flag = 0 and TS_USER.usid = #{value}
 	</select>
 
 	<select id="selectByUnameAndPwd" resultMap="BaseResultMap"
 			parameterType="com.adc.da.sys.entity.UserEO">
 		select TS_USER.* ,SYS_CORP.CORP_NAME as corpName,SYS_CORP.CORP_TYPE AS  type
-		from TS_USER  LEFT JOIN TR_USER_ORG  ON  TS_USER.USID = TR_USER_ORG.USER_ID
-			  LEFT JOIN  TS_ORG   ON  TR_USER_ORG.ORG_ID = TS_ORG.ID
+		from TS_USER  LEFT JOIN TS_USER_ORG  ON  TS_USER.USID = TS_USER_ORG.USER_ID
+			  LEFT JOIN  TS_ORG   ON  TS_USER_ORG.ORG_ID = TS_ORG.ID
 			  LEFT JOIN  SYS_CORP  ON  SYS_CORP.ID = TS_ORG.CORP_ID
 		where TS_USER.valid_flag = 0 and account = #{account}
 	</select>
@@ -349,7 +349,7 @@
 			parameterType="com.adc.da.base.page.BasePage">
 		SELECT count(1) 
 			FROM TS_USER tu 
-			LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
+			LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
 		WHERE tu.valid_flag = '0' AND tuo.user_id is null
 	</select>
 	<select id="findBySetOrg"  resultMap="BaseUserRoleMap"
@@ -359,7 +359,7 @@
 				(SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email, 
 					tu.modify_time AS modifyTime 
 						FROM TS_USER tu 
-						LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
+						LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
 					WHERE tu.valid_flag = 0 AND tuo.user_id is null
 					order by tu.modify_time desc
 				) tmp_tb WHERE rownum &lt;= ${pager.endIndex}
@@ -374,9 +374,9 @@
 		SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email, tu.ext_info,
 		tu.modify_time AS modifyTime, tso.org_name AS orgUseName, tso.id AS deptId
 		FROM TS_USER tu
-		LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
+		LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
 		LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.valid_flag = 0
-		LEFT JOIN TR_USER_ROLE tur ON tur.user_id = tu.usid
+		LEFT JOIN TS_USER_ROLE tur ON tur.user_id = tu.usid
 		LEFT JOIN TS_ROLE tr ON tr.id = tur.role_id
 		WHERE tu.valid_flag = '0'
 		<if test="useCorpId != null and useCorpId != ''">
@@ -404,7 +404,7 @@
 		tu.ext_info,
 		tu.modify_time AS modifyTime,null,null
 		FROM
-		TS_USER tu  where tu.valid_flag = 0 and NOT EXISTS (select * from TR_USER_ORG tuo where tuo.user_id = tu.usid)
+		TS_USER tu  where tu.valid_flag = 0 and NOT EXISTS (select * from TS_USER_ORG tuo where tuo.user_id = tu.usid)
 		<if test="uname != null and uname != ''" >
 			and tu.uname like #{uname}
 		</if>
@@ -418,9 +418,9 @@
 		(SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email, tu.ext_info,
 		tu.modify_time AS modifyTime, tso.org_name AS orgUseName, tso.id AS deptId
 		FROM TS_USER tu
-		LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
+		LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
 		LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.valid_flag = 0
-		LEFT JOIN TR_USER_ROLE tur ON tur.user_id = tu.usid
+		LEFT JOIN TS_USER_ROLE tur ON tur.user_id = tu.usid
 		LEFT JOIN TS_ROLE tr ON tr.id = tur.role_id
 		WHERE tu.valid_flag = '0'
 		<if test="useCorpId != null and useCorpId != ''">
@@ -448,7 +448,7 @@
 						tu.ext_info,
 						tu.modify_time AS modifyTime,null,null
 						FROM
-						TS_USER tu  where tu.valid_flag = 0 and NOT EXISTS (select * from TR_USER_ORG tuo where tuo.user_id = tu.usid)
+						TS_USER tu  where tu.valid_flag = 0 and NOT EXISTS (select * from TS_USER_ORG tuo where tuo.user_id = tu.usid)
 						<if test="uname != null and uname != ''" >
 							and tu.uname like #{uname}
 						</if>
@@ -462,9 +462,9 @@
 		SELECT COUNT(1) FROM 
 		(SELECT TU.usid  
 			FROM TS_USER tu 
-			LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
+			LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
 			LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id
-			LEFT JOIN TR_USER_ROLE tur ON tur.user_id = tu.usid
+			LEFT JOIN TS_USER_ROLE tur ON tur.user_id = tu.usid
 		WHERE tu.valid_flag = '0' and tuo.org_id in (${useCorpId})
 			<if test="uname != null and uname != ''" >
 				and tu.uname like  #{uname} 
@@ -484,9 +484,9 @@
 				(SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email, 
 					tu.modify_time AS modifyTime, tso.org_name AS orgUseName, tso.id AS deptId  
 					FROM TS_USER tu 
-					LEFT JOIN TR_USER_ORG tuo ON tuo.user_id = tu.usid
+					LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
 					LEFT JOIN TS_ORG tso ON tso.id = tuo.org_id and tso.valid_flag = 0
-					LEFT JOIN TR_USER_ROLE tur ON tur.user_id = tu.usid
+					LEFT JOIN TS_USER_ROLE tur ON tur.user_id = tu.usid
 				WHERE tu.valid_flag = '0' and tuo.org_id in (${useCorpId})
 					<if test="uname != null and uname != ''" >
 						and tu.uname like #{uname}  
@@ -506,8 +506,8 @@
 	<select id="queryOrgByAccount" resultMap="BaseResultMap"
 			parameterType="java.lang.String">
 		SELECT TS_ORG.org_name as orgUseName
-		FROM TS_USER LEFT JOIN TR_USER_ORG ON TS_USER.USID = TR_USER_ORG.USER_ID
-		LEFT JOIN TS_ORG ON TR_USER_ORG.ORG_ID = TS_ORG.ID
+		FROM TS_USER LEFT JOIN TS_USER_ORG ON TS_USER.USID = TS_USER_ORG.USER_ID
+		LEFT JOIN TS_ORG ON TS_USER_ORG.ORG_ID = TS_ORG.ID
 		WHERE TS_USER.valid_flag = 0 and TS_ORG.valid_flag = 0 and TS_USER.account = #{account}
 	</select>
 

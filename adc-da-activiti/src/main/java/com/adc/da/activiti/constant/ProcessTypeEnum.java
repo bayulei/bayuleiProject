@@ -18,7 +18,7 @@ public enum ProcessTypeEnum {
     STANDARD_ADJUST_PROCESS("7", "企业标准制修订计划调整申请流程"),
     STANDARD_YEAR_PLAN_PROCESS("8", "企业技术标准制修订年度计划审批发布流程"),
     STANDARD_BUY_PROCESS("9", "标准购买审批流程"),
-    VEHICLE_VERIFICATION_PROCESS("10", "标准购买审批流程");
+    VEHICLE_VERIFICATION_PROCESS("10", "整车认可试验计划下达及验证流程");
 
     private String value;
     private String text;

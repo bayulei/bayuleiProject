@@ -3,6 +3,7 @@ package com.adc.da.sys.page;
 import com.adc.da.base.page.BasePage;
 
 import java.util.Date;
+import java.util.spi.LocaleNameProvider;
 
 /**
  * <b>功能：</b>TS_ROLE RoleEOPage<br>
@@ -136,7 +137,7 @@ public class RoleEOPage extends BasePage {
     }
 
     public String getExtInfo() {
-        return this.extInfo;
+        return extInfo;
     }
 
     public void setExtInfo(String extInfo) {

@@ -20,7 +20,7 @@ public class UserEO extends BaseEntity {
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private String operUser;
-    private Object extInfo;
+    private String extInfo;
     private String workNum;
     private String email;
     private String userSource;
@@ -105,159 +105,132 @@ public class UserEO extends BaseEntity {
             default: return null;
         }
     }
-    
-    /**  **/
+
     public Integer getValidFlag() {
-        return this.validFlag;
+        return validFlag;
     }
 
-    /**  **/
     public void setValidFlag(Integer validFlag) {
         this.validFlag = validFlag;
     }
 
-    /**  **/
     public Date getModifyTime() {
-        return this.modifyTime;
+        return modifyTime;
     }
 
-    /**  **/
     public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
     }
 
-    /**  **/
     public Date getCreationTime() {
-        return this.creationTime;
+        return creationTime;
     }
 
-    /**  **/
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
-    /**  **/
     public String getOperUser() {
-        return this.operUser;
+        return operUser;
     }
 
-    /**  **/
     public void setOperUser(String operUser) {
         this.operUser = operUser;
     }
 
-    /**  **/
-    public Object getExtInfo() {
-        return this.extInfo;
+    public String getExtInfo() {
+        return extInfo;
     }
 
-    /**  **/
-    public void setExtInfo(Object extInfo) {
+    public void setExtInfo(String extInfo) {
         this.extInfo = extInfo;
     }
 
-    /**  **/
     public String getWorkNum() {
-        return this.workNum;
+        return workNum;
     }
 
-    /**  **/
     public void setWorkNum(String workNum) {
         this.workNum = workNum;
     }
 
-    /**  **/
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
-    /**  **/
     public void setEmail(String email) {
         this.email = email;
     }
 
-    /**  **/
     public String getUserSource() {
-        return this.userSource;
+        return userSource;
     }
 
-    /**  **/
     public void setUserSource(String userSource) {
         this.userSource = userSource;
     }
 
-    /**  **/
     public String getUname() {
-        return this.uname;
+        return uname;
     }
 
-    /**  **/
     public void setUname(String uname) {
         this.uname = uname;
     }
 
-    /**  **/
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
-    /**  **/
     public void setPassword(String password) {
         this.password = password;
     }
 
-    /**  **/
     public String getAccount() {
-        return this.account;
+        return account;
     }
 
-    /**  **/
     public void setAccount(String account) {
         this.account = account;
     }
 
-    /**  **/
     public String getUsid() {
-        return this.usid;
+        return usid;
     }
 
-    /**  **/
     public void setUsid(String usid) {
         this.usid = usid;
     }
 
-	public List<String> getRoleIdList() {
-		return roleIdList;
-	}
+    public List<String> getRoleIdList() {
+        return roleIdList;
+    }
 
-	public void setRoleIdList(List<String> roleIdList) {
-		this.roleIdList = roleIdList;
-	}
+    public void setRoleIdList(List<String> roleIdList) {
+        this.roleIdList = roleIdList;
+    }
 
-	public List<RoleEO> getRoleEOList() {
-		return roleEOList;
-	}
+    public List<RoleEO> getRoleEOList() {
+        return roleEOList;
+    }
 
-	public void setRoleEOList(List<RoleEO> roleEOList) {
-		this.roleEOList = roleEOList;
-	}
+    public void setRoleEOList(List<RoleEO> roleEOList) {
+        this.roleEOList = roleEOList;
+    }
 
-	public List<String> getOrgIdList() {
-		return orgIdList;
-	}
+    public List<String> getOrgIdList() {
+        return orgIdList;
+    }
 
-	public void setOrgIdList(List<String> orgIdList) {
-		this.orgIdList = orgIdList;
-	}
+    public void setOrgIdList(List<String> orgIdList) {
+        this.orgIdList = orgIdList;
+    }
 
-	public List<OrgEO> getOrgEOList() {
-		return orgEOList;
-	}
+    public List<OrgEO> getOrgEOList() {
+        return orgEOList;
+    }
 
-	public void setOrgEOList(List<OrgEO> orgEOList) {
-		this.orgEOList = orgEOList;
-	}
-
-    
-    
+    public void setOrgEOList(List<OrgEO> orgEOList) {
+        this.orgEOList = orgEOList;
+    }
 }

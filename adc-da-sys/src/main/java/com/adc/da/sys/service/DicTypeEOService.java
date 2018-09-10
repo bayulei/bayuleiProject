@@ -23,13 +23,21 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
     @Autowired
     private DicTypeEODao dicTypeEODao;
 
+
     public DicTypeEODao getDao() {
         return dicTypeEODao;
     }
-
+//李文轩：此方法对应的sql语句必须有parentId，不传入parentId就会报错
     public DicTypeEO save(DicTypeEO dicTypeEO) {
+
+        String parentId = dicTypeEO.getParentId();
+
         dicTypeEO.setId(UUID.randomUUID10());
         dicTypeEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
+
+		if(parentId!=null){
+			dicTypeEO.setParentId(parentId);
+		}
 
         dicTypeEODao.insert(dicTypeEO);
         return dicTypeEO;
@@ -48,8 +56,8 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<DicTypeEO> getTypeIdByDicIdAndTypeName(String dictionaryCode, String typeName) {
-        return dicTypeEODao.getTypeIdByDicIdAndTypeName(dictionaryCode, typeName);
+    public List<DicTypeEO> getTypeIdByDicIdAndTypeName(String dicId, String typeName) {
+        return dicTypeEODao.getTypeIdByDicIdAndTypeName(dicId, typeName);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -57,7 +65,17 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
         return dicTypeEODao.getDicTypeEOByDicTypeCode(dicTypeCode);
     }
 
-	public void deleteFlagTo1(String id) {
-		dicTypeEODao.deleteFlagTo1(id);
+	public void deleteDicTypeByDicId(String id) {
+		dicTypeEODao.deleteDicTypeByDicId(id);
 	}
+
+    /**
+     * 新增数据字典参数表
+     * */
+    public DicTypeEO saveDictype(DicTypeEO dicTypeEO){
+        dicTypeEO.setId(UUID.randomUUID10());
+        dicTypeEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
+        dicTypeEODao.insertSelective(dicTypeEO);
+        return dicTypeEO;
+    }
 }
