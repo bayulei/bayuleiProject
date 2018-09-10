@@ -124,11 +124,11 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.deleteStand(params.rows);
+                    this.deleteStand(params.rows)
                   }
                 }
               }, '删除')
-            ]);
+            ])
           }
         }
       ],
@@ -167,7 +167,7 @@ export default {
       })
     },
 
-    //保存标准
+    // 保存标准
     saveStands () {
       console.log('aaaaaaaaaaaaaaaaaa' + this.sarStandardsInfoEO.standNumber)
       this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
@@ -182,8 +182,8 @@ export default {
     },
     cancel () {},
     searchData () {},
-    //删除标准
-    deleteStand(params){
+    // 删除标准
+    deleteStand (params) {
       alert(JSON.stringify(params))
     }
   },
