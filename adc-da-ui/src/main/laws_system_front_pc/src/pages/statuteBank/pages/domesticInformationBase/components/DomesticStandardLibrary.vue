@@ -16,8 +16,7 @@
    <div class="content">
      <loading :loading="loading">数据获取中</loading>
      <Table border ref="selection" :columns="tableColumn" :data="stahndinfoList"></Table>
-     <ul id="example-2">
-       <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="(item, index) in stahndinfoList">
+     <!--<Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="item in stahndinfoList">
          <div style="text-align:center">
            <Row>
              <Col span="4">标准号:{{item.standNumber}} </Col>
@@ -37,8 +36,7 @@
              <Col span="4">col-12</Col>
            </Row>
          </div>
-       </Card>
-     </ul>
+     </Card>-->
    </div>
    <pagination :total="total"></pagination>
 
@@ -212,7 +210,7 @@ export default {
     // 保存或修改标准
     saveOrUpdateStands () {
       // 新增
-      if (this.addOrUPdateFlag == 1) {
+      if (this.addOrUPdateFlag === 1) {
         this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
           _this: this
         }, res => {
