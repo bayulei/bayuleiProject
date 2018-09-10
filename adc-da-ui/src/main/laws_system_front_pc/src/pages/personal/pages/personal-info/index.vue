@@ -3,9 +3,7 @@
   <div class="personal-info">
     <panel-header :tabs="tabsList" @activated="showComponent" :active="active"></panel-header>
     <panel-content>
-      <transition enter-active-class="animated zoomInLeft" leave-active-class="animated zoomOutRight">
-        <components :is="active"></components>
-      </transition>
+      <components :is="active"></components>
     </panel-content>
   </div>
 </template>
@@ -44,7 +42,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-  @import 'animate.css';
   .personal-info{
     height: 100%;
   }

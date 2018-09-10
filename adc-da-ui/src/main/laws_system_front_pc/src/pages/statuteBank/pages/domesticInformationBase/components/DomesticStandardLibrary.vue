@@ -39,7 +39,7 @@
      </Card>-->
      <!--    新增样式     -->
      <div class="standards-info-form" >
-       <Form ref="sarStandardsInfoEO" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" :label-width="80" class="label-input-form">
+       <Form ref="sarStandardsInfoEO" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" class="label-input-form">
          <Row>
            <Col span="8">
             <FormItem label="国家/地区" prop="country" class="standards-info-item">
@@ -384,38 +384,38 @@ export default {
         standType: 'INLAND_STAND', // 标准分类
         country: '中国',
         standSort: '',
-        applyArctic:'',
+        applyArctic: '',
         standNumber: '',
         standYear: '',
         standName: '',
         standEnName: '',
-    standState: '',
+        standState: '',
         standNature: '',
-      replaceStandNum: '',
-    replacedStandNum: '',
-    interStandNum: '',
-    adoptExtent: '',
-    emergyKind: '',
-    applyAuth: '',
-    issueTime: '',
-    putTime: '',
-    newcarPutTime: '',
-    productPutTime: '',
-    newproductPutTime: '',
-    draftingUnit: '',
-    draftUser: '',
-    standFile: '',
-    standModifyFile: '',
-    draftFile: '',
-    opinionFile: '',
-    sentScreenFile: '',
-    approvalFile: '',
-    relevanceFile: '',
-    tags: '',
-    synopsis: '',
-    responsibleUnit: '',
-    category: '',
-    remark: ''
+        replaceStandNum: '',
+        replacedStandNum: '',
+        interStandNum: '',
+        adoptExtent: '',
+        emergyKind: '',
+        applyAuth: '',
+        issueTime: '',
+        putTime: '',
+        newcarPutTime: '',
+        productPutTime: '',
+        newproductPutTime: '',
+        draftingUnit: '',
+        draftUser: '',
+        standFile: '',
+        standModifyFile: '',
+        draftFile: '',
+        opinionFile: '',
+        sentScreenFile: '',
+        approvalFile: '',
+        relevanceFile: '',
+        tags: '',
+        synopsis: '',
+        responsibleUnit: '',
+        category: '',
+        remark: ''
       },
       sarStandardsInfoRules: {
         standSort: [
@@ -495,8 +495,8 @@ export default {
         remark: [
         ]
       },
-      standSortOptions: [{ label: '类别1' ,value: '类别1' }],  //标准类别下拉框
-      standStateOptions: [{ label: '状态1' ,value: '状态2' }]   //标准状态下拉框
+      standSortOptions: [{ label: '类别1', value: '类别1' }], // 标准类别下拉框
+      standStateOptions: [{ label: '状态1', value: '状态2' }] // 标准状态下拉框
     }
   },
   methods: {
@@ -519,7 +519,7 @@ export default {
     saveOrUpdateStands () {
       // 新增
       if (this.addOrUPdateFlag === 1) {
-        alert("aaaaa")
+        alert('aaaaa')
         this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
           _this: this
         }, res => {
