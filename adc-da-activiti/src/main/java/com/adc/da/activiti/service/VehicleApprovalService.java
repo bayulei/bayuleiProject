@@ -182,6 +182,14 @@ public class VehicleApprovalService {
 
     }
 
+    /**
+     *  填写实验结果
+     * @MethodName:writeTestProgram
+     * @author: DuYunbao
+     * @param:[flag, taskId]
+     * @return:com.adc.da.util.http.ResponseMessage<java.lang.String>
+     * date: 2018/9/10 9:11
+     */
     public ResponseMessage<String> writeTestProgram(String flag, String taskId) throws Exception {
         //查询当前任务
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -227,6 +235,14 @@ public class VehicleApprovalService {
         return  Result.success();
     }
 
+    /**
+     *  确认结果
+     * @MethodName:quiteResult
+     * @author: DuYunbao
+     * @param:[taskId]
+     * @return:com.adc.da.util.http.ResponseMessage<java.lang.String>
+     * date: 2018/9/10 9:11
+     */
     public ResponseMessage<String> quiteResult(String taskId) throws Exception {
         //查询当前任务
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -242,13 +258,25 @@ public class VehicleApprovalService {
         }else {
             busProcessEO.setLastUserName("从session取");
         }
-
-        busProcessEO.setEndTime(new Date());
+        //查询正在运行的任务
+        List<Task> taskNow = taskService.createTaskQuery().processInstanceId(task.getProcessInstanceId()).list();
+        if(taskNow == null || taskNow.isEmpty()){
+            //没有正在运行的任务，则流程结束
+            busProcessEO.setEndTime(new Date());
+        }
         busProcessEO.setProcessStatus("2");
         flowProcessUtil.updateProcessByProcessInstanceId(task.getProcessInstanceId(),busProcessEO);
         return Result.success();
     }
 
+    /**
+     *  查询流程变量
+     * @MethodName:queryProcessVariable
+     * @author: DuYunbao
+     * @param:[taskId]
+     * @return:java.util.List<org.activiti.engine.history.HistoricVariableInstance>
+     * date: 2018/9/10 9:10
+     */
     public  List<HistoricVariableInstance> queryProcessVariable(String taskId) {
 
         HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();

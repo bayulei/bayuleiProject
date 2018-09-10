@@ -1,12 +1,12 @@
 <!-- 表格工具栏 -->
 <template>
   <div class="table-tools-bar">
- <transition enter-active-class="animated slideInDown" leave-active-class="animated slideOutUp" :duration="1000">
+  <transition enter-active-class="animated slideInDown" leave-active-class="animated slideOutUp" :duration="1000">
     <div class="advanced-search" v-if="isAdvancedSearch">
       高级搜索
       <Button type="primary" class="toggle-btn" @click="toggleSearch">收起</Button>
     </div>
-    </transition>
+  </transition>
     <div class="tools-bar-wrapper">
       <slot name="left"></slot>
       <slot name="right"></slot>

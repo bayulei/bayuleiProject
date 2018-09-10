@@ -15,7 +15,7 @@ import java.util.List;
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public interface SarStandardsInfoEODao extends BaseDao<SarStandardsInfoEO> {
-    List<SarStandardsInfoEO> getSarStandardsInfoPage(SarStandardsInfoEOPage page);
+    List<SarStandardsInfoEO>  getSarStandardsInfoPage(SarStandardsInfoEOPage page);
     int getSarStandardsInfoCount(SarStandardsInfoEOPage page);
 
     List<SarStandExcelDto> getSarStandardsInfo(SarStandardsInfoEOPage page);

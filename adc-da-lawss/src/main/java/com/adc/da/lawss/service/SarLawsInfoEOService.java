@@ -88,7 +88,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             sarLawsValEO.setModifyTime(new Date());
             //向法规关联表添加数据
             sarLawsValEODao.insertSelective(sarLawsValEO);
-            return Result.success(sarLawsInfoEO);
+            return Result.success("0","新增成功",sarLawsInfoEO);
         } else {
             return Result.error("新增失败！");
         }
@@ -144,7 +144,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
 
             }
 
-            return Result.success(sarLawsInfoEO);
+            return Result.success("0","删除成功",sarLawsInfoEO);
         } else {
             return Result.error("删除失败！");
         }
@@ -176,7 +176,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
                 BeanUtils.copyProperties(importDto,sarLawsInfoEO);
                 createLawsInfo(sarLawsInfoEO);
             }
-            return Result.success();
+            return Result.success("0","导入成功");
         } catch (Exception e){
             return Result.error("导入失败");
         }
@@ -214,6 +214,51 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             } else {
                 errorMsg += "文件名称不能为空";
                 countError++;
+            }
+            if(StringUtils.isNotEmpty(dto.getIssueUnit())){
+                if(dto.getIssueUnit().length() > 500){
+                    errorMsg += "发布单位不能超过500个字符";
+                    countError++;
+                }
+            }
+            if(StringUtils.isNotEmpty(dto.getLawsStatus())){
+                if(dto.getLawsStatus().length() > 500){
+                    errorMsg += "文件状态不能超过500个字符";
+                    countError++;
+                }
+            } else {
+                errorMsg += "文件状态不能为空";
+                countError++;
+            }
+            if(dto.getIssueTime() != null){
+                /*if(dto.getIssueTime().toString().length() > 500){
+                    errorMsg += "发布日期不能超过500个字符";
+                    countError++;
+                }*/
+            } else {
+                errorMsg += "发布日期不能为空";
+                countError++;
+            }
+            if(dto.getPutTime() != null){
+                /*if(dto.getIssueTime().toString().length() > 500){
+                    errorMsg += "发布日期不能超过500个字符";
+                    countError++;
+                }*/
+            } else {
+                errorMsg += "实施日期不能为空";
+                countError++;
+            }
+            if(StringUtils.isNotEmpty(dto.getReplaceLawsNum())){
+                if(dto.getReplaceLawsNum().length() > 100){
+                    errorMsg += "代替文件号不能超过100个字符";
+                    countError++;
+                }
+            }
+            if(StringUtils.isNotEmpty(dto.getResponsibleUnit())){
+                if(dto.getResponsibleUnit().length() > 100){
+                    errorMsg += "责任部门不能超过100个字符";
+                    countError++;
+                }
             }
 
             if(countError > 0){
