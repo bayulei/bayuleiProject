@@ -1,19 +1,13 @@
 <!-- 预警时间设置 -->
 <template>
   <div class="warning-time-setting">
-    <Form ref="warningForm" :model="warningForm" :rules="warningRule" :label-width="100" style="margin: 1rem auto">
-      <FormItem label="预警时间设置" prop="warning">
-        <Select v-model="warningForm.warning">
-          <Option v-for="item in warningList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </FormItem>
-      <FormItem>
+        <div class="warningSelect">
+            <label-select v-model="warningForm.warning" :options="warningList" placeholder="请设置预警时间" label="预警时间设置" ></label-select>
         <div class="btn-group">
           <Button type="primary" @click="handleSubmit('warningForm')">保存</Button>
           <Button style="margin-left: 8px" @click="handleReset ('warningForm')">返回</Button>
         </div>
-      </FormItem>
-    </Form>
+  </div>
   </div>
 </template>
 
@@ -27,19 +21,19 @@ export default {
       },
       warningList: [
         {
-          value: 'Three months',
+          value: 'Three Months',
           label: '3个月'
         },
         {
-          value: 'six months',
+          value: 'Six Months',
           label: '6个月'
         },
         {
-          value: 'one year',
+          value: 'One Year',
           label: '一年'
         },
         {
-          value: 'two year',
+          value: 'two Year',
           label: '两年'
         }
       ],
@@ -52,16 +46,10 @@ export default {
   },
   methods: {
     handleSubmit (name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success('Success!')
-        } else {
-          this.$Message.error('Fail!')
-        }
-      })
+      alert('提交的数据是' + this.warningForm.warning)
     },
     handleReset (name) {
-      this.$refs[name].resetFields()
+      this.warningForm.warning = ''
     }
   }
 }
@@ -71,10 +59,15 @@ export default {
   .warning-time-setting{
     display: flex;
     background: #FFF;
+    .warningSelect{
+      margin: 2rem auto;
+    }
     .btn-group{
       margin:1rem;
     }
     .btn-group Button{
+      width: 2rem;
+      margin-left: 30px;
     }
   }
 </style>

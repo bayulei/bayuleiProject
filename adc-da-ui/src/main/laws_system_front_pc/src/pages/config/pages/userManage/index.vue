@@ -6,23 +6,23 @@
         <label-select v-model="search.type" :options="search.typeOptions" placeholder="请选择类型" label="类型"></label-select>
         <label-input v-model="search.userName" placeholder="请输入用户名" label="用户名称"></label-input>
         <label-select v-model="search.roleName" :options="search.roleOptions" placeholder="请选择角色" label="角色名称"></label-select>
-        <!--<Form ref="searchForm" :model="search" inline>-->
-          <!--<FormItem prop="type">-->
-            <!--<Select v-model="search.type" placeholder="请选择类型">-->
-              <!--<Option :value="opt.value" v-for="opt in search.typeOptions" :key="opt.value">{{ opt.label }}</Option>-->
-              <!--<span slot="prepend">类型</span>-->
-            <!--</Select>-->
-          <!--</FormItem>-->
-          <!--<FormItem prop="userName">-->
-            <!--<Input v-model="search.userName" placeholder="请输入用户名" clearable>-->
-              <!--<span slot="prepend">用户名</span>-->
-            <!--</Input>-->
-          <!--</FormItem>-->
-        <!--</Form>-->
+        <label-select v-model="search.userStatus" :options="search.statusOptions" placeholder="请选择角色" label="用户状态"></label-select>
       </div>
-      <div slot="right"></div>
+      <div slot="right">
+      </div>
     </table-tools-bar>
-    <div class="content"></div>
+    <div class="content">
+      <div class="btn-group">
+        <Button type="info" @click="userSelect">查询</Button>
+        <Button type="success" @click="userReset">重置</Button>
+      </div>
+      <div class="btn-function-group">
+        <Button type="error">新增</Button>
+        <Button type="primary">设置角色</Button>
+        <Button type="info">查看</Button>
+        <Button type="warning">删除</Button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -35,6 +35,9 @@ export default {
       // 搜索框
       search: {
         type: '',
+        userName: '',
+        roleName: '',
+        userStatus: '',
         typeOptions: [{
           label: '类型1',
           value: 1
@@ -42,19 +45,34 @@ export default {
           label: '类型2',
           value: 2
         }],
-        userName: '',
-        roleName: '',
         roleOptions: [{
           label: '管理员',
           value: 1
         }, {
           label: '普通用户',
           value: 2
+        }],
+        statusOptions: [{
+          label: '状态1',
+          value: 1
+        }, {
+          label: '状态2',
+          value: 2
         }]
       }
     }
   },
-  methods: {},
+  methods: {
+    userSelect () {
+
+    },
+    userReset () {
+      this.search.type = ''
+      this.search.userName = ''
+      this.search.roleName = ''
+      this.search.userStatus = ''
+    }
+  },
   components: {
     tableToolsBar
   }
@@ -65,5 +83,12 @@ export default {
   #user-manage{
     background: #FFF;
     padding: 0.2rem 0.3rem;
+    .content .btn-group{
+      float: right;
+    }
+    .content .btn-function-group{
+      clear: both;
+      float: left;
+    }
   }
 </style>

@@ -44,7 +44,7 @@
         </Modal>
       </div>
     </table-tools-bar>
-    <Table border ref="selection" :columns="categoryTable" :data="data1"></Table>
+    <Table border ref="selection" :columns="categoryTable" :data="categoryData"></Table>
     <loading :loading="loading"></loading>
   </div>
 </template>
@@ -57,6 +57,8 @@ export default {
     return {
       modalType: '',
       categoryTitle: '',
+      pageNo: '',
+      pageSize: '',
       loading: false,
       formInline: {
         option: '',
@@ -127,7 +129,7 @@ export default {
           }
         }
       ],
-      data1: []
+      categoryData: []
     }
   },
   methods: {
@@ -152,12 +154,25 @@ export default {
       this.modalType = 3
       this.categoryTitle = '查看标准'
       // $('.ivu-modal-footer').addClass('isDisplay')
+    },
+    // 加载表格
+    selectCategory () {
+      this.$http.get('sys/dictype/page', {
+      }, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        this.categoryData=res.data.list
+      }, e => {})
     }
   },
   components: {
     tableToolsBar
   },
   computed: {
+  },
+  mounted () {
+    this.selectCategory()
   }
 }
 </script>
