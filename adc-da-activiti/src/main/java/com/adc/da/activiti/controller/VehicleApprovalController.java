@@ -2,6 +2,7 @@ package com.adc.da.activiti.controller;
 
 
 import com.adc.da.activiti.common.FlowProcessUtil;
+import com.adc.da.activiti.constant.ProcessTypeEnum;
 import com.adc.da.activiti.entity.VehicleApprovalEO;
 import com.adc.da.activiti.service.VehicleApprovalService;
 import com.adc.da.activiti.vo.ProcessInformationVO;
@@ -24,12 +25,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/${restPath}/WorkFlow/VehicleApproval")
@@ -123,8 +127,8 @@ public class VehicleApprovalController{
      */
     @ApiOperation(value = "项目组总体经理提交或者保存流程")
     @PostMapping ("/submitOrSaveStandardApprovalProcess")
-    public ResponseMessage<String> submitOrSaveStandardApprovalProcess(VehicleApprovalEO vehicleApprovalEO, MultipartFile file
-    ,String flag,String ProcessInstanceId) throws Exception {
+    public ResponseMessage<String> submitOrSaveStandardApprovalProcess( @RequestBody VehicleApprovalEO vehicleApprovalEO, MultipartFile file
+    , String flag, String ProcessInstanceId) throws Exception {
 
         //调用上传附件的接口
         String url = "附件地址";
@@ -154,8 +158,17 @@ public class VehicleApprovalController{
 
     @ApiOperation(value = "根据任务id查询流程变量")
     @PostMapping ("/queryProcessVariable")
-    public ResponseMessage<String> queryProcessVariable(String taskId) throws Exception {
-        return  vehicleApprovalService.queryProcessVariable(taskId);
-
+    public ResponseMessage<Map<String,Object>> queryProcessVariable(String taskId) throws Exception {
+        List<HistoricVariableInstance>  list = vehicleApprovalService.queryProcessVariable(taskId);
+        Map<String,Object> map = new HashMap<>();
+        for (HistoricVariableInstance variableInstance :list){
+            if("项目组总体经理发起流程表单".equals(variableInstance.getVariableName())){
+                map.put("项目组总体经理发起流程表单",(VehicleApprovalEO)variableInstance.getValue());
+            }
+            if("填写后的附件".equals(variableInstance.getVariableName())){
+                map.put("附件",variableInstance.getValue());
+            }
+        }
+        return  Result.success(map);
     }
 }

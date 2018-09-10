@@ -7,8 +7,8 @@
       </FormItem>
       <FormItem label="流程类型">
         <Select v-model="formItem.processType">
-          <Option value="beijing">整车认可试验计划下达及验证流程</Option>
-          <Option value="shanghai">标准购买审批流程</Option>
+          <Option value="10">整车认可试验计划下达及验证流程</Option>
+          <Option value="9">标准购买审批流程</Option>
           <Option value="shenzhen">企业技术标准制修订年度计划审批发布流程</Option>
         </Select>
       </FormItem>
@@ -29,8 +29,8 @@
         <Tree :data="data4" show-checkbox multiple></Tree>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="saveInfo()">保存</Button>
-        <Button style="margin-left: 8px"  @click="submitInfo()">提交</Button>
+        <Button type="primary" @click="saveInfo(1)">保存</Button>
+        <Button style="margin-left: 8px"  @click="saveInfo(2)">提交</Button>
       </FormItem>
     </Form>
   </div>
@@ -85,17 +85,23 @@ export default {
     }
   },
   methods: {
-    saveInfo () {
-      this.$http.post('WorkFlow/VehicleApproval/submitOrSaveStandardApprovalProcess', this.formItem, {
-        _this: this
-      }, res => {
-        if (res.ok) {
-          alert('删除成功')
-          this.searchLawsInfo()
-        }
-      }, e => {
-
-      })
+    saveInfo (flag) {
+      // this.$http.post('WorkFlow/VehicleApproval/submitOrSaveStandardApprovalProcess', {
+      //   vehicleApprovalEO: this.formItem,
+      //   flag: flag
+      // }, {
+      //   _this: this
+      // }, res => {
+      //   if (res.ok) {
+      //
+      //   }
+      // }, e => {
+      //
+      // })
+      let params = {
+        flag: flag
+      }
+      this.axios.post('api/WorkFlow/VehicleApproval/submitOrSaveStandardApprovalProcess', params).then((res) => {}).catch((e) => {})
     }
   },
   components: {},

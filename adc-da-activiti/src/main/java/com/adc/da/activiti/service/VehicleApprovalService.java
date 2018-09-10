@@ -183,36 +183,45 @@ public class VehicleApprovalService {
     }
 
     public ResponseMessage<String> writeTestProgram(String flag, String taskId) throws Exception {
-        //查询当前任务所在的流程实例
+        //查询当前任务
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-        Execution execution = runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult();
         //附件信息
         String url = "http://dwz.cn/SM3TT1YK";
 
-        //删除当前的任务所在的子流程实例的流程变量
-        runtimeService.removeVariableLocal(execution.getParentId(),"填写后的附件");
+        //删除当前的任务所在的流程实例的流程变量
+        runtimeService.removeVariableLocal(task.getExecutionId(),"填写后的附件");
         //删除上次附件
         //..................
-        //为当前的任务所在的子流程实例设置流程变量
-        runtimeService.setVariableLocal(execution.getParentId(), "填写后的附件", url);
+        //为当前的任务所在的流程实例设置流程变量
+        runtimeService.setVariableLocal(task.getExecutionId(), "填写后的附件", url);
 
         if(StringUtils.isNotEmpty(flag) && "2".equals(flag)){
             //设置流程审核人
             Authentication.setAuthenticatedUserId("从session取");
             //提交按钮则完成当前任务
+            if(StringUtils.isNotEmpty(task.getOwner())){
+                taskService.resolveTask(taskId);
+
+            }
             taskService.complete(taskId);
             //查询完成上一次任务后当前任务
-            Task taskNow = taskService.createTaskQuery().executionId(execution.getId()).singleResult();
+            Task taskNow = taskService.createTaskQuery().executionId(task.getExecutionId()).singleResult();
             //查询流程从中获取发起人
             HistoricProcessInstance  historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                     .processInstanceId(taskNow.getProcessInstanceId()).singleResult();
             //设置任务受理人
             taskService.setAssignee(taskNow.getId(),historicProcessInstance.getStartUserId());
+
+
             //更新业务流程主表
             BusProcessEO busProcessEO = new BusProcessEO();
             busProcessEO.setLastUserId("从session取");
-            busProcessEO.setLastUserName("从session取");
-            flowProcessUtil.updateProcessByProcessInstanceId(execution.getProcessInstanceId(),busProcessEO);
+            if(StringUtils.isNotEmpty(task.getOwner())){
+                busProcessEO.setLastUserName(task.getOwner()+"委托"+task.getAssignee());
+            }else {
+                busProcessEO.setLastUserName("从session取");
+            }
+            flowProcessUtil.updateProcessByProcessInstanceId(task.getProcessInstanceId(),busProcessEO);
         }
 
         return  Result.success();
@@ -240,17 +249,17 @@ public class VehicleApprovalService {
         return Result.success();
     }
 
-    public ResponseMessage<String> queryProcessVariable(String taskId) {
+    public  List<HistoricVariableInstance> queryProcessVariable(String taskId) {
 
-        /*HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
+        HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
 
         //查询流程实例绑定的流程变量
         List<HistoricVariableInstance> historicVariableInstanceList = historyService.createHistoricVariableInstanceQuery()
                 .executionId(task.getProcessInstanceId()).list();
         //查询子流程执行对象绑定 的流程变量
         List<HistoricVariableInstance> historicChildrenVariableInstanceList = historyService.createHistoricVariableInstanceQuery()
-                .executionId(task.get).list();
-*/     //  historyService.createHistoricVariableInstanceQuery().
-        return  Result.success();
+                .executionId(task.getExecutionId()).list();
+        historicVariableInstanceList.addAll(historicChildrenVariableInstanceList);
+        return  historicVariableInstanceList;
     }
 }
