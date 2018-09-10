@@ -163,7 +163,6 @@ export default {
         }
       ],
       stahndinfoList: [],
-
       modalshowflag: false,
       modalshowtitle: '新增标准',
       addOrUPdateFlag: 1, // 新增：1， 修改：2
@@ -217,9 +216,8 @@ export default {
           this.getDomesticStandardTable()
         }, e => {
         })
-      }
-      // 修改
-      else {
+      } else {
+        // 修改
         console.log(JSON.stringify(this.sarStandardsInfoEO))
         alert(this.sarStandardsInfoEO.id)
         /* let ogje;
