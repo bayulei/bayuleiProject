@@ -1,6 +1,7 @@
 package com.adc.da.search.config;
 
 
+import org.aspectj.lang.annotation.After;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
@@ -38,7 +39,19 @@ public class ElasticsearchConfig {
         } catch (java.net.UnknownHostException e) {
             e.printStackTrace();
         }
+        finally {
+            client.close();
+        }
       return  client;
     }
+
+    /*@After
+    public void tearDown() throws Exception {
+        if (client != null) {
+            client.close();
+        }
+
+    }*/
+
 
 }
