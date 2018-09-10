@@ -210,6 +210,51 @@ const routes = [
         }
       }
     ]
+  },
+  // **************************   流程中心   ******************************* //
+  {
+    path: '/processCenter',
+    name: 'ProcessCenter',
+    redirect: '/uncompletedProcess',
+    component: resolve => require(['pages/processCenter'], resolve),
+    children: [
+      {
+        path: '/uncompletedProcess',
+        name: 'uncompletedProcess',
+        component: resolve => require(['pages/processCenter/pages/uncompletedProcess'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '待办流程'
+        }
+      }
+      // {
+      //   path: '/complateProcess',
+      //   name: 'ComplateProcess',
+      //   component: resolve => require(['pages/processCenter/pages/complateProcess'], resolve),
+      //   meta: {
+      //     requireAuth: true,
+      //     title: '已办流程'
+      //   }
+      // },
+      // {
+      //   path: '/createProcess',
+      //   name: 'CreateProcess',
+      //   component: resolve => require(['pages/processCenter/pages/createProcess'], resolve),
+      //   meta: {
+      //     requireAuth: true,
+      //     title: '创建流程'
+      //   }
+      // },
+      // {
+      //   path: '/myProcess',
+      //   name: 'MyProcess',
+      //   component: resolve => require(['pages/processCenter/pages/myProcess'], resolve),
+      //   meta: {
+      //     requireAuth: true,
+      //     title: '我的流程'
+      //   }
+      // }
+    ]
   }
 ]
 

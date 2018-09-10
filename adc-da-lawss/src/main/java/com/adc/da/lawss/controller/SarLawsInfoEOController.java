@@ -70,8 +70,9 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
      **/
 	@ApiOperation(value = "|SarLawsInfoEO|分页查询")
     @GetMapping("/page")
-    @RequiresPermissions("lawss:sarLawsInfo:page")
+    /*@RequiresPermissions("lawss:sarLawsInfo:page")*/
     public ResponseMessage<PageInfo<SarLawsInfoEO>> page(SarLawsInfoEOPage page) throws Exception {
+        page.setValidFlag("0");
         List<SarLawsInfoEO> rows = sarLawsInfoEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
@@ -112,10 +113,11 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
      * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.SarLawsInfoEO>
      **/
     @ApiOperation(value = "|SarLawsInfoEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/createLawsInfo")
     /*@RequiresPermissions("lawss:sarLawsInfo:save")*/
-    public ResponseMessage<SarLawsInfoEO> createLawsInfo(@RequestBody SarLawsInfoEO sarLawsInfoEO) throws Exception {
-        return sarLawsInfoEOService.createLawsInfo(sarLawsInfoEO);
+    public ResponseMessage<SarLawsInfoEO> createLawsInfo(SarLawsInfoEO sarLawsInfoEO) throws Exception {
+        ResponseMessage<SarLawsInfoEO> result = sarLawsInfoEOService.createLawsInfo(sarLawsInfoEO);
+        return result;
     }
 
     /**
@@ -157,7 +159,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
      * @return com.adc.da.util.http.ResponseMessage
      **/
     @ApiOperation(value = "|SarLawsInfoEO|信息及关联表删除")
-    @PutMapping("/deleteLawsInfos")
+    @PostMapping("/deleteLawsInfos")
     /*@RequiresPermissions("lawss:sarLawsInfo:delete")*/
     public ResponseMessage deleteLawsInfos(@RequestParam("id") String id) throws Exception {
         return sarLawsInfoEOService.deleteLawsInfo(id);
@@ -205,7 +207,14 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
         }
     }
 
-    @ApiOperation(value = "|SarLawsInfoEO|出法规信息")
+    /**
+     * @Author yangxuenan
+     * @Description 导出法规信息
+     * Date 2018/9/5 11:09
+     * @Param [response, request]
+     * @return void
+     **/
+    @ApiOperation(value = "|SarLawsInfoEO|导出法规信息")
     @GetMapping("/exportLawsInfos")
     public void exportLawsInfos(HttpServletResponse response, HttpServletRequest request) throws Exception{
         OutputStream os = null;
@@ -217,11 +226,14 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
             ExportParams exportParams = new ExportParams();
             exportParams.setType(ExcelType.XSSF);
 
+            //存放需要导出的数据
             SarLawsInfoEO sarLawsInfoEO = new SarLawsInfoEO();
             sarLawsInfoEO.setLawsName("11111");
+            //将导出对象与dto对应
             List<LawsInfoExportDto> dto = new ArrayList<>();
             BeanUtils.copyProperties(sarLawsInfoEO, dto);
 
+            //导出数据到Excel
             workbook = ExcelExportUtil.exportExcel(exportParams, LawsInfoExportDto.class, dto);
             os = response.getOutputStream();
             workbook.write(os);

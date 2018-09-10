@@ -23,6 +23,9 @@ import store from './store'
 import plugins from '@/common/plugins'
 // 自定义全局组件
 import components from '@/common/components'
+// axios
+import axios from 'axios'
+import $axios from '@/common/axios'
 // 表单验证
 import verify from '@/common/verify'
 Vue.config.productionTip = false
@@ -31,6 +34,10 @@ Vue.prototype.$ = $
 Vue.use(plugins)
 Vue.use(components)
 Vue.prototype.verify = verify
+// 原生axios
+Vue.prototype.axios = axios
+// 封装后的axios
+Vue.prototype.$http = $axios
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

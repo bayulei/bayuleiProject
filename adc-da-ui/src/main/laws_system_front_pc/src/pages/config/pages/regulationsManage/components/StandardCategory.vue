@@ -1,110 +1,198 @@
 <!-- 标准类别 -->
 <template>
-  <div class="standard-category">
-    <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false">
+  <div class="standard-classification">
+    <table-tools-bar>
       <div slot="left">
-        <Input v-model="keywords1" placeholder="根据用户名查找" clearable class="my-input" />
-        <Input v-model="keywords2" placeholder="根据描述查找" clearable class="my-input" />
-        <Button type="primary" icon="ios-search" :loading="searching" @click="searchData"></Button>
+        <Form ref="formInline" :model="formInline" inline>
+          <FormItem prop="option">
+            <Input type="text" v-model="value1" placeholder="请输入选项">
+            <span slot="prepend">选项</span>
+            </Input>
+          </FormItem>
+          <FormItem prop="describe">
+            <Input type="text" v-model="value2" placeholder="请输入选项">
+            <span slot="prepend">描述</span>
+            </Input>
+          </FormItem>
+          <Button type="info" class="query-button" @click="handleQuery">查询</Button>
+        </Form>
       </div>
       <div slot="right">
-        <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
+        <Button type="success" @click="categoryAdd">增加</Button>
+        <Button type="warning" @click="categoryEdit">编辑</Button>
+        <Button type="error">删除</Button>
+        <!--显示模态框-->
+        <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="400">
+          <!--编辑/查看-->
+          <div v-if="modalType === 2 || modalType === 3">
+            <Form :model="formLeft" label-position="right" :label-width="80">
+              <FormItem label="标准">
+                <Input v-model="formLeft.input1" style="width: 200px" :disabled='modalType === 3'></Input>
+              </FormItem>
+              <FormItem label="描述">
+                <Input v-model="formLeft.input2" style="width: 200px" :disabled='modalType === 3'></Input>
+              </FormItem>
+              <FormItem label="创建人">
+                <Input v-model="formLeft.input3" style="width: 200px" :disabled='modalType === 3'></Input>
+              </FormItem>
+            </Form>
+          </div>
+          <!--新增-->
+          <div v-else-if="modalType === 1">
+            我是新增的内容
+          </div>
+        </Modal>
       </div>
     </table-tools-bar>
-    <div class="content">
-      <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
-    </div>
-    <pagination :total="total"></pagination>
+    <Table border ref="selection" :columns="categoryTable" :data="data1"></Table>
   </div>
 </template>
+
 <script>
-import TableToolsBar from 'pages/components/TableToolsBar'
-import Pagination from 'pages/components/Pagination'
+import tableToolsBar from 'pages/components/tableToolsBar'
 export default {
-  name: 'standard-category',
+  name: 'standard-classification',
   data () {
     return {
-      keywords1: '',
-      keywords2: '',
-      searching: false,
-      isAdvancedSearch: false, // 是否为高级搜索
-      total: 1000,
-      loading: false,
-      tableColumn: [
+      modalType: '',
+      categoryTitle: '',
+      formInline: {
+        option: '',
+        describe: ''
+      },
+      formLeft: {
+        input1: '',
+        input2: '',
+        input3: ''
+      },
+      formRight: {
+        input1: '',
+        input2: '',
+        input3: ''
+      },
+      categoryModal: false,
+      value1: '',
+      value2: '',
+      categoryTable: [
         {
           type: 'selection',
           width: 60,
           align: 'center'
         },
         {
-          title: 'Name',
-          key: 'name'
+          title: '选项',
+          key: 'option',
+          align: 'center'
         },
         {
-          title: 'Age',
-          key: 'age'
+          title: '描述',
+          key: 'describe',
+          width: 300,
+          align: 'center'
         },
         {
-          title: 'Address',
-          key: 'address'
+          title: '创建日期',
+          key: 'creationDate',
+          align: 'center'
+        },
+        {
+          title: '创建人',
+          key: 'founder',
+          align: 'center'
+        },
+        {
+          title: 'Action',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.viewData(params.index)
+                  }
+                }
+              }, '查看')
+            ])
+          }
         }
       ],
-      data: [],
-      userData: [
+      data1: [
         {
-          name: 'John Brown',
-          age: 18,
-          address: 'New York No. 1 Lake Park',
-          date: '2016-10-03'
+          option: '中国标准',
+          describe: 'XXXXXXXXXXXXXXXXXXX',
+          founder: 'Mr.li',
+          creationDate: '2018-9-05'
         },
         {
-          name: 'Jim Green',
-          age: 24,
-          address: 'London No. 1 Lake Park',
-          date: '2016-10-01'
+          option: '企业标准',
+          describe: 'XXXXXXXXXXXXXXXXXXX',
+          founder: 'Mr.li',
+          creationDate: '2018-9-05'
         },
         {
-          name: 'Joe Black',
-          age: 30,
-          address: 'Sydney No. 1 Lake Park',
-          date: '2016-10-02'
+          option: '欧盟标准',
+          describe: 'XXXXXXXXXXXXXXXXXXX',
+          founder: 'Mr.li',
+          creationDate: '2018-9-05'
         },
         {
-          name: 'Jon Snow',
-          age: 26,
-          address: 'Ottawa No. 2 Lake Park',
-          date: '2016-10-04'
+          option: '美国标准',
+          describe: 'XXXXXXXXXXXXXXXXXXX',
+          founder: 'Mr.li',
+          creationDate: '2018-9-05'
         }
       ]
     }
   },
   methods: {
-    searchData () {
-      this.searching = true
-      this.loading = true
-      setTimeout(() => {
-        this.loading = false
-        this.searching = false
-      }, 1000)
+    handleQuery () {
+
+    },
+    // 新增
+    categoryAdd () {
+      this.categoryModal = true
+      this.modalType = 1
+      this.categoryTitle = '新增标准'
+    },
+    // 编辑
+    categoryEdit () {
+      this.categoryModal = true
+      this.modalType = 2
+      this.categoryTitle = '编辑标准'
+    },
+    // 查看
+    viewData () {
+      this.categoryModal = true
+      this.modalType = 3
+      this.categoryTitle = '查看标准'
+      // $('.ivu-modal-footer').addClass('isDisplay')
     }
   },
   components: {
-    TableToolsBar,
-    Pagination
+    tableToolsBar
   },
-  mounted () {
-    this.$loading.show(this, '正在获取数据...')
-    setTimeout(() => {
-      this.data = this.userData
-      this.$loading.remove(this)
-    }, 1000)
+  computed: {
   }
 }
 </script>
 
 <style lang="less">
-  @import '~styles/mixins';
-  .standard-category{
+  .standard-classification {}
+  .hide-modal-footer{
+    .ivu-modal-footer{
+      display: none;
+    }
+  }
+  .unable-edit{
+    disabled:disabled
   }
 </style>

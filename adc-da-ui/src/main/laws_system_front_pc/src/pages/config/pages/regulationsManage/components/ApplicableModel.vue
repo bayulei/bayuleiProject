@@ -1,11 +1,17 @@
 <!-- 适用车型 -->
 <template>
-  <div class="applicable-model">适用车型</div>
+  <div class="applicable-model">
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'applicable-model'
+  name: 'applicable-model',
+  data () {
+    return {
+    }
+  },
+  methods: {}
 }
 </script>
 
