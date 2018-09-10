@@ -1,26 +1,13 @@
 package com.adc.da.activiti.controller;
 
 
-import com.adc.da.activiti.common.FlowProcessUtil;
-import com.adc.da.activiti.constant.ProcessTypeEnum;
 import com.adc.da.activiti.entity.VehicleApprovalEO;
 import com.adc.da.activiti.service.VehicleApprovalService;
-import com.adc.da.activiti.vo.ProcessInformationVO;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
-import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +28,6 @@ public class VehicleApprovalController{
 
     private static final Logger logger = LoggerFactory.getLogger(VehicleApprovalController.class);
 
-
-    @Autowired
-    private HistoryService historyService;
-
-    @Autowired
-    private FlowProcessUtil flowProcessUtil;
 
     @Autowired
     private VehicleApprovalService vehicleApprovalService;
