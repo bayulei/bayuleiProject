@@ -45,6 +45,7 @@
       </div>
     </table-tools-bar>
     <Table border ref="selection" :columns="categoryTable" :data="data1"></Table>
+    <loading :loading="loading"></loading>
   </div>
 </template>
 
@@ -56,6 +57,7 @@ export default {
     return {
       modalType: '',
       categoryTitle: '',
+      loading: false,
       formInline: {
         option: '',
         describe: ''
@@ -125,32 +127,7 @@ export default {
           }
         }
       ],
-      data1: [
-        {
-          option: '中国标准',
-          describe: 'XXXXXXXXXXXXXXXXXXX',
-          founder: 'Mr.li',
-          creationDate: '2018-9-05'
-        },
-        {
-          option: '企业标准',
-          describe: 'XXXXXXXXXXXXXXXXXXX',
-          founder: 'Mr.li',
-          creationDate: '2018-9-05'
-        },
-        {
-          option: '欧盟标准',
-          describe: 'XXXXXXXXXXXXXXXXXXX',
-          founder: 'Mr.li',
-          creationDate: '2018-9-05'
-        },
-        {
-          option: '美国标准',
-          describe: 'XXXXXXXXXXXXXXXXXXX',
-          founder: 'Mr.li',
-          creationDate: '2018-9-05'
-        }
-      ]
+      data1: []
     }
   },
   methods: {
