@@ -200,7 +200,6 @@ export default {
         }, {
           _this: this
         }, res => {
-          alert('新增成功')
           this.searchLawsInfo()
         }, e => {
 
@@ -213,7 +212,6 @@ export default {
         }, {
           _this: this
         }, res => {
-          alert('修改成功')
           this.searchLawsInfo()
         }, e => {
 
@@ -224,15 +222,21 @@ export default {
     },
     // 删除
     remove (id) {
-      this.$http.put('lawss/sarLawsInfo/deleteLawsInfos', {
-        id: id
-      }, {
-        _this: this
-      }, res => {
-        alert('删除成功')
-        this.searchLawsInfo()
-      }, e => {
-
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.put('lawss/sarLawsInfo/deleteLawsInfos', {
+            id: id
+          }, {
+            _this: this
+          }, res => {
+            this.searchLawsInfo()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
       })
     },
     openFile () {
@@ -250,7 +254,6 @@ export default {
       }, {
         _this: this
       }, res => {
-        alert('导入成功')
         this.searchLawsInfo()
       }, e => {
 
