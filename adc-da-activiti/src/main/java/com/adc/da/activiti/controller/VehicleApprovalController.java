@@ -137,7 +137,14 @@ public class VehicleApprovalController{
 
     }
 
-
+    /**
+     *  提交或保存试验计划及验证结果
+     * @MethodName:saveOrSubmitTestProgram
+     * @author: DuYunbao
+     * @param:[file, flag, taskId]
+     * @return:com.adc.da.util.http.ResponseMessage<java.lang.String>
+     * date: 2018/9/10 9:10
+     */
     @ApiOperation(value = "提交或保存试验计划及验证结果")
     @PostMapping ("/saveOrSubmitTestProgram")
     public ResponseMessage<String> saveOrSubmitTestProgram(MultipartFile file
@@ -149,6 +156,14 @@ public class VehicleApprovalController{
     }
 
 
+    /**
+     *  项目组总体经理确认结果
+     * @MethodName:quiteResult
+     * @author: DuYunbao
+     * @param:[taskId]
+     * @return:com.adc.da.util.http.ResponseMessage<java.lang.String>
+     * date: 2018/9/10 9:10
+     */
     @ApiOperation(value = "项目组总体经理确认结果")
     @PostMapping ("/quiteResult")
     public ResponseMessage<String> quiteResult(String taskId) throws Exception {
@@ -156,6 +171,15 @@ public class VehicleApprovalController{
 
     }
 
+
+    /**
+     *  根据任务id查询流程变量
+     * @MethodName:queryProcessVariable
+     * @author: DuYunbao
+     * @param:[taskId]
+     * @return:com.adc.da.util.http.ResponseMessage<java.util.Map<java.lang.String,java.lang.Object>>
+     * date: 2018/9/10 9:10
+     */
     @ApiOperation(value = "根据任务id查询流程变量")
     @PostMapping ("/queryProcessVariable")
     public ResponseMessage<Map<String,Object>> queryProcessVariable(String taskId) throws Exception {
