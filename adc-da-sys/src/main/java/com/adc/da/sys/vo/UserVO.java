@@ -15,7 +15,7 @@ public class UserVO {
 	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date creationTime;
 	private String operUser;
-	private Object extInfo;
+	private String extInfo;
 	private String workNum;
 	private String email;
 	private String userSource;
@@ -27,7 +27,7 @@ public class UserVO {
     private String updateTime;
 	private List<String> rolesstr = new ArrayList<>();
 	private List<RoleEO> roles = new ArrayList<>();
-	
+
 	private List<String> orgsstr = new ArrayList<>();
 	private List<OrgEO> orgs = new ArrayList<>();
 	
@@ -68,15 +68,11 @@ public class UserVO {
 		this.operUser = operUser;
 	}
 
-	public Object getExtInfo() {
+	public String getExtInfo() {
 		return extInfo;
 	}
 
 	public void setExtInfo(String extInfo) {
-		this.extInfo = extInfo;
-	}
-
-	public void setExtInfo(Object extInfo) {
 		this.extInfo = extInfo;
 	}
 

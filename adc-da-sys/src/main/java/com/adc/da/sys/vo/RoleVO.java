@@ -14,7 +14,7 @@ public class RoleVO {
 	private Date creationTime;
 	private Integer validFlag;
 	private String operUser;
-	private Object extInfo;
+	private String extInfo;
 	private String remarks;
 	private Integer isDefault;
 	private Integer useFlag;
@@ -70,11 +70,11 @@ public class RoleVO {
 		this.operUser = operUser;
 	}
 
-	public Object getExtInfo() {
+	public String getExtInfo() {
 		return extInfo;
 	}
 
-	public void setExtInfo(Object extInfo) {
+	public void setExtInfo(String extInfo) {
 		this.extInfo = extInfo;
 	}
 

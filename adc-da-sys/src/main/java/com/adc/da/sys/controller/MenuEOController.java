@@ -36,14 +36,14 @@ public class MenuEOController extends BaseController<MenuEO> {
 
 	@ApiOperation(value = "|MenuEO|详情")
 	@GetMapping("/{id}")
-	@RequiresPermissions("sys:menu:get")
+//	@RequiresPermissions("sys:menu:get")
 	public ResponseMessage<MenuVO> find(@NotNull @PathVariable("id") String id) throws Exception {
 		return Result.success(beanMapper.map(menuEOService.selectByPrimaryKey(id), MenuVO.class));
 	}
 
 	@ApiOperation(value = "|MenuEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-	@RequiresPermissions("sys:menu:save")
+//	@RequiresPermissions("sys:menu:save")
 	public ResponseMessage<MenuVO> create(@RequestBody MenuVO menuVO) throws Exception {
 		MenuEO menuEO = menuEOService.insertMenu(beanMapper.map(menuVO, MenuEO.class));
 		return Result.success(beanMapper.map(menuEO, MenuVO.class));
@@ -67,7 +67,7 @@ public class MenuEOController extends BaseController<MenuEO> {
 
 	@ApiOperation(value = "|MenuEO|修改")
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-	@RequiresPermissions("sys:menu:update")
+//	@RequiresPermissions("sys:menu:update")
 	public ResponseMessage<MenuVO> update(@RequestBody MenuVO menuVO) throws Exception {
 		menuEOService.updateMenu(menuVO);
 		return Result.success(menuVO);
@@ -75,7 +75,7 @@ public class MenuEOController extends BaseController<MenuEO> {
 
 	@ApiOperation(value = "|MenuEO|删除")
 	@DeleteMapping("/{ids}")
-	@RequiresPermissions("sys:menu:delete")
+//	@RequiresPermissions("sys:menu:delete")
 	public ResponseMessage delete(@NotNull @PathVariable("ids") String[] ids) throws Exception {
 		menuEOService.delete(ids);
 		logger.info("log===>delete from TS_MENU where ids = {}", ids);

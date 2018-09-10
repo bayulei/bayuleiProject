@@ -91,15 +91,34 @@ public class DicEORestController extends BaseController<DictionaryEO>{
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	 @RequiresPermissions("sys:dic:update")
 	public ResponseMessage<DictionaryVO> update(@RequestBody DictionaryVO dictionaryVO) throws Exception {
-		DictionaryEO getDic = dicEOService.getDictionaryByDicCode(dictionaryVO.getDictionaryCode());
-		if (StringUtils.isBlank(dictionaryVO.getDictionaryCode())) {
+
+		DictionaryEO dictionaryByDicCode = dicEOService.getDictionaryByDicCode(dictionaryVO.getDictionaryCode());
+		DictionaryEO dictionaryByDicName = dicEOService.getDictionaryByDicName(dictionaryVO.getDictionaryName());
+
+		/*if (StringUtils.isBlank(dictionaryVO.getDictionaryCode())) {
 			return Result.error("r0014", "字典编码不能为空");
 		} else if (getDic != null && !(dictionaryVO.getId().equals(getDic.getId()))) {
 			return Result.error("r0015", "字典编号已存在");
 		}
 		if (StringUtils.isBlank(dictionaryVO.getDictionaryName())) {
 			return Result.error("r0016", "字典名称不能为空");
+		} else if (getDic != null && !(dictionaryVO.getId().equals(getDic.getId()))) {
+			return Result.error("r0015", "字典名称已存在");
+		}*/
+//李文轩
+		if (StringUtils.isBlank(dictionaryVO.getDictionaryCode())) {
+			return Result.error("r0014", "字典编码不能为空");
+		} else if (dictionaryByDicCode != null && !(dictionaryVO.getId().equals(dictionaryByDicCode.getId()))) {
+			return Result.error("r0015", "字典编号已存在");
 		}
+		if (StringUtils.isBlank(dictionaryVO.getDictionaryName())) {
+			return Result.error("r0016", "字典名称不能为空");
+		} else if (dictionaryByDicName != null && !(dictionaryVO.getId().equals(dictionaryByDicName.getId()))) {
+			return Result.error("r0015", "字典名称已存在");
+		}
+
+
+
 		dicEOService.updateById(beanMapper.map(dictionaryVO, DictionaryEO.class));
 		return Result.success(dictionaryVO);
 	}

@@ -20,7 +20,7 @@ public class RoleEO extends BaseEntity {
     private Date creationTime;
     private Integer validFlag;
     private String operUser;
-    private Object extInfo;
+    private String extInfo;
     private String remarks;
     private Integer isDefault;
     private Integer useFlag;
@@ -97,7 +97,23 @@ public class RoleEO extends BaseEntity {
             default: return null;
         }
     }
-    
+    public  RoleEO(){}
+    public RoleEO(Date modifyTime, Date creationTime, Integer validFlag, String operUser, String extInfo, String remarks, Integer isDefault, Integer useFlag, String roleType, String name, String id, List<MenuEO> menuEOList, List<String> menuEOIdList) {
+        this.modifyTime = modifyTime;
+        this.creationTime = creationTime;
+        this.validFlag = validFlag;
+        this.operUser = operUser;
+        this.extInfo = extInfo;
+        this.remarks = remarks;
+        this.isDefault = isDefault;
+        this.useFlag = useFlag;
+        this.roleType = roleType;
+        this.name = name;
+        this.id = id;
+        this.menuEOList = menuEOList;
+        this.menuEOIdList = menuEOIdList;
+    }
+
     /**  **/
     public Date getModifyTime() {
         return this.modifyTime;
@@ -138,13 +154,11 @@ public class RoleEO extends BaseEntity {
         this.operUser = operUser;
     }
 
-    /**  **/
-    public Object getExtInfo() {
-        return this.extInfo;
+    public String getExtInfo() {
+        return extInfo;
     }
 
-    /**  **/
-    public void setExtInfo(Object extInfo) {
+    public void setExtInfo(String extInfo) {
         this.extInfo = extInfo;
     }
 

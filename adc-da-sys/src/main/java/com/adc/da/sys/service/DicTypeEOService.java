@@ -27,7 +27,7 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
     public DicTypeEODao getDao() {
         return dicTypeEODao;
     }
-
+//李文轩：此方法对应的sql语句必须有parentId，不传入parentId就会报错
     public DicTypeEO save(DicTypeEO dicTypeEO) {
 
         String parentId = dicTypeEO.getParentId();
@@ -65,8 +65,8 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
         return dicTypeEODao.getDicTypeEOByDicTypeCode(dicTypeCode);
     }
 
-	public void deleteFlagTo1(String id) {
-		dicTypeEODao.deleteFlagTo1(id);
+	public void deleteDicTypeByDicId(String id) {
+		dicTypeEODao.deleteDicTypeByDicId(id);
 	}
 
     /**

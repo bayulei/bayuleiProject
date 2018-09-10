@@ -52,8 +52,6 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	@ApiOperation(value = "|DicTypeEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:dicType:save")
-
-
 	public ResponseMessage<DicTypeVO> create(@RequestBody DicTypeVO dicTypeVO) throws Exception {
 
 		List<DicTypeEO> dicTypeEOList = dicTypeEOService.getDicTypeEOByDicTypeCode(dicTypeVO.getDicTypeCode());
@@ -70,8 +68,10 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 			return Result.error("r0017","字典类型名称存在");
 		}
 
-		DicTypeEO dicTypeEO = dicTypeEOService.save(beanMapper.map(dicTypeVO, DicTypeEO.class));
-		dicTypeVO.setId(dicTypeEO.getId());
+//		DicTypeEO dicTypeEO = dicTypeEOService.save(beanMapper.map(dicTypeVO, DicTypeEO.class));
+		DicTypeEO dicTypeEO = dicTypeEOService.saveDictype(beanMapper.map(dicTypeVO,DicTypeEO.class));
+
+//		dicTypeVO.setId(dicTypeEO.getId());
 		return Result.success(dicTypeVO);
 	}
 
@@ -105,10 +105,20 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:dicType:update")
 	public ResponseMessage<DicTypeVO> update(@RequestBody DicTypeVO dicTypeVO) throws Exception {
-		if(StringUtils.isBlank(dicTypeVO.getDicTypeCode()))
+		List<DicTypeEO> dicTypeEOList = dicTypeEOService.getDicTypeEOByDicTypeCode(dicTypeVO.getDicTypeCode());
+		List<DicTypeEO> dicTypeEOS = dicTypeEOService.getTypeIdByDicIdAndTypeName(dicTypeVO.getDicId(),dicTypeVO.getDicTypeName());
+
+		if(StringUtils.isBlank(dicTypeVO.getDicTypeCode())){
 			return Result.error("r0014", "字典类型编码不能为空");
-		if(StringUtils.isBlank(dicTypeVO.getDicTypeName()))
+		}else if(dicTypeEOList!=null && !dicTypeEOList.isEmpty()){
+			return Result.error("r0015","字典类型编码已存在");
+		}
+		if(StringUtils.isBlank(dicTypeVO.getDicTypeName())){
 			return Result.error("r0016", "字典类型名称不能为空");
+		}else if(dicTypeEOS!=null && !dicTypeEOS.isEmpty() ){
+			return Result.error("r0017","字典类型名称存在");
+		}
+
 		dicTypeEOService.updateByPrimaryKeySelective(beanMapper.map(dicTypeVO, DicTypeEO.class));
 		return Result.success(dicTypeVO);
 	}
@@ -120,25 +130,29 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		DicTypeVO dicTypeVO = beanMapper.map(dicTypeEOService.getDicTypeById(id), DicTypeVO.class);
 		return Result.success(dicTypeVO);
 	}
-	
-	@ApiOperation(value = "|DicTypeEO|删除")
-	@DeleteMapping("/delete/{ids}")
+//	删除多条数据
+	@ApiOperation(value = "|DicTypeEO|删除多条数据")
+	@DeleteMapping("/deleteArr/{ids}")
 //	@RequiresPermissions("sys:dicType:delete")
 	public ResponseMessage delete(@NotNull @PathVariable("ids") String[] ids) throws Exception {
 		dicTypeEOService.delete(Arrays.asList(ids));
 		return Result.success();
 	}
-	
-	@ApiOperation(value = "|DicTypeEO|删除")
-	@DeleteMapping("/deleteArr/{ids}")
+
+//	删除一条数据
+	@ApiOperation(value = "|DicTypeEO|删除一条数据")
+	@DeleteMapping("/delete/{ids}")
 //	@RequiresPermissions("sys:dicType:deleteArr")
-	public ResponseMessage deleteArr(@NotNull @PathVariable("ids") String ids) throws Exception {
-		String[] idList = ids.split(",");
+	public ResponseMessage deleteArr(@NotNull @PathVariable("ids") String id) throws Exception {
+
+//		删除一条数据
+	/*	String[] idList = ids.split(",");
 		if(idList!=null && idList.length>0){
 			for(String id:idList){
-				dicTypeEOService.deleteFlagTo1(id);
+				dicTypeEOService.deleteDicTypeByDicId(id);
 			}
-		}
+		}*/
+		dicTypeEOService.deleteDicTypeByDicId(id);
 		return Result.success();
 	}
 }
