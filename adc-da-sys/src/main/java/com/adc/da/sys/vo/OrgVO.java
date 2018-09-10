@@ -1,71 +1,132 @@
 package com.adc.da.sys.vo;
 
+import java.util.Date;
+
 public class OrgVO extends TreeVO<OrgVO>{
-	
-	private String orgDesc;
-    private String orgCode;
-    private String orgType;
+
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date modifyTime;
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date creationTime;
+	private Integer validFlag;
 	private Integer isShow;
+	private String parentIds;
+	private String parentId;
+	private String shotName;
 	private String remarks;
-	private String corpId;
-	private String updateTime;
-	private String level;
-	private String shortName;
-	
-	public String getOrgDesc() {
-		return orgDesc;
+	private Integer orgDesc;
+	private String orgType;
+	private String orgCode;
+	private String orgName;
+	private String id;
+
+	public Date getModifyTime() {
+		return modifyTime;
 	}
-	public void setOrgDesc(String orgDesc) {
-		this.orgDesc = orgDesc;
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
 	}
-	public String getOrgCode() {
-		return orgCode;
+
+	public Date getCreationTime() {
+		return creationTime;
 	}
-	public void setOrgCode(String orgCode) {
-		this.orgCode = orgCode;
+
+	public void setCreationTime(Date creationTime) {
+		this.creationTime = creationTime;
 	}
-	public String getOrgType() {
-		return orgType;
+
+	public Integer getValidFlag() {
+		return validFlag;
 	}
-	public void setOrgType(String orgType) {
-		this.orgType = orgType;
+
+	public void setValidFlag(Integer validFlag) {
+		this.validFlag = validFlag;
 	}
+
 	public Integer getIsShow() {
 		return isShow;
 	}
+
 	public void setIsShow(Integer isShow) {
 		this.isShow = isShow;
 	}
+
+	@Override
+	public String getParentIds() {
+		return parentIds;
+	}
+
+	@Override
+	public void setParentIds(String parentIds) {
+		this.parentIds = parentIds;
+	}
+
+	@Override
+	public String getParentId() {
+		return parentId;
+	}
+
+	@Override
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getShotName() {
+		return shotName;
+	}
+
+	public void setShotName(String shotName) {
+		this.shotName = shotName;
+	}
+
 	public String getRemarks() {
 		return remarks;
 	}
+
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	public String getCorpId() {
-		return corpId;
-	}
-	public void setCorpId(String corpId) {
-		this.corpId = corpId;
-	}
-	public String getUpdateTime() {
-		return updateTime;
-	}
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
-	}
-	public String getLevel() {
-		return level;
-	}
-	public void setLevel(String level) {
-		this.level = level;
+
+	public Integer getOrgDesc() {
+		return orgDesc;
 	}
 
-	public String getShortName() {
-		return shortName;
+	public void setOrgDesc(Integer orgDesc) {
+		this.orgDesc = orgDesc;
 	}
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
+	public String getOrgType() {
+		return orgType;
+	}
+
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
+
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 }

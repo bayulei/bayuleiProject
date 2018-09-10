@@ -98,7 +98,7 @@
 		parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
-		from TS_ROLE r, TR_USER_ROLE ur
+		from TS_ROLE r, TS_USER_ROLE ur
 		where r.id = ur.role_id and ur.user_id = #{userId}
 	</select>
 	
@@ -106,7 +106,7 @@
 		parameterType="java.lang.String">
 		select r.id, r.name 
 		from TS_ROLE r 
-		LEFT JOIN TR_USER_ROLE ur ON r.id = ur.role_id 
+		LEFT JOIN TS_USER_ROLE ur ON r.id = ur.role_id
 		where ur.user_id = #{userId} and r.valid_flag = 0
 	</select>
 
@@ -126,7 +126,7 @@
 		<result column="role_id" property="roleId" />
 	</resultMap>
 	<select id="getUserRoleListByRoleId" resultMap="UserRoleMap" parameterType="java.lang.String">
-		select * from TR_USER_ROLE ur
+		select * from TS_USER_ROLE ur
 		where ur.role_id = #{roleId}
 	</select>
 
@@ -153,7 +153,7 @@
 
 	<select id="isBelong" resultType="integer">
 		select count(1)
-		from TR_USER_ROLE
+		from TS_USER_ROLE
 		where user_id = #{userId} and role_id =#{roleId}
 	</select>
 

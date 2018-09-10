@@ -199,7 +199,7 @@
 
 
     <delete id="deleteRoleMenus">
-        DELETE FROM TR_ROLE_MENU where MENU_ID in
+        DELETE FROM TS_ROLE_MENU where MENU_ID in
         <foreach collection="array" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -239,8 +239,8 @@
         SELECT distinct
         M.id, M.valid_flag, M.name, M.parent_id, M.parent_ids, M.href, M.icon, M.is_show, M.permission, M.remarks, M.sort, M.ext_info
         FROM TS_MENU M
-            LEFT JOIN TR_ROLE_MENU RM ON RM.MENU_ID = M.ID
-            LEFT JOIN TR_USER_ROLE UR ON UR.ROLE_ID = RM.ROLE_ID 
+            LEFT JOIN TS_ROLE_MENU RM ON RM.MENU_ID = M.ID
+            LEFT JOIN TS_USER_ROLE UR ON UR.ROLE_ID = RM.ROLE_ID
             LEFT JOIN TS_ROLE TR ON TR.ID = UR.ROLE_ID 
         WHERE UR.USER_ID = #{userId} AND TR.USE_FLAG = 0
         ORDER BY M.IS_SHOW ASC
@@ -254,11 +254,11 @@
     </select>
 
     <select id="isBelong" resultType="integer">
-        SELECT count(1) from TR_ROLE_MENU where ROLE_ID = #{roleId} and MENU_ID = #{menuId}
+        SELECT count(1) from TS_ROLE_MENU where ROLE_ID = #{roleId} and MENU_ID = #{menuId}
     </select>
 
     <select id="listMenuEOByRoleID" resultType="com.adc.da.sys.entity.MenuEO">
-        SELECT <include refid="Base_Column_List"/> FROM TS_MENU M LEFT JOIN TR_ROLE_MENU RM ON M.ID = RM.MENU_ID where RM.ROLE_ID = #{roleId}
+        SELECT <include refid="Base_Column_List"/> FROM TS_MENU M LEFT JOIN TS_ROLE_MENU RM ON M.ID = RM.MENU_ID where RM.ROLE_ID = #{roleId}
     </select>
 
 </mapper>

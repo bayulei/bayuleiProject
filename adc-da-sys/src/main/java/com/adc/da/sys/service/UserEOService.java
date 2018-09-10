@@ -57,8 +57,8 @@ public class UserEOService extends BaseService<UserEO, String> {
 		userEO.setCreationTime(new Date(System.currentTimeMillis()));
 		userEO.setModifyTime(new Date(System.currentTimeMillis()));
 		userEO.setPassword(PasswordUtils.encryptPassword(userEO.getPassword()));
-		if(userEO.getExtInfo() == null){
-			userEO.setExtInfo("");
+		if(userEO.getExtInfo() != null){
+			userEO.setExtInfo(userEO.getExtInfo());
 		}
 		dao.insert(userEO);
 		//TODO 此处需要维护用户的组织机构
@@ -97,6 +97,7 @@ public class UserEOService extends BaseService<UserEO, String> {
 	 */
 	public void delete(List<String> ids) {
 		dao.deleteLogicInBatch(ids);
+//		删除用户角色和组织机构的关系
 		dao.deleteUserRoleByUsidInBatch(ids);
 		dao.deleteUserOrgByUsidInBatch(ids);
 	}
@@ -113,7 +114,10 @@ public class UserEOService extends BaseService<UserEO, String> {
 	 * 设置用户角色关联
 	 */
 	public UserEO saveUserRole(UserEO userEO) {
-		if (CollectionUtils.isNotEmpty(userEO.getRoleIdList())) {
+
+//		if (CollectionUtils.isNotEmpty(userEO.getRoleIdList())) {
+		if (userEO.getRoleIdList() !=null) {
+
 			dao.deleteUserRoleByUsid(userEO.getUsid());
 			for (String roleId : userEO.getRoleIdList()) {
 				dao.saveUserRole(userEO.getUsid(), roleId);

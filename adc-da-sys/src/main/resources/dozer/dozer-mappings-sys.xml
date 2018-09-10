@@ -43,7 +43,7 @@
             <b>rdesc</b>
         </field>
         <field>
-            <a>delFlag</a>
+            <a>validFlag</a>
             <b>enabled</b>
         </field>
         <field>
