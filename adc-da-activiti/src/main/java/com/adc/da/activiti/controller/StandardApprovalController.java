@@ -1,14 +1,14 @@
 package com.adc.da.activiti.controller;
 
-
 import com.adc.da.activiti.common.FlowProcessUtil;
-import com.adc.da.activiti.vo.BuyApprovalVO;
-import com.adc.da.activiti.service.BuyApprovalService;
+import com.adc.da.activiti.service.StandardApprovalService;
+import com.adc.da.activiti.vo.StandardApprovalVO;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.activiti.engine.*;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/${restPath}/WorkFlow/BuyApproval")
-@Api(description = "标准购买审批流程")
-public class BuyApprovalController {
+@RequestMapping("/${restPath}/WorkFlow/StandardApproval")
+@Api(description = "企业技术标准制修订年度计划审批发布流程")
+public class StandardApprovalController {
 
-    private static final Logger logger = LoggerFactory.getLogger(BuyApprovalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(StandardApprovalController.class);
 
 
     @Autowired
@@ -34,7 +34,7 @@ public class BuyApprovalController {
     private TaskService taskService;
 
     @Autowired
-    private BuyApprovalService buyApprovalService;
+    private StandardApprovalService standardApprovalService;
 
     @Autowired
     private FlowProcessUtil flowProcessUtil;
@@ -42,22 +42,22 @@ public class BuyApprovalController {
     /**
      *  部署流程Key
      */
-    private   static  final String processDefinitionKey = "buyApproval";
+    private   static  final String processDefinitionKey = "StandardApproval";
 
     /**
      *  点击保存按钮，保存流程信息
      * @MethodName:startStandardApprovalProcess
      * @author: yuzhong
-     * @param:[vehicleApprovalEO, userId]
+     * @param:[vehicleApprovalEO,userId]
      * @return:void
      * date: 2018/8/27 15:01
      */
     @ApiOperation(value = "保存流程信息")
     @PostMapping ("/saveProcessInfo")
-    public ResponseMessage<String> saveProcessInfo(BuyApprovalVO buyApprovalVO, String userId,String processInstanceId){
+    public ResponseMessage<String> saveProcessInfo(StandardApprovalVO standardApprovalVO, String userId,String processInstanceId){
         //启动流程（为了把信息放入流程变量中）
         try{
-            ProcessInstance processInstance = buyApprovalService.startBuyApprovalProcess(buyApprovalVO,userId,processDefinitionKey,processInstanceId);
+            ProcessInstance processInstance = standardApprovalService.startBuyApprovalProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
             return Result.success(processInstance.getId());
         }catch(Exception e){
             e.printStackTrace();
@@ -66,19 +66,20 @@ public class BuyApprovalController {
     }
 
     /**
-     *  点击申请购买来发起审批
+     *  标准化工程师发起
      * @MethodName:startApproval
      * @author: yuzhong
      * @param:[processInstanceId,userId]
      * @return:S
      * date: 2018年9月4日 14:37:45
      */
-    @ApiOperation(value = "点击申请购买来发起审批")
+    @ApiOperation(value = "标准化工程师发起")
     @PostMapping ("/startApproval")
-    public ResponseMessage<String> startApproval(BuyApprovalVO buyApprovalVO, String userId,String processInstanceId,String comment){
+    public ResponseMessage<String> startApproval(StandardApprovalVO standardApprovalVO, String userId,String processInstanceId,String comment){
         try{
-            ProcessInstance processInstance = buyApprovalService.startBuyApprovalProcess(buyApprovalVO,userId,processDefinitionKey,processInstanceId);
-            buyApprovalService.completeApproval(processInstance.getId(),userId,comment);
+            ProcessInstance processInstance = standardApprovalService.startBuyApprovalProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
+            //完成第一步的发起审批
+            standardApprovalService.completeFirstApproval(standardApprovalVO,processInstance.getId(),userId,comment);
             return Result.success(processInstance.getId());
         }catch(Exception e){
             e.printStackTrace();
@@ -87,18 +88,18 @@ public class BuyApprovalController {
     }
 
     /**
-     *  完成审批
-     * @MethodName:completeApproval
+     *  流程完成审批
+     * @MethodName:completeProcess
      * @author: yuzhong
      * @param:[processInstanceId,nowUserId]
      * @return:S
      * date: 2018年9月4日 14:37:45
      */
-    @ApiOperation(value = "完成审批")
-    @PostMapping ("/completeApproval")
-    public ResponseMessage<String> completeApproval(String processInstanceId,String nowUserId,String comment){
+    @ApiOperation(value = "流程完成审批")
+    @PostMapping ("/completeProcess")
+    public ResponseMessage<String> completeProcess(String processInstanceId,String nowUserId,String comment){
         try {
-            buyApprovalService.completeApproval(processInstanceId,nowUserId,comment);
+            standardApprovalService.completeProcess(processInstanceId,nowUserId,comment);
             return Result.success(processInstanceId);
         }catch (Exception e){
             e.printStackTrace();
@@ -123,36 +124,6 @@ public class BuyApprovalController {
     }
 
     /**
-     * 驳回
-     * @MethodName:reject
-     * @author: yuzhong
-     * @param:[processInstanceId]
-     * @return:String
-     * date: 2018年9月4日 14:37:19
-     */
-    @ApiOperation(value = "驳回")
-    @PostMapping ("/reject")
-    public ResponseMessage<String> reject(String processInstanceId,String nowUserId) {
-        String message = flowProcessUtil.reject(processInstanceId,nowUserId);
-        return Result.success(message);
-    }
-
-    /**
-     * 委托
-     * @MethodName:entrust
-     * @author: yuzhong
-     * @param:[processInstanceId]
-     * @return:String
-     * date: 2018年9月5日 10:12:36
-     */
-    @ApiOperation(value = "委托")
-    @PostMapping ("/entrust")
-    public ResponseMessage<String> entrust(String processInstanceId,String owner) {
-        String message = flowProcessUtil.entrust(processInstanceId,owner);
-        return Result.success(message);
-    }
-
-    /**
      * 查看任务详情
      * @MethodName:getTaskInfo
      * @author: yuzhong
@@ -163,7 +134,7 @@ public class BuyApprovalController {
     @ApiOperation(value = "查看任务详情")
     @PostMapping ("/getTaskInfo")
     public ResponseMessage<Map<String,Object>> getTaskInfo(String taskId,String processInstanceId) {
-        Map<String,Object> map = buyApprovalService.getTaskInfo(taskId,processInstanceId);
+        Map<String,Object> map = standardApprovalService.getTaskInfo(taskId,processInstanceId);
         return Result.success(map);
     }
 }

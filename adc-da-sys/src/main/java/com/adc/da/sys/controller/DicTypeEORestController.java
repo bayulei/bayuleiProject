@@ -14,14 +14,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.adc.da.base.page.Pager;
 import com.adc.da.base.web.BaseController;
@@ -154,5 +147,19 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		}*/
 		dicTypeEOService.deleteDicTypeByDicId(id);
 		return Result.success();
+	}
+
+	/**
+	 * @Author yangxuenan
+	 * @Description 根据数据字典编码查询字典类型
+	 * Date 2018/9/11 15:16
+	 * @Param [dicCode]
+	 * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.sys.entity.DicTypeEO>>
+	 **/
+	@ApiOperation(value = "|DicTypeEO|查询字典类型")
+	@GetMapping("/getDicTypeByDicCode")
+	public ResponseMessage<List<DicTypeEO>> getDicTypeByDicCode(@RequestParam String dicCode) throws Exception {
+		List<DicTypeEO> dicTypeEO = dicTypeEOService.getDicTypeByDicCode(dicCode);
+		return Result.success(dicTypeEO);
 	}
 }
