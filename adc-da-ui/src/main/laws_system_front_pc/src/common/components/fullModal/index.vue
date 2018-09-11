@@ -2,7 +2,7 @@
 <template>
   <div id="fullModal">
     <div class="full-modal-content">
-      <span class="modal-close-btn rotate-icon" @click="toggleClose">&times;</span>
+      <span class="modal-close-btn" @click="toggleClose">&times;</span>
       <slot></slot>
     </div>
   </div>
