@@ -34,7 +34,7 @@ export default {
     label: String,
     options: {
       type: Array,
-      required: true
+      required: this.type === 'select'
     },
     width: {
       type: Number,

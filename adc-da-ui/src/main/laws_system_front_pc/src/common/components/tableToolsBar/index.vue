@@ -24,13 +24,13 @@ export default {
     }
   },
   methods: {
-    // 高级搜索关闭
+  // 高级搜索关闭
     toggleSearch () {
       this.$emit('toggleSearch')
     }
   },
   props: {
-    // 是否为高级搜索
+  // 是否为高级搜索
     isAdvancedSearch: {
       type: Boolean,
       default: false
