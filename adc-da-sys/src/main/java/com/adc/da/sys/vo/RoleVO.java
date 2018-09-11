@@ -15,12 +15,12 @@ public class RoleVO {
 	private Integer validFlag;
 	private String operUser;
 	private String extInfo;
-	private String remarks;
+//	private String remarks;
 	private Integer isDefault;
 	private Integer useFlag;
 	private String roleType;
-	private String name;
-	private String id;
+//	private String name;
+
     //新添字段
     private String oprUser;
 	private String operUserName;
@@ -77,14 +77,14 @@ public class RoleVO {
 	public void setExtInfo(String extInfo) {
 		this.extInfo = extInfo;
 	}
-
-	public String getRemarks() {
-		return remarks;
-	}
-
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
-	}
+//
+//	public String getRemarks() {
+//		return remarks;
+//	}
+//
+//	public void setRemarks(String remarks) {
+//		this.remarks = remarks;
+//	}
 
 	public Integer getIsDefault() {
 		return isDefault;
@@ -110,21 +110,15 @@ public class RoleVO {
 		this.roleType = roleType;
 	}
 
-	public String getName() {
-		return name;
-	}
+//	public String getName() {
+//		return name;
+//	}
+//
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getOprUser() {
 		return oprUser;

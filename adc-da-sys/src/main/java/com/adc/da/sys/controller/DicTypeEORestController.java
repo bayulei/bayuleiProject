@@ -50,7 +50,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	BeanMapper beanMapper;
 	
 	@ApiOperation(value = "|DicTypeEO|新增")
-	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+	@PostMapping("/create")
 //	@RequiresPermissions("sys:dicType:save")
 	public ResponseMessage<DicTypeVO> create(@RequestBody DicTypeVO dicTypeVO) throws Exception {
 
@@ -79,7 +79,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	@ApiOperation(value = "|DicTypeEO|分页列表")
 	@GetMapping("/page")
 //	@RequiresPermissions("sys:dicType:page")
-    public ResponseMessage<PageInfo<DicTypeEO>> pageListByDicId(Integer pageNo, Integer pageSize,String dicId, String dicTypeName) throws Exception{
+    public ResponseMessage<PageInfo<DicTypeEO>> pageListByDicId(Integer pageNo, Integer pageSize,String dicId, String dicTypeName,String dicTypeCode) throws Exception{
 		DicTypeEOPage page = new DicTypeEOPage();
 		if (pageNo != null) {
 			page.setPage(pageNo);
@@ -93,6 +93,11 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		if (StringUtils.isNotEmpty(dicTypeName)) {
 			page.setDicTypeName(dicTypeName);
 			page.setDicTypeNameOperator("LIKE");
+		}
+//		根据code也可以进行模糊查找
+		if (StringUtils.isNotEmpty(dicTypeCode)) {
+			page.setDicTypeCode(dicTypeCode);
+			page.setDicTypeCodeOperator("LIKE");
 		}
 		page.setPager(new Pager());
 		List<DicTypeEO> rows = dicTypeEOService.queryByPage(page);

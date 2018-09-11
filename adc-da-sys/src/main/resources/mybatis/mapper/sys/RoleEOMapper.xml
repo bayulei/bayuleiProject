@@ -89,7 +89,7 @@
 	<select id="getRoleWithMenus" resultMap="RoleMenuMap" parameterType="java.lang.String">
 		select <include refid="Role_Menu_List" />
 		from TS_ROLE r
-		left join TR_ROLE_MENU rm on r.id = rm.role_id
+		left join TS_ROLE_MENU rm on r.id = rm.role_id
 		left join TS_MENU m on rm.menu_id = m.id
 		where r.id = #{id}
 	</select>
@@ -117,7 +117,7 @@
 	</update>
 
 	<delete id="deleteRoleMenuByRoleId" parameterType="java.lang.String">
-		delete from TR_ROLE_MENU rm
+		delete from TS_ROLE_MENU rm
 		where rm.role_id = #{roleId}
 	</delete>
 
@@ -148,7 +148,7 @@
 	</select>
 
 	<insert id="saveRoleMenu">
-		insert into TR_ROLE_MENU(role_id,menu_id) values (#{roleId}, #{menuId})
+		insert into TS_ROLE_MENU(role_id,menu_id) values (#{roleId}, #{menuId})
 	</insert>
 
 	<select id="isBelong" resultType="integer">

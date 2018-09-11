@@ -70,7 +70,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 		}
 		page.setValidFlag(DeleteFlagEnum.NORMAL.getValue()+"");
 		page.setPager(new Pager());
-		page.setOrderBy("update_time desc");
+		page.setOrderBy("modify_time desc");
 		List<RoleEO> rows = roleEOService.queryByPage(page);
 		//此处加载用户名称到前台
 /*		if(rows!=null && rows.size()>0){
@@ -91,24 +91,24 @@ public class RoleEOController extends BaseController<RoleEO> {
 		RoleEO roleEO = roleEOService.getRoleWithMenus(id);
 		return Result.success(beanMapper.map(roleEO, RoleVO.class));
 	}
-
-	@ApiOperation(value = "|RoleEO|列表")
+//李文轩：这个功能没用到
+	/*@ApiOperation(value = "|RoleEO|列表")
 	@GetMapping("")
 //	@RequiresPermissions("sys:role:list")
 	public ResponseMessage<List<RoleVO>> list(String userId) {
 		RoleVO setRole = new RoleVO();
-		String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
+	*//*	String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 		if(loginUserId != null && !loginUserId.isEmpty()){
 			UserEO getUser = userService.selectOrgByPrimaryKey(loginUserId);
-/*			if(getUser != null){
+*//**//*			if(getUser != null){
 				if(("0").equals(getUser.getCorpType())){
 					setRole.setExtInfo("0");
 				} else if(("1").equals(getUser.getCorpType())){
 					setRole.setExtInfo("1");
 				}
 
-			}*/
-		}
+			}*//**//*
+		}*//*
 		List<RoleVO> roleVOs = beanMapper.mapList(roleEOService.findAll(setRole), RoleVO.class);
 		if (userId != null) {
 			for (RoleVO roleVO : roleVOs) {
@@ -119,7 +119,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 		}
 
 		return Result.success(roleVOs);
-	}
+	}*/
 
 	@ApiOperation(value = "|RoleEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
@@ -127,21 +127,18 @@ public class RoleEOController extends BaseController<RoleEO> {
 	public ResponseMessage<RoleVO> create(@RequestBody RoleVO roleVO) throws Exception {
 
 		   Integer useFlag =  roleVO.getUseFlag();
-
 		if(useFlag!=0 && useFlag !=1){
 			return Result.error("0000","使用状态不能为空");
 		}
-		if(StringUtils.isBlank(roleVO.getName())){
+		if(StringUtils.isBlank(roleVO.getRname())){
 			return  Result.error("1111","新增角色名不能为空");
-		}else if(roleEOService.queryNameExistenceByName(roleVO.getName())){
+		}else if(roleEOService.queryNameExistenceByName(roleVO.getRname())){
               return  Result.error("2222","新增角色名已经存在");
 		}
 
-//		roleVO.setOprUser(LoginUserUtil.getUserId());
+
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
-		map.setRemarks(roleVO.getRemarks());//前台传入（前台的角色描述）
 		RoleEO roleEO = roleEOService.save(map);
-		roleVO.setRid(roleEO.getId());
 		return Result.success(roleVO);
 	}
 
@@ -149,9 +146,20 @@ public class RoleEOController extends BaseController<RoleEO> {
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:role:update")
 	public ResponseMessage<RoleVO> update(@RequestBody RoleVO roleVO) throws Exception {
-		roleVO.setUpdateTime(new Date());
+
+		Integer useFlag =  roleVO.getUseFlag();
+		if(useFlag!=0 && useFlag !=1){
+			return Result.error("0000","使用状态不能为空");
+		}
+		if(StringUtils.isBlank(roleVO.getRname())){
+			return  Result.error("1111","新增角色名不能为空");
+		}else if(roleEOService.queryNameExistenceByName(roleVO.getRname())){
+			return  Result.error("2222","新增角色名已经存在");
+		}
+//		roleVO.setUpdateTime(new Date());
+		roleVO.setModifyTime(new Date());
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
-		map.setRemarks(roleVO.getRemarks());
+//		map.setRemarks(roleVO.getRdesc());
 		roleEOService.updateByPrimaryKeySelective(map);
 		return Result.success(roleVO);
 	}
@@ -181,10 +189,11 @@ public class RoleEOController extends BaseController<RoleEO> {
 				if (list != null && list.size() > 0) {
 					return Result.error("r0031", "该角色有对应用户，不能删除");
 				}
-				String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
+/*				String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 				if(loginUserId != null || loginUserId != ""){
+//					根据用户id查询ext-info和userRoleName
 					UserEO getUser = userService.selectRoleMessageByPrimaryKey(loginUserId);
-					/*if(getUser != null && ! ("3").equals(getUser.getRoleExtInfo())){
+					*//*if(getUser != null && ! ("3").equals(getUser.getRoleExtInfo())){
 						RoleEO getRole = roleEOService.selectByPrimaryKey(id);
 						if(!("").equals(getRole.getExtInfo()) && getRole.getExtInfo() != null){
 							if(! getRole.getExtInfo().equals(getUser.getRoleExtInfo())){
@@ -192,8 +201,8 @@ public class RoleEOController extends BaseController<RoleEO> {
 							}
 						}
 
-					}*/
-				}
+					}*//*
+				}*/
 				roleEOService.delete(id);
 			}
 		}
@@ -219,8 +228,8 @@ public class RoleEOController extends BaseController<RoleEO> {
 		}
 		return Result.success(roleVO);
 	}
-	
-	@ApiOperation(value = "|RoleEO|全部")
+	//李文轩：这个功能没用到
+/*	@ApiOperation(value = "|RoleEO|全部")
 	@GetMapping("/findAll")
 //	@RequiresPermissions("sys:role:list")
 	public ResponseMessage<List<RoleVO>> findAll(String userId) {
@@ -228,16 +237,16 @@ public class RoleEOController extends BaseController<RoleEO> {
 		String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 		if(loginUserId != null && !loginUserId.isEmpty()){
 			UserEO getUser = userService.selectOrgByPrimaryKey(loginUserId);
-			/*if(getUser != null){
+			*//*if(getUser != null){
 				if(("0").equals(getUser.getCorpType())){
 					setRole.setExtInfo("0");
 				} else if(("1").equals(getUser.getCorpType())){
 					setRole.setExtInfo("1");
 				}
 
-			}*/
+			}*//*
 		}
 		List<RoleVO> roleVOs = beanMapper.mapList(roleEOService.findAll(setRole), RoleVO.class);
 		return Result.success(roleVOs);
-	}
+	}*/
 }
