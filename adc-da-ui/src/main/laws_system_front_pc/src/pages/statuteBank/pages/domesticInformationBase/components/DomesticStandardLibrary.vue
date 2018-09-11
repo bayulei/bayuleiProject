@@ -3,8 +3,8 @@
  <div id="DomesticStandardLibrary">
    <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false" class="label-input-form">
      <div slot="left">
-       <Input v-model="keywords1" placeholder="根据用户名查找" clearable  />
-       <Input v-model="keywords2" placeholder="根据描述查找" clearable class="my-input" />
+       <label-input v-model="keywords1" placeholder="根据用户名查找" clearable label="用户名"  />
+       <label-input v-model="keywords2" placeholder="根据描述查找" clearable label="描述" class="my-input" />
        <Button type="primary" icon="ios-search" :loading="searching" @click="searchData"></Button>
      </div>
      <div slot="right">
@@ -45,7 +45,7 @@
    <full-modal v-model="modalshowflag" v-if="modalshowflag" ref="modalshow">
      <!--    新增样式     -->
      <div class="standards-info-form" >
-       <Form ref="sarStandardsInfoEO" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" :label-width="80" class="label-input-form">
+       <Form ref="sarStandardsInfoEO" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" class="label-input-form">
          <Row>
            <Col span="8">
            <FormItem label="国家/地区" prop="country" class="standards-info-item">
@@ -53,9 +53,11 @@
            </FormItem>
            </Col>
            <Col span="8">
-           <!--<FormItem label="标准类别" prop="standSort" class="standards-info-item">-->
-           <label-select v-model="sarStandardsInfoEO.standSort" :options="standSortOptions" label="标准类别"></label-select>
-           <!--</FormItem>-->
+           <FormItem label="标准类别" prop="standSort" class="standards-info-item">
+             <Select v-model="sarStandardsInfoEO.standSort" :options="standSortOptions" label="标准类别">
+               <Option v-for="opt in standSortOptions" :key="opt.value" :valu="opt.value">{{ opt.label }}</Option>
+             </Select>
+           </FormItem>
            </Col>
            <Col span="8">
            <FormItem label="适用车型" prop="applyArctic" class="standards-info-item">
@@ -87,10 +89,11 @@
            </FormItem>
            </Col>
            <Col span="8">
-           <!--<FormItem label="标准状态" prop="standState" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.standState"></Input>
-           </FormItem>-->
-           <label-select v-model="sarStandardsInfoEO.standState" :options="standStateOptions" label="标准状态"></label-select>
+           <FormItem label="标准状态" prop="standState" class="standards-info-item">
+             <Select v-model="sarStandardsInfoEO.standState">
+               <Option v-for="opt in standStateOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+             </Select>
+           </FormItem>
            </Col>
            <Col span="8">
            <FormItem label="标准性质" prop="standNature" class="standards-info-item">
@@ -134,41 +137,36 @@
          </Row>
          <Row>
            <Col span="8">
-           <!--<FormItem label="发布日期" prop="issueTime" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.issueTime"></Input>
-           </FormItem>-->
-           <label-select v-model="sarStandardsInfoEO.issueTime"  label="发布日期" type="datePicker"></label-select>
+             <FormItem label="发布日期" prop="issueTime" class="standards-info-item">
+               <DatePicker v-model="sarStandardsInfoEO.issueTime"></DatePicker>
+             </FormItem>
            </Col>
            <Col span="8">
-           <!--<FormItem label="实施日期" prop="putTime" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.putTime"></Input>
-           </FormItem>-->
-           <label-select v-model="sarStandardsInfoEO.putTime"  label="实施日期" type="datePicker"></label-select>
+             <FormItem label="实施日期" prop="putTime" class="standards-info-item">
+               <DatePicker v-model="sarStandardsInfoEO.putTime"></DatePicker>
+             </FormItem>
            </Col>
            <Col span="8">
-           <!--<FormItem label="新定型车实施日期" prop="newcarPutTime" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.newcarPutTime"></Input>
-           </FormItem>-->
-           <label-select v-model="sarStandardsInfoEO.newcarPutTime"  label="新定型车实施日期" type="datePicker"></label-select>
+             <FormItem label="新定型车实施日期" prop="newcarPutTime" class="standards-info-item">
+               <DatePicker v-model="sarStandardsInfoEO.newcarPutTime"></DatePicker>
+             </FormItem>
            </Col>
          </Row>
          <Row>
            <Col span="8">
-           <!--<FormItem label="在产车实施日期" prop="productPutTime" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.productPutTime"></Input>
-           </FormItem>-->
-           <label-select v-model="sarStandardsInfoEO.productPutTime"  label="在产车实施日期" type="datePicker"></label-select>
+              <FormItem label="在产车实施日期" prop="productPutTime" class="standards-info-item">
+                <DatePicker v-model="sarStandardsInfoEO.productPutTime"></DatePicker>
+              </FormItem>
            </Col>
            <Col span="8">
-           <!--<FormItem label="新生产车实施日期" prop="newproductPutTime" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.newproductPutTime"></Input>
-           </FormItem>-->
-           <label-select v-model="sarStandardsInfoEO.newproductPutTime"  label="新生产车实施日期" type="datePicker"></label-select>
+              <FormItem label="新生产车实施日期" prop="newproductPutTime" class="standards-info-item">
+                <DatePicker v-model="sarStandardsInfoEO.newproductPutTime"></DatePicker>
+              </FormItem>
            </Col>
            <Col span="8">
-           <FormItem label="起草单位" prop="draftingUnit" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.draftingUnit"></Input>
-           </FormItem>
+              <FormItem label="起草单位" prop="draftingUnit" class="standards-info-item">
+                <Input v-model="sarStandardsInfoEO.draftingUnit"></Input>
+              </FormItem>
            </Col>
          </Row>
          <Row>
@@ -602,7 +600,7 @@ export default {
    #DomesticStandardLibrary{}
    .standards-info-item{
      .ivu-form-item-content{
-       width: 6rem;
+       /*width: 6rem;*/
      }
    }
    .standards-info-form{
