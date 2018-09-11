@@ -162,7 +162,7 @@ export default {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.categoryData=res.data.list
+        this.categoryData = res.data.list
       }, e => {})
     }
   },
