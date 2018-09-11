@@ -28,6 +28,8 @@ public class RoleEO extends BaseEntity {
     private String name;
     private String id;
 
+    private String operUserName;
+
     private List<MenuEO> menuEOList = new ArrayList<>();
     private List<String> menuEOIdList = new ArrayList<>();
     
@@ -242,5 +244,11 @@ public class RoleEO extends BaseEntity {
         this.modifyTime = modifyTime;
     }
 
+    public String getOperUserName() {
+        return operUserName;
+    }
 
+    public void setOperUserName(String operUserName) {
+        this.operUserName = operUserName;
+    }
 }
