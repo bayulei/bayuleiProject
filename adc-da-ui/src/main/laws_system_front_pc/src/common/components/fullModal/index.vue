@@ -64,7 +64,7 @@ export default {
       top: 0;
       left: 100%;
       border-left: 1px solid #DDD;
-      padding: 0.2rem;
+      padding: 0.5rem 0 0.5rem 0.5rem;
       z-index: 10000;
       box-shadow: -1px -1px 20px 5px #DDD;
       overflow-y: auto;
