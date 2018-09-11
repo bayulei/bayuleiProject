@@ -55,7 +55,7 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 9999;
-    background: rgba(0,0,0,.05);
+    background: rgba(255,255,255,.85);
     .full-modal-content{
       width: 80%;
       height: 100%;
