@@ -10,7 +10,6 @@ import com.adc.da.sys.entity.UserRoleEO;
 import com.adc.da.sys.page.RoleEOPage;
 import com.adc.da.sys.service.RoleEOService;
 import com.adc.da.sys.service.UserEOService;
-import com.adc.da.sys.util.LoginUserUtil;
 import com.adc.da.sys.vo.RoleVO;
 import com.adc.da.util.constant.DeleteFlagEnum;
 import com.adc.da.util.http.PageInfo;
@@ -123,7 +122,8 @@ public class RoleEOController extends BaseController<RoleEO> {
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:role:save")
 	public ResponseMessage<RoleVO> create(@RequestBody RoleVO roleVO) throws Exception {
-		roleVO.setOprUser(LoginUserUtil.getUserId());
+		//TODO 此处调用了登录接口数据 暂时注销
+//		roleVO.setOprUser(LoginUserUtil.getUserId());
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
 		map.setRemarks(roleVO.getRemarks());
 		RoleEO roleEO = roleEOService.save(map);
