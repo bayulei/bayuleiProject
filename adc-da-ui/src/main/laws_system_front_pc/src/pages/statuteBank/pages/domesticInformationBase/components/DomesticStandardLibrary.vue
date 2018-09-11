@@ -9,7 +9,7 @@
      </div>
      <div slot="right">
        <Button type="primary" icon="ios-add" :loading="searching" @click="addModal">新增标准</Button>
-       <Button type="primary" icon="ios-add" :loading="searching" @click="addModal">导入标准</Button>
+       <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal">导入标准</Button>
        <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
      </div>
    </table-tools-bar>
@@ -17,7 +17,7 @@
    <div class="content">
      <loading :loading="loading">数据获取中</loading>
      <!--<Table border ref="selection" :columns="tableColumn" :data="stahndinfoList"></Table>-->
-     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="item in stahndinfoList">
+     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="item in stahndinfoList" :key="item">
          <div style="text-align:center">
            <Row>
              <Col span="4">标准号:{{item.standNumber}} </Col>
@@ -258,6 +258,12 @@
        <Button @click="closeModal">关闭</Button>
      </div>
    </full-modal>
+   <!-- 导入模态窗 -->
+   <Modal v-model="importModalshowflag" title="导入文件"  @on-ok="ok" @on-cancel="cancel">
+     <Upload action="//jsonplaceholder.typicode.com/posts/">
+       <Button icon="ios-cloud-upload-outline">Upload files</Button>
+     </Upload>
+   </Modal>
  </div>
 </template>
 
@@ -361,6 +367,7 @@ export default {
       ],
       stahndinfoList: [],
       modalshowflag: false,
+      importModalshowflag: false,
       modalshowtitle: '新增标准',
       addOrUPdateFlag: 1, // 新增：1， 修改：2
       sarStandardsInfoEO: {
@@ -368,7 +375,7 @@ export default {
         standType: 'INLAND_STAND', // 标准分类
         country: '中国',
         standSort: '',
-        applyArctic:'',
+        applyArctic: '',
         standNumber: '',
         standYear: '',
         standName: '',
@@ -479,9 +486,9 @@ export default {
         remark: [
         ]
       },
-      standSortOptions: [{ label: '类别1' ,value: '类别1' }],  //标准类别下拉框
-      standStateOptions: [{ label: '状态1' ,value: '状态2' }],   //标准状态下拉框
-      applyArcticOptions: [{ label: '状态1' ,value: '状态2' }]   //适用车型下拉框
+      standSortOptions: [{ label: '类别1', value: '类别1' }], // 标准类别下拉框
+      standStateOptions: [{ label: '状态1', value: '状态2' }], // 标准状态下拉框
+      applyArcticOptions: [{ label: '状态1', value: '状态2' }] // 适用车型下拉框
     }
   },
   methods: {
@@ -501,10 +508,8 @@ export default {
     },
     // 保存或修改标准
     saveOrUpdateStands () {
-      alert("aaaa");
       // 新增
       if (this.addOrUPdateFlag === 1) {
-        alert("aaaaa")
         this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
           _this: this
         }, res => {
@@ -515,13 +520,6 @@ export default {
         // 修改
         console.log(JSON.stringify(this.sarStandardsInfoEO))
         alert(this.sarStandardsInfoEO.id)
-        /* let ogje;
-        ogje.id = this.sarStandardsInfoEO.id
-        ogje.standNumber = this.sarStandardsInfoEO.standNumber  // 用户名
-        ogje.standName =this.sarStandardsInfoEO.standName // 姓名
-        ogje.standNature = this.sarStandardsInfoEO.standNature // 任职部门
-        ogje.standState = this.sarStandardsInfoEO.standState */
-        // console.log(JSON.stringify(ogje))
         this.$http.post('lawss/sarStandardsInfo/updateSarStandardsInfo', {id: this.sarStandardsInfoEO.id, putTime: '2018-08-11 11:12:12'}, {
           _this: this
         }, res => {
@@ -581,6 +579,10 @@ export default {
     // 关闭新增模态模态框
     closeModal () {
       this.$refs.modalshow.toggleClose()
+    },
+    // 点击导入标准
+    addImportModal () {
+      this.importModalshowflag = true
     }
   },
   components: {
