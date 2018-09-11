@@ -1,6 +1,12 @@
 <template>
   <div class="home">
-    <div class="logo"></div>
+    <div class="home-header">
+      <div class="logo"></div>
+      <ul class="home-nav">
+        <router-link tag="li" v-for="topNav in topNavList" :key="topNav.name" :to="topNav.path">{{ topNav.title }}</router-link>
+      </ul>
+      <div class="header-right"></div>
+    </div>
     <!-- 搜索框 -->
     <div class="search-box">
       <div class="search-option">主题</div>
@@ -67,7 +73,39 @@ export default {
       searchText: '标准高级检索',
       searchRecommend: '中文文献、外文文献 (elsevier、Springer、wiley......)',
       keywords: '', // 搜索关键词
-      currentTime: ''
+      currentTime: '',
+      topNavList: [
+        {
+          title: '首页',
+          path: '/',
+          name: ''
+        },
+        {
+          title: '云端资源库',
+          path: '/',
+          name: ''
+        },
+        {
+          title: '本地资源库',
+          path: '/',
+          name: ''
+        },
+        {
+          title: '数据报表',
+          path: '/',
+          name: ''
+        },
+        {
+          title: '分析工具',
+          path: '/',
+          name: ''
+        },
+        {
+          title: '配置管理',
+          path: '/',
+          name: ''
+        }
+      ]
     }
   },
   methods: {
@@ -99,14 +137,24 @@ export default {
     background-attachment: fixed;
     background-size: cover;
     position: relative;
-    .logo{
-      width: 23%;
-      height: 4.35%;
-      background: url("~assets/images/home/logo.png") no-repeat;
-      background-size: 100%;
-      position: absolute;
-      top: 20px;
-      left: 26px;
+    .home-header{
+      height: 7.5%;
+      background: #DDD;
+      display: flex;
+      align-items: center;
+      .logo{
+        width: 22.7%;
+        height: 58.75%;
+        background: url(/static/img/logo.26121a7.png) no-repeat;
+        background-position: left center;
+        background-size: 85%;
+        cursor: pointer;
+      }
+      .home-nav{
+        li{
+          float: left;
+        }
+      }
     }
     .search-box{
       width: 45.8%;

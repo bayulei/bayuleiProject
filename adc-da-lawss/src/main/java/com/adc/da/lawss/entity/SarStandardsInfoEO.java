@@ -29,7 +29,7 @@ public class SarStandardsInfoEO extends BaseEntity {
     //责任部门
     private String responsibleUnit;
     //内容摘要
-    private Object synopsis;
+    private String synopsis;
     //关键词
     private String tags;
     //关联文件  支持PDF、doc、docx文件，
@@ -361,12 +361,12 @@ public class SarStandardsInfoEO extends BaseEntity {
     }
 
     /**  **/
-    public Object getSynopsis() {
+    public String  getSynopsis() {
         return this.synopsis;
     }
 
     /**  **/
-    public void setSynopsis(Object synopsis) {
+    public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
     }
 
