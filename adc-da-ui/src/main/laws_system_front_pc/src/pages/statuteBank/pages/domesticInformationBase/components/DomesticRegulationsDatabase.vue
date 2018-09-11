@@ -25,7 +25,7 @@
    <full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">
      <Button @click="closeModal">关闭</Button>
      <div>
-       <Form ref="lawsInfoForm" :model="lawsInfoForm" :rules="lawsInfoFormRules" :label-width="80" class="label-input-form">
+       <Form ref="lawsInfoForm" :model="lawsInfoForm" :rules="lawsInfoFormRules" class="label-input-form">
          <input v-model="lawsInfoForm.editLawsId" v-show="false">
          <Row>
            <Col span="8">
@@ -59,7 +59,9 @@
          </Row>
          <Row>
            <Col span="8">
-              <label-select v-model="lawsInfoForm.issueTime"  label="发布日期" type="datePicker"></label-select>
+             <FormItem label="发布日期" prop="issueTime" class="laws-info-item">
+               <DatePicker v-model="lawsInfoForm.replaceLawsNum"></DatePicker>
+             </FormItem>
            </Col>
            <Col span="8">
               <label-select v-model="lawsInfoForm.putTime"  label="实施日期" type="datePicker"></label-select>
@@ -307,6 +309,7 @@ export default {
         }, {
           _this: this
         }, res => {
+          this.showLawsInfoModal = false
           this.searchLawsInfo()
         }, e => {
 
@@ -319,6 +322,7 @@ export default {
         }, {
           _this: this
         }, res => {
+          this.showLawsInfoModal = false
           this.searchLawsInfo()
         }, e => {
 
