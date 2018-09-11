@@ -4,7 +4,12 @@
     <Divider />
     <div class="pagination-slot">
       <slot>
-        <Page :total="total" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange"/>
+        <Page :total="total"
+              show-elevator
+              show-sizer
+              :page-size-opts="pageSizeOpts"
+              @on-change="pageChange"
+              @on-page-size-change="pageSizeChange"/>
       </slot>
     </div>
   </div>
@@ -13,6 +18,11 @@
 <script>
 export default {
   name: 'pagination',
+  data () {
+    return {
+      pageSizeOpts: [10, 20, 30, 50]
+    }
+  },
   methods: {
     // 切换页码
     pageChange (page) {

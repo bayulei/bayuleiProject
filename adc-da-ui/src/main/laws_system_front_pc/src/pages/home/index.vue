@@ -139,7 +139,6 @@ export default {
     position: relative;
     .home-header{
       height: 7.5%;
-      background: #DDD;
       display: flex;
       align-items: center;
       padding: 0 .54rem;
@@ -159,13 +158,13 @@ export default {
       .header-right{
         width: 7rem;
         height: 100%;
-        background: #CCC;
+        /*background: #CCC;*/
       }
     }
     .search-box{
       width: 45.8%;
       height: 5.55%;
-      margin: 8% auto 0 auto;
+      margin: 4.5% auto 0 auto;
       display: flex;
       &>div{
         height: 100%;
