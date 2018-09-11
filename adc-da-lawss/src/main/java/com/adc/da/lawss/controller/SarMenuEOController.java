@@ -98,4 +98,37 @@ public class SarMenuEOController extends BaseController<SarMenuEO>{
         return Result.success(sarMenuEOService.queryMenuByPid(parentId));
     }
 
+    /**
+     * @Author yangxuenan
+     * @Description 删除目录及子目录
+     * Date 2018/9/11 17:30
+     * @Param [sarMenuEO]
+     * @return com.adc.da.util.http.ResponseMessage
+     **/
+    @ApiOperation(value = "|SarMenuEO|删除目录及子目录")
+    @PutMapping("/deleteMenuAndChildren")
+    /*@RequiresPermissions("lawss:sarMenu:update")*/
+    public ResponseMessage deleteMenuAndChildren(@RequestParam("id") String id) throws Exception {
+        SarMenuEO sarMenuEO = new SarMenuEO();
+        sarMenuEO.setId(id);
+        sarMenuEO.setValidFlag(1);
+        int countUpdate = sarMenuEOService.updateByPrimaryKeySelective(sarMenuEO);
+        if(countUpdate > 0){
+            //查询是否包含子目录
+            List<SarMenuEO> getChildrenMenu = sarMenuEOService.queryMenuByPid(id);
+            if(getChildrenMenu.size() > 0) {
+                for(int i=0;i<getChildrenMenu.size();i++){
+                    SarMenuEO upMenu = new SarMenuEO();
+                    upMenu.setId(getChildrenMenu.get(i).getId());
+                    upMenu.setValidFlag(1);
+                    //删除子目录
+                    sarMenuEOService.updateByPrimaryKeySelective(upMenu);
+                }
+            }
+            return Result.success("0","删除成功",sarMenuEO);
+        } else {
+            return Result.error("删除失败");
+        }
+    }
+
 }
