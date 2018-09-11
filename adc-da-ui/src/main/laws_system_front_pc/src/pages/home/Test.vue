@@ -3,6 +3,7 @@
     <label-input :label="123"></label-input>
     <label-select v-model="userId" type="datePicker" label="管理员"></label-select>
     <span>{{ userId }}</span>
+    <label-select v-model="userId" :options="[{label:options.label,value:options.value}]"></label-select>
   </div>
 </template>
 <script>

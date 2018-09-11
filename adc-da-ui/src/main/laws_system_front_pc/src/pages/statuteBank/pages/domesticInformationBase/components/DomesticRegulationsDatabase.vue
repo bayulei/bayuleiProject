@@ -11,7 +11,7 @@
         </Form>
       </div>
       <div slot="right">
-        <Button type="primary" @click="modalAdd = true">新增</Button>
+        <Button type="primary" @click="openLawsModal">新增</Button>
         <Button type="primary" @click="modal2 = true">导入</Button>
       </div>
     </table-tools-bar>
@@ -22,17 +22,92 @@
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
    <!--新增修改模态框-->
-   <Modal v-model="modalAdd" title="新增法规信息" @on-ok="saveLawsInfo" @on-cancel="cancelAdd">
-     <Form ref="lawsInfoAdd" :model="lawsInfoAdd" :rules="lawsInfoAddRules" :label-width="80">
-       <input v-model="lawsInfoAdd.editLawsId" v-show="false">
-       <FormItem label="文件号" prop="lawsNum" class="laws-info-item">
-         <Input v-model="lawsInfoAdd.lawsNum"></Input>
-       </FormItem>
-       <FormItem label="文件名称" prop="lawsName" class="laws-info-item">
-         <Input v-model="lawsInfoAdd.lawsName"></Input>
-       </FormItem>
-     </Form>
-   </Modal>
+   <full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">
+     <Button @click="closeModal">关闭</Button>
+     <div>
+       <Form ref="lawsInfoForm" :model="lawsInfoForm" :rules="lawsInfoFormRules" :label-width="80" class="label-input-form">
+         <input v-model="lawsInfoForm.editLawsId" v-show="false">
+         <Row>
+           <Col span="8">
+             <FormItem label="国家/地区" prop="country" class="laws-info-item">
+               <Input v-model="lawsInfoForm.country" disabled="disabled"></Input>
+             </FormItem>
+          </Col>
+           <Col span="8">
+             <label-select v-model="lawsInfoForm.lawsProperty" :options="lawsPropertyOptions" label="文件性质"></label-select>
+           </Col>
+           <Col span="8">
+             <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
+               <Input v-model="lawsInfoForm.lawsNumber"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+             <FormItem label="文件名称" prop="lawsName" class="laws-info-item">
+               <Input v-model="lawsInfoForm.lawsName"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="发布单位" prop="issueUnit" class="laws-info-item">
+               <Input v-model="lawsInfoForm.issueUnit"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+              <label-select v-model="lawsInfoForm.lawsStatus" :options="lawsStatusOptions" label="文件状态"></label-select>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+              <label-select v-model="lawsInfoForm.issueTime"  label="发布日期" type="datePicker"></label-select>
+           </Col>
+           <Col span="8">
+              <label-select v-model="lawsInfoForm.putTime"  label="实施日期" type="datePicker"></label-select>
+           </Col>
+           <Col span="8">
+             <FormItem label="代替文件号" prop="replaceLawsNum" class="laws-info-item">
+               <Input v-model="lawsInfoForm.replaceLawsNum"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+             <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
+               <Input v-model="lawsInfoForm.applyArctic"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
+               <Input v-model="lawsInfoForm.energyKind"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="适用认证" prop="applyAuth" class="laws-info-item">
+               <Input v-model="lawsInfoForm.applyAuth"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+             <FormItem label="责任部门" prop="responsibleUnit" class="laws-info-item">
+               <Input v-model="lawsInfoForm.responsibleUnit"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="链接" prop="linkUri" class="laws-info-item">
+               <Input v-model="lawsInfoForm.linkUri"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+       </Form>
+
+     </div>
+     <div class="save-laws-btn">
+       <Button type="primary" @click="saveLawsInfo">提交</Button>
+       <Button @click="cancelAdd">取消</Button>
+     </div>
+   </full-modal>
+
    <!--导入模态框-->
    <Modal v-model="modal2" title="导入法规信息" @on-ok="importLawsInfo" @on-cancel="cancelAdd">
      <Form ref="lawsInfoImport" :model="lawsInfoImport" :label-width="80">
@@ -54,14 +129,26 @@ export default {
   data () {
     return {
       modal2: false,
-      modalAdd: false,
+      showLawsInfoModal: false,
       lawsInfo: {
         fileNum: '' // 文件号
       },
-      lawsInfoAdd: {
-        lawsNum: '',
+      lawsInfoForm: {
+        editLawsId: '',
+        country: '中国',
+        lawsProperty: '',
+        lawsNumber: '',
         lawsName: '',
-        editLawsId: ''
+        issueUnit: '',
+        lawsStatus: '',
+        issueTime: '',
+        putTime: '',
+        replaceLawsNum: '',
+        applyArctic: '',
+        energyKind: '',
+        applyAuth: '',
+        responsibleUnit: '',
+        linkUri: ''
       },
       total: 0,
       page: 1,
@@ -155,8 +242,24 @@ export default {
         }
       ],
       data: [],
+      lawsPropertyOptions: [{ label: '状态1', value: '状态2' }],
+      lawsStatusOptions: [{ label: '状态1', value: '状态2' }],
       lawsInfoRules: {},
-      lawsInfoAddRules: {}
+      lawsInfoFormRules: {
+        lawsName: [
+          { required: true, message: '文件名称不能为空', trigger: 'blur' }
+        ],
+        lawsStatus: [
+          { required: true, message: '文件状态不能为空', trigger: 'blur' }
+        ],
+        issueTime: [
+          { required: true, message: '发布日期不能为空', trigger: 'blur' }
+        ],
+        putTime: [
+          { required: true, message: '实施日期不能为空', trigger: 'blur' }
+        ]
+
+      }
     }
   },
   methods: {
@@ -184,19 +287,23 @@ export default {
       this.rows = pageSize
       this.searchLawsInfo()
     },
+    // 打开新增模态框
+    openLawsModal () {
+      this.showLawsInfoModal = true
+    },
     // 点击编辑按钮触发
     edit (row) {
-      this.modalAdd = true
-      this.lawsInfoAdd.editLawsId = row.id
-      this.lawsInfoAdd.lawsNum = row.lawsNumber
-      this.lawsInfoAdd.lawsName = row.lawsName
+      this.showLawsInfoModal = true
+      this.lawsInfoForm.editLawsId = row.id
+      this.lawsInfoForm.lawsNumber = row.lawsNumber
+      this.lawsInfoForm.lawsName = row.lawsName
     },
     // 提交新增/修改
     saveLawsInfo () {
-      if (this.lawsInfoAdd.editLawsId == null || this.lawsInfoAdd.editLawsId === '') {
+      if (this.lawsInfoForm.editLawsId == null || this.lawsInfoForm.editLawsId === '') {
         this.$http.post('lawss/sarLawsInfo/createLawsInfo', {
-          lawsNumber: this.lawsInfoAdd.lawsNum,
-          lawsName: this.lawsInfoAdd.lawsName
+          lawsNumber: this.lawsInfoForm.lawsNumber,
+          lawsName: this.lawsInfoForm.lawsName
         }, {
           _this: this
         }, res => {
@@ -206,9 +313,9 @@ export default {
         })
       } else {
         this.$http.put('lawss/sarLawsInfo/updateLawsInfo', {
-          id: this.lawsInfoAdd.editLawsId,
-          lawsNumber: this.lawsInfoAdd.lawsNum,
-          lawsName: this.lawsInfoAdd.lawsName
+          id: this.lawsInfoForm.editLawsId,
+          lawsNumber: this.lawsInfoForm.lawsNumber,
+          lawsName: this.lawsInfoForm.lawsName
         }, {
           _this: this
         }, res => {
@@ -219,6 +326,10 @@ export default {
       }
     },
     cancelAdd () {
+    },
+    // 关闭模态框
+    closeModal () {
+      this.$refs.showLawsInfoModal.toggleClose()
     },
     // 删除
     remove (id) {
@@ -288,5 +399,11 @@ export default {
     .laws-info-item{
       display:inline-block;
     }
+  }
+  .label-input-form{
+    margin-top: 10px;
+  }
+  .save-laws-btn{
+    text-align: center;
   }
 </style>

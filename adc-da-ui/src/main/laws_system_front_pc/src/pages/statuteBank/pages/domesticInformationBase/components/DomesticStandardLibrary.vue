@@ -3,13 +3,13 @@
  <div id="DomesticStandardLibrary">
    <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false" class="label-input-form">
      <div slot="left">
-       <label-input v-model="keywords1" placeholder="根据用户名查找" label="用户名" />
-       <label-input v-model="keywords2" placeholder="根据描述查找" label="描述" class="my-input" />
+       <Input v-model="keywords1" placeholder="根据用户名查找" clearable  />
+       <Input v-model="keywords2" placeholder="根据描述查找" clearable class="my-input" />
        <Button type="primary" icon="ios-search" :loading="searching" @click="searchData"></Button>
      </div>
      <div slot="right">
        <Button type="primary" icon="ios-add" :loading="searching" @click="addModal">新增标准</Button>
-       <Button type="primary" icon="ios-add" :loading="searching" @click="addModal">导入标准</Button>
+       <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal">导入标准</Button>
        <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
      </div>
    </table-tools-bar>
@@ -17,7 +17,7 @@
    <div class="content">
      <loading :loading="loading">数据获取中</loading>
      <!--<Table border ref="selection" :columns="tableColumn" :data="stahndinfoList"></Table>-->
-     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="(item, index) in stahndinfoList" :key="index">
+     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="item in stahndinfoList" :key="item">
          <div style="text-align:center">
            <Row>
              <Col span="4">标准号:{{item.standNumber}} </Col>
@@ -38,117 +38,118 @@
            </Row>
          </div>
      </Card>
+
    <pagination :total="total"></pagination>
    </div>
    <!-- 新增、编辑模态窗 -->
    <full-modal v-model="modalshowflag" v-if="modalshowflag" ref="modalshow">
-     <!-- 新增样式 -->
+     <!--    新增样式     -->
      <div class="standards-info-form" >
-       <Form ref="sarStandardsInfoEO" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" class="label-input-form">
+       <Form ref="sarStandardsInfoEO" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" :label-width="80" class="label-input-form">
          <Row>
            <Col span="8">
-             <FormItem label="国家/地区" prop="country" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.country" disabled="disabled"></Input>
-             </FormItem>
+           <FormItem label="国家/地区" prop="country" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.country" disabled="disabled"></Input>
+           </FormItem>
            </Col>
            <Col span="8">
-             <FormItem label="标准类别" prop="standSort" class="standards-info-item">
-              <Select v-model="sarStandardsInfoEO.standSort" :options="standSortOptions">
-                <Option v-for="opt in standSortOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
-              </Select>
-             </FormItem>
+           <!--<FormItem label="标准类别" prop="standSort" class="standards-info-item">-->
+           <label-select v-model="sarStandardsInfoEO.standSort" :options="standSortOptions" label="标准类别"></label-select>
+           <!--</FormItem>-->
            </Col>
            <Col span="8">
-             <FormItem label="适用车型" prop="applyArctic" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.applyArctic"></Input>
-             </FormItem>
+           <FormItem label="适用车型" prop="applyArctic" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.applyArctic"></Input>
+           </FormItem>
            </Col>
          </Row>
          <Row>
            <Col span="8">
-             <FormItem label="标准编号" prop="standNumber" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.standNumber"></Input>
-             </FormItem>
+           <FormItem label="标准编号" prop="standNumber" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.standNumber"></Input>
+           </FormItem>
            </Col>
            <Col span="8">
-             <FormItem label="标准年份" prop="standYear" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.standYear"></Input>
-             </FormItem>
+           <FormItem label="标准年份" prop="standYear" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.standYear"></Input>
+           </FormItem>
            </Col>
            <Col span="8">
-             <FormItem label="标准名称" prop="standName" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.standName"></Input>
-             </FormItem>
-           </Col>
-         </Row>
-         <Row>
-           <Col span="8">
-             <FormItem label="标准英文名称" prop="standEnName" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.standEnName"></Input>
-             </FormItem>
-           </Col>
-           <Col span="8">
-             <FormItem label="标准状态" prop="standState" class="standards-info-item">
-               <Select v-model="sarStandardsInfoEO.standState">
-                 <Option v-for="opt in standStateOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
-               </Select>
-             </FormItem>
-           </Col>
-           <Col span="8">
-             <FormItem label="标准性质" prop="standNature" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.standNature"></Input>
-             </FormItem>
+           <FormItem label="标准名称" prop="standName" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.standName"></Input>
+           </FormItem>
            </Col>
          </Row>
          <Row>
            <Col span="8">
-             <FormItem label="代替标准号" prop="replaceStandNum" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.replaceStandNum"></Input>
-             </FormItem>
+           <FormItem label="标准英文名称" prop="standEnName" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.standEnName"></Input>
+           </FormItem>
            </Col>
            <Col span="8">
-             <FormItem label="被代替标准号" prop="replacedStandNum" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.replacedStandNum"></Input>
-             </FormItem>
+           <!--<FormItem label="标准状态" prop="standState" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.standState"></Input>
+           </FormItem>-->
+           <label-select v-model="sarStandardsInfoEO.standState" :options="standStateOptions" label="标准状态"></label-select>
            </Col>
            <Col span="8">
-             <FormItem label="采用国际标准号" prop="interStandNum" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.interStandNum"></Input>
-             </FormItem>
-           </Col>
-         </Row>
-         <Row>
-           <Col span="8">
-             <FormItem label="采标程度" prop="adoptExtent" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.adoptExtent"></Input>
-             </FormItem>
-           </Col>
-           <Col span="8">
-             <FormItem label="能源种类" prop="emergyKind" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.emergyKind"></Input>
-             </FormItem>
-           </Col>
-           <Col span="8">
-             <FormItem label="适用认证" prop="applyAuth" class="standards-info-item">
-               <Input v-model="sarStandardsInfoEO.applyAuth"></Input>
-             </FormItem>
+           <FormItem label="标准性质" prop="standNature" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.standNature"></Input>
+           </FormItem>
            </Col>
          </Row>
          <Row>
            <Col span="8">
-             <FormItem label="发布日期" prop="issueTime" class="standards-info-item">
-               <DatePicker v-model="sarStandardsInfoEO.issueTime"></DatePicker>
-             </FormItem>
+           <FormItem label="代替标准号" prop="replaceStandNum" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.replaceStandNum"></Input>
+           </FormItem>
            </Col>
            <Col span="8">
-             <FormItem label="实施日期" prop="putTime" class="standards-info-item">
-               <DatePicker v-model="sarStandardsInfoEO.putTime"></DatePicker>
-             </FormItem>
+           <FormItem label="被代替标准号" prop="replacedStandNum" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.replacedStandNum"></Input>
+           </FormItem>
            </Col>
            <Col span="8">
-             <FormItem label="新定型车实施日期" prop="newcarPutTime" class="standards-info-item">
-               <DatePicker v-model="sarStandardsInfoEO.newcarPutTime"></DatePicker>
-             </FormItem>
+           <FormItem label="采用国际标准号" prop="interStandNum" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.interStandNum"></Input>
+           </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+           <FormItem label="采标程度" prop="adoptExtent" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.adoptExtent"></Input>
+           </FormItem>
+           </Col>
+           <Col span="8">
+           <FormItem label="能源种类" prop="emergyKind" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.emergyKind"></Input>
+           </FormItem>
+           </Col>
+           <Col span="8">
+           <FormItem label="适用认证" prop="applyAuth" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.applyAuth"></Input>
+           </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+           <!--<FormItem label="发布日期" prop="issueTime" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.issueTime"></Input>
+           </FormItem>-->
+           <label-select v-model="sarStandardsInfoEO.issueTime"  label="发布日期" type="datePicker"></label-select>
+           </Col>
+           <Col span="8">
+           <!--<FormItem label="实施日期" prop="putTime" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.putTime"></Input>
+           </FormItem>-->
+           <label-select v-model="sarStandardsInfoEO.putTime"  label="实施日期" type="datePicker"></label-select>
+           </Col>
+           <Col span="8">
+           <!--<FormItem label="新定型车实施日期" prop="newcarPutTime" class="standards-info-item">
+             <Input v-model="sarStandardsInfoEO.newcarPutTime"></Input>
+           </FormItem>-->
+           <label-select v-model="sarStandardsInfoEO.newcarPutTime"  label="新定型车实施日期" type="datePicker"></label-select>
            </Col>
          </Row>
          <Row>
@@ -254,8 +255,15 @@
          </Row>
        </Form>
        <input type="button" value="保存修改" class="save primary-btn" @click="saveOrUpdateStands">
+       <Button @click="closeModal">关闭</Button>
      </div>
    </full-modal>
+   <!-- 导入模态窗 -->
+   <Modal v-model="importModalshowflag" title="导入文件"  @on-ok="ok" @on-cancel="cancel">
+     <Upload action="//jsonplaceholder.typicode.com/posts/">
+       <Button icon="ios-cloud-upload-outline">Upload files</Button>
+     </Upload>
+   </Modal>
  </div>
 </template>
 
@@ -359,6 +367,7 @@ export default {
       ],
       stahndinfoList: [],
       modalshowflag: false,
+      importModalshowflag: false,
       modalshowtitle: '新增标准',
       addOrUPdateFlag: 1, // 新增：1， 修改：2
       sarStandardsInfoEO: {
@@ -486,8 +495,7 @@ export default {
     // 分页查询国内标准
     getDomesticStandardTable () {
       this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', {}, {
-        _this: this,
-        loading: 'loading'
+        _this: this
       }, res => {
         this.stahndinfoList = res.data.list
       }, e => {
@@ -500,13 +508,10 @@ export default {
     },
     // 保存或修改标准
     saveOrUpdateStands () {
-      alert('aaaa')
       // 新增
       if (this.addOrUPdateFlag === 1) {
-        alert('aaaaa')
         this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
-          _this: this,
-          loading: 'loading'
+          _this: this
         }, res => {
           this.getDomesticStandardTable()
         }, e => {
@@ -515,16 +520,8 @@ export default {
         // 修改
         console.log(JSON.stringify(this.sarStandardsInfoEO))
         alert(this.sarStandardsInfoEO.id)
-        /* let ogje;
-        ogje.id = this.sarStandardsInfoEO.id
-        ogje.standNumber = this.sarStandardsInfoEO.standNumber  // 用户名
-        ogje.standName =this.sarStandardsInfoEO.standName // 姓名
-        ogje.standNature = this.sarStandardsInfoEO.standNature // 任职部门
-        ogje.standState = this.sarStandardsInfoEO.standState */
-        // console.log(JSON.stringify(ogje))
         this.$http.post('lawss/sarStandardsInfo/updateSarStandardsInfo', {id: this.sarStandardsInfoEO.id, putTime: '2018-08-11 11:12:12'}, {
-          _this: this,
-          loading: 'loading'
+          _this: this
         }, res => {
           this.getDomesticStandardTable()
         }, e => {
@@ -537,8 +534,7 @@ export default {
     // 删除标准
     deleteStand () {
       this.$http.post('lawss/sarStandardsInfo/deleteSarStandards', {id: this.sarStandardsInfoEO.id}, {
-        _this: this,
-        loading: 'loading'
+        _this: this
       }, res => {
         this.getDomesticStandardTable()
       }, e => {
@@ -551,8 +547,7 @@ export default {
     // 查看标准属性
     selectStandardPro () {
       this.$http.post('', {id: this.sarStandardsInfoEO.id}, {
-        _this: this,
-        loading: 'loading'
+        _this: this
       }, res => {
       }, e => {
       })
@@ -560,8 +555,7 @@ export default {
     // 收藏标准
     collectStandard () {
       this.$http.post('', {id: this.sarStandardsInfoEO.id}, {
-        _this: this,
-        loading: 'loading'
+        _this: this
       }, res => {
       }, e => {
       })
@@ -585,6 +579,10 @@ export default {
     // 关闭新增模态模态框
     closeModal () {
       this.$refs.modalshow.toggleClose()
+    },
+    // 点击导入标准
+    addImportModal () {
+      this.importModalshowflag = true
     }
   },
   components: {
@@ -601,21 +599,20 @@ export default {
 </script>
 
 <style lang="less">
-   #DomesticStandardLibrary{
-     .standards-info-item{
-       .ivu-form-item-content{
-         /*width: 6rem;*/
-       }
+   #DomesticStandardLibrary{}
+   .standards-info-item{
+     .ivu-form-item-content{
+       width: 6rem;
      }
-     .standards-info-form{
-       min-height: 400px;
-       overflow : auto;
-       .save{
-         width: 4.24rem;
-         height: 0.72rem;
-         line-height: 0.72rem;
-         margin: 0.5rem 0 0 0.2rem;
-       }
+   }
+   .standards-info-form{
+     min-height: 400px;
+     overflow : auto;
+     .save{
+       width: 4.24rem;
+       height: 0.72rem;
+       line-height: 0.72rem;
+       margin: 0.5rem 0 0 0.2rem;
      }
    }
 </style>

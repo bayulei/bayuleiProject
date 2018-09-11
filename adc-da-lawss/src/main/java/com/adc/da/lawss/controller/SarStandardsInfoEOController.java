@@ -110,7 +110,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
     public ResponseMessage<SarStandardsInfoEO> create(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
         sarStandardsInfoEOService.createSarStandardsInfo(sarStandardsInfoEO);
         //标准文件资源表，标准文件详情表中插入数据，需要下载文件，并保存数据
-        return Result.success(sarStandardsInfoEO);
+        return Result.success("","添加成功",sarStandardsInfoEO);
     }
 
     /**
