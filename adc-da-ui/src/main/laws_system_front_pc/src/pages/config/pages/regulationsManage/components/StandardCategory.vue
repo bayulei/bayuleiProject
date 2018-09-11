@@ -1,51 +1,39 @@
 <!-- 标准类别 -->
 <template>
   <div class="standard-classification">
-    <table-tools-bar>
-      <div slot="left">
-        <Form ref="formInline" :model="formInline" inline>
-          <FormItem prop="option">
-            <Input type="text" v-model="value1" placeholder="请输入选项">
-              <span slot="prepend">选项</span>
-            </Input>
-          </FormItem>
-          <FormItem prop="describe">
-            <Input type="text" v-model="value2" placeholder="请输入选项">
-              <span slot="prepend">描述</span>
-            </Input>
-          </FormItem>
-          <Button type="info" class="query-button" @click="handleQuery">查询</Button>
-        </Form>
-      </div>
-      <div slot="right">
-        <Button type="success" @click="categoryAdd">增加</Button>
-        <Button type="warning" @click="categoryEdit">编辑</Button>
-        <Button type="error">删除</Button>
-        <!--显示模态框-->
-        <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="400">
-          <!--编辑/查看-->
-          <div v-if="modalType === 2 || modalType === 3">
-            <Form :model="formLeft" label-position="right" :label-width="80">
-              <FormItem label="标准">
-                <Input v-model="formLeft.input1" style="width: 200px" :disabled='modalType === 3'></Input>
-              </FormItem>
-              <FormItem label="描述">
-                <Input v-model="formLeft.input2" style="width: 200px" :disabled='modalType === 3'></Input>
-              </FormItem>
-              <FormItem label="创建人">
-                <Input v-model="formLeft.input3" style="width: 200px" :disabled='modalType === 3'></Input>
-              </FormItem>
-            </Form>
-          </div>
-          <!--新增-->
-          <div v-else-if="modalType === 1">
-            我是新增的内容
-          </div>
-        </Modal>
-      </div>
-    </table-tools-bar>
-    <Table border ref="selection" :columns="categoryTable" :data="categoryData"></Table>
-    <loading :loading="loading"></loading>
+      <table-tools-bar>
+        <div slot="left">
+            <label-input v-model="standardForm.standName" placeholder="请输入选项" label="选项"></label-input>
+          <label-input v-model="standardForm.standCode" placeholder="请输入选项" label="数据编码"></label-input>
+            <Button type="info" class="query-button" @click="selectCategory">查询</Button>
+        </div>
+        <div slot="right">
+          <Button type="success" @click="categoryAdd">增加</Button>
+          <Button type="warning" @click="categoryEdit">编辑</Button>
+          <Button type="error"  @click="categoryDel">删除</Button>
+          <!--显示模态框-->
+          <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="400"
+                 @on-ok="saveCategory">
+              <Form :model="categoryModelAdd" label-position="right" :label-width="80">
+                <input v-model="categoryModelAdd.id" v-show="false">
+                <FormItem label="标准">
+                  <Input v-model="categoryModelAdd.parts" style="width: 200px" :disabled='modalType === 3'></Input>
+                </FormItem>
+                <FormItem label="数据编码">
+                  <Input v-model="categoryModelAdd.coding" style="width: 200px" :disabled='modalType === 3'></Input>
+                </FormItem>
+                <FormItem label="创建人">
+                  <Input v-model="categoryModelAdd.found" style="width: 200px" :disabled='modalType === 3'></Input>
+                </FormItem>
+              </Form>
+          </Modal>
+        </div>
+      </table-tools-bar>
+    <div class="content">
+      <loading :loading="loading">数据获取中</loading>
+      <Table border ref="selection" :columns="categoryTable" :data="categoryData"></Table>
+      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
+    </div>
   </div>
 </template>
 
@@ -56,27 +44,23 @@ export default {
   data () {
     return {
       modalType: '',
-      categoryTitle: '',
-      pageNo: '',
-      pageSize: '',
+      categoryTitle: '', // 模态框标题
+      standardForm: {
+        standName: '', // 选项
+        standCode: '', // 数据编码
+        id: ''
+      },
+      total: 0,
+      page: 1,
+      rows: 10,
       loading: false,
-      formInline: {
-        option: '',
-        describe: ''
+      categoryModelAdd: {
+        parts: '', // 模态框标准
+        coding: '', // 数据编码
+        found: ''// 模态框创建人
       },
-      formLeft: {
-        input1: '',
-        input2: '',
-        input3: ''
-      },
-      formRight: {
-        input1: '',
-        input2: '',
-        input3: ''
-      },
-      categoryModal: false,
-      value1: '',
-      value2: '',
+      categoryModal: false, // 模态框是否打开
+      // 表格表头
       categoryTable: [
         {
           type: 'selection',
@@ -85,12 +69,12 @@ export default {
         },
         {
           title: '选项',
-          key: 'option',
+          key: 'dicTypeName',
           align: 'center'
         },
         {
-          title: '描述',
-          key: 'describe',
+          title: '数据编码',
+          key: 'dicTypeCode',
           width: 300,
           align: 'center'
         },
@@ -105,7 +89,7 @@ export default {
           align: 'center'
         },
         {
-          title: 'Action',
+          title: '操作',
           key: 'action',
           width: 150,
           align: 'center',
@@ -121,7 +105,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.viewData(params.index)
+                    this.viewData(params.row)
                   }
                 }
               }, '查看')
@@ -129,18 +113,18 @@ export default {
           }
         }
       ],
+      // 表格内容
       categoryData: []
     }
   },
   methods: {
-    handleQuery () {
-
-    },
     // 新增
     categoryAdd () {
       this.categoryModal = true
       this.modalType = 1
       this.categoryTitle = '新增标准'
+      this.categoryModelAdd.parts = ''
+      this.categoryModelAdd.coding = ''
     },
     // 编辑
     categoryEdit () {
@@ -149,21 +133,65 @@ export default {
       this.categoryTitle = '编辑标准'
     },
     // 查看
-    viewData () {
+    viewData (row) {
       this.categoryModal = true
       this.modalType = 3
       this.categoryTitle = '查看标准'
-      // $('.ivu-modal-footer').addClass('isDisplay')
+      this.categoryModelAdd.parts = row.dicTypeName
+      this.categoryModelAdd.coding = row.dicTypeCode
+    },
+    // 删除
+    categoryDel () {},
+    pageChange (page) {
+      this.page = page
+      this.selectCategory()
+    },
+    pageSizeChange (pageSize) {
+      this.rows = pageSize
+      this.selectCategory()
     },
     // 加载表格
     selectCategory () {
       this.$http.get('sys/dictype/page', {
+        page: this.page,
+        pageSize: this.rows,
+        dicTypeName: this.standardForm.standName,
+        dicTypeCode: this.standardForm.standCode
       }, {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.categoryData=res.data.list
+        this.categoryData = res.data.list
+        this.total = res.data.count
       }, e => {})
+    },
+    // 提交新增/修改
+    saveCategory () {
+      if (this.modalType === 1) {
+        this.$http.post('sys/dictype', {
+          dicTypeName: this.categoryModelAdd.parts,
+          dicTypeCode: this.categoryModelAdd.coding,
+          dicId: 1
+        }, {
+          _this: this
+        }, res => {
+          this.selectCategory()
+        }, e => {
+
+        })
+      } else {
+        this.$http.put('sys/dictype', {
+          dicTypeName: this.categoryModelAdd.parts,
+          dicTypeCode: this.categoryModelAdd.coding,
+          dicId: 1
+        }, {
+          _this: this
+        }, res => {
+          this.selectCategory()
+        }, e => {
+
+        })
+      }
     }
   },
   components: {
