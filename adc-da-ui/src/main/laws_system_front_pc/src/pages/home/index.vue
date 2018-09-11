@@ -78,32 +78,32 @@ export default {
         {
           title: '首页',
           path: '/',
-          name: ''
+          name: 'home'
         },
         {
           title: '云端资源库',
-          path: '/',
-          name: ''
+          path: '/yunduanziyuanku',
+          name: 'yunduanziyuanku'
         },
         {
           title: '本地资源库',
-          path: '/',
-          name: ''
+          path: '/bendiziyuanku',
+          name: 'bendiziyuanku'
         },
         {
           title: '数据报表',
-          path: '/',
-          name: ''
+          path: '/shujubaobiao',
+          name: 'shujubaobiao'
         },
         {
           title: '分析工具',
-          path: '/',
-          name: ''
+          path: '/fenxigongju',
+          name: 'fenxigongju'
         },
         {
           title: '配置管理',
-          path: '/',
-          name: ''
+          path: '/config',
+          name: 'Config'
         }
       ]
     }
