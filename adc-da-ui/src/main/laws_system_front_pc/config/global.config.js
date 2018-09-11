@@ -4,7 +4,7 @@
  * @date: 2018-09-04 17:47:46
  */
 // 开发环境配置
-const devIp = '192.168.7.168'
+const devIp = '192.168.1.137'
 // const devIp = '192.168.1.174'
 const devInterfacePORT = '8888'
 
