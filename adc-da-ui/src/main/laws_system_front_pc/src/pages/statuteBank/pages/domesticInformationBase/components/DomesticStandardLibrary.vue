@@ -17,7 +17,7 @@
    <div class="content">
      <loading :loading="loading">数据获取中</loading>
      <!--<Table border ref="selection" :columns="tableColumn" :data="stahndinfoList"></Table>-->
-     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="(item, index) in stahndinfoList">
+     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="(item, index) in stahndinfoList" :key="index">
          <div style="text-align:center">
            <Row>
              <Col span="4">标准号:{{item.standNumber}} </Col>
