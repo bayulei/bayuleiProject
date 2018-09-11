@@ -1,39 +1,32 @@
 package com.adc.da.sys.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import com.adc.da.util.utils.RequestUtils;
+import com.adc.da.base.page.Pager;
+import com.adc.da.base.web.BaseController;
+import com.adc.da.sys.common.LayUiResult;
+import com.adc.da.sys.entity.OrgEO;
+import com.adc.da.sys.entity.UserEO;
+import com.adc.da.sys.page.UserEOPage;
+import com.adc.da.sys.service.OrgEOService;
+import com.adc.da.sys.service.UserEOService;
+import com.adc.da.sys.vo.UserVO;
+import com.adc.da.util.http.PageInfo;
+import com.adc.da.util.http.ResponseMessage;
+import com.adc.da.util.http.Result;
+import com.adc.da.util.utils.BeanMapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.adc.da.base.page.Pager;
-import com.adc.da.base.web.BaseController;
-import com.adc.da.sys.common.LayUiResult;
-import com.adc.da.sys.entity.OrgEO;
-import com.adc.da.sys.entity.RoleEO;
-import com.adc.da.sys.entity.UserEO;
-import com.adc.da.sys.page.UserEOPage;
-import com.adc.da.sys.service.OrgEOService;
-import com.adc.da.sys.service.UserEOService;
-import com.adc.da.sys.vo.RoleVO;
-import com.adc.da.sys.vo.UserVO;
-import com.adc.da.util.http.ResponseMessage;
-import com.adc.da.util.http.Result;
-import com.adc.da.util.utils.BeanMapper;
-import com.adc.da.util.http.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
 @RequestMapping("/${restPath}/sys/user")
@@ -106,9 +99,6 @@ public class UserEOController extends BaseController<UserEO> {
 		} else if (userEOService.getUserByLoginName(userVO.getAccount()) != null) {
 			return Result.error("r0015", "账号已存在");
 		}
-		if(userEOService.getUserWithRoles(userVO.getUsid()).getWorkNum() !=null){
-			return  Result.error("r0016", "员工编号已存在");
-		}
 
 		// 前台如果base64传输密文，则需要解码
 		// userVO.setPassword(new String(Encodes.decodeBase64(userVO.getPassword())));
@@ -123,9 +113,9 @@ public class UserEOController extends BaseController<UserEO> {
 		UserEO userEO = beanMapper.map(userVO, UserEO.class);
 		userEO.setModifyTime(new Date());
 
-		if(userEOService.getUserWithRoles(userVO.getUsid()).getWorkNum() !=null){
+/*		if(userEOService.getUserWithRoles(userVO.getUsid()).getWorkNum() !=null){
 			return  Result.error("r0016", "员工编号已存在");
-		}
+		}*/
 //		李文轩：修改用户信息的密码是在个人中心中完成
 //		userEO.setPassword("");
 		userEOService.updateByPrimaryKeySelective(userEO);
