@@ -7,7 +7,7 @@
         <Page :total="total"
               show-elevator
               show-sizer
-              :page-size-opts="pageSizeOpts"
+              :page-size-opts="[10, 20, 30, 50]"
               @on-change="pageChange"
               @on-page-size-change="pageSizeChange"/>
       </slot>
@@ -18,11 +18,6 @@
 <script>
 export default {
   name: 'pagination',
-  data () {
-    return {
-      pageSizeOpts: [10, 20, 30, 50]
-    }
-  },
   methods: {
     // 切换页码
     pageChange (page) {
