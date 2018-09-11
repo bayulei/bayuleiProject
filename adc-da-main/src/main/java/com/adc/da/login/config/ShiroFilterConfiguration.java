@@ -1,9 +1,9 @@
 package com.adc.da.login.config;
 
-import com.adc.da.login.security.FormAuthenticationFilter;
 import com.adc.da.util.constant.GlobalConfig;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ShiroFilterConfiguration {
         GlobalConfig.setRestApiPath(env.getProperty("restPath"));
     }
 
-    /*@Bean(name = "shiroFilter")
+/*    @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         String adminPath = GlobalConfig.getAdminPath();
         String restPath = GlobalConfig.getRestApiPath();
@@ -61,6 +62,6 @@ public class ShiroFilterConfiguration {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
-    }
-*/
+    }*/
+
 }

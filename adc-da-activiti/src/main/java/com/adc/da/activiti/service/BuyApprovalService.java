@@ -204,6 +204,7 @@ public class BuyApprovalService {
      */
     public Map<String, Object> getTaskInfo(String taskId, String processInstanceId){
         Map<String,Object> resultMap = new HashMap<String,Object>();
+        //获取历史的流程变量
         List<HistoricVariableInstance> historicVariableInstanceList = historyService.createHistoricVariableInstanceQuery()
                 .executionId(processInstanceId).list();
         if (historicVariableInstanceList != null && !historicVariableInstanceList.isEmpty()) {
@@ -211,12 +212,18 @@ public class BuyApprovalService {
                 resultMap.put(hvi.getVariableName(),hvi.getValue());
             }
         }
-        List<Comment> commentList = taskService.getTaskComments(taskId);
-        if(commentList!=null && !commentList.isEmpty()){
-            for(Comment comment : commentList){
-                resultMap.put("comment",comment.getFullMessage());
+        //获取历史的审批意见
+        List<Map<String,String>> commentList = new ArrayList<Map<String,String>>();
+        List<Comment> comments = taskService.getProcessInstanceComments(processInstanceId);
+        if(comments!=null && !comments.isEmpty()){
+            for(Comment comment : comments){
+                Map<String,String> map = new HashMap<String,String>();
+                map.put("审批人",comment.getUserId());
+                map.put("审批意见",comment.getFullMessage());
+                commentList.add(map);
             }
         }
+        resultMap.put("comment",commentList);
         return resultMap;
     }
 }

@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
@@ -160,6 +161,20 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	@GetMapping("/getDicTypeByDicCode")
 	public ResponseMessage<List<DicTypeEO>> getDicTypeByDicCode(@RequestParam String dicCode) throws Exception {
 		List<DicTypeEO> dicTypeEO = dicTypeEOService.getDicTypeByDicCode(dicCode);
+		return Result.success(dicTypeEO);
+	}
+
+	/**
+	 * @Author gaoyan
+	 * @Description 分组查询全部字典类型
+	 * Date 2018/9/11 19:09
+	 * @Param [dicCode]
+	 * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.sys.entity.DicTypeEO>>
+	 **/
+	@ApiOperation(value = "|DicTypeEO|查询字典类型")
+	@GetMapping("/getDicTypeListCode")
+	public ResponseMessage<Map<String,Object>> getDicTypeListCode() throws Exception {
+		Map<String,Object> dicTypeEO = dicTypeEOService.getDicTypeListCode();
 		return Result.success(dicTypeEO);
 	}
 }

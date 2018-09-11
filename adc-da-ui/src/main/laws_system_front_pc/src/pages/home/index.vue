@@ -1,6 +1,12 @@
 <template>
   <div class="home">
-    <div class="logo"></div>
+    <div class="home-header">
+      <div class="logo"></div>
+      <ul class="home-nav">
+        <router-link tag="li" v-for="topNav in topNavList" :key="topNav.name" :to="topNav.path">{{ topNav.title }}</router-link>
+      </ul>
+      <div class="header-right"></div>
+    </div>
     <!-- 搜索框 -->
     <div class="search-box">
       <div class="search-option">主题</div>
@@ -67,7 +73,39 @@ export default {
       searchText: '标准高级检索',
       searchRecommend: '中文文献、外文文献 (elsevier、Springer、wiley......)',
       keywords: '', // 搜索关键词
-      currentTime: ''
+      currentTime: '',
+      topNavList: [
+        {
+          title: '首页',
+          path: '/',
+          name: 'home'
+        },
+        {
+          title: '云端资源库',
+          path: '/yunduanziyuanku',
+          name: 'yunduanziyuanku'
+        },
+        {
+          title: '本地资源库',
+          path: '/bendiziyuanku',
+          name: 'bendiziyuanku'
+        },
+        {
+          title: '数据报表',
+          path: '/shujubaobiao',
+          name: 'shujubaobiao'
+        },
+        {
+          title: '分析工具',
+          path: '/fenxigongju',
+          name: 'fenxigongju'
+        },
+        {
+          title: '配置管理',
+          path: '/config',
+          name: 'Config'
+        }
+      ]
     }
   },
   methods: {
@@ -99,19 +137,34 @@ export default {
     background-attachment: fixed;
     background-size: cover;
     position: relative;
-    .logo{
-      width: 23%;
-      height: 4.35%;
-      background: url("~assets/images/home/logo.png") no-repeat;
-      background-size: 100%;
-      position: absolute;
-      top: 20px;
-      left: 26px;
+    .home-header{
+      height: 7.5%;
+      display: flex;
+      align-items: center;
+      padding: 0 .54rem;
+      .logo{
+        width: 22.7%;
+        height: 58.75%;
+        background: url(/static/img/logo.26121a7.png) no-repeat;
+        background-position: left center;
+        background-size: 85%;
+      }
+      .home-nav{
+        flex: 1;
+        li{
+          float: left;
+        }
+      }
+      .header-right{
+        width: 7rem;
+        height: 100%;
+        /*background: #CCC;*/
+      }
     }
     .search-box{
       width: 45.8%;
       height: 5.55%;
-      margin: 8% auto 0 auto;
+      margin: 4.5% auto 0 auto;
       display: flex;
       &>div{
         height: 100%;

@@ -18,7 +18,7 @@ let formData = (data) => {
   }
   return _formData
 }
-axios.defaults.timeout = 10000
+axios.defaults.timeout = 5000
 axios.defaults.headers['Content-type'] = 'application/json'
 module.exports = {
   /**
@@ -32,23 +32,30 @@ module.exports = {
    */
   post (url, param, config, thenFun, exeFun) {
     var _formData = formData(param)
-    let _this = config._this
-    _this[config.loading] = true
+    // 参数包含this
+    let _this = config._this || false
+    // 参数包含loading
+    let loading = config.loading || false
+    if (_this) {
+      _this[loading] = true
+    }
     axios.post('/api/' + url, _formData).then(res => {
-      _this[config.loading] = false
+      if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
-        _this.$Message[type](res.data.message)
+        if (_this) { _this.$Message[type](res.data.message) }
         if (res.data.ok) {
           thenFun.call(this, res.data)
         }
       }
     }).catch(err => {
-      _this[config.loading] = false
-      _this.$Notice.error({
-        title: '错误',
-        desc: '网络连接错误'
-      })
+      if (_this && loading) {
+        _this[loading] = false
+        _this.$Notice.error({
+          title: '错误',
+          desc: '网络连接错误'
+        })
+      }
       exeFun.call(this, err)
     })
   },
@@ -62,32 +69,35 @@ module.exports = {
    * @author: xx
    * @date: 2018-08-14 16:59:56
    */
+  postData (url, param, config, thenFun, exeFun) {
+    // 参数包含this
+    let _this = config._this || false
+    // 参数包含loading
+    let loading = config.loading || false
+    if (_this) {
+      _this[loading] = true
+    }
+    axios.post('/api/' + url, param).then(res => {
+      if (_this && loading) { _this[loading] = false }
+      if (res.data.ok !== undefined) {
+        let type = res.data.ok ? 'success' : 'warning'
+        if (_this) { _this.$Message[type](res.data.message) }
+        if (res.data.ok) {
+          thenFun.call(this, res.data)
+        }
+      }
+    }).catch(err => {
+      if (_this && loading) {
+        _this[loading] = false
+        _this.$Notice.error({
+          title: '错误',
+          desc: '网络连接错误'
+        })
+      }
+      exeFun.call(this, err)
+    })
+  },
 
-  // postData (url, param, config, thenFun, exeFun) {
-  //   let _this = config._this
-  //   _this[config.loading] = true
-  //   axios.post('/api/' + url, param, {
-  //     headers: {
-  //       'Content-type': 'application/x-www-form-urlencoded'
-  //     }
-  //   }).then(res => {
-  //     _this[config.loading] = false
-  //     if (res.data.ok !== undefined) {
-  //       let type = res.data.ok ? 'success' : 'warning'
-  //       _this.$Message[type](res.data.message)
-  //       if (res.data.ok) {
-  //         thenFun.call(this, res.data)
-  //       }
-  //     }
-  //   }).catch(err => {
-  //     _this[config.loading] = false
-  //     _this.$Notice.error({
-  //       title: '错误',
-  //       desc: '网络连接错误'
-  //     })
-  //     exeFun.call(this, err)
-  //   })
-  // },
   /**
    * @description: $get方法(使用post方法获取数据)
    * @config: {
@@ -99,17 +109,24 @@ module.exports = {
    */
   $get (url, param, config, thenFun, exeFun) {
     var _formData = formData(param)
-    let _this = config._this
-    _this[config.loading] = true
+    // 参数包含this
+    let _this = config._this || false
+    // 参数包含loading
+    let loading = config.loading || false
+    if (_this) {
+      _this[loading] = true
+    }
     axios.post('/api/' + url, _formData).then(res => {
-      _this[config.loading] = false
+      if (_this && loading) { _this[loading] = false }
       thenFun.call(this, res.data)
     }).catch(err => {
-      _this[config.loading] = false
-      _this.$Notice.error({
-        title: '错误',
-        desc: '网络连接错误'
-      })
+      if (_this && loading) {
+        _this[loading] = false
+        _this.$Notice.error({
+          title: '错误',
+          desc: '网络连接错误'
+        })
+      }
       exeFun.call(this, err)
     })
   },
@@ -124,10 +141,15 @@ module.exports = {
    * @date: 2018-08-14 16:59:56
    */
   get (url, param, config, thenFun, exeFun) {
-    let _this = config._this
-    _this[config.loading] = true
+    // 参数包含this
+    let _this = config._this || false
+    // 参数包含loading
+    let loading = config.loading || false
+    if (_this) {
+      _this[loading] = true
+    }
     axios.get('/api/' + url, { params: param }).then(res => {
-      _this[config.loading] = false
+      if (_this && loading) { _this[loading] = false }
       // 返回data对象
       if (res.ok !== undefined) {
         if (res.ok) {
@@ -141,11 +163,13 @@ module.exports = {
       }
       thenFun.call(this, res.data)
     }).catch(err => {
-      _this[config.loading] = false
-      _this.$Notice.error({
-        title: '错误',
-        desc: '网络连接错误'
-      })
+      if (_this && loading) {
+        _this[loading] = false
+        _this.$Notice.error({
+          title: '错误',
+          desc: '网络连接错误'
+        })
+      }
       exeFun.call(this, err)
     })
   },
@@ -157,23 +181,30 @@ module.exports = {
    */
   put (url, param, config, thenFun, exeFun) {
     var _formData = formData(param)
-    let _this = config._this
-    _this[config.loading] = true
+    // 参数包含this
+    let _this = config._this || false
+    // 参数包含loading
+    let loading = config.loading || false
+    if (_this) {
+      _this[loading] = true
+    }
     axios.put('/api/' + url, _formData).then(res => {
-      _this[config.loading] = false
+      if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
-        _this.$Message[type](res.data.message)
+        if (_this) { _this.$Message[type](res.data.message) }
         if (res.data.ok) {
           thenFun.call(this, res.data)
         }
       }
     }).catch(err => {
-      _this[config.loading] = false
-      _this.$Notice.error({
-        title: '错误',
-        desc: '网络连接错误'
-      })
+      if (_this && loading) {
+        _this[loading] = false
+        _this.$Notice.error({
+          title: '错误',
+          desc: '网络连接错误'
+        })
+      }
       exeFun.call(this, err)
     })
   }
