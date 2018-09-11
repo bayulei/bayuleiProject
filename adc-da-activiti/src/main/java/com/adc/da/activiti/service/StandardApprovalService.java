@@ -7,7 +7,9 @@ import com.adc.da.activiti.vo.StandardApprovalVO;
 import com.adc.da.activiti.page.BusExecuProcessEOPage;
 import com.adc.da.sys.util.UUIDUtils;
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.impl.HistoricTaskInstanceQueryImpl;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -21,10 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  *
@@ -199,19 +199,23 @@ public class StandardApprovalService {
      */
     public String completeProcess(String processInstanceId, String nowUserId, String comment) throws Exception {
         //通过代办人，获取该人需要执行的任务
-        Task task = taskService.createTaskQuery()
+        List<Task> taskList = taskService.createTaskQuery()
                 .processInstanceId(processInstanceId)
                 .taskAssignee(nowUserId)
-                .singleResult();
-        if (!StringUtils.isEmpty(comment)) {
-            // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
-            Authentication.setAuthenticatedUserId(nowUserId);//批注人的名称  一定要写，不然查看的时候不知道人物信息
-            // 添加批注信息
-            taskService.addComment(task.getId(), null, comment);//comment为批注内容
-        }
+                .list();
+        if(taskList!=null && !taskList.isEmpty()) {
+            for(int i=0;i<taskList.size();i++) {
+                if (!StringUtils.isEmpty(comment)) {
+                    // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
+                    Authentication.setAuthenticatedUserId(nowUserId);//批注人的名称  一定要写，不然查看的时候不知道人物信息
+                    // 添加批注信息
+                    taskService.addComment(taskList.get(i).getId(), processInstanceId,null, comment);//comment为批注内容
+                }
 
-        //将提交申请第一步任务走完 即向后执行一步
-        taskService.complete(task.getId());
+                //将提交申请第一步任务走完 即向后执行一步
+                taskService.complete(taskList.get(i).getId());
+            }
+        }
 
         /*
         *
@@ -224,7 +228,7 @@ public class StandardApprovalService {
                 .parentId(processInstanceId).singleResult();
         if(execution!=null){
             //查询完成上一次任务后当前任务
-            Task taskNow = taskService.createTaskQuery().executionId(task.getExecutionId()).singleResult();
+            Task taskNow = taskService.createTaskQuery().executionId(taskList.get(0).getExecutionId()).singleResult();
             if (taskNow != null) {
                 //设置下一步的代办人
                 taskService.setAssignee(taskNow.getId(), "下一个人");
@@ -285,6 +289,7 @@ public class StandardApprovalService {
      */
     public Map<String, Object> getTaskInfo(String taskId, String processInstanceId){
         Map<String,Object> resultMap = new HashMap<String,Object>();
+        //获取历史的流程变量
         List<HistoricVariableInstance> historicVariableInstanceList = historyService.createHistoricVariableInstanceQuery()
                 .executionId(processInstanceId).list();
         if (historicVariableInstanceList != null && !historicVariableInstanceList.isEmpty()) {
@@ -292,12 +297,20 @@ public class StandardApprovalService {
                 resultMap.put(hvi.getVariableName(),hvi.getValue());
             }
         }
-        List<Comment> commentList = taskService.getTaskComments(taskId);
-        if(commentList!=null && !commentList.isEmpty()){
-            for(Comment comment : commentList){
-                resultMap.put("comment",comment.getFullMessage());
+        //获取历史的审批意见
+        List<Map<String,String>> commentList = new ArrayList<Map<String,String>>();
+        List<Comment> comments = taskService.getProcessInstanceComments(processInstanceId);
+        if(comments!=null && !comments.isEmpty()){
+            for(Comment comment : comments){
+                Map<String,String> map = new HashMap<String,String>();
+                map.put("审批人",comment.getUserId());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                map.put("审批时间",simpleDateFormat.format(comment.getTime()));
+                map.put("审批意见",comment.getFullMessage());
+                commentList.add(map);
             }
         }
+        resultMap.put("comment",commentList);
         return resultMap;
     }
 }
