@@ -8,72 +8,66 @@ import com.adc.da.sys.entity.MenuEO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class RoleVO {
-	private String rid;
-	private String rname;
-	private String rdesc;
-	private int enabled;
-	private int usercount;
-	private int belong;
-	
-    private String remarks;
-    private String name;
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date modifyTime;
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date creationTime;
+	private Integer validFlag;
+	private String operUser;
+	private String extInfo;
+	private String remarks;
+	private Integer isDefault;
+	private Integer useFlag;
+	private String roleType;
+	private String name;
+	private String id;
     //新添字段
     private String oprUser;
-    private int useFlag;
 	private String operUserName;
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
+
+
 	// 扩展字段
-	private String extInfo;
 	private List<MenuEO> menus = new ArrayList<>();
 	private List<String> menusstr = new ArrayList<>();
+	private String rid;
+	private Integer belong;
+	private String rname;
+	private String rdesc;
+	private String enabled;
 
-	public String getRid() {
-		return rid;
+
+	public Date getModifyTime() {
+		return modifyTime;
 	}
 
-	public void setRid(String rid) {
-		this.rid = rid;
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
-	public String getRname() {
-		return rname;
+	public Date getCreationTime() {
+		return creationTime;
 	}
 
-	public void setRname(String rname) {
-		this.rname = rname;
+	public void setCreationTime(Date creationTime) {
+		this.creationTime = creationTime;
 	}
 
-	public String getRdesc() {
-		return rdesc;
+	public Integer getValidFlag() {
+		return validFlag;
 	}
 
-	public void setRdesc(String rdesc) {
-		this.rdesc = rdesc;
+	public void setValidFlag(Integer validFlag) {
+		this.validFlag = validFlag;
 	}
 
-	public int getEnabled() {
-		return enabled;
+	public String getOperUser() {
+		return operUser;
 	}
 
-	public void setEnabled(int enabled) {
-		this.enabled = enabled;
-	}
-
-	public int getUsercount() {
-		return usercount;
-	}
-
-	public void setUsercount(int usercount) {
-		this.usercount = usercount;
-	}
-
-	public int getBelong() {
-		return belong;
-	}
-
-	public void setBelong(int belong) {
-		this.belong = belong;
+	public void setOperUser(String operUser) {
+		this.operUser = operUser;
 	}
 
 	public String getExtInfo() {
@@ -82,6 +76,78 @@ public class RoleVO {
 
 	public void setExtInfo(String extInfo) {
 		this.extInfo = extInfo;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Integer getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(Integer isDefault) {
+		this.isDefault = isDefault;
+	}
+
+	public Integer getUseFlag() {
+		return useFlag;
+	}
+
+	public void setUseFlag(Integer useFlag) {
+		this.useFlag = useFlag;
+	}
+
+	public String getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(String roleType) {
+		this.roleType = roleType;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getOprUser() {
+		return oprUser;
+	}
+
+	public void setOprUser(String oprUser) {
+		this.oprUser = oprUser;
+	}
+
+	public String getOperUserName() {
+		return operUserName;
+	}
+
+	public void setOperUserName(String operUserName) {
+		this.operUserName = operUserName;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	public List<MenuEO> getMenus() {
@@ -100,57 +166,43 @@ public class RoleVO {
 		this.menusstr = menusstr;
 	}
 
-	public String getRemarks() {
-		return remarks;
+	public String getRid() {
+		return rid;
 	}
 
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
+	public void setRid(String rid) {
+		this.rid = rid;
 	}
 
-	public String getName() {
-		return name;
+	public Integer getBelong() {
+		return belong;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setBelong(Integer belong) {
+		this.belong = belong;
 	}
 
-	public String getOprUser() {
-		return oprUser;
+	public String getRname() {
+		return rname;
 	}
 
-	public void setOprUser(String oprUser) {
-		this.oprUser = oprUser;
+	public void setRname(String rname) {
+		this.rname = rname;
 	}
 
-	public int getUseFlag() {
-		return useFlag;
+	public String getRdesc() {
+		return rdesc;
 	}
 
-	public void setUseFlag(Integer useFlag) {
-		this.useFlag = useFlag;
+	public void setRdesc(String rdesc) {
+		this.rdesc = rdesc;
 	}
 
-	public String getOperUserName() {
-		return operUserName;
+	public String getEnabled() {
+		return enabled;
 	}
 
-	public void setOperUserName(String operUserName) {
-		this.operUserName = operUserName;
+	public void setEnabled(String enabled) {
+		this.enabled = enabled;
 	}
-
-	public void setUseFlag(int useFlag) {
-		this.useFlag = useFlag;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	
 }

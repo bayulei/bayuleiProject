@@ -15,12 +15,13 @@ public class UserEOPage extends BasePage {
     private String usidOperator = "=";
     private String account;
     private String accountOperator = "=";
-    private String delFlag;
-    private String delFlagOperator = "=";
+    private String validFlag;
+    private String validFlagOperator = "=";
     private String password;
     private String passwordOperator = "=";
-    private String usname;
-    private String usnameOperator = "=";
+//    private String usname;
+    private String uname;
+    private String unameOperator = "=";
     private String rolename;
     private String rolenameOperator = "=";
     private String roleId;
@@ -69,20 +70,20 @@ public class UserEOPage extends BasePage {
         this.accountOperator = accountOperator;
     }
 
-    public String getDelFlag() {
-        return this.delFlag;
+    public String getValidFlag() {
+        return validFlag;
     }
 
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag;
+    public void setValidFlag(String validFlag) {
+        this.validFlag = validFlag;
     }
 
-    public String getDelFlagOperator() {
-        return this.delFlagOperator;
+    public String getValidFlagOperator() {
+        return validFlagOperator;
     }
 
-    public void setDelFlagOperator(String delFlagOperator) {
-        this.delFlagOperator = delFlagOperator;
+    public void setValidFlagOperator(String validFlagOperator) {
+        this.validFlagOperator = validFlagOperator;
     }
 
     public String getPassword() {
@@ -101,20 +102,20 @@ public class UserEOPage extends BasePage {
         this.passwordOperator = passwordOperator;
     }
 
-    public String getUsname() {
-        return this.usname;
+    public String getUname() {
+        return uname;
     }
 
-    public void setUsname(String usname) {
-        this.usname = usname;
+    public void setUname(String uname) {
+        this.uname = uname;
     }
 
-    public String getUsnameOperator() {
-        return this.usnameOperator;
+    public String getUnameOperator() {
+        return this.unameOperator;
     }
 
-    public void setUsnameOperator(String usnameOperator) {
-        this.usnameOperator = usnameOperator;
+    public void setUnameOperator(String unameOperator) {
+        this.unameOperator = unameOperator;
     }
     public String getRolename() {
 		return rolename;

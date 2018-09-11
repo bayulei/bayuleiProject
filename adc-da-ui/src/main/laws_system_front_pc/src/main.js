@@ -26,6 +26,8 @@ import components from '@/common/components'
 // axios
 import axios from 'axios'
 import $axios from '@/common/axios'
+// es6兼容
+import 'babel-polyfill'
 // 表单验证
 import verify from '@/common/verify'
 Vue.config.productionTip = false

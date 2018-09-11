@@ -17,6 +17,7 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.sys.dao.MenuEODao;
 import com.adc.da.sys.entity.MenuEO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,6 +51,12 @@ public class MenuEOService extends BaseService<MenuEO, String> {
 	public MenuEO insertMenu(MenuEO menuEO) throws Exception {
 		menuEO.setId(UUID.randomUUID(10));
 		menuEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
+
+
+		menuEO.setCreationTime(new Date());
+		menuEO.setModifyTime(new Date());
+
+
 		TreeEntity parent = menuEO.getParent();
 		if (parent != null) {
 			menuEO.setParentId(parent.getId());
@@ -69,6 +76,7 @@ public class MenuEOService extends BaseService<MenuEO, String> {
 	public void updateMenu(MenuVO menuVO) throws Exception {
 		// 处理当前节点
 		// 构建菜单
+		menuVO.setModifyTime(new Date());
 		String oldParentId = menuVO.getParentId();
 		String oldParentIds = menuVO.getParentIds();
 		MenuVO parentMenu = menuVO.getParent();

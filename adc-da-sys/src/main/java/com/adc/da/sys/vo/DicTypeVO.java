@@ -5,7 +5,9 @@ public class DicTypeVO {
     private String dicTypeCode;
     private String dicTypeName;
     private String dicId;
-    private Integer delFlag;
+    private Integer validFlag;
+    private String parentId;
+
     
     public String getId() {
         return id;
@@ -36,11 +38,19 @@ public class DicTypeVO {
 		this.dicId = dicId;
 	}
 
-	public Integer getDelFlag() {
-		return delFlag;
+	public Integer getValidFlag() {
+		return validFlag;
 	}
 
-	public void setDelFlag(Integer delFlag) {
-		this.delFlag = delFlag;
+	public void setValidFlag(Integer validFlag) {
+		this.validFlag = validFlag;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
 	}
 }

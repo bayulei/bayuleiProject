@@ -6,12 +6,12 @@
         <Form ref="formInline" :model="formInline" inline>
           <FormItem prop="option">
             <Input type="text" v-model="value1" placeholder="请输入选项">
-            <span slot="prepend">选项</span>
+              <span slot="prepend">选项</span>
             </Input>
           </FormItem>
           <FormItem prop="describe">
             <Input type="text" v-model="value2" placeholder="请输入选项">
-            <span slot="prepend">描述</span>
+              <span slot="prepend">描述</span>
             </Input>
           </FormItem>
           <Button type="info" class="query-button" @click="handleQuery">查询</Button>
@@ -44,7 +44,8 @@
         </Modal>
       </div>
     </table-tools-bar>
-    <Table border ref="selection" :columns="categoryTable" :data="data1"></Table>
+    <Table border ref="selection" :columns="categoryTable" :data="categoryData"></Table>
+    <loading :loading="loading"></loading>
   </div>
 </template>
 
@@ -56,6 +57,9 @@ export default {
     return {
       modalType: '',
       categoryTitle: '',
+      pageNo: '',
+      pageSize: '',
+      loading: false,
       formInline: {
         option: '',
         describe: ''
@@ -125,32 +129,7 @@ export default {
           }
         }
       ],
-      data1: [
-        {
-          option: '中国标准',
-          describe: 'XXXXXXXXXXXXXXXXXXX',
-          founder: 'Mr.li',
-          creationDate: '2018-9-05'
-        },
-        {
-          option: '企业标准',
-          describe: 'XXXXXXXXXXXXXXXXXXX',
-          founder: 'Mr.li',
-          creationDate: '2018-9-05'
-        },
-        {
-          option: '欧盟标准',
-          describe: 'XXXXXXXXXXXXXXXXXXX',
-          founder: 'Mr.li',
-          creationDate: '2018-9-05'
-        },
-        {
-          option: '美国标准',
-          describe: 'XXXXXXXXXXXXXXXXXXX',
-          founder: 'Mr.li',
-          creationDate: '2018-9-05'
-        }
-      ]
+      categoryData: []
     }
   },
   methods: {
@@ -175,12 +154,25 @@ export default {
       this.modalType = 3
       this.categoryTitle = '查看标准'
       // $('.ivu-modal-footer').addClass('isDisplay')
+    },
+    // 加载表格
+    selectCategory () {
+      this.$http.get('sys/dictype/page', {
+      }, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        this.categoryData=res.data.list
+      }, e => {})
     }
   },
   components: {
     tableToolsBar
   },
   computed: {
+  },
+  mounted () {
+    this.selectCategory()
   }
 }
 </script>

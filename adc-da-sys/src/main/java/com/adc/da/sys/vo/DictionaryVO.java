@@ -3,49 +3,50 @@ package com.adc.da.sys.vo;
 import com.adc.da.sys.entity.DicTypeEO;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DictionaryVO {
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date modifyTime;
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date creationTime;
+	private Integer validFlag;
+	private Integer dictionarySeq;
+	private String dictionaryName;
+	private String dictionaryCode;
 	private String id;
-    private String dictionaryCode;
-    private String dictionaryName;
-	private String dicTypeName;
-	private String dicId;
-	private Integer delFlag;
-	private String updateTime;
 
-	public String getDicTypeName() {
-		return dicTypeName;
+	public Date getModifyTime() {
+		return modifyTime;
 	}
 
-	public void setDicTypeName(String dicTypeName) {
-		this.dicTypeName = dicTypeName;
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
-	public String getDicId() {
-		return dicId;
+	public Date getCreationTime() {
+		return creationTime;
 	}
 
-	public void setDicId(String dicId) {
-		this.dicId = dicId;
+	public void setCreationTime(Date creationTime) {
+		this.creationTime = creationTime;
 	}
 
-	private List<DicTypeEO> dicTypeEOList = new ArrayList<>();
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-    
-    public String getDictionaryCode() {
-		return dictionaryCode;
+	public Integer getValidFlag() {
+		return validFlag;
 	}
 
-	public void setDictionaryCode(String dictionaryCode) {
-		this.dictionaryCode = dictionaryCode;
+	public void setValidFlag(Integer validFlag) {
+		this.validFlag = validFlag;
+	}
+
+	public Integer getDictionarySeq() {
+		return dictionarySeq;
+	}
+
+	public void setDictionarySeq(Integer dictionarySeq) {
+		this.dictionarySeq = dictionarySeq;
 	}
 
 	public String getDictionaryName() {
@@ -56,27 +57,19 @@ public class DictionaryVO {
 		this.dictionaryName = dictionaryName;
 	}
 
-	public Integer getDelFlag() {
-		return delFlag;
+	public String getDictionaryCode() {
+		return dictionaryCode;
 	}
 
-	public void setDelFlag(Integer delFlag) {
-		this.delFlag = delFlag;
+	public void setDictionaryCode(String dictionaryCode) {
+		this.dictionaryCode = dictionaryCode;
 	}
 
-	public List<DicTypeEO> getDicTypeEOList() {
-		return dicTypeEOList;
+	public String getId() {
+		return id;
 	}
 
-	public void setDicTypeEOList(List<DicTypeEO> dicTypeEOList) {
-		this.dicTypeEOList = dicTypeEOList;
-	}
-
-	public String getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
+	public void setId(String id) {
+		this.id = id;
 	}
 }
