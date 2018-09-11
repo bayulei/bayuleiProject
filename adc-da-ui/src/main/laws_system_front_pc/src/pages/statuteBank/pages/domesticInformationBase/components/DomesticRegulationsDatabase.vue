@@ -25,79 +25,81 @@
    <full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">
      <Button @click="closeModal">关闭</Button>
      <div>
-       <Form ref="lawsInfoForm" :model="lawsInfoForm" :rules="lawsInfoFormRules" class="label-input-form">
-         <input v-model="lawsInfoForm.editLawsId" v-show="false">
+       <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
+         <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
          <Row>
            <Col span="8">
              <FormItem label="国家/地区" prop="country" class="laws-info-item">
-               <Input v-model="lawsInfoForm.country" disabled="disabled"></Input>
+               <Input v-model="SarLawsInfoEO.country" disabled="disabled"></Input>
              </FormItem>
           </Col>
            <Col span="8">
-             <label-select v-model="lawsInfoForm.lawsProperty" :options="lawsPropertyOptions" label="文件性质"></label-select>
+             <label-select v-model="SarLawsInfoEO.lawsProperty" :options="lawsPropertyOptions" label="文件性质"></label-select>
            </Col>
            <Col span="8">
              <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
-               <Input v-model="lawsInfoForm.lawsNumber"></Input>
+               <Input v-model="SarLawsInfoEO.lawsNumber"></Input>
              </FormItem>
            </Col>
          </Row>
          <Row>
            <Col span="8">
              <FormItem label="文件名称" prop="lawsName" class="laws-info-item">
-               <Input v-model="lawsInfoForm.lawsName"></Input>
+               <Input v-model="SarLawsInfoEO.lawsName"></Input>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="发布单位" prop="issueUnit" class="laws-info-item">
-               <Input v-model="lawsInfoForm.issueUnit"></Input>
+               <Input v-model="SarLawsInfoEO.issueUnit"></Input>
              </FormItem>
            </Col>
            <Col span="8">
-              <label-select v-model="lawsInfoForm.lawsStatus" :options="lawsStatusOptions" label="文件状态"></label-select>
+              <label-select v-model="SarLawsInfoEO.lawsStatus" :options="lawsStatusOptions" label="文件状态"></label-select>
            </Col>
          </Row>
          <Row>
            <Col span="8">
              <FormItem label="发布日期" prop="issueTime" class="laws-info-item">
-               <DatePicker v-model="lawsInfoForm.replaceLawsNum"></DatePicker>
+               <DatePicker type="date" v-model="SarLawsInfoEO.issueTime" format="yyyy-MM-dd"></DatePicker>
              </FormItem>
            </Col>
            <Col span="8">
-              <label-select v-model="lawsInfoForm.putTime"  label="实施日期" type="datePicker"></label-select>
+             <FormItem label="实施日期" prop="putTime" class="laws-info-item">
+               <DatePicker v-model="SarLawsInfoEO.putTime"></DatePicker>
+             </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="代替文件号" prop="replaceLawsNum" class="laws-info-item">
-               <Input v-model="lawsInfoForm.replaceLawsNum"></Input>
+               <Input v-model="SarLawsInfoEO.replaceLawsNum"></Input>
              </FormItem>
            </Col>
          </Row>
          <Row>
            <Col span="8">
              <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
-               <Input v-model="lawsInfoForm.applyArctic"></Input>
+               <Input v-model="SarLawsInfoEO.applyArctic"></Input>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
-               <Input v-model="lawsInfoForm.energyKind"></Input>
+               <Input v-model="SarLawsInfoEO.energyKind"></Input>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="适用认证" prop="applyAuth" class="laws-info-item">
-               <Input v-model="lawsInfoForm.applyAuth"></Input>
+               <Input v-model="SarLawsInfoEO.applyAuth"></Input>
              </FormItem>
            </Col>
          </Row>
          <Row>
            <Col span="8">
              <FormItem label="责任部门" prop="responsibleUnit" class="laws-info-item">
-               <Input v-model="lawsInfoForm.responsibleUnit"></Input>
+               <Input v-model="SarLawsInfoEO.responsibleUnit"></Input>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="链接" prop="linkUri" class="laws-info-item">
-               <Input v-model="lawsInfoForm.linkUri"></Input>
+               <Input v-model="SarLawsInfoEO.linkUri"></Input>
              </FormItem>
            </Col>
          </Row>
@@ -135,7 +137,7 @@ export default {
       lawsInfo: {
         fileNum: '' // 文件号
       },
-      lawsInfoForm: {
+      SarLawsInfoEO: {
         editLawsId: '',
         country: '中国',
         lawsProperty: '',
@@ -296,17 +298,18 @@ export default {
     // 点击编辑按钮触发
     edit (row) {
       this.showLawsInfoModal = true
-      this.lawsInfoForm.editLawsId = row.id
-      this.lawsInfoForm.lawsNumber = row.lawsNumber
-      this.lawsInfoForm.lawsName = row.lawsName
+      this.SarLawsInfoEO.editLawsId = row.id
+      this.SarLawsInfoEO.lawsNumber = row.lawsNumber
+      this.SarLawsInfoEO.lawsName = row.lawsName
     },
     // 提交新增/修改
     saveLawsInfo () {
-      if (this.lawsInfoForm.editLawsId == null || this.lawsInfoForm.editLawsId === '') {
-        this.$http.post('lawss/sarLawsInfo/createLawsInfo', {
-          lawsNumber: this.lawsInfoForm.lawsNumber,
-          lawsName: this.lawsInfoForm.lawsName
-        }, {
+      this.SarLawsInfoEO.issueTime = this.SarLawsInfoEO.issueTime.getTime()
+      let SarLawsInfoEO = JSON.parse(JSON.stringify(this.SarLawsInfoEO))
+      SarLawsInfoEO.issueTime = this.$dateFormat('yyyy-MM-dd', SarLawsInfoEO.issueTime)
+      console.log(SarLawsInfoEO)
+      if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
+        this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
           _this: this
         }, res => {
           this.showLawsInfoModal = false
@@ -315,11 +318,7 @@ export default {
 
         })
       } else {
-        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', {
-          id: this.lawsInfoForm.editLawsId,
-          lawsNumber: this.lawsInfoForm.lawsNumber,
-          lawsName: this.lawsInfoForm.lawsName
-        }, {
+        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', this.SarLawsInfoEO, {
           _this: this
         }, res => {
           this.showLawsInfoModal = false
