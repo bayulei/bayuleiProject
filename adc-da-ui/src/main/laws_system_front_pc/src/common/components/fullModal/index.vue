@@ -89,6 +89,16 @@ export default {
           color: rgba(0,0,0,85);
         }
       }
+      .ivu-form-item{
+        display: flex;
+        .ivu-form-item-content{
+          flex: 1;
+          padding-right: 0.5rem;
+          .ivu-date-picker{
+            width: 100%;
+          }
+        }
+      }
     }
   }
 </style>

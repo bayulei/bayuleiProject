@@ -252,8 +252,7 @@
            </Col>
          </Row>
        </Form>
-       <input type="button" value="保存修改" class="save primary-btn" @click="saveOrUpdateStands">
-       <Button @click="closeModal">关闭</Button>
+       <Button type="primary" @click="saveOrUpdateStands">保存修改</Button>
      </div>
    </full-modal>
    <!-- 导入模态窗 -->

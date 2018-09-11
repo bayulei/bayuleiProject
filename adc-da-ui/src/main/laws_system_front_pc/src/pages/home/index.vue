@@ -142,18 +142,24 @@ export default {
       background: #DDD;
       display: flex;
       align-items: center;
+      padding: 0 .54rem;
       .logo{
         width: 22.7%;
         height: 58.75%;
         background: url(/static/img/logo.26121a7.png) no-repeat;
         background-position: left center;
         background-size: 85%;
-        cursor: pointer;
       }
       .home-nav{
+        flex: 1;
         li{
           float: left;
         }
+      }
+      .header-right{
+        width: 7rem;
+        height: 100%;
+        background: #CCC;
       }
     }
     .search-box{
