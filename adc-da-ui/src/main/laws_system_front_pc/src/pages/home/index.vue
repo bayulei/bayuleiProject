@@ -78,32 +78,32 @@ export default {
         {
           title: '首页',
           path: '/',
-          name: ''
+          name: 'home'
         },
         {
           title: '云端资源库',
-          path: '/',
-          name: ''
+          path: '/yunduanziyuanku',
+          name: 'yunduanziyuanku'
         },
         {
           title: '本地资源库',
-          path: '/',
-          name: ''
+          path: '/bendiziyuanku',
+          name: 'bendiziyuanku'
         },
         {
           title: '数据报表',
-          path: '/',
-          name: ''
+          path: '/shujubaobiao',
+          name: 'shujubaobiao'
         },
         {
           title: '分析工具',
-          path: '/',
-          name: ''
+          path: '/fenxigongju',
+          name: 'fenxigongju'
         },
         {
           title: '配置管理',
-          path: '/',
-          name: ''
+          path: '/config',
+          name: 'Config'
         }
       ]
     }
@@ -139,27 +139,32 @@ export default {
     position: relative;
     .home-header{
       height: 7.5%;
-      background: #DDD;
       display: flex;
       align-items: center;
+      padding: 0 .54rem;
       .logo{
         width: 22.7%;
         height: 58.75%;
         background: url(/static/img/logo.26121a7.png) no-repeat;
         background-position: left center;
         background-size: 85%;
-        cursor: pointer;
       }
       .home-nav{
+        flex: 1;
         li{
           float: left;
         }
+      }
+      .header-right{
+        width: 7rem;
+        height: 100%;
+        /*background: #CCC;*/
       }
     }
     .search-box{
       width: 45.8%;
       height: 5.55%;
-      margin: 8% auto 0 auto;
+      margin: 4.5% auto 0 auto;
       display: flex;
       &>div{
         height: 100%;

@@ -17,7 +17,8 @@
    <div class="content">
      <loading :loading="loading">数据获取中</loading>
      <!--<Table border ref="selection" :columns="tableColumn" :data="stahndinfoList"></Table>-->
-     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="(item, index) in stahndinfoList" v-bind="item">
+
+     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="(item, index) in stahndinfoList" :key="index">
          <div style="text-align:center">
            <Row>
              <Col span="4">标准号:{{item.standNumber}} </Col>
@@ -264,8 +265,7 @@
            </Col>
          </Row>
        </Form>
-       <input type="button" value="保存修改" class="save primary-btn" @click="saveOrUpdateStands">
-       <Button @click="closeModal">关闭</Button>
+       <Button type="primary" @click="saveOrUpdateStands">保存修改</Button>
      </div>
    </full-modal>
    <!-- 导入模态窗 -->
