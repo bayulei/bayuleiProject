@@ -64,9 +64,10 @@ export default {
       top: 0;
       left: 100%;
       border-left: 1px solid #DDD;
-      padding: 0.2rem;
+      padding: 0.5rem 0 0.5rem 0.5rem;
       z-index: 10000;
       box-shadow: -1px -1px 20px 5px #DDD;
+      overflow-y: auto;
       .modal-close-btn{
         display: inline-block;
         width: 1rem;
@@ -87,6 +88,16 @@ export default {
         user-select: none;
         &:hover{
           color: rgba(0,0,0,85);
+        }
+      }
+      .ivu-form-item{
+        display: flex;
+        .ivu-form-item-content{
+          flex: 1;
+          padding-right: 1rem;
+          .ivu-date-picker{
+            width: 100%;
+          }
         }
       }
     }

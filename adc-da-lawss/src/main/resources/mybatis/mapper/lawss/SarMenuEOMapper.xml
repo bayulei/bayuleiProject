@@ -192,4 +192,9 @@
     </if>
   </select>
 
+    <select id="queryMenuByPid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select <include refid="Base_Column_List"/> from SAR_MENU
+        where parent_id = #{parentId} and valid_flag = 0
+    </select>
+
 </mapper>

@@ -3,7 +3,7 @@ package com.adc.da.lawss.dao;
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
-import com.adc.da.lawss.vo.SarStandExcelDto;
+import com.adc.da.lawss.dto.SarStandExcelDto;
 import java.util.List;
 
 /**

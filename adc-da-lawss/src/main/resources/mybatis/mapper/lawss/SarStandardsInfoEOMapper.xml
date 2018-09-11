@@ -44,7 +44,7 @@
     <result column="country" property="country" />
     <result column="stand_type" property="standType" />
   </resultMap>
-  <resultMap id="BaseResultMapExcel" type="com.adc.da.lawss.vo.SarStandExcelDto" >
+  <resultMap id="BaseResultMapExcel" type="com.adc.da.lawss.dto.SarStandExcelDto" >
         <!--<result column="modify_time" property="modifyTime" />
         <result column="creation_time" property="creationTime" />
         <result column="valid_flag" property="validFlag" />-->
