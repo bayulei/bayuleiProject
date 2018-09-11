@@ -90,7 +90,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             sarLawsValEODao.insertSelective(sarLawsValEO);
             return Result.success("0","新增成功",sarLawsInfoEO);
         } else {
-
+            return Result.error("新增失败");
         }
     }
 
