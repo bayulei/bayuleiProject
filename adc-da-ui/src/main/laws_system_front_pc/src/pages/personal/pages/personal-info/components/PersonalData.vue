@@ -87,7 +87,18 @@ export default {
     uploadAvator () {
       let avator = this.$refs.avatorUploadBtn.files[0]
       console.log(avator)
+    },
+    searchPersonal () {
+      this.$http.get('person/userInfo', {}, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        this.userInfo.username = res.data.count
+      }, e => {})
     }
+  },
+  mounted () {
+    this.searchPersonal()
   }
 }
 </script>
