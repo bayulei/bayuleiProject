@@ -4,7 +4,7 @@
     <Divider />
     <div class="pagination-slot">
       <slot>
-        <Page :total="total" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange"/>
+        <Page :total="total" show-elevator show-sizer show-total @on-change="pageChange" @on-page-size-change="pageSizeChange"/>
       </slot>
     </div>
   </div>
