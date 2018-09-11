@@ -11,7 +11,7 @@ import com.adc.da.lawss.common.ReadExcel;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
 import com.adc.da.lawss.service.SarStandardsInfoEOService;
-import com.adc.da.lawss.vo.SarStandExcelDto;
+import com.adc.da.lawss.dto.SarStandExcelDto;
 import com.adc.da.util.exception.AdcDaBaseException;
 import com.adc.da.util.http.PageInfo;
 import com.adc.da.util.http.ResponseMessage;
@@ -33,8 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 /**
  * 用户管理模块相关接口
@@ -121,7 +119,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
      * date 2018-09-04
      */
     @ApiOperation(value = "|SarStandardsInfoEO|导入")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE,value = "importStandardsInfo")
+    @PostMapping(value = "importStandardsInfo")
     //@RequiresPermissions("lawss:sarStandardsInfo:save")
     public ResponseMessage<SarStandardsInfoEO> importStandardsInfo(@RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
 
@@ -135,13 +133,13 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         // 导入参数设置，默认即可
         ImportParams params = new ImportParams();
         // 解析excel，并返回校验信息
-        ExcelImportResult<SarStandardsInfoEO> result = ExcelImportUtil.importExcelVerify(is, SarStandardsInfoEO.class, params);
+        ExcelImportResult<SarStandExcelDto> result = ExcelImportUtil.importExcelVerify(is, SarStandExcelDto.class, params);
         // 如果校验不通过，返回错误信息
         if (result.isVerfiyFail()) {
             return Result.error("fail", "excel文件校验失败");
         }
         //excel读取到的数据
-        List<SarStandardsInfoEO> datas = result.getList();
+        List<SarStandExcelDto> datas = result.getList();
         try {
             return sarStandardsInfoEOService.importSarStandardsInfoData(datas);
         } catch (Exception e) {
