@@ -67,6 +67,7 @@ export default {
       padding: 0.2rem;
       z-index: 10000;
       box-shadow: -1px -1px 20px 5px #DDD;
+      overflow-y: auto;
       .modal-close-btn{
         display: inline-block;
         width: 1rem;
