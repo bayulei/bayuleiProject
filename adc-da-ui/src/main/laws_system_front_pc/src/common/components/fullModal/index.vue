@@ -93,7 +93,7 @@ export default {
         display: flex;
         .ivu-form-item-content{
           flex: 1;
-          padding-right: 0.5rem;
+          padding-right: 1rem;
           .ivu-date-picker{
             width: 100%;
           }
