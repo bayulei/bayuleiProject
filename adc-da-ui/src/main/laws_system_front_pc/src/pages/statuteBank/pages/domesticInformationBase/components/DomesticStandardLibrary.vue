@@ -17,7 +17,7 @@
    <div class="content">
      <loading :loading="loading">数据获取中</loading>
      <!--<Table border ref="selection" :columns="tableColumn" :data="stahndinfoList"></Table>-->
-     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="item in stahndinfoList" :key="item">
+     <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="(item, index) in stahndinfoList">
          <div style="text-align:center">
            <Row>
              <Col span="4">标准号:{{item.standNumber}} </Col>
@@ -39,7 +39,7 @@
          </div>
      </Card>
 
-   <pagination :total="total"></pagination>
+   <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
    </div>
    <!-- 新增、编辑模态窗 -->
    <full-modal v-model="modalshowflag" v-if="modalshowflag" ref="modalshow">
@@ -259,9 +259,9 @@
      </div>
    </full-modal>
    <!-- 导入模态窗 -->
-   <Modal v-model="importModalshowflag" title="导入文件"  @on-ok="ok" @on-cancel="cancel">
-     <Upload action="//jsonplaceholder.typicode.com/posts/">
-       <Button icon="ios-cloud-upload-outline">Upload files</Button>
+   <Modal v-model="importModalshowflag" title="导入文件" >
+     <Upload action="/api/lawss/sarStandardsInfo/importStandardsInfo" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
+       <Button icon="ios-cloud-upload-outline">选择文件</Button>
      </Upload>
    </Modal>
  </div>
@@ -345,7 +345,6 @@ export default {
                     this.sarStandardsInfoEO = params.row
                     this.modalshowtitle = '修改标准'
                     this.addOrUPdateFlag = 2
-                    // this.updateStand()
                   }
                 }
               }, '编辑'),
@@ -407,7 +406,8 @@ export default {
         responsibleUnit: '',
         category: '',
         remark: ''
-      },
+      }, // 新增过程中用到的对象
+      sarStandardsSearch: {page: 1, pageSize: 10}, // 分页查询过程中用到的对象
       sarStandardsInfoRules: {
         standSort: [
           { required: true, message: '标准类别不能为空', trigger: 'blur' }
@@ -494,13 +494,26 @@ export default {
   methods: {
     // 分页查询国内标准
     getDomesticStandardTable () {
-      this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', {}, {
-        _this: this
+      this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', this.sarStandardsSearch, {
+        _this: this, loading: 'loading'
       }, res => {
         this.stahndinfoList = res.data.list
+        this.total = res.data.count
       }, e => {
       })
     },
+    // 分页点击后方法
+    pageChange (page) {
+      this.sarStandardsSearch.page = page
+      this.getDomesticStandardTable()
+    },
+    // 分页每页显示数改变后方法
+    pageSizeChange (pageSize) {
+      this.sarStandardsSearch.pageSize = pageSize
+      this.getDomesticStandardTable()
+      // 此处需要调用接口，修改个人配置
+    },
+    // 点击新增按钮弹出新增模态框
     addModal () {
       this.modalshowflag = true
       this.modalshowtitle = '新增标准'
@@ -540,8 +553,6 @@ export default {
       }, e => {
       })
     },
-    updateStand () {},
-    cancel () {},
     searchData () {},
     // 需求中操作栏中操作函数
     // 查看标准属性
@@ -583,6 +594,17 @@ export default {
     // 点击导入标准
     addImportModal () {
       this.importModalshowflag = true
+      this.$refs.importfile.clearFiles()
+    },
+    // 导入标准文件格式错误执行
+    handleFormatError (file) {
+      this.$Notice.warning({
+        title: 'The file format is incorrect',
+        desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+      })
+    },
+    // 导入标准数据成功后执行
+    importFileSuccess (response, file) {
     }
   },
   components: {
