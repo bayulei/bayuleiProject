@@ -35,7 +35,7 @@ module.exports = {
     let _this = config._this
     _this[config.loading] = true
     axios.post('/api/' + url, _formData).then(res => {
-      // _this[config.loading] = false
+      _this[config.loading] = false
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
         _this.$Message[type](res.data.message)
@@ -53,6 +53,41 @@ module.exports = {
     })
   },
 
+  /**
+   * @description: post方法(json格式提交)
+   * @config: {
+   *    _this : this (vue原型)
+   *    loading: data中定义的 loading('字符串格式 例如data定义的myloading config:{ _this: this, loading: 'myloading' }')
+   * }
+   * @author: xx
+   * @date: 2018-08-14 16:59:56
+   */
+
+  // postData (url, param, config, thenFun, exeFun) {
+  //   let _this = config._this
+  //   _this[config.loading] = true
+  //   axios.post('/api/' + url, param, {
+  //     headers: {
+  //       'Content-type': 'application/x-www-form-urlencoded'
+  //     }
+  //   }).then(res => {
+  //     _this[config.loading] = false
+  //     if (res.data.ok !== undefined) {
+  //       let type = res.data.ok ? 'success' : 'warning'
+  //       _this.$Message[type](res.data.message)
+  //       if (res.data.ok) {
+  //         thenFun.call(this, res.data)
+  //       }
+  //     }
+  //   }).catch(err => {
+  //     _this[config.loading] = false
+  //     _this.$Notice.error({
+  //       title: '错误',
+  //       desc: '网络连接错误'
+  //     })
+  //     exeFun.call(this, err)
+  //   })
+  // },
   /**
    * @description: $get方法(使用post方法获取数据)
    * @config: {

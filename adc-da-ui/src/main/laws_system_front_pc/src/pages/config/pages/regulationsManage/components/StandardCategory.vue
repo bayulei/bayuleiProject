@@ -4,7 +4,7 @@
       <table-tools-bar>
         <div slot="left">
             <label-input v-model="standardForm.standName" placeholder="请输入选项" label="选项"></label-input>
-          <label-input v-model="standardForm.standCode" placeholder="请输入选项" label="数据编码"></label-input>
+            <label-input v-model="standardForm.standCode" placeholder="请输入选项" label="数据编码"></label-input>
             <Button type="info" class="query-button" @click="selectCategory">查询</Button>
         </div>
         <div slot="right">
@@ -15,7 +15,7 @@
           <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="400"
                  @on-ok="saveCategory">
               <Form :model="categoryModelAdd" label-position="right" :label-width="80">
-                <input v-model="categoryModelAdd.id" v-show="false">
+                <input v-model="categoryModelAdd.id">
                 <FormItem label="标准">
                   <Input v-model="categoryModelAdd.parts" style="width: 200px" :disabled='modalType === 3'></Input>
                 </FormItem>
@@ -31,7 +31,8 @@
       </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="categoryTable" :data="categoryData"></Table>
+      <Table border ref="selection" :columns="categoryTable" :data="categoryData" @on-selection-change=" handleSelectone">
+      </Table>
       <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
     </div>
   </div>
@@ -48,7 +49,9 @@ export default {
       standardForm: {
         standName: '', // 选项
         standCode: '', // 数据编码
-        id: ''
+        id: '',
+        selectNum: '',
+        selectId: ''
       },
       total: 0,
       page: 1,
@@ -118,30 +121,69 @@ export default {
     }
   },
   methods: {
+    //  全选
+    handleSelectAll (status) {
+      this.$refs.selection.selectAll(status)
+    },
+    // 非全选
+    handleSelectone (row) {
+      this.selectNum = row
+      console.log(this.selectNum)
+      console.log(this.selectNum.length)
+    },
     // 新增
     categoryAdd () {
       this.categoryModal = true
       this.modalType = 1
+      // 取消所有的选中效果
+      this.handleSelectAll(false)
       this.categoryTitle = '新增标准'
       this.categoryModelAdd.parts = ''
       this.categoryModelAdd.coding = ''
+      this.categoryModelAdd.id = ''
     },
     // 编辑
     categoryEdit () {
       this.categoryModal = true
       this.modalType = 2
       this.categoryTitle = '编辑标准'
+      this.categoryModelAdd.parts = this.selectNum[0].dicTypeName
+      this.categoryModelAdd.coding = this.selectNum[0].dicTypeCode
+      this.categoryModelAdd.id = this.selectNum[0].id
     },
     // 查看
     viewData (row) {
+      console.log(row.id)
       this.categoryModal = true
       this.modalType = 3
       this.categoryTitle = '查看标准'
       this.categoryModelAdd.parts = row.dicTypeName
       this.categoryModelAdd.coding = row.dicTypeCode
+      this.categoryModelAdd.id = row.id
     },
     // 删除
-    categoryDel () {},
+    categoryDel () {
+      let delIds = []
+      for (let i = 0; i < this.selectNum.length; i++) {
+        delIds.push(this.selectNum[i].id)
+      }
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.put('deleteArr/{ids}', {
+            id: JSON.stringify(delIds)
+          }, {
+            _this: this
+          }, res => {
+            this.selectCategory()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
+      })
+    },
     pageChange (page) {
       this.page = page
       this.selectCategory()
@@ -168,7 +210,7 @@ export default {
     // 提交新增/修改
     saveCategory () {
       if (this.modalType === 1) {
-        this.$http.post('sys/dictype', {
+        this.$http.post('sys/dictype/create', {
           dicTypeName: this.categoryModelAdd.parts,
           dicTypeCode: this.categoryModelAdd.coding,
           dicId: 1
