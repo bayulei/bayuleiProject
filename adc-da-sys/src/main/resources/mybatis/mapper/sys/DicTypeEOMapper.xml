@@ -189,4 +189,12 @@
 		set valid_flag = 1
 		where id = #{id}
 	</update>-->
+
+	<!--create by yangxuenan-->
+	<select id="getDicTypeByDicCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		dt.id,dt.parent_id,dt.dic_type_code,dt.dic_type_name,dt.dic_id
+		from TS_DICTIONARY dn LEFT JOIN TS_DICTYPE dt ON dn.ID = dt.DIC_ID
+		where dictionary_code = #{dictionaryCode} AND dn.VALID_FLAG = 0 AND dt.VALID_FLAG = 0
+	</select>
 </mapper>
