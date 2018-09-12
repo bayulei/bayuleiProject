@@ -4,7 +4,20 @@
     <div class="mechanism-manage-left">
       <Tree :data="deptTree" :render="renderContent"></Tree>
     </div>
-    <div class="mechanism-manage-right"></div>
+    <div class="mechanism-manage-right">
+      <table-tools-bar>
+        <div slot="left">
+          <label-select v-model="mechanismSearch.type" :options="mechanismSearch.typeOptions" placeholder="请选择" label="状态"></label-select>
+          <label-input v-model="mechanismSearch.userName" placeholder="请输入用户名" label="用户名称"></label-input>
+          <label-select v-model="mechanismSearch.roleName" :options="mechanismSearch.roleOptions" placeholder="按角色查找" label="角色名称"></label-select>
+          <label-select v-model="mechanismSearch.state" :options="mechanismSearch.stateOptions" placeholder="按状态查找" label="用户状态"></label-select>
+        </div>
+        <div slot="right">
+          <Button type="info">查询</Button>
+          <Button type="info">查询</Button>
+        </div>
+      </table-tools-bar>
+    </div>
     <!-- tree弹窗 -->
     <Modal
       v-model="isShow.tree"
@@ -27,6 +40,33 @@ export default {
   name: 'mechanism-manage',
   data () {
     return {
+      mechanismSearch: {
+        type: '',
+        userName: '',
+        roleName: '',
+        state: '',
+        typeOptions: [{
+          label: '类型1',
+          value: 1
+        }, {
+          label: '类型2',
+          value: 2
+        }],
+        roleOptions: [{
+          label: '管理员',
+          value: 1
+        }, {
+          label: '普通用户',
+          value: 2
+        }],
+        stateOptions: [{
+          label: '已启用',
+          value: 1
+        }, {
+          label: '已停用',
+          value: 2
+        }]
+      },
       deptTree: [{
         expand: true,
         render: (h, { root, node, data }) => {
@@ -231,7 +271,7 @@ export default {
     display: flex;
     background: #FFF;
     .mechanism-manage-left{
-      width: 6.1rem;
+      width: 7rem;
       height: 100%;
       border-right: 1px solid #DDD;
       position: relative;
