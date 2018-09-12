@@ -35,7 +35,6 @@
     </div>
     <!-- 导航 -->
     <div class="nav">
-      <div class="time-box">{{ currentTime }}</div>
       <div class="nav-content">
         <div class="nav-content-left">
           <div class="nav-group nav-top">
@@ -222,9 +221,10 @@ export default {
           &.time-box{
             min-width: 3.92rem;
             justify-content: center;
+            margin-right: 0.2rem;
           }
           &.user-info{
-            width: 3.5rem;
+            min-width: 3.5rem;
             display: flex;
             img{
               width: 0.8rem;
@@ -236,6 +236,7 @@ export default {
               line-height: 0.8rem;
               cursor: pointer;
               text-align: center;
+              margin-left: 0.2rem;
             }
           }
         }
@@ -244,7 +245,7 @@ export default {
     .search-box{
       width: 45.8%;
       height: 5.55%;
-      margin: 4.5% auto 0 auto;
+      margin: 3.5% auto 0 auto;
       display: flex;
       &>div{
         height: 100%;
@@ -292,21 +293,13 @@ export default {
         flex: 0 0 calc(~'100% - 82.26%');
         position: relative;
         top: 5px;
-        left: 5px;
+        left: 0.55rem;
       }
     }
     .nav{
       width: 54.2%;
       height: 61%;
       margin: 3.5% auto 0 auto;
-      .time-box{
-        display: flex;
-        justify-content: flex-end;
-        color: #FEFEFE;
-        margin-right: 5px;
-        height: 30px;
-        line-height: 30px;
-      }
       .nav-content{
         height: calc(~'100% - 30px');
         display: flex;
