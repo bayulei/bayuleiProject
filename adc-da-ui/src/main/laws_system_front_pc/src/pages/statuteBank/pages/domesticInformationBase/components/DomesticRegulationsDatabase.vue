@@ -159,6 +159,7 @@ export default {
         responsibleUnit: '',
         linkUri: ''
       },
+      saveLawsProperty: '',
       total: 0,
       page: 1,
       rows: 10,
@@ -369,6 +370,21 @@ export default {
       }, e => {
 
       })
+    },
+    // 加载数据字典
+    loadDicTypeDatas () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'SARPROPERTY'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.saveLawsProperty = res.data
+          console.log(this.saveLawsProperty)
+        }
+      }, e => {
+
+      })
     }
   },
   components: {},
@@ -380,7 +396,8 @@ export default {
     }
   },
   mounted () {
-    // this.searchLawsInfo()
+    this.searchLawsInfo()
+    this.loadDicTypeDatas()
   }
 }
 </script>
