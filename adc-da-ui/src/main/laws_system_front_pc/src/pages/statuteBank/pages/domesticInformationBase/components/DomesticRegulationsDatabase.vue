@@ -309,10 +309,7 @@ export default {
     },
     // 提交新增/修改
     saveLawsInfo () {
-      this.SarLawsInfoEO.issueTime = this.SarLawsInfoEO.issueTime.getTime()
-      let SarLawsInfoEO = JSON.parse(JSON.stringify(this.SarLawsInfoEO))
-      SarLawsInfoEO.issueTime = this.$dateFormat('yyyy-MM-dd', SarLawsInfoEO.issueTime)
-      console.log(SarLawsInfoEO)
+      this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
       if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
         this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
           _this: this
@@ -328,9 +325,7 @@ export default {
         }, res => {
           this.showLawsInfoModal = false
           this.searchLawsInfo()
-        }, e => {
-
-        })
+        }, e => {})
       }
     },
     cancelAdd () {
@@ -385,7 +380,7 @@ export default {
     }
   },
   mounted () {
-    this.searchLawsInfo()
+    // this.searchLawsInfo()
   }
 }
 </script>
