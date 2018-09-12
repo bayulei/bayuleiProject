@@ -33,7 +33,11 @@
              </FormItem>
           </Col>
            <Col span="8">
-             <label-select v-model="SarLawsInfoEO.lawsProperty" :options="lawsPropertyOptions" label="文件性质"></label-select>
+             <FormItem label="文件性质" prop="country" class="laws-info-item">
+               <Select v-model="SarLawsInfoEO.lawsProperty">
+                 <Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+               </Select>
+             </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
@@ -53,7 +57,11 @@
              </FormItem>
            </Col>
            <Col span="8">
-              <label-select v-model="SarLawsInfoEO.lawsStatus" :options="lawsStatusOptions" label="文件状态"></label-select>
+             <FormItem label="文件状态" prop="issueUnit" class="laws-info-item">
+               <Select v-model="SarLawsInfoEO.lawsStatus">
+                 <Option v-for="opt in lawsStatusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+               </Select>
+             </FormItem>
            </Col>
          </Row>
          <Row>
