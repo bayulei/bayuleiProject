@@ -1,11 +1,26 @@
 <template>
   <div class="home">
     <div class="home-header">
+      <!-- logo -->
       <div class="logo"></div>
+      <!-- 顶部导航 -->
       <ul class="home-nav">
         <router-link tag="li" v-for="topNav in topNavList" :key="topNav.name" :to="topNav.path">{{ topNav.title }}</router-link>
       </ul>
-      <div class="header-right"></div>
+      <!-- 用户信息 -->
+      <div class="header-right">
+        <div class="time-box">{{ currentTime }}</div>
+        <div class="user-info">
+          <img :src="userAvator" alt="avator">
+          <Dropdown trigger="click">
+            <span>欢迎您，张三 <Icon type="ios-arrow-down"></Icon></span>
+            <DropdownMenu slot="list">
+              <DropdownItem>设置</DropdownItem>
+              <DropdownItem>退出</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </div>
     </div>
     <!-- 搜索框 -->
     <div class="search-box">
@@ -20,7 +35,6 @@
     </div>
     <!-- 导航 -->
     <div class="nav">
-      <div class="time-box">{{ currentTime }}</div>
       <div class="nav-content">
         <div class="nav-content-left">
           <div class="nav-group nav-top">
@@ -105,7 +119,8 @@ export default {
           path: '/config',
           name: 'Config'
         }
-      ]
+      ],
+      userAvator: require('assets/images/user-avator.png')
     }
   },
   methods: {
@@ -116,7 +131,8 @@ export default {
      */
     getTime () {
       setInterval(() => {
-        this.currentTime = this.$dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss') + ' 星期' + '日一二三四五六'.charAt(new Date().getDay())
+        this.currentTime = this.$dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+        // this.currentTime = this.$dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss') + ' 星期' + '日一二三四五六'.charAt(new Date().getDay())
       }, 1000)
     }
   },
@@ -151,20 +167,85 @@ export default {
       }
       .home-nav{
         flex: 1;
+        display: flex;
+        padding: 0 0.5rem;
         li{
           float: left;
+          color: #FFF;
+          font-size: 16px;
+          flex: 1;
+          text-align: center;
+          position: relative;
+          transition: transform 0.3s linear;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          &::before{
+            content: '';
+            width: 0;
+            height: 2px;
+            background: #FFF;
+            position: absolute;
+            bottom: -0.15rem;
+            left: 50%;
+            transform: translate(-50%);
+            transition: all .3s linear;
+          }
+          &:hover{
+            cursor: pointer;
+            transform: translateY(-5px);
+            &::before{
+              width: 50%;
+              bottom: -0.25rem;
+            }
+          }
         }
       }
       .header-right{
-        width: 7rem;
+        width: 11rem;
         height: 100%;
-        /*background: #CCC;*/
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        color: #FFF;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        &>div{
+          height: 62.5%;
+          display: flex;
+          align-items: center;
+          font-size: 15px;
+          &.time-box{
+            min-width: 3.92rem;
+            justify-content: center;
+            margin-right: 0.2rem;
+          }
+          &.user-info{
+            min-width: 3.5rem;
+            display: flex;
+            img{
+              width: 0.8rem;
+              height: 0.8rem;
+            }
+            .ivu-dropdown{
+              flex: 1;
+              height: 0.8rem;
+              line-height: 0.8rem;
+              cursor: pointer;
+              text-align: center;
+              margin-left: 0.2rem;
+            }
+          }
+        }
       }
     }
     .search-box{
       width: 45.8%;
       height: 5.55%;
-      margin: 4.5% auto 0 auto;
+      margin: 3.5% auto 0 auto;
       display: flex;
       &>div{
         height: 100%;
@@ -212,21 +293,13 @@ export default {
         flex: 0 0 calc(~'100% - 82.26%');
         position: relative;
         top: 5px;
-        left: 5px;
+        left: 0.55rem;
       }
     }
     .nav{
       width: 54.2%;
       height: 61%;
       margin: 3.5% auto 0 auto;
-      .time-box{
-        display: flex;
-        justify-content: flex-end;
-        color: #FEFEFE;
-        margin-right: 5px;
-        height: 30px;
-        line-height: 30px;
-      }
       .nav-content{
         height: calc(~'100% - 30px');
         display: flex;

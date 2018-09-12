@@ -24,10 +24,11 @@ export default {
   },
   components: {},
   props: {
-    fullModalShow: Boolean
+    value: Boolean
   },
+  // model绑定哪个，哪个props就会双向绑定
   model: {
-    prop: 'fullModalShow',
+    prop: 'value',
     event: 'toggleClose'
   },
   computed: {},
