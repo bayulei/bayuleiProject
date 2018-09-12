@@ -17,7 +17,7 @@
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="tableColumn" :data="data" :height="550"></Table>
+      <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
     </div>
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
@@ -34,7 +34,11 @@
              </FormItem>
           </Col>
            <Col span="8">
-             <label-select v-model="SarLawsInfoEO.lawsProperty" :options="lawsPropertyOptions" label="文件性质"></label-select>
+             <FormItem label="文件性质" prop="lawsProperty" class="laws-info-item">
+               <Select v-model="SarLawsInfoEO.lawsProperty">
+                 <Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{opt.label}}</Option>
+               </Select>
+             </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
@@ -154,6 +158,7 @@ export default {
         responsibleUnit: '',
         linkUri: ''
       },
+      saveLawsProperty: '',
       total: 0,
       page: 1,
       rows: 10,
@@ -372,6 +377,21 @@ export default {
       }, e => {
 
       })
+    },
+    // 加载数据字典
+    loadDicTypeDatas () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'SARPROPERTY'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.saveLawsProperty = res.data
+          console.log(this.saveLawsProperty)
+        }
+      }, e => {
+
+      })
     }
   },
   components: {
@@ -387,6 +407,7 @@ export default {
   },
   mounted () {
     this.searchLawsInfo()
+    this.loadDicTypeDatas()
   }
 }
 </script>
