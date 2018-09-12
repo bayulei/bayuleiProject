@@ -1,7 +1,12 @@
 package com.adc.da.sys.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.adc.da.sys.dao.DicEODao;
+import com.adc.da.sys.entity.DictionaryEO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,10 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
 
     @Autowired
     private DicTypeEODao dicTypeEODao;
+
+    @Autowired
+    private DicEODao dicEODao;
+
 
 
     public DicTypeEODao getDao() {
@@ -88,5 +97,29 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
      **/
     public List<DicTypeEO> getDicTypeByDicCode(String dictionaryCode){
         return dicTypeEODao.getDicTypeByDicCode(dictionaryCode);
+    }
+
+    /**
+     * @Author gaoyan
+     * @Description
+     * Date 2018/9/11 19:12
+     * @Param [dictionaryCode]
+     * @return java.util.List<com.adc.da.sys.entity.DicTypeEO>
+     **/
+    public Map<String,Object> getDicTypeListCode(){
+        Map<String,Object> resultMap = new HashMap<>();
+        List<DictionaryEO> diclist = dicEODao.getDictionaryEO();
+        for (DictionaryEO dictionaryEO : diclist){
+            List<DicTypeEO> list = getDicTypeByDicCode(dictionaryEO.getDictionaryCode());
+            List<Map<String,String >>  relist = new ArrayList<>();
+            for (DicTypeEO dicTypeEO :list){
+                Map<String,String> map = new HashMap<>();
+                map.put("label",dicTypeEO.getDicTypeName());
+                map.put("value",dicTypeEO.getDicTypeCode());
+                relist.add(map);
+            }
+            resultMap.put(dictionaryEO.getDictionaryCode(),relist);
+        }
+        return resultMap;
     }
 }

@@ -17,6 +17,7 @@
    <div class="content">
      <loading :loading="loading">数据获取中</loading>
      <!--<Table border ref="selection" :columns="tableColumn" :data="stahndinfoList"></Table>-->
+
      <Card style="width:98%;padding:2px;margin: 5px 5px 5px 5px;align-items: center"  v-for="(item, index) in stahndinfoList" :key="index">
          <div style="text-align:center">
            <Row>
@@ -53,15 +54,17 @@
            </FormItem>
            </Col>
            <Col span="8">
-           <FormItem label="标准类别" prop="standSort" class="standards-info-item">
-             <Select v-model="sarStandardsInfoEO.standSort" :options="standSortOptions" label="标准类别">
+          <FormItem label="标准类别" prop="standSort" class="standards-info-item">
+             <Select v-model="sarStandardsInfoEO.standSort" :options="standSortOptions">
                <Option v-for="opt in standSortOptions" :key="opt.value" :valu="opt.value">{{ opt.label }}</Option>
              </Select>
            </FormItem>
            </Col>
            <Col span="8">
            <FormItem label="适用车型" prop="applyArctic" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.applyArctic"></Input>
+             <Select v-model="sarStandardsInfoEO.applyArctic" multiple>
+               <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+             </Select>
            </FormItem>
            </Col>
          </Row>
@@ -97,7 +100,9 @@
            </Col>
            <Col span="8">
            <FormItem label="标准性质" prop="standNature" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.standNature"></Input>
+             <Select v-model="sarStandardsInfoEO.standNature">
+               <Option v-for="opt in standNatureOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+             </Select>
            </FormItem>
            </Col>
          </Row>
@@ -121,17 +126,23 @@
          <Row>
            <Col span="8">
            <FormItem label="采标程度" prop="adoptExtent" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.adoptExtent"></Input>
+             <Select v-model="sarStandardsInfoEO.adoptExtent">
+               <Option v-for="opt in adoptExtentOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+             </Select>
            </FormItem>
            </Col>
            <Col span="8">
            <FormItem label="能源种类" prop="emergyKind" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.emergyKind"></Input>
+             <Select v-model="sarStandardsInfoEO.emergyKind" multiple>
+               <Option v-for="item in emergyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+             </Select>
            </FormItem>
            </Col>
            <Col span="8">
            <FormItem label="适用认证" prop="applyAuth" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.applyAuth"></Input>
+             <Select v-model="sarStandardsInfoEO.applyAuth" multiple>
+               <Option v-for="item in applyAuthOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+             </Select>
            </FormItem>
            </Col>
          </Row>
@@ -233,7 +244,9 @@
            </Col>
            <Col span="8">
            <FormItem label="所属类别" prop="category" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.category"></Input>
+             <Select v-model="sarStandardsInfoEO.category" multiple>
+               <Option v-for="item in categoryOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+             </Select>
            </FormItem>
            </Col>
          </Row>
@@ -481,9 +494,14 @@ export default {
         remark: [
         ]
       },
-      standSortOptions: [{ label: '类别1', value: '类别1' }], // 标准类别下拉框
-      standStateOptions: [{ label: '状态1', value: '状态2' }], // 标准状态下拉框
-      applyArcticOptions: [{ label: '状态1', value: '状态2' }] // 适用车型下拉框
+      standSortOptions: [], // 标准类别下拉框
+      applyArcticOptions: [], // 适用车型下拉框
+      standStateOptions: [], // 标准状态下拉框
+      standNatureOptions: [], // 标准性质下拉框
+      adoptExtentOptions: [], // 采标程度下拉框
+      emergyKindOptions: [], // 能源种类下拉框
+      applyAuthOptions: [], // 适用认证下拉框
+      categoryOptions: [] // 所属类别下拉框
     }
   },
   methods: {
@@ -513,6 +531,20 @@ export default {
       this.modalshowflag = true
       this.modalshowtitle = '新增标准'
       this.addOrUPdateFlag = 1
+      // 查询各下拉框数据
+      this.$http.get('/sys/dictype/getDicTypeListCode', this.sarStandardsInfoEO, {
+        _this: this
+      }, res => {
+        this.standSortOptions = res.data.STANDCLASSIFY
+        this.applyArcticOptions = res.data.PRODUCTTYPE // 根据需求文档，产品类别对应标准属性中的“适用车型”
+        this.standStateOptions = res.data.STANDSTATE
+        this.standNatureOptions = res.data.SARPROPERTY // 标准性质
+        this.adoptExtentOptions = res.data.DEGREESTANDARD
+        this.emergyKindOptions = res.data.ENERGYTYPES
+        this.applyAuthOptions = res.data.PROVETYPE // 适用认证下拉框
+        this.categoryOptions = res.data.CATEGORY
+      }, e => {
+      })
     },
     // 保存或修改标准
     saveOrUpdateStands () {
