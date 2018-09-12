@@ -153,14 +153,14 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	/**
 	 * @Author yangxuenan
 	 * @Description 根据数据字典编码查询字典类型
-	 * Date 2018/9/11 15:16
+	 * Date 2018/9/12 10:12
 	 * @Param [dicCode]
-	 * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.sys.entity.DicTypeEO>>
+	 * @return com.adc.da.util.http.ResponseMessage<java.util.Map<java.lang.String,java.lang.String>>
 	 **/
 	@ApiOperation(value = "|DicTypeEO|查询字典类型")
 	@GetMapping("/getDicTypeByDicCode")
-	public ResponseMessage<List<DicTypeEO>> getDicTypeByDicCode(@RequestParam String dicCode) throws Exception {
-		List<DicTypeEO> dicTypeEO = dicTypeEOService.getDicTypeByDicCode(dicCode);
+	public ResponseMessage<List<Map<String,String>>> getDicTypeByDicCode(@RequestParam String dicCode) throws Exception {
+		List<Map<String,String>> dicTypeEO = dicTypeEOService.getDicTypeByDicCode(dicCode);
 		return Result.success(dicTypeEO);
 	}
 

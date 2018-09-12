@@ -3,7 +3,7 @@
  <div class="personal-data">
     <table-tools-bar>
       <div class="laws-info-form" slot="left">
-        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80" class="label-input-form">
+        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" class="label-input-form">
           <FormItem label="文件号" prop="fileNum" class="laws-info-item">
             <Input v-model="lawsInfo.fileNum"></Input>
           </FormItem>
@@ -17,13 +17,12 @@
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="tableColumn" :data="data" :height="550"></Table>
+      <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
     </div>
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
    <!--新增修改模态框-->
    <full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">
-     <Button @click="closeModal">关闭</Button>
      <div>
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
          <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
@@ -34,7 +33,11 @@
              </FormItem>
           </Col>
            <Col span="8">
-             <label-select v-model="SarLawsInfoEO.lawsProperty" :options="lawsPropertyOptions" label="文件性质"></label-select>
+             <FormItem label="文件性质" prop="country" class="laws-info-item">
+               <Select v-model="SarLawsInfoEO.lawsProperty">
+                 <Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+               </Select>
+             </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
@@ -54,7 +57,11 @@
              </FormItem>
            </Col>
            <Col span="8">
-              <label-select v-model="SarLawsInfoEO.lawsStatus" :options="lawsStatusOptions" label="文件状态"></label-select>
+             <FormItem label="文件状态" prop="lawsState" class="laws-info-item">
+               <Select v-model="SarLawsInfoEO.lawsState">
+                 <Option v-for="opt in lawsStatusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+               </Select>
+             </FormItem>
            </Col>
          </Row>
          <Row>
@@ -126,8 +133,6 @@
 </template>
 
 <script>
-import Pagination from 'pages/components/Pagination'
-import tableToolsBar from 'pages/components/TableToolsBar'
 export default {
   name: 'DomesticRegulationsDatabase',
   data () {
@@ -144,7 +149,7 @@ export default {
         lawsNumber: '',
         lawsName: '',
         issueUnit: '',
-        lawsStatus: '',
+        lawsState: '',
         issueTime: '',
         putTime: '',
         replaceLawsNum: '',
@@ -171,7 +176,7 @@ export default {
         },
         {
           title: '文件性质',
-          key: 'lawsProperty'
+          key: 'propertyName'
         },
         {
           title: '文件名称',
@@ -183,7 +188,7 @@ export default {
         },
         {
           title: '文件状态',
-          key: 'lawsStatus'
+          key: 'stateName'
         },
         {
           title: '发布日期',
@@ -246,14 +251,14 @@ export default {
         }
       ],
       data: [],
-      lawsPropertyOptions: [{ label: '状态1', value: '状态2' }],
-      lawsStatusOptions: [{ label: '状态1', value: '状态2' }],
+      lawsPropertyOptions: '',
+      lawsStatusOptions: '',
       lawsInfoRules: {},
       lawsInfoFormRules: {
         lawsName: [
           { required: true, message: '文件名称不能为空', trigger: 'blur' }
         ],
-        lawsStatus: [
+        lawsState: [
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
         issueTime: [
@@ -298,16 +303,13 @@ export default {
     // 点击编辑按钮触发
     edit (row) {
       this.showLawsInfoModal = true
+      this.SarLawsInfoEO = row
       this.SarLawsInfoEO.editLawsId = row.id
-      this.SarLawsInfoEO.lawsNumber = row.lawsNumber
-      this.SarLawsInfoEO.lawsName = row.lawsName
     },
     // 提交新增/修改
     saveLawsInfo () {
-      this.SarLawsInfoEO.issueTime = this.SarLawsInfoEO.issueTime.getTime()
-      let SarLawsInfoEO = JSON.parse(JSON.stringify(this.SarLawsInfoEO))
-      SarLawsInfoEO.issueTime = this.$dateFormat('yyyy-MM-dd', SarLawsInfoEO.issueTime)
-      console.log(SarLawsInfoEO)
+      this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
+      this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
       if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
         this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
           _this: this
@@ -323,15 +325,10 @@ export default {
         }, res => {
           this.showLawsInfoModal = false
           this.searchLawsInfo()
-        }, e => {
-
-        })
+        }, e => {})
       }
     },
     cancelAdd () {
-    },
-    // 关闭模态框
-    closeModal () {
       this.$refs.showLawsInfoModal.toggleClose()
     },
     // 删除
@@ -372,12 +369,35 @@ export default {
       }, e => {
 
       })
+    },
+    // 加载数据字典
+    loadDicTypeDatas1 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'SARPROPERTY'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.lawsPropertyOptions = res.data
+        }
+      }, e => {
+
+      })
+    },
+    loadDicTypeDatas2 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'STANDSTATE'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.lawsStatusOptions = res.data
+        }
+      }, e => {
+      })
     }
   },
-  components: {
-    Pagination,
-    tableToolsBar
-  },
+  components: {},
   props: {},
   computed: {},
   watch: {
@@ -387,6 +407,8 @@ export default {
   },
   mounted () {
     this.searchLawsInfo()
+    this.loadDicTypeDatas1()
+    this.loadDicTypeDatas2()
   }
 }
 </script>
@@ -402,9 +424,6 @@ export default {
     .laws-info-item{
       display:inline-block;
     }
-  }
-  .label-input-form{
-    margin-top: 10px;
   }
   .save-laws-btn{
     text-align: center;
