@@ -7,16 +7,22 @@
         <label-select v-model="roleSearch.type" :options="roleSearch.typeOptions" placeholder="请输入" label="状态"></label-select>
       </div>
       <div slot="right">
-        <Button type="info">查询</Button>
-        <Button type="primary">重置</Button>
+        <Button type="info" @click="selectRole">查询</Button>
+        <Button type="primary" @click="resetRole">重置</Button>
       </div>
     </table-tools-bar>
     <div class="content">
-      <Button type="success" @click="categoryAdd">增加</Button>
-      <Button type="warning" @click="categoryEdit">编辑</Button>
-      <Button type="error">删除</Button>
-      <loading :loading="loading">数据获取中</loading>
-      <Table :columns="roleColumns" :data="userList" border ref="selection"></Table>
+      <div class="btn-group">
+      <Button type="success" @click="roleAdd">增加</Button>
+      <Button type="warning" @click="roleEdit" style="margin-left: 0.3rem">编辑</Button>
+      <Button type="error" @click="roleConfigure" style="margin-left: 0.3rem">配置角色信息</Button>
+        <Modal
+          v-model="roleModel"
+          :title="roleTitle">
+          <div> 我是模态框内容</div>
+        </Modal>
+      </div>
+      <Table :columns="roleColumns" :data="roleList" border ref="selection"></Table>
     </div>
   </div>
 </template>
@@ -26,6 +32,8 @@ export default {
   name: 'role-manage',
   data () {
     return {
+      roleModel: false,
+      roleTitle: '',
       roleSearch: {
         roleName: '',
         type: '',
@@ -77,13 +85,44 @@ export default {
               },
               on: {
                 click: () => {
-                  this.show(params.index)
+                  this.showRole(params.index)
                 }
               }
             }, '查看')
           ])
         }
-      }]
+      }],
+      roleList: []
+    }
+  },
+  methods: {
+    // 查询、加载表格
+    selectRole () {
+    },
+    // 重置
+    resetRole () {
+      this.roleSearch.roleName = ''
+      this.roleSearch.type = ''
+    },
+    // 添加角色信息
+    roleAdd () {
+      this.roleModel = true
+      this.roleTitle = '添加角色信息'
+    },
+    // 编辑角色信息
+    roleEdit () {
+      this.roleModel = true
+      this.roleTitle = '编辑角色信息'
+    },
+    // 查看角色信息
+    showRole () {
+      this.roleModel = true
+      this.roleTitle = '查看角色信息'
+    },
+    // 配置角色信息
+    roleConfigure () {
+      this.roleModel = true
+      this.roleTitle = '配置角色信息'
     }
   }
 }
@@ -93,5 +132,8 @@ export default {
   .role-manage{
     background: #FFF;
     padding: 0.2rem 0.3rem;
+    .content .btn-group{
+      margin-bottom: 0.5rem;
+    }
   }
 </style>

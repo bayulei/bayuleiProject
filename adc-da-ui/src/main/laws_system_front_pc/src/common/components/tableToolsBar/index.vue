@@ -42,7 +42,6 @@ export default {
 <style lang="less">
   @import 'animate.css';
   .table-tools-bar{
-    padding: 0.1rem 0;
     .advanced-search{
       width: 100%;
       height: 200px;
@@ -68,6 +67,7 @@ export default {
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      padding-top: 0.1rem;
       &>div{
         &>div{
           display: inline-block;

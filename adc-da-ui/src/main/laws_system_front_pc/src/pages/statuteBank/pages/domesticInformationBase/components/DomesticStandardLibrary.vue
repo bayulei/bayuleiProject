@@ -280,8 +280,6 @@
 </template>
 
 <script>
-import TableToolsBar from 'pages/components/TableToolsBar'
-import Pagination from 'pages/components/Pagination'
 export default {
   name: 'DomesticStandardLibrary',
   data () {
@@ -650,10 +648,7 @@ export default {
       this.getDomesticStandardTable()
     }
   },
-  components: {
-    TableToolsBar,
-    Pagination
-  },
+  components: {},
   props: {},
   computed: {},
   watch: {},
