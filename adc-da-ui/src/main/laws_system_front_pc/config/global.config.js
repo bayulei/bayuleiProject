@@ -4,7 +4,7 @@
  * @date: 2018-09-04 17:47:46
  */
 // 开发环境配置
-const devIp = 'localhost'
+const devIp = '192.168.7.168'
 const devInterfacePORT = '8888'
 
 // 生产环境配置

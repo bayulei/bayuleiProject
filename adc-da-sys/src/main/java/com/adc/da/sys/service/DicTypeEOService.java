@@ -91,12 +91,20 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
     /**
      * @Author yangxuenan
      * @Description 根据数据字典编码查询字典类型
-     * Date 2018/9/11 15:09
+     * Date 2018/9/12 10:18
      * @Param [dictionaryCode]
-     * @return java.util.List<com.adc.da.sys.entity.DicTypeEO>
+     * @return java.util.List<java.util.Map<java.lang.String,java.lang.String>>
      **/
-    public List<DicTypeEO> getDicTypeByDicCode(String dictionaryCode){
-        return dicTypeEODao.getDicTypeByDicCode(dictionaryCode);
+    public List<Map<String,String>> getDicTypeByDicCode(String dictionaryCode){
+        List<DicTypeEO> getDicType = dicTypeEODao.getDicTypeByDicCode(dictionaryCode);
+        List<Map<String,String>> listMap = new ArrayList<>();
+        for(int i=0;i<getDicType.size();i++){
+            Map<String,String> map = new HashMap<>();
+            map.put("label",getDicType.get(i).getDicTypeName());
+            map.put("value",getDicType.get(i).getDicTypeCode());
+            listMap.add(map);
+        }
+        return listMap;
     }
 
     /**
@@ -110,14 +118,7 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
         Map<String,Object> resultMap = new HashMap<>();
         List<DictionaryEO> diclist = dicEODao.getDictionaryEO();
         for (DictionaryEO dictionaryEO : diclist){
-            List<DicTypeEO> list = getDicTypeByDicCode(dictionaryEO.getDictionaryCode());
-            List<Map<String,String >>  relist = new ArrayList<>();
-            for (DicTypeEO dicTypeEO :list){
-                Map<String,String> map = new HashMap<>();
-                map.put("label",dicTypeEO.getDicTypeName());
-                map.put("value",dicTypeEO.getDicTypeCode());
-                relist.add(map);
-            }
+            List<Map<String,String >> relist = getDicTypeByDicCode(dictionaryEO.getDictionaryCode());
             resultMap.put(dictionaryEO.getDictionaryCode(),relist);
         }
         return resultMap;

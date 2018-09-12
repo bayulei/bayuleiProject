@@ -38,8 +38,13 @@
              <Col span="4"></Col>
              <Col span="4"></Col>
              <Col span="4" align="right">
+
                  <Icon :type="item.collectIcontype"  size="30" @click = "collectStandard(item)" style="cursor:pointer"  :color="item.collectIconcolor"/>
                  <Icon type="ios-redo"  size="30" @click = "shareStandard(item)" style="cursor:pointer;margin-left: 5px "/>
+
+                 <!--<Icon :type="1 === 1? 'md-star' : 'md-star-outline'"  size="25" @click = "collectStandard(item)" style="cursor:pointer"  :color="1 === 1 ? '#5C6B77': ''"/>
+                 <Icon type="ios-redo"  size="25" @click = "shareStandard" style="cursor:pointer"/>-->
+
              </Col>
            </Row>
            <br>
@@ -61,7 +66,7 @@
    <!-- 新增、编辑模态窗 -->
    <full-modal v-model="modalshowflag" v-if="modalshowflag" ref="modalshow">
      <!--    新增样式     -->
-     <div class="standards-info-form" >
+     <div class="standards-info-form">
        <Form ref="sarStandardsInfoEO" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" class="label-input-form">
          <Row>
            <Col span="8">
@@ -71,8 +76,8 @@
            </Col>
            <Col span="8">
           <FormItem label="标准类别" prop="standSort" class="standards-info-item">
-             <Select v-model="sarStandardsInfoEO.standSort" :options="standSortOptions">
-               <Option v-for="opt in standSortOptions" :key="opt.value" :valu="opt.value">{{ opt.label }}</Option>
+             <Select v-model="sarStandardsInfoEO.standSort">
+               <Option v-for="opt in standSortOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
              </Select>
            </FormItem>
            </Col>
@@ -143,21 +148,21 @@
            <Col span="8">
            <FormItem label="采标程度" prop="adoptExtent" class="standards-info-item">
              <Select v-model="sarStandardsInfoEO.adoptExtent">
-               <Option v-for="opt in adoptExtentOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+               <Option v-for="opt in adoptExtentOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
              </Select>
            </FormItem>
            </Col>
            <Col span="8">
            <FormItem label="能源种类" prop="emergyKind" class="standards-info-item">
              <Select v-model="sarStandardsInfoEO.emergyKind" multiple>
-               <Option v-for="item in emergyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               <Option v-for="opt in emergyKindOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
              </Select>
            </FormItem>
            </Col>
            <Col span="8">
            <FormItem label="适用认证" prop="applyAuth" class="standards-info-item">
              <Select v-model="sarStandardsInfoEO.applyAuth" multiple>
-               <Option v-for="item in applyAuthOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               <Option v-for="opt in applyAuthOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
              </Select>
            </FormItem>
            </Col>
@@ -465,59 +470,36 @@ export default {
         standNature: [
           { required: true, message: '标准性质不能为空', trigger: 'blur' }
         ],
-        replaceStandNum: [
-        ],
-        replacedStandNum: [
-        ],
-        interStandNum: [
-        ],
-        adoptExtent: [
-        ],
+        replaceStandNum: [],
+        replacedStandNum: [],
+        interStandNum: [],
+        adoptExtent: [],
         emergyKind: [
-          { required: true, message: '能源种类不能为空', trigger: 'blur' }
-        ],
-        applyAuth: [
-        ],
+          { required: true, message: '能源种类不能为空', trigger: 'blur' }],
+        applyAuth: [],
         issueTime: [
           { required: true, message: '发布日期不能为空', trigger: 'blur' }
         ],
         putTime: [
           { required: true, message: '实施日期不能为空', trigger: 'blur' }
         ],
-        newcarPutTime: [
-        ],
-        productPutTime: [
-        ],
-        newproductPutTime: [
-        ],
-        draftingUnit: [
-        ],
-        draftUser: [
-        ],
-        standFile: [
-        ],
-        standModifyFile: [
-        ],
-        draftFile: [
-        ],
-        opinionFile: [
-        ],
-        sentScreenFile: [
-        ],
-        approvalFile: [
-        ],
-        relevanceFile: [
-        ],
-        tags: [
-        ],
-        synopsis: [
-        ],
-        responsibleUnit: [
-        ],
-        category: [
-        ],
-        remark: [
-        ]
+        newcarPutTime: [],
+        productPutTime: [],
+        newproductPutTime: [],
+        draftingUnit: [],
+        draftUser: [],
+        standFile: [],
+        standModifyFile: [],
+        draftFile: [],
+        opinionFile: [],
+        sentScreenFile: [],
+        approvalFile: [],
+        relevanceFile: [],
+        tags: [],
+        synopsis: [],
+        responsibleUnit: [],
+        category: [],
+        remark: []
       },
       sarMenuRules: {
         menuName: [
@@ -553,10 +535,6 @@ export default {
         _this: this, loading: 'loading'
       }, res => {
         this.stahndinfoList = res.data.list
-        for (let i = 0; i < this.stahndinfoList.length; i++) {
-          this.stahndinfoList[i]['collectIcontype'] = 'ios-star-outline'
-          this.stahndinfoList[i]['collectIconcolor'] = '#5c6b77'
-        }
         this.total = res.data.count
       }, e => {
       })
@@ -647,7 +625,7 @@ export default {
       })
     },
     // 收藏标准
-    collectStandard(i) {
+    collectStandard (i) {
       console.log(i)
       i.collectIconcolor = '#CD950C'
       i.collectIcontype = 'ios-star'

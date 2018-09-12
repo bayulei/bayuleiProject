@@ -57,8 +57,8 @@
              </FormItem>
            </Col>
            <Col span="8">
-             <FormItem label="文件状态" prop="issueUnit" class="laws-info-item">
-               <Select v-model="SarLawsInfoEO.lawsStatus">
+             <FormItem label="文件状态" prop="lawsState" class="laws-info-item">
+               <Select v-model="SarLawsInfoEO.lawsState">
                  <Option v-for="opt in lawsStatusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
                </Select>
              </FormItem>
@@ -149,7 +149,7 @@ export default {
         lawsNumber: '',
         lawsName: '',
         issueUnit: '',
-        lawsStatus: '',
+        lawsState: '',
         issueTime: '',
         putTime: '',
         replaceLawsNum: '',
@@ -159,7 +159,6 @@ export default {
         responsibleUnit: '',
         linkUri: ''
       },
-      saveLawsProperty: '',
       total: 0,
       page: 1,
       rows: 10,
@@ -177,7 +176,7 @@ export default {
         },
         {
           title: '文件性质',
-          key: 'lawsProperty'
+          key: 'propertyName'
         },
         {
           title: '文件名称',
@@ -189,7 +188,7 @@ export default {
         },
         {
           title: '文件状态',
-          key: 'lawsStatus'
+          key: 'stateName'
         },
         {
           title: '发布日期',
@@ -252,14 +251,14 @@ export default {
         }
       ],
       data: [],
-      lawsPropertyOptions: [{ label: '状态1', value: '状态2' }],
-      lawsStatusOptions: [{ label: '状态1', value: '状态2' }],
+      lawsPropertyOptions: '',
+      lawsStatusOptions: '',
       lawsInfoRules: {},
       lawsInfoFormRules: {
         lawsName: [
           { required: true, message: '文件名称不能为空', trigger: 'blur' }
         ],
-        lawsStatus: [
+        lawsState: [
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
         issueTime: [
@@ -304,13 +303,13 @@ export default {
     // 点击编辑按钮触发
     edit (row) {
       this.showLawsInfoModal = true
+      this.SarLawsInfoEO = row
       this.SarLawsInfoEO.editLawsId = row.id
-      this.SarLawsInfoEO.lawsNumber = row.lawsNumber
-      this.SarLawsInfoEO.lawsName = row.lawsName
     },
     // 提交新增/修改
     saveLawsInfo () {
       this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
+      this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
       if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
         this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
           _this: this
@@ -372,18 +371,29 @@ export default {
       })
     },
     // 加载数据字典
-    loadDicTypeDatas () {
+    loadDicTypeDatas1 () {
       this.$http.get('sys/dictype/getDicTypeByDicCode', {
         dicCode: 'SARPROPERTY'
       }, {
         _this: this
       }, res => {
         if (res.data != null) {
-          this.saveLawsProperty = res.data
-          console.log(this.saveLawsProperty)
+          this.lawsPropertyOptions = res.data
         }
       }, e => {
 
+      })
+    },
+    loadDicTypeDatas2 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'STANDSTATE'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.lawsStatusOptions = res.data
+        }
+      }, e => {
       })
     }
   },
@@ -397,7 +407,8 @@ export default {
   },
   mounted () {
     this.searchLawsInfo()
-    this.loadDicTypeDatas()
+    this.loadDicTypeDatas1()
+    this.loadDicTypeDatas2()
   }
 }
 </script>
