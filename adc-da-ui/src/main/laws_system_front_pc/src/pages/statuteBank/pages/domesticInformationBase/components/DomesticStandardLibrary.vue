@@ -50,7 +50,7 @@
    <!-- 新增、编辑模态窗 -->
    <full-modal v-model="modalshowflag" v-if="modalshowflag" ref="modalshow">
      <!--    新增样式     -->
-     <div class="standards-info-form" >
+     <div class="standards-info-form">
        <Form ref="sarStandardsInfoEO" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" class="label-input-form">
          <Row>
            <Col span="8">
