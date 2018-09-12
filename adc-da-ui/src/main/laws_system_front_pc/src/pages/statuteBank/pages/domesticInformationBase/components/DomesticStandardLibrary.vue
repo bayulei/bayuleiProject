@@ -3,8 +3,10 @@
  <div id="DomesticStandardLibrary">
    <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false" class="label-input-form">
      <div slot="left">
-       <label-input v-model="keywords1" placeholder="根据用户名查找" clearable label="用户名"  />
-       <label-input v-model="keywords2" placeholder="根据描述查找" clearable label="描述" class="my-input" />
+       <label-input v-model="sarStandardsSearch.country" placeholder="根据国家/地区查找" clearable label="国家/地区"  />
+       <label-input v-model="sarStandardsSearch.standNumber" placeholder="根据标准号查找" clearable label="标准号" class="my-input" />
+       <label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />
+       <label-input v-model="sarStandardsSearch.standState" placeholder="根据标准状态查找" clearable label="标准状态" class="my-input" />
        <Button type="primary" icon="ios-search" :loading="searching" @click="searchData"></Button>
      </div>
      <div slot="right">
@@ -26,7 +28,10 @@
              <Col span="4">标准性质:{{item.standNature}} </Col>
              <Col span="4"></Col>
              <Col span="4"></Col>
-             <Col span="4" align="right"><Icon type="ios-star-outline" /><Icon type="ios-redo"  size="400px" /></Col>
+             <Col span="4" align="right">
+                 <Icon :type="item.collectIcontype"  size="30" @click = "collectStandard(item)" style="cursor:pointer"  :color="item.collectIconcolor"/>
+                 <Icon type="ios-redo"  size="30" @click = "shareStandard" style="cursor:pointer"/>
+             </Col>
            </Row>
            <br>
            <Row>
@@ -35,7 +40,7 @@
              <Col span="4">实施日期:{{item.putTime}}</Col>
              <Col span="4"></Col>
              <Col span="4"></Col>
-             <Col span="4">col-12</Col>
+             <Col span="4"></Col>
            </Row>
          </div>
      </Card>
@@ -257,9 +262,6 @@
            </FormItem>
            </Col>
            <Col span="8">
-           <FormItem label="标准分解单" prop="cname" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.standName"></Input>
-           </FormItem>
            </Col>
            <Col span="8">
            </Col>
@@ -285,8 +287,6 @@ export default {
   data () {
     return {
       isAdvancedSearch: false, // 高级检索窗口是否打开
-      keywords1: '',
-      keywords2: '',
       searching: false,
       loading: false,
       total: 0,
@@ -382,7 +382,7 @@ export default {
       sarStandardsInfoEO: {
         id: '',
         standType: 'INLAND_STAND', // 标准分类
-        country: '中国',
+        country: 'CN',
         standSort: '',
         applyArctic: '',
         standNumber: '',
@@ -417,7 +417,7 @@ export default {
         category: '',
         remark: ''
       }, // 新增过程中用到的对象
-      sarStandardsSearch: {page: 1, pageSize: 10}, // 分页查询过程中用到的对象
+      sarStandardsSearch: {page: 1, pageSize: 10, country: '', standNumber: '', standName: '', standState: ''}, // 分页查询过程中用到的对象
       sarStandardsInfoRules: {
         standSort: [
           { required: true, message: '标准类别不能为空', trigger: 'blur' }
@@ -513,6 +513,10 @@ export default {
         _this: this, loading: 'loading'
       }, res => {
         this.stahndinfoList = res.data.list
+        for (let i = 0; i < this.stahndinfoList.length; i++) {
+          this.stahndinfoList[i]['collectIcontype'] = 'ios-star-outline'
+          this.stahndinfoList[i]['collectIconcolor'] = '#5c6b77'
+        }
         this.total = res.data.count
       }, e => {
       })
@@ -550,6 +554,12 @@ export default {
     },
     // 保存或修改标准
     saveOrUpdateStands () {
+      // 时间格式修改
+      this.sarStandardsInfoEO.issueTime = this.$dateFormat(this.sarStandardsInfoEO.issueTime, 'yyyy-MM-dd')
+      this.sarStandardsInfoEO.putTime = this.$dateFormat(this.sarStandardsInfoEO.putTime, 'yyyy-MM-dd')
+      this.sarStandardsInfoEO.newcarPutTime = this.$dateFormat(this.sarStandardsInfoEO.newcarPutTime, 'yyyy-MM-dd')
+      this.sarStandardsInfoEO.productPutTime = this.$dateFormat(this.sarStandardsInfoEO.productPutTime, 'yyyy-MM-dd')
+      this.sarStandardsInfoEO.newproductPutTime = this.$dateFormat(this.sarStandardsInfoEO.newproductPutTime, 'yyyy-MM-dd')
       // 新增
       if (this.addOrUPdateFlag === 1) {
         this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
@@ -593,14 +603,17 @@ export default {
       })
     },
     // 收藏标准
-    collectStandard () {
-      this.$http.post('', {id: this.sarStandardsInfoEO.id}, {
+    collectStandard (i) {
+      console.log(i)
+      i.collectIconcolor = '#CD950C'
+      i.collectIcontype = 'ios-star'
+      /*this.$http.post('', {id: this.sarStandardsInfoEO.id}, {
         _this: this
       }, res => {
       }, e => {
-      })
+      })*/
     },
-    // 分享
+    // 分享标准
     shareStandard () {
       this.$http.post('', {id: this.sarStandardsInfoEO.id}, {
         _this: this
@@ -634,6 +647,7 @@ export default {
     },
     // 导入标准数据成功后执行
     importFileSuccess (response, file) {
+      this.getDomesticStandardTable()
     }
   },
   components: {
