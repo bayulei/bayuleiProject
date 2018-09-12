@@ -3,7 +3,7 @@
  <div class="personal-data">
     <table-tools-bar>
       <div class="laws-info-form" slot="left">
-        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80" class="label-input-form">
+        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" class="label-input-form">
           <FormItem label="文件号" prop="fileNum" class="laws-info-item">
             <Input v-model="lawsInfo.fileNum"></Input>
           </FormItem>
@@ -23,7 +23,6 @@
 
    <!--新增修改模态框-->
    <full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">
-     <Button @click="closeModal">关闭</Button>
      <div>
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
          <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
@@ -34,9 +33,9 @@
              </FormItem>
           </Col>
            <Col span="8">
-             <FormItem label="文件性质" prop="lawsProperty" class="laws-info-item">
+             <FormItem label="文件性质" prop="country" class="laws-info-item">
                <Select v-model="SarLawsInfoEO.lawsProperty">
-                 <Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{opt.label}}</Option>
+                 <Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
                </Select>
              </FormItem>
            </Col>
@@ -58,7 +57,11 @@
              </FormItem>
            </Col>
            <Col span="8">
-              <label-select v-model="SarLawsInfoEO.lawsStatus" :options="lawsStatusOptions" label="文件状态"></label-select>
+             <FormItem label="文件状态" prop="issueUnit" class="laws-info-item">
+               <Select v-model="SarLawsInfoEO.lawsStatus">
+                 <Option v-for="opt in lawsStatusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+               </Select>
+             </FormItem>
            </Col>
          </Row>
          <Row>
@@ -130,8 +133,6 @@
 </template>
 
 <script>
-import Pagination from 'pages/components/Pagination'
-import tableToolsBar from 'pages/components/TableToolsBar'
 export default {
   name: 'DomesticRegulationsDatabase',
   data () {
@@ -309,10 +310,7 @@ export default {
     },
     // 提交新增/修改
     saveLawsInfo () {
-      this.SarLawsInfoEO.issueTime = this.SarLawsInfoEO.issueTime.getTime()
-      let SarLawsInfoEO = JSON.parse(JSON.stringify(this.SarLawsInfoEO))
-      SarLawsInfoEO.issueTime = this.$dateFormat('yyyy-MM-dd', SarLawsInfoEO.issueTime)
-      console.log(SarLawsInfoEO)
+      this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
       if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
         this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
           _this: this
@@ -328,15 +326,10 @@ export default {
         }, res => {
           this.showLawsInfoModal = false
           this.searchLawsInfo()
-        }, e => {
-
-        })
+        }, e => {})
       }
     },
     cancelAdd () {
-    },
-    // 关闭模态框
-    closeModal () {
       this.$refs.showLawsInfoModal.toggleClose()
     },
     // 删除
@@ -394,10 +387,7 @@ export default {
       })
     }
   },
-  components: {
-    Pagination,
-    tableToolsBar
-  },
+  components: {},
   props: {},
   computed: {},
   watch: {
@@ -423,9 +413,6 @@ export default {
     .laws-info-item{
       display:inline-block;
     }
-  }
-  .label-input-form{
-    margin-top: 10px;
   }
   .save-laws-btn{
     text-align: center;

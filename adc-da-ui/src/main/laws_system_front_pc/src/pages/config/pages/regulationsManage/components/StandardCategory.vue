@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import tableToolsBar from 'pages/components/TableToolsBar'
 export default {
   name: 'standard-classification',
   data () {
@@ -236,9 +235,7 @@ export default {
       }
     }
   },
-  components: {
-    tableToolsBar
-  },
+  components: {},
   computed: {
   },
   mounted () {
