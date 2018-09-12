@@ -38,23 +38,33 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	
 	@Autowired
 	private BeanMapper beanMapper;
-	
+//	李文轩：需求可能会变成分页查找+模糊查找（根据类型/用户名称/角色名称/用户状态）
 	@ApiOperation(value = "组织机构列表|OrgEO|")
 	@GetMapping("/listOrgByOrgName")
 //	@RequiresPermissions("sys:org:listMenuByUserId")
 	public ResponseMessage<List<OrgVO>> listOrgByOrgName(String orgName) {
 		return Result.success(beanMapper.mapList(orgEOService.listOrgEOByOrgName(orgName), OrgVO.class));
 	}
-
+//新增组织机构（入参：部门名称+部门简介+部门表述(不必须填写)）
 	@SuppressWarnings("unchecked")
 	@ApiOperation(value = "|OrgEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:org:save")
 	public ResponseMessage<OrgVO> create(@RequestBody OrgVO orgVO) throws Exception {
-		if (StringUtils.isBlank(orgVO.getName())) {
+		if (StringUtils.isBlank(orgVO.getOrgName())) {
 			return Result.error("r0014", "组织机构名称不能为空");
-		} else if (orgEOService.getOrgEOByNameAndPid(orgVO.getName(),orgVO.getParentId()) != null) {
+		} else if (orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()) != null) {
 			return Result.error("r0015", "组织机构名称已存在");
+		}
+//判断部门简称不能为空，不能已经存在
+		if (StringUtils.isBlank(orgVO.getShotName())) {
+			return Result.error("r0014", "组织机构简称不能为空");
+			//先判断返回对象不为空，然后在进行判断shotname
+		} else if (orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()) != null) {
+			if(orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()).getShotName()!=null){
+				return Result.error("r0015", "组织机构简称已存在");
+			}
+
 		}
 		
 		return orgEOService.save(beanMapper.map(orgVO, OrgEO.class));
@@ -74,10 +84,10 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		OrgVO orgVO = beanMapper.map(orgEOService.getOrgEOById(id), OrgVO.class);
 		return Result.success(orgVO);
 	}
-	
+//删除组织机构
 	@ApiOperation(value = "|OrgEO|删除")
 	@DeleteMapping("/{id}")
-	@RequiresPermissions("sys:org:delete")
+//	@RequiresPermissions("sys:org:delete")
 	public ResponseMessage delete(@NotNull @PathVariable("id") String id) throws Exception {
 		return orgEOService.delete(id);
 	}
@@ -100,7 +110,7 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		return Result.success(eos);
 	}
 	
-	//未验证是否正确
+//	根据userID和orgId删除用户和组织机构关联
 	@ApiOperation(value = "|OrgEO|删除组织机构下的一些用户")
 	@DeleteMapping("/{userId}/{orgId}")
 //	@RequiresPermissions("sys:org:delOrgOfUser")
@@ -108,10 +118,11 @@ public class OrgEORestController extends BaseController<OrgEO>{
 			@NotNull @PathVariable("orgId") String orgId){
 		return orgEOService.delOrgRelatedUser(userId, orgId);
 	}
-	
+
+//前台传入类型：[{"userId":"QJX2Z8E678","orgId":"5W2J4AQ8KA"}]
 	@ApiOperation(value = "|OrgEO|给用户设置组织机构")
 	@PostMapping("/addOrgRelateUsers")
-	@RequiresPermissions("sys:org:addOrgRelateUsers")
+//	@RequiresPermissions("sys:org:addOrgRelateUsers")
 	public ResponseMessage<Integer> addOrgRelatedUser(String userOrgs){
 		return orgEOService.addOrgRelatedUser(userOrgs);
 	}
@@ -136,5 +147,7 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		List<OrgEO> eos = orgEOService.findById(id, userCorpName);
 		return Result.success(eos);
 	}
+
+//	分页查询
 	
 }

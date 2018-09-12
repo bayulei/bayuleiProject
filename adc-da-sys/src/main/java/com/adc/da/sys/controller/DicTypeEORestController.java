@@ -135,9 +135,10 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		DicTypeVO dicTypeVO = beanMapper.map(dicTypeEOService.getDicTypeById(id), DicTypeVO.class);
 		return Result.success(dicTypeVO);
 	}
-//	删除多条数据
+//	删除多条数据  修改
 	@ApiOperation(value = "|DicTypeEO|删除多条数据")
-	@DeleteMapping("/deleteArr/{ids}")
+//	@DeleteMapping("/deleteArr/{ids}")
+	@PostMapping("/deleteArr/{ids}")
 //	@RequiresPermissions("sys:dicType:delete")
 	public ResponseMessage delete(@NotNull @PathVariable("ids") String[] ids) throws Exception {
 		dicTypeEOService.delete(Arrays.asList(ids));
