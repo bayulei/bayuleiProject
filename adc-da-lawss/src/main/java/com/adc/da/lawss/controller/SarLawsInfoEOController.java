@@ -73,8 +73,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
     @GetMapping("/page")
     /*@RequiresPermissions("lawss:sarLawsInfo:page")*/
     public ResponseMessage<PageInfo<SarLawsInfoEO>> page(SarLawsInfoEOPage page) throws Exception {
-        page.setValidFlag("0");
-        page.setOrderBy("modify_time desc");
+        page.setOrderBy("SAR_LAWS_INFO.modify_time desc");
         List<SarLawsInfoEO> rows = sarLawsInfoEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
