@@ -265,8 +265,6 @@
 </template>
 
 <script>
-import TableToolsBar from 'pages/components/TableToolsBar'
-import Pagination from 'pages/components/Pagination'
 export default {
   name: 'DomesticStandardLibrary',
   data () {
@@ -604,10 +602,7 @@ export default {
     importFileSuccess (response, file) {
     }
   },
-  components: {
-    TableToolsBar,
-    Pagination
-  },
+  components: {},
   props: {},
   computed: {},
   watch: {},

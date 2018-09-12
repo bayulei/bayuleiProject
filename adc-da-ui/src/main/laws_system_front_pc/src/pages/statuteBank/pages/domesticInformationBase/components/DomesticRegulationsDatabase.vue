@@ -3,7 +3,7 @@
  <div class="personal-data">
     <table-tools-bar>
       <div class="laws-info-form" slot="left">
-        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" :label-width="80" class="label-input-form">
+        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" class="label-input-form">
           <FormItem label="文件号" prop="fileNum" class="laws-info-item">
             <Input v-model="lawsInfo.fileNum"></Input>
           </FormItem>
@@ -17,13 +17,12 @@
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="tableColumn" :data="data" :height="550"></Table>
+      <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
     </div>
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
    <!--新增修改模态框-->
    <full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">
-     <Button @click="closeModal">关闭</Button>
      <div>
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
          <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
@@ -126,8 +125,6 @@
 </template>
 
 <script>
-import Pagination from 'pages/components/Pagination'
-import tableToolsBar from 'pages/components/TableToolsBar'
 export default {
   name: 'DomesticRegulationsDatabase',
   data () {
@@ -329,9 +326,6 @@ export default {
       }
     },
     cancelAdd () {
-    },
-    // 关闭模态框
-    closeModal () {
       this.$refs.showLawsInfoModal.toggleClose()
     },
     // 删除
@@ -374,10 +368,7 @@ export default {
       })
     }
   },
-  components: {
-    Pagination,
-    tableToolsBar
-  },
+  components: {},
   props: {},
   computed: {},
   watch: {
@@ -402,9 +393,6 @@ export default {
     .laws-info-item{
       display:inline-block;
     }
-  }
-  .label-input-form{
-    margin-top: 10px;
   }
   .save-laws-btn{
     text-align: center;
