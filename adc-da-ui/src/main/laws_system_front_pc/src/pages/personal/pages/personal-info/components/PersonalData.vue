@@ -32,7 +32,7 @@
         <FormItem label="传 真" prop="fax" class="user-info-item">
           <Input v-model="userInfo.fax"></Input>
         </FormItem>
-        <FormItem label="个性签名" prop="autograph">
+        <FormItem label="个性签名" prop="autograph" class="user-info-item">
           <Input v-model="userInfo.autograph"></Input>
         </FormItem>
       </Form>
@@ -87,7 +87,23 @@ export default {
     uploadAvator () {
       let avator = this.$refs.avatorUploadBtn.files[0]
       console.log(avator)
+    },
+    searchPersonal () {
+      this.$http.get('person/userInfo', {}, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        this.userInfo.username = res.data[0].userId
+        this.userInfo.department = res.data[0].duty
+        this.userInfo.phone = res.data[0].officePhone
+        this.userInfo.mobile = res.data[0].mobilePhone
+        this.userInfo.fax = res.data[0].faxAddress
+        this.userInfo.autograph = res.data[0].signature
+      }, e => {})
     }
+  },
+  mounted () {
+    this.searchPersonal()
   }
 }
 </script>
@@ -124,10 +140,15 @@ export default {
         line-height: 0.72rem;
         margin: 0.5rem 0 0 0.2rem;
       }
-    }
-    .user-info-item{
-      .ivu-form-item-content{
-        width: 6rem;
+      .user-info-item{
+        .ivu-input{
+          width: 250px;
+        }
+        &:last-child{
+          .ivu-input{
+            width: 400px;
+          }
+        }
       }
     }
   }

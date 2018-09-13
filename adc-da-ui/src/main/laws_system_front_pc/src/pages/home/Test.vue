@@ -1,25 +1,29 @@
 <template>
   <div class="test">
-    <label-input :label="123"></label-input>
-    <label-select v-model="userId" type="datePicker" label="管理员"></label-select>
-    <span>{{ userId }}</span>
+    <input type="button" value="请求" @click="postData">
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      userId: '1002',
-      options: [{
-        value: '1001',
-        label: '张小明'
-      }, {
-        value: '1002',
-        label: '王铁柱'
-      }]
+      processType: 1,
+      projectName: '这个测试肯定成功',
+      flag: 1
     }
   },
-  methods: {}
+  methods: {
+    postData () {
+      let vehicleApprovalEO = {
+        processType: this.processType,
+        projectName: this.projectName,
+        flag: 1
+      }
+      this.$http.post('WorkFlow/VehicleApproval/submitOrSaveStandardApprovalProcess', vehicleApprovalEO, {
+        _this: this
+      }, res => {}, e => {})
+    }
+  }
 }
 </script>
 <style lang="less">

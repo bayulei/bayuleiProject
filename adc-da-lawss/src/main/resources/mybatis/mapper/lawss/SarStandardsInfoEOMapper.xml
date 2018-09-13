@@ -44,7 +44,7 @@
     <result column="country" property="country" />
     <result column="stand_type" property="standType" />
   </resultMap>
-  <resultMap id="BaseResultMapExcel" type="com.adc.da.lawss.vo.SarStandExcelDto" >
+  <resultMap id="BaseResultMapExcel" type="com.adc.da.lawss.dto.SarStandExcelDto" >
         <!--<result column="modify_time" property="modifyTime" />
         <result column="creation_time" property="creationTime" />
         <result column="valid_flag" property="validFlag" />-->
@@ -616,8 +616,13 @@
             <if test="replacedStandNum != null" >
                 and replaced_stand_num like concat(concat('%',#{replacedStandNum}),'%')
             </if>
-
-
+            <!--  目录判断 -->
+            <if test="menuId != null and menuId !='nomenu'" >
+                and SAR_STAND_MENU.MENU_ID = #{menuId}
+            </if>
+            <if test="menuId != null and menuId =='nomenu'" >
+                and SAR_STAND_MENU.MENU_ID is null
+            </if>
             <!--
              < 标准种类 >
              <if test="standSort != null" >
@@ -704,7 +709,6 @@
              <if test="putTime2 != null" >
                  and put_time &lt;= #{putTime2}
              </if>
-
              <if test="applyAuth != null" >
                  and apply_auth ${applyAuthOperator} #{applyAuth}
              </if>
@@ -717,10 +721,6 @@
              <if test="interStandNum != null" >
                  and inter_stand_num ${interStandNumOperator} #{interStandNum}
              </if>
-
-
-
-
              <if test="standEnName != null" >
                  and stand_en_name ${standEnNameOperator} #{standEnName}
              </if>
@@ -728,9 +728,6 @@
              <if test="standYear != null" >
                  and stand_year ${standYearOperator} #{standYear}
              </if>
-
-
-
              <if test="country != null" >
                  and country ${countryOperator} #{country}
              </if>
@@ -756,10 +753,18 @@
       where rn &gt;= ${pager.startIndex}
   </select>
   <!-- 分页查询条件查询一共有多少条数据，配合分页 -->
-  <select id="getSarStandardsInfoCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+  <select id="getSarStandardsInfoCount" resultType="java.lang.Integer" parameterType="com.adc.da.lawss.page.SarStandardsInfoEOPage">
         select count(1) from SAR_STANDARDS_INFO
         <include refid="SarStandardsInfo_Where_Clause"/>
   </select>
+  <!--    查询各级目录下数据   -->
+  <select id="getSarStandardsInfoByMenu" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarStandardsInfoEOPage">
+        select SAR_STANDARDS_INFO.* from SAR_STANDARDS_INFO  left join   SAR_STAND_MENU
+        on SAR_STAND_MENU.STAND_ID = SAR_STANDARDS_INFO.ID
+        <include refid="SarStandardsInfo_Where_Clause"/>
+  </select>
+
+
   <!-- 条件查询后，用于导出标准信息数据-->
   <select id="getSarStandardsInfo" resultMap="BaseResultMapExcel" parameterType="com.adc.da.lawss.page.SarStandardsInfoEOPage">
         select <include refid="Base_Column_List" /> from SAR_STANDARDS_INFO
@@ -769,4 +774,16 @@
         </if>
   </select>
 
+  <select id="selectStandardsByStandnumber" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.entity.SarStandardsInfoEO">
+        select <include refid="Base_Column_List" /> from
+        SAR_STANDARDS_INFO
+        where 1=1
+        <!-- 标准类型 -->
+        <if test="standType != null" >
+          and stand_type = #{standType}
+        </if>
+        <if test="replaceStandNum != null" >
+          and stand_number in ( #{replaceStandNum})
+        </if>
+  </select>
 </mapper>

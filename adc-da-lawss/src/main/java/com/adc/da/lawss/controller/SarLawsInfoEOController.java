@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -72,8 +73,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
     @GetMapping("/page")
     /*@RequiresPermissions("lawss:sarLawsInfo:page")*/
     public ResponseMessage<PageInfo<SarLawsInfoEO>> page(SarLawsInfoEOPage page) throws Exception {
-        page.setValidFlag("0");
-        page.setOrderBy("modify_time desc");
+        page.setOrderBy("SAR_LAWS_INFO.modify_time desc");
         List<SarLawsInfoEO> rows = sarLawsInfoEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
@@ -131,6 +131,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
     @PutMapping("/updateLawsInfo")
     /*@RequiresPermissions("lawss:sarLawsInfo:update")*/
     public ResponseMessage<SarLawsInfoEO> update(SarLawsInfoEO sarLawsInfoEO) throws Exception {
+        sarLawsInfoEO.setModifyTime(new Date());
         int countUpdate = sarLawsInfoEOService.updateByPrimaryKeySelective(sarLawsInfoEO);
         if(countUpdate > 0){
             return Result.success("0","修改成功",sarLawsInfoEO);

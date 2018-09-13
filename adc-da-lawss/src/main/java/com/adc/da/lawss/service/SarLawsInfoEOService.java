@@ -90,7 +90,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             sarLawsValEODao.insertSelective(sarLawsValEO);
             return Result.success("0","新增成功",sarLawsInfoEO);
         } else {
-            return Result.error("新增失败！");
+            return Result.error("新增失败");
         }
     }
 
@@ -176,7 +176,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
                 BeanUtils.copyProperties(importDto,sarLawsInfoEO);
                 createLawsInfo(sarLawsInfoEO);
             }
-            return Result.success("0","导入成功");
+            return new ResponseMessage("0","导入成功",true);
         } catch (Exception e){
             return Result.error("导入失败");
         }

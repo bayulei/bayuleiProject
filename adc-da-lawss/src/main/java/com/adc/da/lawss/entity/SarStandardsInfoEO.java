@@ -2,6 +2,7 @@ package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -29,7 +30,7 @@ public class SarStandardsInfoEO extends BaseEntity {
     //责任部门
     private String responsibleUnit;
     //内容摘要
-    private Object synopsis;
+    private String synopsis;
     //关键词
     private String tags;
     //关联文件  支持PDF、doc、docx文件，
@@ -51,20 +52,21 @@ public class SarStandardsInfoEO extends BaseEntity {
     //起草单位
     private String draftingUnit;
     //新生产车实施日期
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date newproductPutTime;
     //在产车实施日期
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date productPutTime;
     //新定型车实施日期
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date newcarPutTime;
     //实施日期
-    //@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+
+    //@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date putTime;
     //发布日期
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date issueTime;
     //适用认证  多选
     private String applyAuth;
@@ -103,7 +105,8 @@ public class SarStandardsInfoEO extends BaseEntity {
 
     //目录ID   非标准信息表中的字段
     private String  menuId;
-
+    private MultipartFile standFiles;
+    private MultipartFile standModifyFiles;
 
 
 
@@ -360,12 +363,12 @@ public class SarStandardsInfoEO extends BaseEntity {
     }
 
     /**  **/
-    public Object getSynopsis() {
+    public String  getSynopsis() {
         return this.synopsis;
     }
 
     /**  **/
-    public void setSynopsis(Object synopsis) {
+    public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
     }
 
@@ -695,5 +698,21 @@ public class SarStandardsInfoEO extends BaseEntity {
 
     public void setMenuId(String menuId) {
         this.menuId = menuId;
+    }
+
+    public MultipartFile getStandFiles() {
+        return standFiles;
+    }
+
+    public void setStandFiles(MultipartFile standFiles) {
+        this.standFiles = standFiles;
+    }
+
+    public MultipartFile getStandModifyFiles() {
+        return standModifyFiles;
+    }
+
+    public void setStandModifyFiles(MultipartFile standModifyFiles) {
+        this.standModifyFiles = standModifyFiles;
     }
 }

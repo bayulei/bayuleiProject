@@ -30,6 +30,17 @@
 		</collection>
 	</resultMap>
 
+	<!--gaoyan -->
+	<resultMap id="ListMap" type="com.adc.da.sys.entity.DictionaryEO">
+		<id column="id" property="id" />
+		<result column="dictionary_code" property="dictionaryCode" />
+		<result column="dictionary_name" property="dictionaryName" />
+		<result column="dictionary_seq" property="dictionarySeq" />
+		<result column="valid_flag" property="validFlag" />
+		<result column="creation_time" property="creationTime" />
+		<result column="modify_time" property="modifyTime" />
+	</resultMap>
+
 	<sql id="Dic_Type_List">
 		u.*, ur.id as type_id,
 		ur.dic_type_code as dic_type_code,
@@ -136,8 +147,9 @@
 	<!-- 插入记录 -->
 	<insert id="insert" parameterType="com.adc.da.sys.entity.DictionaryEO">
 		insert into TS_DICTIONARY(<include refid="Base_Column_List" />)
-	    values (#{modifyTime}, #{creationTime}, #{validFlag}, #{dictionarySeq}, #{dictionaryName}, #{dictionaryCode}, #{id})
+	    values (#{modifyTime}, #{creationTime}, #{validFlag}, '1', #{dictionaryName}, #{dictionaryCode}, #{id})
 	</insert>
+
 
 	<!-- 删除记录 -->
 	
@@ -180,6 +192,11 @@
       </if>
 	</select>
 
-
+	<select id="getDictionaryEO" parameterType="java.lang.String" resultMap="ListMap">
+		select
+		*
+		from TS_DICTIONARY dn
+		where  dn.VALID_FLAG = 0
+	</select>
 
 </mapper>

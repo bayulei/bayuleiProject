@@ -1,25 +1,33 @@
 package com.adc.da.sys.vo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.adc.da.sys.entity.OrgEO;
 import com.adc.da.sys.entity.RoleEO;
 
 public class UserVO {
-  
-	private String usid;
-	private String account;
-	private String usname;
+
+	private Integer validFlag;
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date modifyTime;
+	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date creationTime;
+	private String operUser;
+	private String extInfo;
+	private String workNum;
+	private String email;
+	private String userSource;
+	private String uname;
 	private String password;
+	private String account;
+	private String usid;
 	// 扩展字段
-    private String extInfo;
-    private String email;
     private String updateTime;
-    private String workNum;
 	private List<String> rolesstr = new ArrayList<>();
 	private List<RoleEO> roles = new ArrayList<>();
-	
+
 	private List<String> orgsstr = new ArrayList<>();
 	private List<OrgEO> orgs = new ArrayList<>();
 	
@@ -27,37 +35,37 @@ public class UserVO {
 	private String orgUseName;
 	private String rname;
 	private String deptId;
-	
-	public String getUsid() {
-		return usid;
+
+	public Integer getValidFlag() {
+		return validFlag;
 	}
 
-	public void setUsid(String usid) {
-		this.usid = usid;
+	public void setValidFlag(Integer validFlag) {
+		this.validFlag = validFlag;
 	}
 
-	public String getAccount() {
-		return account;
+	public Date getModifyTime() {
+		return modifyTime;
 	}
 
-	public void setAccount(String account) {
-		this.account = account;
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
-	public String getUsname() {
-		return usname;
+	public Date getCreationTime() {
+		return creationTime;
 	}
 
-	public void setUsname(String usname) {
-		this.usname = usname;
+	public void setCreationTime(Date creationTime) {
+		this.creationTime = creationTime;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getOperUser() {
+		return operUser;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setOperUser(String operUser) {
+		this.operUser = operUser;
 	}
 
 	public String getExtInfo() {
@@ -68,6 +76,14 @@ public class UserVO {
 		this.extInfo = extInfo;
 	}
 
+	public String getWorkNum() {
+		return workNum;
+	}
+
+	public void setWorkNum(String workNum) {
+		this.workNum = workNum;
+	}
+
 	public List<String> getRolesstr() {
 		return rolesstr;
 	}
@@ -76,21 +92,6 @@ public class UserVO {
 		this.rolesstr = rolesstr;
 	}
 
-	public List<RoleEO> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<RoleEO> roles) {
-		this.roles = roles;
-		if(roles!=null &&roles.size()>0){
-			List<String> roleNameList=new ArrayList<String>();
-			for(RoleEO role:roles){
-				roleNameList.add(role.getName());
-			}
-			this.rolesstr=roleNameList;
-		}
-	}
-	
 	public List<String> getOrgsstr() {
 		return orgsstr;
 	}
@@ -105,30 +106,6 @@ public class UserVO {
 
 	public void setOrgs(List<OrgEO> orgs) {
 		this.orgs = orgs;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getWorkNum() {
-		return workNum;
-	}
-
-	public void setWorkNum(String workNum) {
-		this.workNum = workNum;
 	}
 
 	public String getUseCorpId() {
@@ -147,6 +124,7 @@ public class UserVO {
 		this.orgUseName = orgUseName;
 	}
 
+
 	public String getRname() {
 		return rname;
 	}
@@ -162,5 +140,77 @@ public class UserVO {
 	public void setDeptId(String deptId) {
 		this.deptId = deptId;
 	}
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getUserSource() {
+		return userSource;
+	}
+
+	public void setUserSource(String userSource) {
+		this.userSource = userSource;
+	}
+
+	public String getUname() {
+		return uname;
+	}
+
+	public void setUname(String uname) {
+		this.uname = uname;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getUsid() {
+		return usid;
+	}
+
+	public void setUsid(String usid) {
+		this.usid = usid;
+	}
+
+	public List<RoleEO> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<RoleEO> roles) {
+		this.roles = roles;
+		if(roles!=null &&roles.size()>0){
+			List<String> roleNameList=new ArrayList<String>();
+			for(RoleEO role:roles){
+				roleNameList.add(role.getName());
+			}
+			this.rolesstr=roleNameList;
+		}
+	}
+
+
 }

@@ -5,11 +5,13 @@ import com.adc.da.lawss.common.PropertyTypeEnum;
 import com.adc.da.lawss.dao.SarStandMenuEODao;
 import com.adc.da.lawss.dao.SarStandValEODao;
 import com.adc.da.lawss.dao.SarStandardsInfoEODao;
+import com.adc.da.lawss.dto.LawsInfoImportDto;
+import com.adc.da.lawss.entity.SarLawsInfoEO;
 import com.adc.da.lawss.entity.SarStandMenuEO;
 import com.adc.da.lawss.entity.SarStandValEO;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
-import com.adc.da.lawss.vo.SarStandExcelDto;
+import com.adc.da.lawss.dto.SarStandExcelDto;
 import com.adc.da.sys.constant.ValueStateEnum;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
@@ -17,6 +19,7 @@ import com.adc.da.util.utils.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -118,23 +122,36 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
                     sarStandValEODao.insertSelective(sarStandValEO);
                 }
             }
-
             //标准文件资源表，标准文件详情表中插入数据
-
-
-
-
-            return  Result.success("00","插入数据成功");
+            return  Result.success("00","插入数据成功",sarStandardsInfoEO);
         }
         else {
             return Result.error("01","插入输入过程中出错");
         }
     }
 
-    public ResponseMessage<SarStandardsInfoEO> importSarStandardsInfoData(List<SarStandardsInfoEO> list){
+    public ResponseMessage<SarStandardsInfoEO> importSarStandardsInfoData(List<SarStandExcelDto> list,String  standType){
         //此处需要做各种验证，数据库操作
-        SarStandardsInfoEO sarStandardsInfoEO = new SarStandardsInfoEO();
-        return Result.success(sarStandardsInfoEO);
+        try{
+            //验证导入数据是否符合规则
+            //Map map = validateImportDatas(datas);
+            //boolean isOk = (boolean) map.get("result");
+            /*if (!isOk) {
+                //验证没有通过
+                String message = (String) map.get("message");
+                return Result.error("fail", message);
+            }*/
+            //将导入数据循环新增至相应表
+            for(SarStandExcelDto importDto : list){
+                SarStandardsInfoEO sarStandardsInfoEO = new SarStandardsInfoEO();
+                BeanUtils.copyProperties(importDto,sarStandardsInfoEO);
+                sarStandardsInfoEO.setStandType(standType);
+                createSarStandardsInfo(sarStandardsInfoEO);
+            }
+            return Result.success("0","导入数据成功");
+        } catch (Exception e){
+            return Result.error("导入失败");
+        }
     }
 
     /**
@@ -152,5 +169,16 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
 
     public List<SarStandExcelDto> getSarStandardsInfo(SarStandardsInfoEOPage page){
         return  sarStandardsInfoEOdao.getSarStandardsInfo(page);
+    }
+
+    public List<SarStandardsInfoEO> selectStandardsByStandnumber(String replaceStandNum,String standType){
+        SarStandardsInfoEO sarStandardsInfoEO = new SarStandardsInfoEO();
+        sarStandardsInfoEO.setReplaceStandNum(replaceStandNum);
+        sarStandardsInfoEO.setStandType(standType);
+        return  sarStandardsInfoEOdao.selectStandardsByStandnumber(sarStandardsInfoEO);
+    }
+
+    public List<SarStandardsInfoEO> getSarStandardsInfoByMenu(SarStandardsInfoEOPage page){
+        return  sarStandardsInfoEOdao.getSarStandardsInfoByMenu(page);
     }
 }

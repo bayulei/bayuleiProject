@@ -138,12 +138,9 @@ public class LoginRestController {
                 request.getSession().setAttribute(RequestUtils.LOGIN_ROLE_ID, UserUtils.getRoleIds());
                 List<UserEO> getUser =userService.queryOrgByAccount(username);
                 
-                if(getUser.size() == 0){
-                    return Result.error("登录失败！账号无组织机构，为禁用状态");
-                }
-                if(menuList==null || menuList.isEmpty()){
+/*                if(menuList==null || menuList.isEmpty()){
                 	return Result.error("登录失败！账号无访问权限，请联系管理员授权");
-                }
+                }*/
                 return Result.success(beanMapper.map(userEO, UserVO.class));
             } catch (CaptchaException e) {
                 logger.info("验证码验证失败");
