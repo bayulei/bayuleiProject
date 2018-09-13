@@ -4,8 +4,14 @@
     <table-tools-bar>
       <div class="laws-info-form" slot="left">
         <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" class="label-input-form">
-          <FormItem label="文件号" prop="fileNum" class="laws-info-item">
-            <Input v-model="lawsInfo.fileNum"></Input>
+          <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
+            <Input v-model="lawsInfo.lawsNumber"></Input>
+          </FormItem>
+          <FormItem label="文件名称" prop="lawsName" class="laws-info-item">
+            <Input v-model="lawsInfo.lawsName"></Input>
+          </FormItem>
+          <FormItem label="发布日期" prop="issueTime" class="laws-info-item">
+            <DatePicker type="date" v-model="lawsInfo.issueTime" format="yyyy-MM-dd"></DatePicker>
           </FormItem>
           <Button type="primary" icon="ios-search" @click="searchLawsInfo"></Button>
         </Form>
@@ -140,7 +146,9 @@ export default {
       modal2: false,
       showLawsInfoModal: false,
       lawsInfo: {
-        fileNum: '' // 文件号
+        lawsNum: '',
+        lawsName: '',
+        issueTime: ''
       },
       SarLawsInfoEO: {
         editLawsId: '',
@@ -274,11 +282,13 @@ export default {
   methods: {
     // 分页查询
     searchLawsInfo () {
-      this.$http.get('lawss/sarLawsInfo/page', {
-        page: this.page,
-        pageSize: this.rows,
-        lawsNumber: this.lawsInfo.fileNum
-      }, {
+      let SarLawsInfoEOPage = this.lawsInfo
+      SarLawsInfoEOPage.page = this.page
+      SarLawsInfoEOPage.pageSize = this.rows
+      if (SarLawsInfoEOPage.issueTime != null && SarLawsInfoEOPage.issueTime !== '') {
+        SarLawsInfoEOPage.issueTime = this.$dateFormat(SarLawsInfoEOPage.issueTime, 'yyyy-MM-dd')
+      }
+      this.$http.get('lawss/sarLawsInfo/page', SarLawsInfoEOPage, {
         _this: this,
         loading: 'loading'
       }, res => {
