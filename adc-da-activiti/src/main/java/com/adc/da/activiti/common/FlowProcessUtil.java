@@ -150,14 +150,14 @@ public class FlowProcessUtil {
         }
     }
 
-    /**
+   /* *//**
      *  驳回到上一步
      * @MethodName:reject
      * @author: yuzhong
      * @param:[processInstanceId,nowUserId]
      * @return:String
      * date: 2018年9月4日 16:25:59
-     */
+     *//*
     public String reject(String processInstanceId,String nowUserId,String comment){
         try {
             Map<String, Object> variables;
@@ -316,7 +316,7 @@ public class FlowProcessUtil {
         } catch (Exception e) {
             return "驳回失败";
         }
-    }
+    }*/
 
     @ApiOperation(value = "通过任务ID委托人")
     @GetMapping("/entrustByTaskId")

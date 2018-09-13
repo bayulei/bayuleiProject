@@ -161,8 +161,10 @@ public class StandardAdjustProcessService {
             flowProcessUtil.updateProcessByProcessInstanceId(task.getProcessInstanceId(), busProcessEO);
 
         } else {
+            //此流程默认驳回到起点
+            String destTaskKey = "usertask1";
             //flag 为3，则退回
-            flowProcessUtil.rejectToStart(task.getProcessInstanceId());
+            flowProcessUtil.rejectTask(task.getProcessInstanceId(),task.getAssignee(),destTaskKey,"");
             //更新业务流程主表
             BusProcessEO busProcessEO = new BusProcessEO();
             busProcessEO.setLastUserId("从session取");
