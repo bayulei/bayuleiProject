@@ -45,6 +45,15 @@ public class VehicleApprovalEO extends BaseEntity implements Serializable {
      */
     private  String fileUrl ;
 
+    private  String flag;
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
 
     public String getProcessNumber() {
         return processNumber;

@@ -122,20 +122,15 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
                     sarStandValEODao.insertSelective(sarStandValEO);
                 }
             }
-
             //标准文件资源表，标准文件详情表中插入数据
-
-
-
-
-            return  Result.success("00","插入数据成功");
+            return  Result.success("00","插入数据成功",sarStandardsInfoEO);
         }
         else {
             return Result.error("01","插入输入过程中出错");
         }
     }
 
-    public ResponseMessage<SarStandardsInfoEO> importSarStandardsInfoData(List<SarStandExcelDto> list){
+    public ResponseMessage<SarStandardsInfoEO> importSarStandardsInfoData(List<SarStandExcelDto> list,String  standType){
         //此处需要做各种验证，数据库操作
         try{
             //验证导入数据是否符合规则
@@ -150,6 +145,7 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
             for(SarStandExcelDto importDto : list){
                 SarStandardsInfoEO sarStandardsInfoEO = new SarStandardsInfoEO();
                 BeanUtils.copyProperties(importDto,sarStandardsInfoEO);
+                sarStandardsInfoEO.setStandType(standType);
                 createSarStandardsInfo(sarStandardsInfoEO);
             }
             return Result.success("0","导入数据成功");
@@ -173,5 +169,16 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
 
     public List<SarStandExcelDto> getSarStandardsInfo(SarStandardsInfoEOPage page){
         return  sarStandardsInfoEOdao.getSarStandardsInfo(page);
+    }
+
+    public List<SarStandardsInfoEO> selectStandardsByStandnumber(String replaceStandNum,String standType){
+        SarStandardsInfoEO sarStandardsInfoEO = new SarStandardsInfoEO();
+        sarStandardsInfoEO.setReplaceStandNum(replaceStandNum);
+        sarStandardsInfoEO.setStandType(standType);
+        return  sarStandardsInfoEOdao.selectStandardsByStandnumber(sarStandardsInfoEO);
+    }
+
+    public List<SarStandardsInfoEO> getSarStandardsInfoByMenu(SarStandardsInfoEOPage page){
+        return  sarStandardsInfoEOdao.getSarStandardsInfoByMenu(page);
     }
 }

@@ -12,7 +12,6 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 
-import static com.adc.da.activiti.controller.VehicleApprovalController.ProcessDefinitionKey;
+import static com.adc.da.activiti.controller.VehicleApprovalController.VEHICLE_APPROVAL_KEY;
 
 
 /**
@@ -63,26 +62,6 @@ public class VehicleApprovalService {
     @Autowired
     private TaskService taskService;
 
-    /**
-     * 启动流程,创建流程实例
-     *
-     * @MethodName:startStandardApprovalProcess
-     * @author: DuYunbao
-     * @param:[vehicleApprovalEO]
-     * @return:org.activiti.engine.runtime.ProcessInstance date: 2018/9/3 20:15
-     */
-    public ProcessInstance startStandardApprovalProcess(VehicleApprovalEO vehicleApprovalEO) {
-        //从session取当前登录人Id
-        String userId = "dyb";
-
-        //设置流程发起人id
-        Authentication.setAuthenticatedUserId(userId);
-        //与正在执行的流程实例和执行对象相关的Service
-        ProcessInstance pi = runtimeService
-                //使用流程定义的key启动流程实例，key对应bpmn文件中id的属性值，使用key值启动，默认是按照最新版本的流程定义启动
-                .startProcessInstanceByKey(ProcessDefinitionKey);
-        return pi;
-    }
 
 
     /**
@@ -96,7 +75,7 @@ public class VehicleApprovalService {
     public ResponseMessage<String> submitOrSaveStandardApprovalProcess(VehicleApprovalEO vehicleApprovalEO, String flag, String ProcessInstanceId) throws Exception {
         //启动流程
         try {
-            ProcessInstance pi = this.startStandardApprovalProcess(vehicleApprovalEO);
+            ProcessInstance pi = flowProcessUtil.startStandardApprovalProcess(VEHICLE_APPROVAL_KEY);
             //获取当前执行的任务
             Task task = taskService.createTaskQuery()
                     .processInstanceId(pi.getProcessInstanceId())
