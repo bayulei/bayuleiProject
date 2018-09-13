@@ -12,7 +12,7 @@
           <Button type="warning" @click="categoryEdit">编辑</Button>
           <Button type="error"  @click="categoryDel">删除</Button>
           <!--显示模态框-->
-          <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="400"
+          <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }"
                  @on-ok="saveCategory">
               <Form :model="categoryModelAdd" label-position="right" :label-width="80">
                 <input v-model="categoryModelAdd.id" v-show="false">
@@ -265,7 +265,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" >
   .standard-classification {}
   .hide-modal-footer{
     .ivu-modal-footer{

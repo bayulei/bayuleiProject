@@ -227,7 +227,7 @@ export default {
       }, e => {})
     },
     // 提交新增/修改
-    saveclass () {
+    saveClass () {
       if (this.modalType === 1) {
         this.$http.post('sys/dictype/create', {
           dicTypeName: this.classModelAdd.parts,
