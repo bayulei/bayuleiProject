@@ -12,4 +12,6 @@ import com.adc.da.lawss.entity.MsgModuleEO;
  */
 public interface MsgModuleEODao extends BaseDao<MsgModuleEO> {
 
+//    重写详情
+    MsgModuleEO selectByPrimaryKey(String id);
 }

@@ -195,11 +195,19 @@
   </select>
 
   <!-- 删除记录 -->
+    <!--
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from MSG_DYNAMIC_INFO
      where id = #{value}
-
   </delete>
+  -->
+    <!--李文轩：删除记录-->
+    <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+        UPDATE  MSG_DYNAMIC_INFO
+        	set valid_Flag = 1
+        WHERE id = #{id}
+
+    </update>
 
   <!-- MSG_DYNAMIC_INFO 列表总数-->
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
@@ -227,5 +235,19 @@
        ${pager.orderCondition}
     </if>
   </select>
+    
+    <!--李文轩：添加动态信息管理id到附件表中-->
+<update id="updateIdOfMsgFile" parameterType="com.adc.da.lawss.entity.MsgFileEO">
+    UPDATE msg_file set msg_file.msg_id = #{msgId},
+    msg_file.file_name=#{fileName},
+    msg_file.file_suffix=#{fileSuffix},
+    msg_file.att_id=#{attId}
+    where msg_file.id in
+    <foreach item="id" collection="list" open="(" separator=","
+             close=")" index="index">
+        #{id}
+    </foreach>
+</update>
+
 
 </mapper>

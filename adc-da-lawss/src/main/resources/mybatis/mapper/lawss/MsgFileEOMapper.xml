@@ -177,9 +177,10 @@
   <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
     select <include refid="Base_Column_List"/> from MSG_FILE
     <include refid="Base_Where_Clause"/>
-    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-       ${pager.orderCondition}
-    </if>
-  </select>
 
-</mapper>
+      <!--    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+             ${pager.orderCondition}
+          </if>  -->
+        </select>
+
+      </mapper>

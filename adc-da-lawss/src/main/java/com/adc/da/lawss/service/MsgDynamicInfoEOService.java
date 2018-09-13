@@ -1,5 +1,7 @@
 package com.adc.da.lawss.service;
 
+import com.adc.da.lawss.entity.MsgFileEO;
+import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.MsgDynamicInfoEODao;
 import com.adc.da.lawss.entity.MsgDynamicInfoEO;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -33,4 +38,27 @@ public class MsgDynamicInfoEOService extends BaseService<MsgDynamicInfoEO, Strin
         return dao;
     }
 
+    public int insertSelective(MsgDynamicInfoEO msgDynamicInfoEO) throws Exception {
+
+        msgDynamicInfoEO.setId(UUID.randomUUID10());
+        msgDynamicInfoEO.setValidFlag(0);
+        msgDynamicInfoEO.setCreationTime(new Date());
+        msgDynamicInfoEO.setModifyTime(new Date());
+
+        return dao.insertSelective(msgDynamicInfoEO);
+    }
+//修改
+    public int updateByPrimaryKeySelective(MsgDynamicInfoEO msgDynamicInfoEO) throws Exception {
+
+        msgDynamicInfoEO.setModifyTime(new Date());
+        return dao.updateByPrimaryKeySelective(msgDynamicInfoEO);
+    }
+
+//  调用附件存入动态信息id
+    public  Integer updateIdOfMsgFile(List<MsgFileEO> msgFileEOS){
+
+
+     return   dao.updateIdOfMsgFile(msgFileEOS);
+
+}
 }
