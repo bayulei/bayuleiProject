@@ -21,7 +21,7 @@
        <Button type="primary" icon="ios-add" :loading="searching" @click="addModal">新增标准</Button>
        <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal">导入标准</Button>
        <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
-       <Button type="primary" @click="isAdvancedSearch = true">配置标准</Button>
+       <Button type="primary" @click="configurationStandard">配置标准</Button>
      </div>
    </table-tools-bar>
 
@@ -130,7 +130,7 @@
          <Row>
            <Col span="8">
            <FormItem label="代替标准号" prop="replaceStandNum" class="standards-info-item">
-             <Input v-model="sarStandardsInfoEO.replaceStandNum"></Input>
+             <Input v-model="sarStandardsInfoEO.replaceStandNum" @on-blur="testReplaceStandNum" placeholder="输入多个标准号，以逗号隔开"></Input>
            </FormItem>
            </Col>
            <Col span="8">
@@ -210,13 +210,13 @@
            <Col span="8">
            <FormItem label="标准文本" prop="standFile" class="standards-info-item">
              <!--<Input v-model="sarStandardsInfoEO.standFile"></Input>-->
-             <input type="file" name="standFile" />
+             <input type="file" name="standFiles" />
            </FormItem>
            </Col>
            <Col span="8">
            <FormItem label="标准修改单" prop="standModifyFile" class="standards-info-item">
              <!--<Input v-model="sarStandardsInfoEO.standModifyFile"></Input>-->
-             <input type="file" name="standModifyFile" />
+             <input type="file" name="standModifyFiles" />
            </FormItem>
            </Col>
          </Row>
@@ -290,7 +290,7 @@
    </full-modal>
    <!-- 导入模态窗 -->
    <Modal v-model="importModalshowflag" title="导入文件" >
-     <Upload action="/api/lawss/sarStandardsInfo/importStandardsInfo" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
+     <Upload action="/api/lawss/sarStandardsInfo/importStandardsInfo?standType='INLAND'" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
        <Button icon="ios-cloud-upload-outline">选择文件</Button>
      </Upload>
    </Modal>
@@ -409,7 +409,7 @@ export default {
       addOrUPdateFlag: 1, // 新增：1， 修改：2
       sarStandardsInfoEO: {
         id: '',
-        standType: 'INLAND_STAND', // 标准分类
+        standType: 'INLAND', // 标准分类
         country: 'CN',
         standSort: '',
         applyArctic: '',
@@ -445,7 +445,16 @@ export default {
         category: '',
         remark: ''
       }, // 新增过程中用到的对象
-      sarStandardsSearch: {page: 1, pageSize: 10, country: '', standNumber: '', standName: '', standState: ''}, // 分页查询过程中用到的对象
+      sarStandardsSearch: {
+        page: 1,
+        pageSize: 10,
+        country: '',
+        standNumber: '',
+        standName: '',
+        standState: '',
+        standType: 'INLAND',
+        menuId: ''
+      }, // 分页查询过程中用到的对象
       sarStandardsInfoRules: {
         standSort: [
           { required: true, message: '标准类别不能为空', trigger: 'blur' }
@@ -535,6 +544,10 @@ export default {
         _this: this, loading: 'loading'
       }, res => {
         this.stahndinfoList = res.data.list
+        for (let i = 0; i < this.stahndinfoList.length; i++) {
+          this.stahndinfoList[i]['collectIcontype'] = 'ios-star-outline'
+          this.stahndinfoList[i]['collectIconcolor'] = '#5c6b77'
+        }
         this.total = res.data.count
       }, e => {
       })
@@ -571,7 +584,7 @@ export default {
       })
     },
     // 保存或修改标准
-    saveOrUpdateStands() {
+    saveOrUpdateStands () {
       // 时间格式修改
       this.sarStandardsInfoEO.issueTime = this.$dateFormat(this.sarStandardsInfoEO.issueTime, 'yyyy-MM-dd')
       this.sarStandardsInfoEO.putTime = this.$dateFormat(this.sarStandardsInfoEO.putTime, 'yyyy-MM-dd')
@@ -579,6 +592,7 @@ export default {
       this.sarStandardsInfoEO.productPutTime = this.$dateFormat(this.sarStandardsInfoEO.productPutTime, 'yyyy-MM-dd')
       this.sarStandardsInfoEO.newproductPutTime = this.$dateFormat(this.sarStandardsInfoEO.newproductPutTime, 'yyyy-MM-dd')
       // 新增
+      console.log(this.sarStandardsInfoEO)
       if (this.addOrUPdateFlag === 1) {
         this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
           _this: this
@@ -629,11 +643,11 @@ export default {
       console.log(i)
       i.collectIconcolor = '#CD950C'
       i.collectIcontype = 'ios-star'
-      this.$http.post('', {id: this.sarStandardsInfoEO.id}, {
+      /* this.$http.post('', {id: this.sarStandardsInfoEO.id}, {
         _this: this
       }, res => {
       }, e => {
-      })
+      }) */
     },
     // 分享标准
     shareStandard (item) {
@@ -685,6 +699,26 @@ export default {
       this.$http.post('lawss/sarMenu/addSarMenu', this.sarMenu, {
         _this: this, loading: 'loading'
       }, res => {
+      }, e => {
+      })
+    },
+    // 输入代替标准号后，和数据库做验证
+    testReplaceStandNum () {
+      this.sarStandardsInfoEO.replaceStandNum = this.sarStandardsInfoEO.replaceStandNum.replace(/，/ig, ',')
+      this.$http.post('lawss/sarStandardsInfo/selectReplaceStandNum', {'replaceStandNum': this.sarStandardsInfoEO.replaceStandNum, 'standType': this.sarStandardsInfoEO.standType}, {
+        _this: this
+      }, res => {
+        console.log(res)
+      }, e => {
+      })
+    },
+    // 现在配置标准要求查询处于游离状态的数据
+    configurationStandard () {
+      this.sarStandardsSearch.menuId = 'nomenu'
+      this.$http.post('lawss/sarStandardsInfo/selectStandardsInfoByMenu', this.sarStandardsSearch, {
+        _this: this
+      }, res => {
+        console.log(res)
       }, e => {
       })
     }
