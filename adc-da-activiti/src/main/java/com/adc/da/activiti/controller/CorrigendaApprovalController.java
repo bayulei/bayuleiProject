@@ -1,8 +1,8 @@
 package com.adc.da.activiti.controller;
 
 import com.adc.da.activiti.common.FlowProcessUtil;
-import com.adc.da.activiti.service.StandardApprovalService;
-import com.adc.da.activiti.vo.StandardApprovalVO;
+import com.adc.da.activiti.service.CorrigendaApprovalService;
+import com.adc.da.activiti.vo.CorrigendaApprovalVO;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import io.swagger.annotations.Api;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/${restPath}/WorkFlow/StandardApproval")
-@Api(description = "企业技术标准制修订年度计划审批发布流程")
-public class StandardApprovalController {
+@RequestMapping("/${restPath}/WorkFlow/CorrigendaApproval")
+@Api(description = "企业标准勘误审批流程")
+public class CorrigendaApprovalController {
 
-    private static final Logger logger = LoggerFactory.getLogger(StandardApprovalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CorrigendaApprovalController.class);
 
 
     @Autowired
@@ -34,7 +34,7 @@ public class StandardApprovalController {
     private TaskService taskService;
 
     @Autowired
-    private StandardApprovalService standardApprovalService;
+    private CorrigendaApprovalService corrigendaApprovalService;
 
     @Autowired
     private FlowProcessUtil flowProcessUtil;
@@ -42,7 +42,7 @@ public class StandardApprovalController {
     /**
      *  部署流程Key
      */
-    private   static  final String processDefinitionKey = "StandardApproval";
+    private   static  final String processDefinitionKey = "corrigendaApproval";
 
     /**
      *  点击保存按钮，保存流程信息
@@ -54,10 +54,10 @@ public class StandardApprovalController {
      */
     @ApiOperation(value = "保存流程信息")
     @PostMapping ("/saveProcessInfo")
-    public ResponseMessage<String> saveProcessInfo(StandardApprovalVO standardApprovalVO, String userId,String processInstanceId){
+    public ResponseMessage<String> saveProcessInfo(CorrigendaApprovalVO corrigendaApprovalVO, String userId,String processInstanceId){
         //启动流程（为了把信息放入流程变量中）
         try{
-            ProcessInstance processInstance = standardApprovalService.startProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
+            ProcessInstance processInstance = corrigendaApprovalService.startProcess(corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId);
             return Result.success(processInstance.getId());
         }catch(Exception e){
             e.printStackTrace();
@@ -70,16 +70,16 @@ public class StandardApprovalController {
      * @MethodName:startApproval
      * @author: yuzhong
      * @param:[processInstanceId,userId]
-     * @return:S
+     * @return:String
      * date: 2018年9月4日 14:37:45
      */
     @ApiOperation(value = "标准化工程师发起")
     @PostMapping ("/startApproval")
-    public ResponseMessage<String> startApproval(StandardApprovalVO standardApprovalVO, String userId,String processInstanceId,String comment){
+    public ResponseMessage<String> startApproval(CorrigendaApprovalVO corrigendaApprovalVO, String userId,String processInstanceId,String comment){
         try{
-            ProcessInstance processInstance = standardApprovalService.startProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
+            ProcessInstance processInstance = corrigendaApprovalService.startProcess(corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId);
             //完成第一步的发起审批
-            standardApprovalService.completeFirstApproval(standardApprovalVO,processInstance.getId(),userId,comment);
+            corrigendaApprovalService.completeFirstApproval(corrigendaApprovalVO,processInstance.getId(),userId,comment);
             return Result.success(processInstance.getId());
         }catch(Exception e){
             e.printStackTrace();
@@ -99,7 +99,7 @@ public class StandardApprovalController {
     @PostMapping ("/completeProcess")
     public ResponseMessage<String> completeProcess(String processInstanceId,String nowUserId,String comment){
         try {
-            standardApprovalService.completeProcess(processInstanceId,nowUserId,comment);
+            corrigendaApprovalService.completeProcess(processInstanceId,nowUserId,comment);
             return Result.success(processInstanceId);
         }catch (Exception e){
             e.printStackTrace();
@@ -134,7 +134,7 @@ public class StandardApprovalController {
     @ApiOperation(value = "查看任务详情")
     @PostMapping ("/getTaskInfo")
     public ResponseMessage<Map<String,Object>> getTaskInfo(String taskId,String processInstanceId) {
-        Map<String,Object> map = standardApprovalService.getTaskInfo(taskId,processInstanceId);
+        Map<String,Object> map = corrigendaApprovalService.getTaskInfo(taskId,processInstanceId);
         return Result.success(map);
     }
 }

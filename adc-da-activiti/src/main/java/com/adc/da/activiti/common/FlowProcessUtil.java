@@ -13,6 +13,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
@@ -139,13 +141,19 @@ public class FlowProcessUtil {
      * @return:String
      * date: 2018年9月4日 16:25:59
      */
-    public String reject(String processInstanceId,String nowUserId){
+    public String reject(String processInstanceId,String nowUserId,String comment){
         try {
             Map<String, Object> variables;
             // 取得当前任务
             Task task = taskService.createTaskQuery()
                     .processInstanceId(processInstanceId)
                     .singleResult();
+//            if (!StringUtils.isEmpty(comment)) {
+//                // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
+//                Authentication.setAuthenticatedUserId(nowUserId);//批注人的名称  一定要写，不然查看的时候不知道人物信息
+//                // 添加批注信息
+//                taskService.addComment(task.getId(), null, comment);//comment为批注内容
+//            }
             HistoricTaskInstance currTask = historyService
                     .createHistoricTaskInstanceQuery().taskId(task.getId())
                     .singleResult();
@@ -232,6 +240,112 @@ public class FlowProcessUtil {
         }else{
             taskService.delegateTask(taskId,owner);
             return "委托成功";
+        }
+    }
+
+    /**
+     *  驳回到任意节点
+     * @MethodName:rejectTask
+     * @author:yuzhong
+     * @param:[processInstanceId,nowUserId,destTaskKey,rejectMessage]
+     * @return:String
+     * date: 2018年9月12日 13:31:02
+     */
+    public String rejectTask(String processInstanceId,String nowUserId,String destTaskKey,String rejectMessage){
+        //获得当前任务的对应实列
+        Task taskEntity =  taskService.createTaskQuery().processInstanceId(processInstanceId).taskAssignee(nowUserId).singleResult();
+//        if (!StringUtils.isEmpty(rejectMessage)) {
+//            // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
+//            Authentication.setAuthenticatedUserId("");//批注人的名称  一定要写，不然查看的时候不知道人物信息
+//            // 添加批注信息
+//            taskService.addComment(taskEntity.getId(), null, rejectMessage);//comment为批注内容
+//        }
+        if(taskEntity!=null) {
+            //当前任务key
+            String taskDefKey = taskEntity.getTaskDefinitionKey();
+            //获得当前流程的定义模型
+
+            ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+                    .getDeployedProcessDefinition(taskEntity.getProcessDefinitionId());
+
+            //获得当前流程定义模型的所有任务节点
+
+            List<ActivityImpl> activitilist = processDefinition.getActivities();
+            //获得当前活动节点和驳回的目标节点"draft"
+            ActivityImpl currActiviti = null;//当前活动节点
+            ActivityImpl destActiviti = null;//驳回目标节点
+            int sign = 0;
+            for (ActivityImpl activityImpl : activitilist) {
+                //确定当前活动activiti节点
+
+                if (taskDefKey.equals(activityImpl.getId())) {
+                    currActiviti = activityImpl;
+
+                    sign++;
+                } else if (destTaskKey.equals(activityImpl.getId())) {
+                    destActiviti = activityImpl;
+
+                    sign++;
+                }
+                //System.out.println("//-->activityImpl.getId():"+activityImpl.getId());
+                if (sign == 2) {
+                    break;//如果两个节点都获得,退出跳出循环
+                }
+            }
+            //保存当前活动节点的流程想参数
+
+            List<PvmTransition> hisPvmTransitionList = new ArrayList<PvmTransition>(0);
+
+            for (PvmTransition pvmTransition : currActiviti.getOutgoingTransitions()) {
+                hisPvmTransitionList.add(pvmTransition);
+            }
+            //清空当前活动几点的所有流出项
+
+            currActiviti.getOutgoingTransitions().clear();
+            System.out.println("//-->currActiviti.getOutgoingTransitions().clear():" + currActiviti.getOutgoingTransitions().size());
+            //为当前节点动态创建新的流出项
+
+            TransitionImpl newTransitionImpl = currActiviti.createOutgoingTransition();
+            //为当前活动节点新的流出目标指定流程目标
+            newTransitionImpl.setDestination(destActiviti);
+            //保存驳回意见
+
+            taskEntity.setDescription(rejectMessage);//设置驳回意见
+            taskService.saveTask(taskEntity);
+            //设定驳回标志
+
+//        Map<String, Object> variables = new HashMap<String, Object>(0);
+//        variables.put(WfConstant.WF_VAR_IS_REJECTED.value(), WfConstant.IS_REJECTED.value());
+            //执行当前任务驳回到目标任务draft
+            taskService.complete(taskEntity.getId());
+
+            //获取驳回到目的节点（最新审批的）之前的审批人，并将审批人赋值给最新的节点上
+            Task nowTask = taskService.createTaskQuery().executionId(taskEntity.getExecutionId()).singleResult();
+            List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskDefinitionKey(destTaskKey)
+                    .orderByTaskCreateTime().desc().list();
+            if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+                //第二条才是最新的目的节点上次历史记录，因为第一条是最新的一条，不是历史
+                taskService.setAssignee(nowTask.getId(),historicTaskInstanceList.get(1).getAssignee());
+            }
+
+//            //清除目标节点的新流入项
+//            destActiviti.getIncomingTransitions().remove(newTransitionImpl);
+//            //清除原活动节点的临时流程项
+//            currActiviti.getOutgoingTransitions().clear();
+//            //还原原活动节点流出项参数
+//            currActiviti.getOutgoingTransitions().addAll(hisPvmTransitionList);
+
+            // 清空现有流向
+            List<PvmTransition> pvmTransitionList = currActiviti.getOutgoingTransitions();
+            pvmTransitionList.clear();
+            // 还原以前流向
+            for (PvmTransition pvmTransition : hisPvmTransitionList) {
+                pvmTransitionList.add(pvmTransition);
+            }
+
+            return "驳回成功";
+        }else{
+            return "您不是此节点的审批人";
         }
     }
 }
