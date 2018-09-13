@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -105,9 +106,27 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
     @ApiOperation(value = "|SarStandardsInfoEO|新增")
     @PostMapping("/addarStandardsInfo")
     //@RequiresPermissions("lawss:sarStandardsInfo:save")
-    public ResponseMessage<SarStandardsInfoEO> create(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
+    public ResponseMessage<SarStandardsInfoEO> create(SarStandardsInfoEO sarStandardsInfoEO,HttpServletRequest request) throws Exception {
         sarStandardsInfoEOService.createSarStandardsInfo(sarStandardsInfoEO);
-        //标准文件资源表，标准文件详情表中插入数据，需要下载文件，并保存数据
+       /* //标准文件资源表，标准文件详情表中插入数据，需要下载文件，并保存数据
+        List<MultipartFile> standfiles = null;
+        List<MultipartFile> standModifyfiles = null;
+        *//* 2.如果是上传文件请求，获取文件列表*//*
+        if (request instanceof MultipartHttpServletRequest) {
+            standfiles = ((MultipartHttpServletRequest) request).getFiles("standFile");
+            standModifyfiles = ((MultipartHttpServletRequest) request).getFiles("standModifyFile");
+        }
+        String basePath = session.getServletContext().getRealPath("/");// 项目路径
+
+        *//* 3.如果文件列表不为空，循环文件列表，保存文件 *//*
+        if (files != null) {
+            for (MultipartFile file : files) {
+                *//* 3.1保存图片 *//*
+                String picUrl = HandleFile.saveFile(file, basePath);
+                *//* 3.2 其他后续操作 *//*
+
+            } *//*end for()*//*
+        } *//*end if*/
         return Result.success("","添加成功",sarStandardsInfoEO);
     }
 
