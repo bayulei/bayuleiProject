@@ -82,7 +82,7 @@ public class BuyApprovalService {
             map.put("applicat", userId);
             map.put("money", buyApprovalVO.getMoney());
             runtimeService.setVariables(processInstanceId,map);
-
+            //往流程业务表修改数据
             BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
             busExecuProcessEOPage.setProcInstId(processInstanceId);
             List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
@@ -243,14 +243,18 @@ public class BuyApprovalService {
                 processInstanceId(processInstanceId).list();
         if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
             for(HistoricTaskInstance historicTaskInstance : historicTaskInstanceList){
-                if(historicTaskInstance.getEndTime()!=null) {
-                    Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<String, String>();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                if(historicTaskInstance.getDescription()!=null
+                        && !StringUtils.isEmpty(historicTaskInstance.getDescription())){
                     map.put("审批人", historicTaskInstance.getAssignee());
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     map.put("审批日期", simpleDateFormat.format(historicTaskInstance.getStartTime()));
                     map.put("审批意见", historicTaskInstance.getDescription());
-                    commentList.add(map);
+                }else{
+                    map.put("发起人", historicTaskInstance.getAssignee());
+                    map.put("发起日期", simpleDateFormat.format(historicTaskInstance.getStartTime()));
                 }
+                commentList.add(map);
             }
         }
         resultMap.put("comment",commentList);
