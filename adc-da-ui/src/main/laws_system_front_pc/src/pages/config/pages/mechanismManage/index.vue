@@ -17,6 +17,13 @@
           <Button type="info">查询</Button>
         </div>
       </table-tools-bar>
+      <div class="content">
+        <div class="btn-group">
+          <Button type="success" >增加</Button>
+          <Button type="warning" style="margin-left: 0.3rem">编辑</Button>
+          <Button type="error"  style="margin-left: 0.3rem">配置角色信息</Button>
+        </div>
+      </div>
     </div>
     <!-- tree弹窗 -->
     <Modal
@@ -96,10 +103,10 @@ export default {
                 on: {
                   click: () => {
                     // this.append(data)
-                    this.treeFlag = 1
-                    this.isShow.tree = true
-                    this.treeForm.treeNodeTitle = ''
-                    this.treeNode = data
+                    this.treeFlag = 1 // 1为新增 2为编辑
+                    this.isShow.tree = true // 显示条件 默认为false
+                    this.treeForm.treeNodeTitle = '' // 弹出对话框表单名称
+                    this.treeNode = data // 当前节点
                   }
                 }
               })
@@ -271,7 +278,7 @@ export default {
     display: flex;
     background: #FFF;
     .mechanism-manage-left{
-      width: 7rem;
+      width: 6rem;
       height: 100%;
       border-right: 1px solid #DDD;
       position: relative;
@@ -292,6 +299,9 @@ export default {
       .ivu-tree-arrow{
         margin-right: 5px;
       }
+    }
+    .content .btn-group{
+      margin-bottom: 0.5rem;
     }
   }
   .mechanism-tree-modal{

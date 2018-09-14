@@ -46,19 +46,19 @@ public class BuyApprovalController {
 
     /**
      *  点击保存按钮，保存流程信息
-     * @MethodName:startStandardApprovalProcess
-     * @author: yuzhong
-     * @param:[vehicleApprovalEO, userId]
-     * @return:void
-     * date: 2018/8/27 15:01
+     * @MethodName:saveProcessInfo
+     * @author:yuzhong
+     * @param:[buyApprovalVO,userId]
+     * @return:String
+     * date:2018年9月4日 16:11:09
      */
     @ApiOperation(value = "保存流程信息")
     @PostMapping ("/saveProcessInfo")
     public ResponseMessage<String> saveProcessInfo(BuyApprovalVO buyApprovalVO, String userId,String processInstanceId){
         //启动流程（为了把信息放入流程变量中）
         try{
-            ProcessInstance processInstance = buyApprovalService.startBuyApprovalProcess(buyApprovalVO,userId,processDefinitionKey,processInstanceId);
-            return Result.success(processInstance.getId());
+            processInstanceId = buyApprovalService.startProcess(buyApprovalVO,userId,processDefinitionKey,processInstanceId);
+            return Result.success(processInstanceId);
         }catch(Exception e){
             e.printStackTrace();
             return Result.error("保存失败");
@@ -77,9 +77,9 @@ public class BuyApprovalController {
     @PostMapping ("/startApproval")
     public ResponseMessage<String> startApproval(BuyApprovalVO buyApprovalVO, String userId,String processInstanceId,String comment){
         try{
-            ProcessInstance processInstance = buyApprovalService.startBuyApprovalProcess(buyApprovalVO,userId,processDefinitionKey,processInstanceId);
-            buyApprovalService.completeApproval(processInstance.getId(),userId,comment);
-            return Result.success(processInstance.getId());
+            processInstanceId = buyApprovalService.startProcess(buyApprovalVO,userId,processDefinitionKey,processInstanceId);
+            buyApprovalService.completeApproval(processInstanceId,userId,comment);
+            return Result.success(processInstanceId);
         }catch(Exception e){
             e.printStackTrace();
             return Result.error("审批失败");
@@ -130,10 +130,26 @@ public class BuyApprovalController {
      * @return:String
      * date: 2018年9月4日 14:37:19
      */
+//    @ApiOperation(value = "驳回")
+//    @PostMapping ("/reject")
+//    public ResponseMessage<String> reject(String processInstanceId,String nowUserId,String comment) {
+//        String message = flowProcessUtil.reject(processInstanceId,nowUserId,comment);
+//        return Result.success(message);
+//    }
+
+    /**
+     * 驳回
+     * @MethodName:reject
+     * @author: yuzhong
+     * @param:[processInstanceId]
+     * @return:String
+     * date: 2018年9月4日 14:37:19
+     */
     @ApiOperation(value = "驳回")
     @PostMapping ("/reject")
-    public ResponseMessage<String> reject(String processInstanceId,String nowUserId) {
-        String message = flowProcessUtil.reject(processInstanceId,nowUserId);
+    public ResponseMessage<String> reject(String processInstanceId,String nowUserId,String comment)throws Exception {
+        String message = buyApprovalService.reject(processInstanceId,nowUserId,comment);
+        //String message = flowProcessUtil.reject(processInstanceId,nowUserId,comment);
         return Result.success(message);
     }
 
@@ -153,14 +169,14 @@ public class BuyApprovalController {
     }
 
     /**
-     * 查看任务详情
+     * 查看审批历史
      * @MethodName:getTaskInfo
      * @author: yuzhong
      * @param:[taskId]
      * @return:Map
      * date: 2018年9月6日 19:07:04
      */
-    @ApiOperation(value = "查看任务详情")
+    @ApiOperation(value = "查看审批历史")
     @PostMapping ("/getTaskInfo")
     public ResponseMessage<Map<String,Object>> getTaskInfo(String taskId,String processInstanceId) {
         Map<String,Object> map = buyApprovalService.getTaskInfo(taskId,processInstanceId);

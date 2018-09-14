@@ -1,5 +1,6 @@
 package com.adc.da.lawss.controller;
 
+import com.adc.da.att.service.AttFileEOService;
 import com.adc.da.base.web.BaseController;
 import com.adc.da.excel.poi.excel.ExcelExportUtil;
 import com.adc.da.excel.poi.excel.ExcelImportUtil;
@@ -8,8 +9,13 @@ import com.adc.da.excel.poi.excel.entity.ImportParams;
 import com.adc.da.excel.poi.excel.entity.enums.ExcelType;
 import com.adc.da.excel.poi.excel.entity.result.ExcelImportResult;
 import com.adc.da.lawss.common.ReadExcel;
+import com.adc.da.lawss.common.StandFileClassifyEnum;
+import com.adc.da.lawss.entity.SarStandFileEO;
+import com.adc.da.lawss.entity.SarStandResEO;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
+import com.adc.da.lawss.service.SarStandFileEOService;
+import com.adc.da.lawss.service.SarStandResEOService;
 import com.adc.da.lawss.service.SarStandardsInfoEOService;
 import com.adc.da.lawss.dto.SarStandExcelDto;
 import com.adc.da.util.exception.AdcDaBaseException;
@@ -17,6 +23,7 @@ import com.adc.da.util.http.PageInfo;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import com.adc.da.util.utils.IOUtils;
+import com.adc.da.util.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -58,6 +66,15 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
 
     @Autowired
     private SarStandardsInfoEOService sarStandardsInfoEOService;
+
+    @Autowired
+    private SarStandResEOService sarStandResEOService;
+
+    @Autowired
+    private SarStandFileEOService sarStandFileEOService;
+
+    @Autowired
+    private AttFileEOService attFileEOService;
 
 	@ApiOperation(value = "|SarStandardsInfoEO|分页查询")
     @GetMapping("/page")
@@ -107,26 +124,62 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
     @PostMapping("/addarStandardsInfo")
     //@RequiresPermissions("lawss:sarStandardsInfo:save")
     public ResponseMessage<SarStandardsInfoEO> create(SarStandardsInfoEO sarStandardsInfoEO,HttpServletRequest request) throws Exception {
-        sarStandardsInfoEOService.createSarStandardsInfo(sarStandardsInfoEO);
-       /* //标准文件资源表，标准文件详情表中插入数据，需要下载文件，并保存数据
+        ResponseMessage<SarStandardsInfoEO> result = sarStandardsInfoEOService.createSarStandardsInfo(sarStandardsInfoEO);
+        //标准文件资源表，标准文件详情表中插入数据，需要下载文件，并保存数据
         List<MultipartFile> standfiles = null;
         List<MultipartFile> standModifyfiles = null;
-        *//* 2.如果是上传文件请求，获取文件列表*//*
+        //* 2.如果是上传文件请求，获取文件列表*//*
         if (request instanceof MultipartHttpServletRequest) {
             standfiles = ((MultipartHttpServletRequest) request).getFiles("standFile");
             standModifyfiles = ((MultipartHttpServletRequest) request).getFiles("standModifyFile");
         }
-        String basePath = session.getServletContext().getRealPath("/");// 项目路径
-
-        *//* 3.如果文件列表不为空，循环文件列表，保存文件 *//*
-        if (files != null) {
-            for (MultipartFile file : files) {
-                *//* 3.1保存图片 *//*
-                String picUrl = HandleFile.saveFile(file, basePath);
-                *//* 3.2 其他后续操作 *//*
-
-            } *//*end for()*//*
-        } *//*end if*/
+        //* 3.如果文件列表不为空，循环文件列表，保存文件 *//*
+        if (standfiles != null) {
+            for (MultipartFile file : standfiles) {
+                //* 3.1保存图片 *//*
+                 file = sarStandardsInfoEO.getStandFiles();
+                String fileid = attFileEOService.saveFileInfo(file);
+                //* 3.2 其他后续操作 *//*
+                //标准文件资源表存数据库
+                SarStandResEO sarStandResEO = new SarStandResEO();
+                sarStandResEO.setStandId(result.getData().getId());            //标准ID
+                sarStandResEO.setStandFileClassify(StandFileClassifyEnum.STAND_FILE.getValue());  //文件分类
+                sarStandResEO.setFileName(file.getName());           //文件名称
+                String fileTyle=file.getName().substring(file.getName().lastIndexOf("."),file.getName().length());
+                sarStandResEO.setFileSuffix(fileTyle);         //文件类型
+                sarStandResEO = sarStandResEOService.insertSarStandResEO(sarStandResEO);
+                //标准文件详情表存数据库
+                SarStandFileEO sarStandFileEO = new SarStandFileEO();
+                sarStandFileEO.setStandId(result.getData().getId());     //标准ID
+                sarStandFileEO.setResId(sarStandResEO.getId());       //资源ID
+                sarStandFileEO.setAttId(fileid);       //文件ID
+                sarStandFileEO.setUseModel("");  //文件使用模式
+                sarStandFileEOService.insertSarStandFileEO(sarStandFileEO);
+            }
+        }
+        if (standModifyfiles != null) {
+            for (MultipartFile file : standModifyfiles) {
+                //* 3.1保存图片 *//*
+                 file = sarStandardsInfoEO.getStandModifyFiles();
+                 String fileid = attFileEOService.saveFileInfo(file);
+                //* 3.2 其他后续操作 *//*
+                //标准文件资源表存数据库
+                SarStandResEO sarStandResEO = new SarStandResEO();
+                sarStandResEO.setStandId(result.getData().getId());            //标准ID
+                sarStandResEO.setStandFileClassify(StandFileClassifyEnum.STAND_MODIFY_FILE.getValue());  //文件分类
+                sarStandResEO.setFileName(file.getName());           //文件名称
+                String fileTyle=file.getName().substring(file.getName().lastIndexOf("."),file.getName().length());
+                sarStandResEO.setFileSuffix(fileTyle);         //文件类型
+                sarStandResEO = sarStandResEOService.insertSarStandResEO(sarStandResEO);
+                //标准文件详情表存数据库
+                SarStandFileEO sarStandFileEO = new SarStandFileEO();
+                sarStandFileEO.setStandId(result.getData().getId());     //标准ID
+                sarStandFileEO.setResId(sarStandResEO.getId());       //资源ID
+                sarStandFileEO.setAttId(fileid);       //文件ID
+                sarStandFileEO.setUseModel("");  //文件使用模式
+                sarStandFileEOService.insertSarStandFileEO(sarStandFileEO);
+           }
+        }
         return Result.success("","添加成功",sarStandardsInfoEO);
     }
 
@@ -140,7 +193,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
     @ApiOperation(value = "|SarStandardsInfoEO|导入")
     @PostMapping(value = "importStandardsInfo")
     //@RequiresPermissions("lawss:sarStandardsInfo:save")
-    public ResponseMessage<SarStandardsInfoEO> importStandardsInfo(@RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
+    public ResponseMessage<SarStandardsInfoEO> importStandardsInfo(@RequestParam(value = "file", required = false) MultipartFile file,String standType) throws Exception {
 
         //验证文件名是否合格
         ReadExcel readExcel = new ReadExcel();
@@ -160,7 +213,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         //excel读取到的数据
         List<SarStandExcelDto> datas = result.getList();
         try {
-            return sarStandardsInfoEOService.importSarStandardsInfoData(datas);
+            return sarStandardsInfoEOService.importSarStandardsInfoData(datas,standType);
         } catch (Exception e) {
             return Result.error("fail", e.getMessage());
         }
@@ -221,6 +274,59 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         } finally {
             IOUtils.closeQuietly(os);
         }
+    }
+
+    /**
+     * 查询输入的代替标准号在系统中是否录入
+     * @param replaceStandNum  代替标准号
+     * @param standType  标准分类
+     * @return
+     * @author gaoyan
+     * date 2018-09-13
+     */
+    @ApiOperation(value = "|SarStandardsInfoEO|验证输入的代替标准号")
+    @PostMapping("/selectReplaceStandNum")
+    //@RequiresPermissions("lawss:sarStandardsInfo:delete")
+    public ResponseMessage selectReplaceStandNum(String replaceStandNum,String standType) throws Exception {
+        if(StringUtils.isNotEmpty(replaceStandNum)){
+            if(replaceStandNum.indexOf(",",0)==0){
+                replaceStandNum=replaceStandNum.substring(1,replaceStandNum.length());
+            }
+            if(replaceStandNum.lastIndexOf(",")==replaceStandNum.length()-1){
+                replaceStandNum=replaceStandNum.substring(0,replaceStandNum.length()-1);
+            }
+            String [] numstring = replaceStandNum.split(",");
+            List<String> resultstring =  Arrays.asList(numstring);
+            for(String tesmun : numstring){
+                List<SarStandardsInfoEO> standlist = sarStandardsInfoEOService.selectStandardsByStandnumber(tesmun,standType);
+                if(standlist.size()>0){
+                    resultstring.remove(tesmun);
+                }
+            }
+            if(resultstring.size()==0){
+                return Result.success();
+            }
+            else{
+                return Result.success("00","代替标准号不存在",resultstring);
+            }
+        }
+        logger.info("", replaceStandNum);
+        return Result.success();
+    }
+
+    /**
+     * 查询对应目录下的标准或游离的标准
+     * @param standardsInfoEO
+     * @return
+     * @author gaoyan
+     * date 2018-09-13
+     */
+    @ApiOperation(value = "|SarStandardsInfoEO|查询对应目录下的标准或游离的标准")
+    @PostMapping("/selectStandardsInfoByMenu")
+    //@RequiresPermissions("lawss:sarStandardsInfo:delete")
+    public ResponseMessage selectStandardsInfoByMenu(SarStandardsInfoEOPage standardsInfoEO) throws Exception {
+        List<SarStandardsInfoEO> standlist = sarStandardsInfoEOService.getSarStandardsInfoByMenu(standardsInfoEO);
+        return Result.success(standlist);
     }
 
 

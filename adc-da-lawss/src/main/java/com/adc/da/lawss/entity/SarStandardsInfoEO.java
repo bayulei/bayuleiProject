@@ -2,6 +2,7 @@ package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -104,7 +105,8 @@ public class SarStandardsInfoEO extends BaseEntity {
 
     //目录ID   非标准信息表中的字段
     private String  menuId;
-
+    private MultipartFile standFiles;
+    private MultipartFile standModifyFiles;
 
 
 
@@ -696,5 +698,21 @@ public class SarStandardsInfoEO extends BaseEntity {
 
     public void setMenuId(String menuId) {
         this.menuId = menuId;
+    }
+
+    public MultipartFile getStandFiles() {
+        return standFiles;
+    }
+
+    public void setStandFiles(MultipartFile standFiles) {
+        this.standFiles = standFiles;
+    }
+
+    public MultipartFile getStandModifyFiles() {
+        return standModifyFiles;
+    }
+
+    public void setStandModifyFiles(MultipartFile standModifyFiles) {
+        this.standModifyFiles = standModifyFiles;
     }
 }

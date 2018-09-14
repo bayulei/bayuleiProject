@@ -862,4 +862,13 @@ public class SarStandardsInfoEOPage extends BasePage {
         this.idOperator = idOperator;
     }
 
+    private String  menuId;
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
 }
