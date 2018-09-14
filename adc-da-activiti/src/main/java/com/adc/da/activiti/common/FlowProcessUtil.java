@@ -427,6 +427,11 @@ public class FlowProcessUtil {
 //        Map<String, Object> variables = new HashMap<String, Object>(0);
 //        variables.put(WfConstant.WF_VAR_IS_REJECTED.value(), WfConstant.IS_REJECTED.value());
             //执行当前任务驳回到目标任务draft
+
+            if(!StringUtils.isEmpty(taskEntity.getOwner())){
+                taskService.resolveTask(taskEntity.getId());
+            }
+
             taskService.complete(taskEntity.getId());
 
             //获取驳回到目的节点（最新审批的）之前的审批人，并将审批人赋值给最新的节点上

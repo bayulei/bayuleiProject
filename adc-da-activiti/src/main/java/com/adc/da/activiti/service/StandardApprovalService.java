@@ -81,7 +81,7 @@ public class StandardApprovalService {
             map.put("processType", standardApprovalVO.getProcessType());
             map.put("processDescription", standardApprovalVO.getProcessDescription());
             map.put("applicat", userId);
-            map.put("file", standardApprovalVO.getFileUrl());
+            map.put("fileList", standardApprovalVO.getFileIdList());
             map.put("assignerUserList",standardApprovalVO.getAssignerUserList());
             runtimeService.setVariables(processInstanceId,map);
 
@@ -113,7 +113,7 @@ public class StandardApprovalService {
             map.put("processType", standardApprovalVO.getProcessType());
             map.put("processDescription", standardApprovalVO.getProcessDescription());
             map.put("applicat", userId);
-            map.put("file", standardApprovalVO.getFileUrl());
+            map.put("fileList", standardApprovalVO.getFileIdList());
             map.put("assignerUserList",standardApprovalVO.getAssignerUserList());
             //启动流程
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, map);
