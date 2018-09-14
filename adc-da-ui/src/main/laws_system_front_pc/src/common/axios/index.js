@@ -180,6 +180,7 @@ module.exports = {
    * @date: 2018-09-06 13:28:37
    */
   put (url, param, config, thenFun, exeFun) {
+    var _formData = formData(param)
     // 参数包含this
     let _this = config._this || false
     // 参数包含loading
@@ -187,7 +188,7 @@ module.exports = {
     if (_this) {
       _this[loading] = true
     }
-    axios.put('/api/' + url, param).then(res => {
+    axios.put('/api/' + url, _formData).then(res => {
       if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
