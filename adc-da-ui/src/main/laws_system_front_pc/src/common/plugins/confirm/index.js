@@ -77,9 +77,9 @@ export default (con) => {
               }
             },
             style: {
-              'margin-left': '5px'
+              'margin-left': '15px'
             }
-          }, '继续')
+          }, '确定')
         ])
       ])
     }
