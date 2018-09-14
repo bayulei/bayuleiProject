@@ -35,7 +35,7 @@ public class VehicleApprovalController{
     /**
      *  整车认可试验计划下达及验证流程的流程图Key
      */
-    public  static  final String ProcessDefinitionKey = "VerificationProcess";
+    public  static  final String VEHICLE_APPROVAL_KEY = "VerificationProcess";
 
 
 
@@ -107,13 +107,12 @@ public class VehicleApprovalController{
      */
     @ApiOperation(value = "项目组总体经理提交或者保存流程")
     @PostMapping ("/submitOrSaveStandardApprovalProcess")
-    public ResponseMessage<String> submitOrSaveStandardApprovalProcess( @RequestBody VehicleApprovalEO vehicleApprovalEO, MultipartFile file
-    , String flag, String ProcessInstanceId) throws Exception {
+    public ResponseMessage<String> submitOrSaveStandardApprovalProcess(@RequestBody VehicleApprovalEO vehicleApprovalEO, String ProcessInstanceId) throws Exception {
 
         //调用上传附件的接口
         String url = "附件地址";
         vehicleApprovalEO.setFileUrl(url);
-        return  vehicleApprovalService.submitOrSaveStandardApprovalProcess(vehicleApprovalEO,flag,ProcessInstanceId);
+        return  vehicleApprovalService.submitOrSaveStandardApprovalProcess(vehicleApprovalEO,vehicleApprovalEO.getFlag(),ProcessInstanceId);
 
     }
 
@@ -148,7 +147,6 @@ public class VehicleApprovalController{
     @PostMapping ("/quiteResult")
     public ResponseMessage<String> quiteResult(String taskId) throws Exception {
         return  vehicleApprovalService.quiteResult(taskId);
-
     }
 
 

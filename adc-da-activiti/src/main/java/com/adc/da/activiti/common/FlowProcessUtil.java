@@ -5,12 +5,14 @@ import com.adc.da.activiti.entity.BusProcessEO;
 import com.adc.da.activiti.page.BusExecuProcessEOPage;
 import com.adc.da.activiti.service.BusExecuProcessEOService;
 import com.adc.da.activiti.service.BusProcessEOService;
+import com.adc.da.sys.util.UUIDUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.identity.Authentication;
@@ -31,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
@@ -87,6 +89,7 @@ public class FlowProcessUtil {
     }
 
 
+
     @ApiOperation(value = "删除流程实例")
     @GetMapping("/deleteByProcessInstance")
     public void deleteByProcessInstance(String processInstanceId){
@@ -101,17 +104,31 @@ public class FlowProcessUtil {
        // historyService.deleteHistoricProcessInstance(processInstanceId);
     }
 
+
     @ApiOperation(value = "更新业务流程主表")
     @GetMapping("/updateProcessByProcessInstanceId")
     public void updateProcessByProcessInstanceId(String processInstanceId,BusProcessEO  busProcessEO) throws Exception {
-        //查询流程和业务关系表
-        BusExecuProcessEO busExecuProcessEO = new BusExecuProcessEO();
-        busExecuProcessEO.setProcInstId(processInstanceId);
-        List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.selectByEO(busExecuProcessEO);
-        //更新业务流程主表
-        busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
-        busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
+            //更新业务流程表
+            BusExecuProcessEO busExecuProcessEO = new BusExecuProcessEO();
+            busExecuProcessEO.setProcInstId(processInstanceId);
+            List<BusExecuProcessEO> ExecuProcessEOList = busExecuProcessEOService.selectByEO(busExecuProcessEO);
+            busProcessEO.setId(ExecuProcessEOList.get(0).getProcessId());
+            busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
     }
+
+    @ApiOperation(value = "业务流程主表新增")
+    @GetMapping("/addProcess")
+    public void addProcess(String processInstanceId,BusProcessEO  busProcessEO) throws Exception {
+        busProcessEO.setId(UUIDUtils.randomUUID20());
+        busProcessEO.setCreateTime(new Date());
+        busProcessEOService.insertSelective(busProcessEO);
+        BusExecuProcessEO busExecuProcessEO = new BusExecuProcessEO();
+        busExecuProcessEO.setProcessId(busProcessEO.getId());
+        busExecuProcessEO.setProcInstId(processInstanceId);
+        busExecuProcessEO.setId(UUIDUtils.randomUUID20());
+        busExecuProcessEOService.insertSelective(busExecuProcessEO);
+    }
+
     /**
      *  委托
      * @MethodName:entrust
@@ -133,14 +150,14 @@ public class FlowProcessUtil {
         }
     }
 
-    /**
+   /* *//**
      *  驳回到上一步
      * @MethodName:reject
      * @author: yuzhong
      * @param:[processInstanceId,nowUserId]
      * @return:String
      * date: 2018年9月4日 16:25:59
-     */
+     *//*
     public String reject(String processInstanceId,String nowUserId,String comment){
         try {
             Map<String, Object> variables;
@@ -230,6 +247,77 @@ public class FlowProcessUtil {
         }
     }
 
+    public String rejectToStart(String processInstanceId){
+        try {
+            Map<String, Object> variables;
+            // 取得当前任务
+            Task task = taskService.createTaskQuery()
+                    .processInstanceId(processInstanceId)
+                    .singleResult();
+            HistoricTaskInstance currTask = historyService
+                    .createHistoricTaskInstanceQuery().taskId(task.getId())
+                    .singleResult();
+            // 取得流程实例j
+            ProcessInstance instance = runtimeService
+                    .createProcessInstanceQuery()
+                    .processInstanceId(processInstanceId)
+                    .singleResult();
+            variables = instance.getProcessVariables();
+            // 取得流程定义
+            ProcessDefinitionEntity definition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+                    .getDeployedProcessDefinition(instance.getProcessDefinitionId());
+
+            // 取得初始活动
+            List<HistoricActivityInstance> historicActivityInstanceList = historyService.createHistoricActivityInstanceQuery()
+                    .list();
+            ActivityImpl currActivity = ((ProcessDefinitionImpl) definition)
+                    .findActivity(historicActivityInstanceList.get(1).getActivityId());
+
+            List<PvmTransition> nextTransitionList = currActivity
+                    .getIncomingTransitions();
+            // 清除当前活动的出口
+            List<PvmTransition> oriPvmTransitionList = new ArrayList<PvmTransition>();
+            List<PvmTransition> pvmTransitionList = currActivity
+                    .getOutgoingTransitions();
+            for (PvmTransition pvmTransition : pvmTransitionList) {
+                oriPvmTransitionList.add(pvmTransition);
+            }
+            pvmTransitionList.clear();
+
+            // 建立新出口
+            List<TransitionImpl> newTransitions = new ArrayList<TransitionImpl>();
+            for (PvmTransition nextTransition : nextTransitionList) {
+                PvmActivity nextActivity = nextTransition.getSource();
+                ActivityImpl nextActivityImpl = ((ProcessDefinitionImpl) definition)
+                        .findActivity(nextActivity.getId());
+                TransitionImpl newTransition = currActivity
+                        .createOutgoingTransition();
+                newTransition.setDestination(nextActivityImpl);
+                newTransitions.add(newTransition);
+            }
+
+            // 完成任务
+            List<Task> tasks = taskService.createTaskQuery()
+                    .processInstanceId(instance.getId())
+                    .taskDefinitionKey(currTask.getTaskDefinitionKey()).list();
+            for (Task t : tasks) {
+                taskService.complete(t.getId(), variables);
+                historyService.deleteHistoricTaskInstance(t.getId());
+            }
+            // 恢复方向
+            for (TransitionImpl transitionImpl : newTransitions) {
+                currActivity.getOutgoingTransitions().remove(transitionImpl);
+            }
+            for (PvmTransition pvmTransition : oriPvmTransitionList) {
+                pvmTransitionList.add(pvmTransition);
+            }
+
+            return "驳回成功";
+        } catch (Exception e) {
+            return "驳回失败";
+        }
+    }*/
+
     @ApiOperation(value = "通过任务ID委托人")
     @GetMapping("/entrustByTaskId")
     public String entrustByTaskId(String taskId,String owner){
@@ -244,7 +332,29 @@ public class FlowProcessUtil {
     }
 
     /**
-     *  驳回到任意节点
+     * 启动流程,创建流程实例
+     *
+     * @MethodName:startStandardApprovalProcess
+     * @author: DuYunbao
+     * @param:[vehicleApprovalEO]
+     * @return:org.activiti.engine.runtime.ProcessInstance date: 2018/9/3 20:15
+     */
+    public ProcessInstance startStandardApprovalProcess(String key) {
+        //从session取当前登录人Id
+        String userId = "dyb";
+
+        //设置流程发起人id
+        Authentication.setAuthenticatedUserId(userId);
+        //与正在执行的流程实例和执行对象相关的Service
+        ProcessInstance pi = runtimeService
+                //使用流程定义的key启动流程实例，key对应bpmn文件中id的属性值，使用key值启动，默认是按照最新版本的流程定义启动
+                .startProcessInstanceByKey(key);
+        return pi;
+    }
+
+
+
+    /**  驳回到任意节点
      * @MethodName:rejectTask
      * @author:yuzhong
      * @param:[processInstanceId,nowUserId,destTaskKey,rejectMessage]

@@ -8,6 +8,19 @@
       </div>
       <div slot="right"></div>
     </table-tools-bar>
+    <div class="content">
+      <div v-for="(item,index) in pushList" :key="index">
+        <Card :bordered="false"  style="border-bottom: 1px solid #e8eaec;">
+          <Row>
+            <Col span="19"  offset="1">
+              <Icon type="md-bookmark" />
+              <span >{{item.text}}</span>
+            </Col>
+            <Col span="4">{{item.creationTime}}</Col>
+          </Row>
+        </Card>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -18,7 +31,17 @@ export default {
     return {
       search: {
         pushName: ''
-      }
+      },
+      pushList: [{
+        text: 'XX标准已更新',
+        creationTime: '2018年/09/13  12：00'
+      }, {
+        text: 'XX标准已更新',
+        creationTime: '2018年/09/13  12：00'
+      }, {
+        text: 'XX标准已更新',
+        creationTime: '2018年/09/13  12：00'
+      }]
     }
   },
   methods: {
