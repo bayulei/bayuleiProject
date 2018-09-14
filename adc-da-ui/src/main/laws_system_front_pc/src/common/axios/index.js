@@ -180,6 +180,40 @@ module.exports = {
    * @date: 2018-09-06 13:28:37
    */
   put (url, param, config, thenFun, exeFun) {
+    // 参数包含this
+    let _this = config._this || false
+    // 参数包含loading
+    let loading = config.loading || false
+    if (_this) {
+      _this[loading] = true
+    }
+    axios.put('/api/' + url, param).then(res => {
+      if (_this && loading) { _this[loading] = false }
+      if (res.data.ok !== undefined) {
+        let type = res.data.ok ? 'success' : 'warning'
+        if (_this) { _this.$Message[type](res.data.message) }
+        if (res.data.ok) {
+          thenFun.call(this, res.data)
+        }
+      }
+    }).catch(err => {
+      if (_this && loading) {
+        _this[loading] = false
+        _this.$Notice.error({
+          title: '错误',
+          desc: '网络连接错误'
+        })
+      }
+      exeFun.call(this, err)
+    })
+  },
+
+  /**
+   * @description: delete方法
+   * @author: chenxiaoxi
+   * @date: 2018-09-14 09:55:30
+   */
+  delete (url, param, config, thenFun, exeFun) {
     var _formData = formData(param)
     // 参数包含this
     let _this = config._this || false
@@ -188,7 +222,7 @@ module.exports = {
     if (_this) {
       _this[loading] = true
     }
-    axios.put('/api/' + url, _formData).then(res => {
+    axios.delete('/api/' + url, _formData).then(res => {
       if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
