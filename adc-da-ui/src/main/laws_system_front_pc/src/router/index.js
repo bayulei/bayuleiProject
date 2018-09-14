@@ -192,15 +192,6 @@ const routes = [
         }
       },
       {
-        path: '/foreignInformationBase',
-        name: 'ForeignInformationBase',
-        component: resolve => require(['pages/statuteBank/pages/foreignInformationBase'], resolve),
-        meta: {
-          requireAuth: true,
-          title: '国外信息库'
-        }
-      },
-      {
         path: '/cloudAdaptationAnalysis',
         name: 'CloudAdaptationAnalysis',
         component: resolve => require(['pages/statuteBank/pages/cloudAdaptationAnalysis'], resolve),

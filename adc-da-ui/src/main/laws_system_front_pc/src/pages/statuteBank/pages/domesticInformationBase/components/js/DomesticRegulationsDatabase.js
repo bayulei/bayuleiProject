@@ -6,7 +6,9 @@ export default {
       showLawsInfoModal: false,
       showLawsItemsModal: false,
       addLawsItemsModal: false,
+      importItemsModal: false,
       saveInfoBtn: true,
+      saveLawsItemsBtn: true,
       lawsInfo: {
         lawsNum: '',
         lawsName: '',
@@ -34,6 +36,7 @@ export default {
       },
       SarLawsItemsEO: {
         id: '',
+        lawsId: '',
         itemsNum: '',
         itemsName: '',
         parts: '',
@@ -43,11 +46,11 @@ export default {
         responsibleUnit: '',
         remarks: ''
       },
+      saveLawsId: '',
       total: 0,
       page: 1,
       rows: 10,
       loading: false,
-      lawsInfoImport: {},
       tableColumn: [
         {
           type: 'selection',
@@ -224,8 +227,8 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.edit(params.row)
-                    this.saveInfoBtn = false
+                    this.editLawsItems(params.row)
+                    this.saveLawsItemsBtn = false
                   }
                 }
               }, '属性'),
@@ -239,7 +242,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.edit(params.row)
+                    this.editLawsItems(params.row)
                   }
                 }
               }, '编辑'),
@@ -260,6 +263,8 @@ export default {
       ],
       itemsData: [],
       data: [],
+      lawsInfoImport: {},
+      lawsItemsImport: {},
       lawsPropertyOptions: '',
       lawsStatusOptions: '',
       lawsInfoRules: {},
@@ -363,13 +368,6 @@ export default {
         }
       })
     },
-    openFile () {
-      $('#lawsInfoFile').click()
-    },
-    lawsInfoFileBeforeUpload (val) {
-      let file = this.$refs.lawsInfoFile.files[0].name
-      console.log(file)
-    },
     // 导入
     importLawsInfo () {
       let file = this.$refs.lawsInfoFile.files[0]
@@ -385,6 +383,7 @@ export default {
     },
     // 分页查询条目
     searchLawsItems (lawsId) {
+      this.saveLawsId = lawsId
       this.$http.get('lawss/sarLawsItems/page', {
         lawsId: lawsId,
         page: this.itemPage,
@@ -400,47 +399,71 @@ export default {
 
       })
     },
+    searchLawsItemsByUnit () {
+      let lawsId = this.saveLawsId
+      this.searchLawsItems(lawsId)
+    },
     // 打开新增条目模态框
     openAddItemsModal () {
       this.addLawsItemsModal = true
+      this.saveLawsItemsBtn = true
+    },
+    // 打开编辑条目模态框
+    editLawsItems (row) {
+      this.addLawsItemsModal = true
+      this.saveLawsItemsBtn = true
+      this.SarLawsItemsEO = row
+    },
+    cancelAddItems () {
+      this.addLawsItemsModal = false
     },
     // 保存条目数据
     saveLawsItems () {
-      this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
+      this.SarLawsItemsEO.lawsId = this.saveLawsId
+      if (this.SarLawsItemsEO.tackTime != null) {
+        this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
+      }
       if (this.SarLawsItemsEO.id == null || this.SarLawsItemsEO.id === '') {
         this.$http.post('lawss/sarLawsItems/addLawsItems', this.SarLawsItemsEO, {
           _this: this
         }, res => {
           this.addLawsItemsModal = false
-          this.searchLawsItems()
+          this.searchLawsItems(this.saveLawsId)
         }, e => {
         })
       } else {
-        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', this.SarLawsInfoEO, {
+        this.$http.put('lawss/sarLawsItems/updateLawsItems', this.SarLawsItemsEO, {
           _this: this
         }, res => {
-          this.showLawsInfoModal = false
-          this.searchLawsInfo()
+          this.addLawsItemsModal = false
+          this.searchLawsItems(this.saveLawsId)
         }, e => {})
       }
     },
     // 删除条目
     removeLawsItems (id) {
-      this.$Modal.confirm({
-        title: '确认删除',
-        content: '<p>确认删除该条数据？</p>',
-        onOk: () => {
-          this.$http.put('lawss/sarLawsItems/deleteLawsItems', {
-            id: id
-          }, {
-            _this: this
-          }, res => {
-            this.searchLawsItems()
-          }, e => {
-          })
-        },
-        onCancel: () => {
-        }
+      this.$http.put('lawss/sarLawsItems/deleteLawsItems', {
+        id: id
+      }, {
+        _this: this
+      }, res => {
+        this.searchLawsItems(this.saveLawsId)
+      }, e => {
+      })
+    },
+    // 导入条目
+    importLawsItems () {
+      let file = this.$refs.lawsItemsFile.files[0]
+      let lawsId = this.saveLawsId
+      this.$http.post('lawss/sarLawsItems/importLawsItems', {
+        file: file,
+        lawsId: lawsId
+      }, {
+        _this: this
+      }, res => {
+        this.searchLawsItems(this.saveLawsId)
+      }, e => {
+
       })
     },
     // 加载数据字典
