@@ -267,6 +267,9 @@ export default {
       lawsItemsImport: {},
       lawsPropertyOptions: '',
       lawsStatusOptions: '',
+      applyArcticOptions: '',
+      energyKindOptions: '',
+      applyAuthOptions: '',
       lawsInfoRules: {},
       lawsInfoFormRules: {
         lawsName: [
@@ -314,6 +317,7 @@ export default {
     },
     // 打开新增模态框
     openLawsModal () {
+      this.SarLawsInfoEO = ''
       this.showLawsInfoModal = true
       this.saveInfoBtn = true
     },
@@ -323,9 +327,15 @@ export default {
       this.saveInfoBtn = true
       this.SarLawsInfoEO = row
       this.SarLawsInfoEO.editLawsId = row.id
+      this.SarLawsInfoEO.applyArctic = this.combineToArray(this.SarLawsInfoEO.applyArctic)
+      this.SarLawsInfoEO.energyKind = this.combineToArray(this.SarLawsInfoEO.energyKind)
+      this.SarLawsInfoEO.applyAuth = this.combineToArray(this.SarLawsInfoEO.applyAuth)
     },
     // 提交新增/修改
     saveLawsInfo () {
+      this.SarLawsInfoEO.applyArctic = this.breakMultiSelect(this.SarLawsInfoEO.applyArctic)
+      this.SarLawsInfoEO.energyKind = this.breakMultiSelect(this.SarLawsInfoEO.energyKind)
+      this.SarLawsInfoEO.applyAuth = this.breakMultiSelect(this.SarLawsInfoEO.applyAuth)
       this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
       this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
       if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
@@ -405,6 +415,7 @@ export default {
     },
     // 打开新增条目模态框
     openAddItemsModal () {
+      this.SarLawsItemsEO = ''
       this.addLawsItemsModal = true
       this.saveLawsItemsBtn = true
     },
@@ -466,6 +477,19 @@ export default {
 
       })
     },
+    // 分解多选下拉
+    breakMultiSelect (value) {
+      let stringValue = ''
+      for (let i = 0; i < value.length; i++) {
+        stringValue += value[i] + ','
+      }
+      return stringValue
+    },
+    // 多选合并为数组显示
+    combineToArray (value) {
+      let arrayValue = value.split(',')
+      return arrayValue
+    },
     // 加载数据字典
     loadDicTypeDatas1 () {
       this.$http.get('sys/dictype/getDicTypeByDicCode', {
@@ -491,6 +515,42 @@ export default {
         }
       }, e => {
       })
+    },
+    loadDicTypeDatas3 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'PRODUCTTYPE'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.applyArcticOptions = res.data
+        }
+      }, e => {
+      })
+    },
+    loadDicTypeDatas4 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'ENERGYTYPES'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.energyKindOptions = res.data
+        }
+      }, e => {
+      })
+    },
+    loadDicTypeDatas5 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'PROVETYPE'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.applyAuthOptions = res.data
+        }
+      }, e => {
+      })
     }
   },
   components: {},
@@ -505,5 +565,8 @@ export default {
     this.searchLawsInfo()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()
+    this.loadDicTypeDatas3()
+    this.loadDicTypeDatas4()
+    this.loadDicTypeDatas5()
   }
 }

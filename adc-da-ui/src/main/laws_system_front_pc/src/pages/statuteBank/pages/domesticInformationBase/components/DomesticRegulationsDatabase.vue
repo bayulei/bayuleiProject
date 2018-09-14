@@ -90,17 +90,23 @@
          <Row>
            <Col span="8">
              <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.applyArctic"></Input>
+               <Select v-model="SarLawsInfoEO.applyArctic" multiple style="width:200px">
+                 <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.energyKind"></Input>
+               <Select v-model="SarLawsInfoEO.energyKind" multiple style="width:200px">
+                 <Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="适用认证" prop="applyAuth" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.applyAuth"></Input>
+               <Select v-model="SarLawsInfoEO.applyAuth" multiple style="width:200px">
+                 <Option v-for="item in applyAuthOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
          </Row>
