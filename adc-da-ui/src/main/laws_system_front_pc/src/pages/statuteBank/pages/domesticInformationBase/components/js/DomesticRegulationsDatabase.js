@@ -5,6 +5,7 @@ export default {
       modal2: false,
       showLawsInfoModal: false,
       showLawsItemsModal: false,
+      addLawsItemsModal: false,
       saveInfoBtn: true,
       lawsInfo: {
         lawsNum: '',
@@ -30,6 +31,17 @@ export default {
       },
       lawsItemsSearch: {
         responsibleUnit: ''
+      },
+      SarLawsItemsEO: {
+        id: '',
+        itemsNum: '',
+        itemsName: '',
+        parts: '',
+        tackTime: '',
+        applyArctic: '',
+        energyKind: '',
+        responsibleUnit: '',
+        remarks: ''
       },
       total: 0,
       page: 1,
@@ -264,8 +276,8 @@ export default {
         putTime: [
           { required: true, message: '实施日期不能为空', trigger: 'blur' }
         ]
-
-      }
+      },
+      addLawsItemsFormRules: {}
     }
   },
   methods: {
@@ -387,6 +399,30 @@ export default {
       }, e => {
 
       })
+    },
+    // 打开新增条目模态框
+    openAddItemsModal () {
+      this.addLawsItemsModal = true
+    },
+    // 保存条目数据
+    saveLawsItems () {
+      this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
+      if (this.SarLawsItemsEO.id == null || this.SarLawsItemsEO.id === '') {
+        this.$http.post('lawss/sarLawsItems/addLawsItems', this.SarLawsItemsEO, {
+          _this: this
+        }, res => {
+          this.addLawsItemsModal = false
+          this.searchLawsItems()
+        }, e => {
+        })
+      } else {
+        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', this.SarLawsInfoEO, {
+          _this: this
+        }, res => {
+          this.showLawsInfoModal = false
+          this.searchLawsInfo()
+        }, e => {})
+      }
     },
     // 删除条目
     removeLawsItems (id) {

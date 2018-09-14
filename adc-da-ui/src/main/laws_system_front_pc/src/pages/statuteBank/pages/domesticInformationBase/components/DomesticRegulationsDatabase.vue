@@ -27,7 +27,7 @@
     </div>
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
-   <!--新增修改查看模态框-->
+   <!--新增修改查看法规模态框-->
    <full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">
      <div>
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
@@ -145,7 +145,7 @@
            </FormItem>
          </Col>
          <Col span="8">
-           <Button type="primary" @click="openLawsModal">新增</Button>
+           <Button type="primary" @click="openAddItemsModal">新增</Button>
            <Button type="primary" @click="modal2 = true">导入</Button>
          </Col>
        </Row>
@@ -155,7 +155,66 @@
        <Table border ref="selection" :columns="itemsTableColumn" :data="itemsData"></Table>
      </div>
      <pagination :total="itemsTotal" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
+   </full-modal>
 
+   <!--新增修改查看法规条目模态框-->
+   <full-modal v-model="addLawsItemsModal" v-if="addLawsItemsModal" ref="addLawsItemsModal">
+     <div>
+       <Form ref="SarLawsItemsEO" :model="SarLawsItemsEO" :rules="lawsItemsFormRules" class="label-input-form">
+         <input v-model="SarLawsItemsEO.id" v-show="false">
+         <Row>
+           <Col span="8">
+             <FormItem label="条目号" prop="itemsNum" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.itemsNum"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="条目名称" prop="itemsName" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.itemsName"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="涉及零部件" prop="parts" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.parts"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+             <FormItem label="特殊生效日期" prop="tackTime" class="laws-info-item">
+               <DatePicker type="date" v-model="SarLawsItemsEO.tackTime" format="yyyy-MM-dd"></DatePicker>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.applyArctic"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.energyKind"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+             <FormItem label="责任部门" prop="responsibleUnit" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.responsibleUnit"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="备注" prop="remarks" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.remarks"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+       </Form>
+
+     </div>
+     <div class="save-laws-btn">
+       <Button v-if="saveInfoBtn" type="primary" @click="saveLawsItems">提交</Button>
+       <Button @click="cancelAdd">取消</Button>
+     </div>
    </full-modal>
 
    </div>
