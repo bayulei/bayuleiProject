@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,8 +58,8 @@ public class CorrigendaApprovalController {
     public ResponseMessage<String> saveProcessInfo(CorrigendaApprovalVO corrigendaApprovalVO, String userId,String processInstanceId){
         //启动流程（为了把信息放入流程变量中）
         try{
-            ProcessInstance processInstance = corrigendaApprovalService.startProcess(corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId);
-            return Result.success(processInstance.getId());
+            processInstanceId = corrigendaApprovalService.startProcess(corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId);
+            return Result.success(processInstanceId);
         }catch(Exception e){
             e.printStackTrace();
             return Result.error("保存失败");
@@ -66,21 +67,20 @@ public class CorrigendaApprovalController {
     }
 
     /**
-     *  标准化工程师发起
+     *  标准编写人员发起流程
      * @MethodName:startApproval
-     * @author: yuzhong
+     * @author:yuzhong
      * @param:[processInstanceId,userId]
      * @return:String
      * date: 2018年9月4日 14:37:45
      */
-    @ApiOperation(value = "标准化工程师发起")
+    @ApiOperation(value = "标准编写人员发起流程")
     @PostMapping ("/startApproval")
     public ResponseMessage<String> startApproval(CorrigendaApprovalVO corrigendaApprovalVO, String userId,String processInstanceId,String comment){
         try{
-            ProcessInstance processInstance = corrigendaApprovalService.startProcess(corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId);
-            //完成第一步的发起审批
-            corrigendaApprovalService.completeFirstApproval(corrigendaApprovalVO,processInstance.getId(),userId,comment);
-            return Result.success(processInstance.getId());
+            processInstanceId = corrigendaApprovalService.startProcess(corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId);
+            corrigendaApprovalService.completeApproval(processInstanceId,userId,comment);
+            return Result.success(processInstanceId);
         }catch(Exception e){
             e.printStackTrace();
             return Result.error("审批失败");
@@ -88,18 +88,18 @@ public class CorrigendaApprovalController {
     }
 
     /**
-     *  流程完成审批
-     * @MethodName:completeProcess
+     *  完成审批
+     * @MethodName:completeApproval
      * @author: yuzhong
      * @param:[processInstanceId,nowUserId]
      * @return:S
      * date: 2018年9月4日 14:37:45
      */
-    @ApiOperation(value = "流程完成审批")
-    @PostMapping ("/completeProcess")
-    public ResponseMessage<String> completeProcess(String processInstanceId,String nowUserId,String comment){
+    @ApiOperation(value = "完成审批")
+    @PostMapping ("/completeApproval")
+    public ResponseMessage<String> completeApproval(String processInstanceId,String nowUserId,String comment){
         try {
-            corrigendaApprovalService.completeProcess(processInstanceId,nowUserId,comment);
+            corrigendaApprovalService.completeApproval(processInstanceId,nowUserId,comment);
             return Result.success(processInstanceId);
         }catch (Exception e){
             e.printStackTrace();
@@ -136,5 +136,35 @@ public class CorrigendaApprovalController {
     public ResponseMessage<Map<String,Object>> getTaskInfo(String taskId,String processInstanceId) {
         Map<String,Object> map = corrigendaApprovalService.getTaskInfo(taskId,processInstanceId);
         return Result.success(map);
+    }
+
+    /**
+     * 驳回
+     * @MethodName:reject
+     * @author: yuzhong
+     * @param:[processInstanceId]
+     * @return:String
+     * date: 2018年9月4日 14:37:19
+     */
+    @ApiOperation(value = "驳回")
+    @PostMapping ("/reject")
+    public ResponseMessage<String> reject(String processInstanceId,String nowUserId,String comment)throws Exception {
+        String message = corrigendaApprovalService.reject(processInstanceId,nowUserId,comment);
+        return Result.success(message);
+    }
+
+    /**
+     * 委托
+     * @MethodName:entrust
+     * @author: yuzhong
+     * @param:[processInstanceId]
+     * @return:String
+     * date: 2018年9月5日 10:12:36
+     */
+    @ApiOperation(value = "委托")
+    @PostMapping ("/entrust")
+    public ResponseMessage<String> entrust(String processInstanceId,String owner) {
+        String message = flowProcessUtil.entrust(processInstanceId,owner);
+        return Result.success(message);
     }
 }

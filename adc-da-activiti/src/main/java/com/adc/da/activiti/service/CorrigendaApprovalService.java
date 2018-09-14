@@ -7,6 +7,7 @@ import com.adc.da.activiti.page.BusExecuProcessEOPage;
 import com.adc.da.activiti.vo.CorrigendaApprovalVO;
 import com.adc.da.sys.util.UUIDUtils;
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.runtime.Execution;
@@ -66,47 +67,33 @@ public class CorrigendaApprovalService {
      * 启动流程
      *
      * @MethodName:startProcess
-     * @author: yuzhong
-     * @param:[buyApprovalEO,userId,processDefinitionKey,processInstanceId]
+     * @author:yuzhong
+     * @param:[corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId]
      * @return:void date: 2018年9月4日 10:24:08
      */
-    public ProcessInstance startProcess(CorrigendaApprovalVO corrigendaApprovalVO,
+    public String startProcess(CorrigendaApprovalVO corrigendaApprovalVO,
             String userId, String processDefinitionKey, String processInstanceId) throws Exception {
         //如果有流程Id，那么就删除这个流程，重新赋值流程变量再启动流程
         if (!StringUtils.isEmpty(processInstanceId)) {
-            //runtimeService.get
-        }
-        //设置流程发起人id
-        identityService.setAuthenticatedUserId(userId);
-        //设置此流程的流程变量
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("processNumber", corrigendaApprovalVO.getProcessNumber());
-        map.put("processType", corrigendaApprovalVO.getProcessType());
-        map.put("processDescription", corrigendaApprovalVO.getProcessDescription());
-        map.put("applicat", userId);
-        map.put("file", corrigendaApprovalVO.getFileUrl());
-        map.put("corrigendaApprovalVOList",corrigendaApprovalVO.getCorrigendaApprovalVOList());
-        //启动流程
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, map);
-
-        //获取当前执行的任务
-        Task task = taskService.createTaskQuery()
-                .processInstanceId(processInstance.getProcessInstanceId())
-                .singleResult();
-
-        taskService.setAssignee(task.getId(),userId);
-        //拿流程Id去关联表查一下，有数据证明那么需要更新，没有数据，需要新增
-        if (!StringUtils.isEmpty(processInstanceId)) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("processNumber", corrigendaApprovalVO.getProcessNumber());
+            map.put("processType", corrigendaApprovalVO.getProcessType());
+            map.put("processDescription", corrigendaApprovalVO.getProcessDescription());
+            map.put("applicat", userId);
+            map.put("fileList",corrigendaApprovalVO.getFileIdList());
+            map.put("corrigendaApprovalVOList",corrigendaApprovalVO.getCorrigendaApprovalList());
+            runtimeService.setVariables(processInstanceId,map);
+            //往流程业务表修改数据
             BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
             busExecuProcessEOPage.setProcInstId(processInstanceId);
             List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
             if (busExecuProcessEOList != null && !busExecuProcessEOList.isEmpty()) {
-                //往流程业务和流程的关联表添加数据
+                //往流程业务和流程的关联表修改数据
                 BusExecuProcessEO busExecuProcessEO = new BusExecuProcessEO();
-                busExecuProcessEO.setProcInstId(processInstance.getId());
+                busExecuProcessEO.setProcInstId(processInstanceId);
                 busExecuProcessEO.setId(busExecuProcessEOList.get(0).getId());
                 busExecuProcessEOService.updateByPrimaryKeySelective(busExecuProcessEO);
-                //往流程业务表添加数据
+                //往流程业务表修改数据
                 BusProcessEO busProcessEO = new BusProcessEO();
                 busProcessEO.setProcessNumber(corrigendaApprovalVO.getProcessNumber());
                 busProcessEO.setProcessType(corrigendaApprovalVO.getProcessType());
@@ -116,7 +103,28 @@ public class CorrigendaApprovalService {
                 busProcessEO.setProcessStatus("1");
                 busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
             }
-        } else {
+        }else{
+            //设置流程发起人id
+            identityService.setAuthenticatedUserId(userId);
+            //设置此流程的流程变量
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("processNumber", corrigendaApprovalVO.getProcessNumber());
+            map.put("processType", corrigendaApprovalVO.getProcessType());
+            map.put("processDescription", corrigendaApprovalVO.getProcessDescription());
+            map.put("applicat", userId);
+            map.put("fileList",corrigendaApprovalVO.getFileIdList());
+            map.put("corrigendaApprovalVOList", corrigendaApprovalVO.getCorrigendaApprovalList());
+            //启动流程
+            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, map);
+
+            processInstanceId = processInstance.getId();
+            //获取当前执行的任务
+            Task task = taskService.createTaskQuery()
+                    .processInstanceId(processInstance.getProcessInstanceId())
+                    .singleResult();
+
+            taskService.setAssignee(task.getId(),userId);
+
             //往流程业务表添加数据
             BusProcessEO busProcessEO = new BusProcessEO();
             busProcessEO.setProcessNumber(corrigendaApprovalVO.getProcessNumber());
@@ -135,37 +143,55 @@ public class CorrigendaApprovalService {
             busExecuProcessEO.setId(UUIDUtils.randomUUID20());
             busExecuProcessEOService.insertSelective(busExecuProcessEO);
         }
-        return processInstance;
+        return processInstanceId;
     }
 
     /**
-     * 完成第一步发起审批
+     * 完成审批
      *
-     * @MethodName:completeFirstApproval
-     * @author: yuzhong
-     * @param:[processInstanceId,nowUserId]
+     * @MethodName:completeApproval
+     * @author:yuzhong
+     * @param:[processInstanceId,nowUserId,comment]
      * @return:String date: 2018年9月5日 16:40:26
      */
-    public String completeFirstApproval(CorrigendaApprovalVO corrigendaApprovalVO,String processInstanceId, String nowUserId, String comment) throws Exception {
+    public String completeApproval(String processInstanceId, String nowUserId, String comment) throws Exception {
         //获取当前执行的任务
-        Task task = taskService.createTaskQuery()
-                .processInstanceId(processInstanceId)
-                .singleResult();
+        Task task = taskService.createTaskQuery().processInstanceId(processInstanceId)
+                .taskAssignee(nowUserId).singleResult();
         if (!StringUtils.isEmpty(comment)) {
-            // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
-            Authentication.setAuthenticatedUserId(nowUserId);//批注人的名称  一定要写，不然查看的时候不知道人物信息
-            // 添加批注信息
-            taskService.addComment(task.getId(), null, comment);//comment为批注内容
+//            // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
+//            Authentication.setAuthenticatedUserId(nowUserId);//批注人的名称  一定要写，不然查看的时候不知道人物信息
+//            // 添加批注信息
+//            taskService.addComment(task.getId(), null, comment);//comment为批注内容
+            task.setDescription(comment);//设置意见
+            taskService.saveTask(task);
+        }
+
+        if(!StringUtils.isEmpty(task.getOwner())){
+            taskService.resolveTask(task.getId());
         }
 
         //将提交申请第一步任务走完 即向后执行一步
         taskService.complete(task.getId());
 
         //获取当前执行的任务(已经是第二步了)
-        List<Task> taskList = taskService.createTaskQuery()
+        Task task2 = taskService.createTaskQuery()
                 .processInstanceId(processInstanceId)
-                .list();
-        if (taskList != null && !taskList.isEmpty()) {
+                .singleResult();
+        if (task2 != null) {
+            String taskDefKey = task2.getTaskDefinitionKey();
+            //如果是最后一步标准工程师接收，那么审批人要指定为标准工程师
+            if(taskDefKey.equals("usertask6")){
+                List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId)
+                        .taskDefinitionKey("usertask2").orderByTaskCreateTime().desc().list();
+                if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+                    taskService.setAssignee(task2.getId(),historicTaskInstanceList.get(0).getAssignee());
+                }
+            }else{
+                //设置下一步的代办人
+                taskService.setAssignee(task2.getId(), "下一个人");
+            }
+
             //修改业务表的上一操作人
             BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
             busExecuProcessEOPage.setProcInstId(processInstanceId);
@@ -177,95 +203,19 @@ public class CorrigendaApprovalService {
                 busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
                 busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
             }
-        }
-        return processInstanceId;
-    }
-
-    /**
-     * 流程完成审批
-     *
-     * @MethodName:completeProcess
-     * @author: yuzhong
-     * @param:[processInstanceId,nowUserId]
-     * @return:String date: 2018年9月5日 16:40:26
-     */
-    public String completeProcess(String processInstanceId, String nowUserId, String comment) throws Exception {
-        //通过代办人，获取该人需要执行的任务
-        List<Task> taskList = taskService.createTaskQuery()
-                .processInstanceId(processInstanceId)
-                .taskAssignee(nowUserId)
-                .list();
-        if(taskList!=null && !taskList.isEmpty()) {
-            for(int i=0;i<taskList.size();i++) {
-                if (!StringUtils.isEmpty(comment)) {
-                    // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
-                    Authentication.setAuthenticatedUserId(nowUserId);//批注人的名称  一定要写，不然查看的时候不知道人物信息
-                    // 添加批注信息
-                    taskService.addComment(taskList.get(i).getId(), processInstanceId,null, comment);//comment为批注内容
-                }
-
-                //将提交申请第一步任务走完 即向后执行一步
-                taskService.complete(taskList.get(i).getId());
-            }
-        }
-
-        /*
-        *
-        *
-        * 需要加入该人所在部门的领导
-        *
-        * */
-
-        Execution execution = runtimeService.createExecutionQuery().processInstanceId(processInstanceId)
-                .parentId(processInstanceId).singleResult();
-        if(execution!=null){
-            //查询完成上一次任务后当前任务
-            Task taskNow = taskService.createTaskQuery().executionId(taskList.get(0).getExecutionId()).singleResult();
-            if (taskNow != null) {
-                //设置下一步的代办人
-                taskService.setAssignee(taskNow.getId(), "下一个人");
-                //修改业务表的上一操作人
-                BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
-                busExecuProcessEOPage.setProcInstId(processInstanceId);
-                List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
-                if (busExecuProcessEOList != null && !busExecuProcessEOList.isEmpty()) {
-                    BusProcessEO busProcessEO = new BusProcessEO();
-                    busProcessEO.setLastUserId(nowUserId);
-                    busProcessEO.setLastUserName("查出来是谁");
-                    busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
-                    busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
-                }
-            }
-        }else{
-            Task taskNow = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
-            if(taskNow!=null){
-                //设置下一步的代办人
-                taskService.setAssignee(taskNow.getId(), "下一个人");
-                //修改业务表的上一操作人
-                BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
-                busExecuProcessEOPage.setProcInstId(processInstanceId);
-                List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
-                if (busExecuProcessEOList != null && !busExecuProcessEOList.isEmpty()) {
-                    BusProcessEO busProcessEO = new BusProcessEO();
-                    busProcessEO.setLastUserId(nowUserId);
-                    busProcessEO.setLastUserName("查出来是谁");
-                    busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
-                    busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
-                }
-            }else{
-                //修改业务表的上一操作人，完成状态，完成时间
-                BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
-                busExecuProcessEOPage.setProcInstId(processInstanceId);
-                List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
-                if (busExecuProcessEOList != null && !busExecuProcessEOList.isEmpty()) {
-                    BusProcessEO busProcessEO = new BusProcessEO();
-                    busProcessEO.setLastUserId(nowUserId);
-                    busProcessEO.setLastUserName("查出来是谁");
-                    busProcessEO.setEndTime(new Date(System.currentTimeMillis()));
-                    busProcessEO.setProcessStatus("2");
-                    busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
-                    busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
-                }
+        } else {
+            //修改业务表的上一操作人，完成状态，完成时间
+            BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
+            busExecuProcessEOPage.setProcInstId(processInstanceId);
+            List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
+            if (busExecuProcessEOList != null && !busExecuProcessEOList.isEmpty()) {
+                BusProcessEO busProcessEO = new BusProcessEO();
+                busProcessEO.setLastUserId(nowUserId);
+                busProcessEO.setLastUserName("查出来是谁");
+                busProcessEO.setEndTime(new Date(System.currentTimeMillis()));
+                busProcessEO.setProcessStatus("2");
+                busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
+                busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
             }
         }
         return processInstanceId;
@@ -275,9 +225,10 @@ public class CorrigendaApprovalService {
      * 查看任务详情
      *
      * @MethodName:getTaskInfo
-     * @author: yuzhong
+     * @author:yuzhong
      * @param:[taskId]
-     * @return:Map date: 2018年9月5日 16:40:26
+     * @return:Map
+     * date: 2018年9月5日 16:40:26
      */
     public Map<String, Object> getTaskInfo(String taskId, String processInstanceId){
         Map<String,Object> resultMap = new HashMap<String,Object>();
@@ -291,18 +242,83 @@ public class CorrigendaApprovalService {
         }
         //获取历史的审批意见
         List<Map<String,String>> commentList = new ArrayList<Map<String,String>>();
-        List<Comment> comments = taskService.getProcessInstanceComments(processInstanceId);
-        if(comments!=null && !comments.isEmpty()){
-            for(Comment comment : comments){
-                Map<String,String> map = new HashMap<String,String>();
-                map.put("审批人",comment.getUserId());
+//        List<Comment> comments = taskService.getProcessInstanceComments(processInstanceId);
+//        if(comments!=null && !comments.isEmpty()){
+//            for(Comment comment : comments){
+//                Map<String,String> map = new HashMap<String,String>();
+//                map.put("审批人",comment.getUserId());
+//                map.put("审批意见",comment.getFullMessage());
+//                commentList.add(map);
+//            }
+//        }
+        List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().orderByTaskCreateTime().asc().
+                processInstanceId(processInstanceId).list();
+        if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+            for(HistoricTaskInstance historicTaskInstance : historicTaskInstanceList){
+                Map<String, String> map = new HashMap<String, String>();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                map.put("审批时间",simpleDateFormat.format(comment.getTime()));
-                map.put("审批意见",comment.getFullMessage());
+                if(historicTaskInstance.getDescription()!=null
+                        && !StringUtils.isEmpty(historicTaskInstance.getDescription())){
+                    map.put("审批人", historicTaskInstance.getAssignee());
+                    map.put("审批日期", simpleDateFormat.format(historicTaskInstance.getStartTime()));
+                    map.put("审批意见", historicTaskInstance.getDescription());
+                }else{
+                    map.put("发起人", historicTaskInstance.getAssignee());
+                    map.put("发起日期", simpleDateFormat.format(historicTaskInstance.getStartTime()));
+                }
                 commentList.add(map);
             }
         }
         resultMap.put("comment",commentList);
         return resultMap;
+    }
+
+    /**
+     * 驳回到任意节点
+     *
+     * @MethodName:reject
+     * @author:yuzhong
+     * @param:[processInstanceId,comment]
+     * @return:void
+     * date:2018年9月14日 09:29:10
+     */
+    public String reject(String processInstanceId,String nowUserId,String comment) throws Exception {
+        String message = "";
+        Task taskEntity =  taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
+        String destTaskKey = "";
+        String nowTaskKey = taskEntity.getTaskDefinitionKey();
+        //当前任务key
+        switch (nowTaskKey){
+        case "usertask2":
+            destTaskKey = "usertask1";
+            break;
+        case "usertask3":
+            destTaskKey = "usertask1";
+            break;
+        case "usertask4":
+            destTaskKey = "usertask3";
+            break;
+        case "usertask5":
+            destTaskKey = "usertask4";
+            break;
+        default:
+            message = "无需驳回";
+        }
+        if(message.equals("无需驳回")){
+            return message;
+        }
+        message = flowProcessUtil.rejectTask(processInstanceId,nowUserId,destTaskKey,comment);
+        //修改业务表的上一操作人
+        BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
+        busExecuProcessEOPage.setProcInstId(processInstanceId);
+        List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
+        if (busExecuProcessEOList != null && !busExecuProcessEOList.isEmpty()) {
+            BusProcessEO busProcessEO = new BusProcessEO();
+            busProcessEO.setLastUserId(nowUserId);
+            busProcessEO.setLastUserName("查出来是谁");
+            busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
+            busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
+        }
+        return message;
     }
 }
