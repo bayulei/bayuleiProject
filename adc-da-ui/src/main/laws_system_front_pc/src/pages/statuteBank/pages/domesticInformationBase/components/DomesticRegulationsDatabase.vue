@@ -194,12 +194,16 @@
            </Col>
            <Col span="8">
              <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
-               <Input v-model="SarLawsItemsEO.applyArctic"></Input>
+               <Select v-model="SarLawsItemsEO.applyArctic" multiple style="width:200px">
+                 <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
-               <Input v-model="SarLawsItemsEO.energyKind"></Input>
+               <Select v-model="SarLawsItemsEO.energyKind" multiple style="width:200px">
+                 <Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
          </Row>

@@ -424,12 +424,16 @@ export default {
       this.addLawsItemsModal = true
       this.saveLawsItemsBtn = true
       this.SarLawsItemsEO = row
+      this.SarLawsItemsEO.applyArctic = this.combineToArray(this.SarLawsItemsEO.applyArctic)
+      this.SarLawsItemsEO.energyKind = this.combineToArray(this.SarLawsItemsEO.energyKind)
     },
     cancelAddItems () {
       this.addLawsItemsModal = false
     },
     // 保存条目数据
     saveLawsItems () {
+      this.SarLawsItemsEO.applyArctic = this.breakMultiSelect(this.SarLawsItemsEO.applyArctic)
+      this.SarLawsItemsEO.energyKind = this.breakMultiSelect(this.SarLawsItemsEO.energyKind)
       this.SarLawsItemsEO.lawsId = this.saveLawsId
       if (this.SarLawsItemsEO.tackTime != null) {
         this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')

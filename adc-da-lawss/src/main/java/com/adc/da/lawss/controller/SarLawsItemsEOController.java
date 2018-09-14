@@ -89,7 +89,6 @@ public class SarLawsItemsEOController extends BaseController<SarLawsItemsEO>{
     @PutMapping("/updateLawsItems")
     /*@RequiresPermissions("lawss:sarLawsItems:update")*/
     public ResponseMessage<SarLawsItemsEO> update(SarLawsItemsEO sarLawsItemsEO) throws Exception {
-        /*sarLawsItemsEO.setModifyTime(new Date());*/
         return sarLawsItemsEOService.updateLawsItems(sarLawsItemsEO);
     }
 

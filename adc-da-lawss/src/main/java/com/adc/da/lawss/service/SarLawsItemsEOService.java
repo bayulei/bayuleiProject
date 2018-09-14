@@ -125,6 +125,7 @@ public class SarLawsItemsEOService extends BaseService<SarLawsItemsEO, String> {
      **/
     public ResponseMessage<SarLawsItemsEO> updateLawsItems(SarLawsItemsEO sarLawsItemsEO) throws Exception {
         //修改info表信息
+        sarLawsItemsEO.setModifyTime(new Date());
         int countUp = dao.updateByPrimaryKeySelective(sarLawsItemsEO);
         if(countUp > 0){
             String itemId = sarLawsItemsEO.getId();
