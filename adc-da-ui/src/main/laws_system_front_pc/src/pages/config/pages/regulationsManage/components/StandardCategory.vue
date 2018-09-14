@@ -12,18 +12,15 @@
           <Button type="warning" @click="categoryEdit">编辑</Button>
           <Button type="error"  @click="categoryDel">删除</Button>
           <!--显示模态框-->
-          <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="400"
+          <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }"
                  @on-ok="saveCategory">
               <Form :model="categoryModelAdd" label-position="right" :label-width="80">
-                <input v-model="categoryModelAdd.id">
-                <FormItem label="标准">
-                  <Input v-model="categoryModelAdd.parts" style="width: 200px" :disabled='modalType === 3'></Input>
+                <input v-model="categoryModelAdd.id" v-show="false">
+                <FormItem label="选项">
+                  <Input v-model="categoryModelAdd.parts" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
                 </FormItem>
                 <FormItem label="数据编码">
-                  <Input v-model="categoryModelAdd.coding" style="width: 200px" :disabled='modalType === 3'></Input>
-                </FormItem>
-                <FormItem label="创建人">
-                  <Input v-model="categoryModelAdd.found" style="width: 200px" :disabled='modalType === 3'></Input>
+                  <Input v-model="categoryModelAdd.coding" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
                 </FormItem>
               </Form>
           </Modal>
@@ -45,12 +42,11 @@ export default {
     return {
       modalType: '',
       categoryTitle: '', // 模态框标题
+      selectNum: '', // 接收选中行数据
       standardForm: {
         standName: '', // 选项
         standCode: '', // 数据编码
-        id: '',
-        selectNum: '',
-        selectId: ''
+        id: '' // 数据id
       },
       total: 0,
       page: 1,
@@ -58,8 +54,7 @@ export default {
       loading: false,
       categoryModelAdd: {
         parts: '', // 模态框标准
-        coding: '', // 数据编码
-        found: ''// 模态框创建人
+        coding: ''// 数据编码
       },
       categoryModal: false, // 模态框是否打开
       // 表格表头
@@ -130,6 +125,18 @@ export default {
       console.log(this.selectNum)
       console.log(this.selectNum.length)
     },
+    // 选择提示框
+    instance (type, content) {
+      const title = '请选择'
+      switch (type) {
+        case 'warning':
+          this.$Modal.warning({
+            title: title,
+            content: content
+          })
+          break
+      }
+    },
     // 新增
     categoryAdd () {
       this.categoryModal = true
@@ -143,16 +150,24 @@ export default {
     },
     // 编辑
     categoryEdit () {
-      this.categoryModal = true
-      this.modalType = 2
-      this.categoryTitle = '编辑标准'
-      this.categoryModelAdd.parts = this.selectNum[0].dicTypeName
-      this.categoryModelAdd.coding = this.selectNum[0].dicTypeCode
-      this.categoryModelAdd.id = this.selectNum[0].id
+      console.log(this.selectNum)
+      if (this.selectNum === '' || this.selectNum.length === 0) {
+        this.instance('warning', '请务必选择一条数据')
+      } else {
+        if (this.selectNum.length === 1) {
+          this.categoryModal = true
+          this.modalType = 2
+          this.categoryTitle = '编辑标准'
+          this.categoryModelAdd.parts = this.selectNum[0].dicTypeName
+          this.categoryModelAdd.coding = this.selectNum[0].dicTypeCode
+          this.categoryModelAdd.id = this.selectNum[0].id
+        } else {
+          this.instance('warning', '最多只能选择一条数据')
+        }
+      }
     },
     // 查看
     viewData (row) {
-      console.log(row.id)
       this.categoryModal = true
       this.modalType = 3
       this.categoryTitle = '查看标准'
@@ -162,26 +177,31 @@ export default {
     },
     // 删除
     categoryDel () {
-      let delIds = []
-      for (let i = 0; i < this.selectNum.length; i++) {
-        delIds.push(this.selectNum[i].id)
-      }
-      this.$Modal.confirm({
-        title: '确认删除',
-        content: '<p>确认删除该条数据？</p>',
-        onOk: () => {
-          this.$http.put('deleteArr/{ids}', {
-            id: JSON.stringify(delIds)
-          }, {
-            _this: this
-          }, res => {
-            this.selectCategory()
-          }, e => {
-          })
-        },
-        onCancel: () => {
+      if (this.selectNum === '' || this.selectNum.length === 0) {
+        this.instance('warning', '请选择一条数据进行删除')
+      } else {
+        let delIds = []
+        for (let i = 0; i < this.selectNum.length; i++) {
+          delIds.push(this.selectNum[i].id)
         }
-      })
+        console.log(delIds)
+        this.$Modal.confirm({
+          title: '确认删除',
+          content: '<p>确认删除该条数据？</p>',
+          onOk: () => {
+            this.$http.put('deleteArr/{ids}', {
+              id: JSON.stringify(delIds)
+            }, {
+              _this: this
+            }, res => {
+              this.selectCategory()
+            }, e => {
+            })
+          },
+          onCancel: () => {
+          }
+        })
+      }
     },
     pageChange (page) {
       this.page = page
@@ -197,7 +217,8 @@ export default {
         page: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
-        dicTypeCode: this.standardForm.standCode
+        dicTypeCode: this.standardForm.standCode,
+        dicId: 'JKSADFH564S'
       }, {
         _this: this,
         loading: 'loading'
@@ -212,7 +233,7 @@ export default {
         this.$http.post('sys/dictype/create', {
           dicTypeName: this.categoryModelAdd.parts,
           dicTypeCode: this.categoryModelAdd.coding,
-          dicId: 1
+          dicId: 'JKSADFH564S'
         }, {
           _this: this
         }, res => {
@@ -244,7 +265,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" >
   .standard-classification {}
   .hide-modal-footer{
     .ivu-modal-footer{

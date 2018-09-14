@@ -16,7 +16,12 @@ import java.util.List;
  */
 public interface SarStandardsInfoEODao extends BaseDao<SarStandardsInfoEO> {
     List<SarStandardsInfoEO>  getSarStandardsInfoPage(SarStandardsInfoEOPage page);
+
     int getSarStandardsInfoCount(SarStandardsInfoEOPage page);
 
     List<SarStandExcelDto> getSarStandardsInfo(SarStandardsInfoEOPage page);
+
+    List<SarStandardsInfoEO> selectStandardsByStandnumber(SarStandardsInfoEO sarStandardsInfoEO);
+
+    List<SarStandardsInfoEO> getSarStandardsInfoByMenu(SarStandardsInfoEOPage page);
 }

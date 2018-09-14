@@ -4,7 +4,27 @@
     <div class="mechanism-manage-left">
       <Tree :data="deptTree" :render="renderContent"></Tree>
     </div>
-    <div class="mechanism-manage-right"></div>
+    <div class="mechanism-manage-right">
+      <table-tools-bar>
+        <div slot="left">
+          <label-select v-model="mechanismSearch.type" :options="mechanismSearch.typeOptions" placeholder="请选择" label="状态"></label-select>
+          <label-input v-model="mechanismSearch.userName" placeholder="请输入用户名" label="用户名称"></label-input>
+          <label-select v-model="mechanismSearch.roleName" :options="mechanismSearch.roleOptions" placeholder="按角色查找" label="角色名称"></label-select>
+          <label-select v-model="mechanismSearch.state" :options="mechanismSearch.stateOptions" placeholder="按状态查找" label="用户状态"></label-select>
+        </div>
+        <div slot="right">
+          <Button type="info">查询</Button>
+          <Button type="info">查询</Button>
+        </div>
+      </table-tools-bar>
+      <div class="content">
+        <div class="btn-group">
+          <Button type="success" >增加</Button>
+          <Button type="warning" style="margin-left: 0.3rem">编辑</Button>
+          <Button type="error"  style="margin-left: 0.3rem">配置角色信息</Button>
+        </div>
+      </div>
+    </div>
     <!-- tree弹窗 -->
     <Modal
       v-model="isShow.tree"
@@ -27,6 +47,33 @@ export default {
   name: 'mechanism-manage',
   data () {
     return {
+      mechanismSearch: {
+        type: '',
+        userName: '',
+        roleName: '',
+        state: '',
+        typeOptions: [{
+          label: '类型1',
+          value: 1
+        }, {
+          label: '类型2',
+          value: 2
+        }],
+        roleOptions: [{
+          label: '管理员',
+          value: 1
+        }, {
+          label: '普通用户',
+          value: 2
+        }],
+        stateOptions: [{
+          label: '已启用',
+          value: 1
+        }, {
+          label: '已停用',
+          value: 2
+        }]
+      },
       deptTree: [{
         expand: true,
         render: (h, { root, node, data }) => {
@@ -56,10 +103,10 @@ export default {
                 on: {
                   click: () => {
                     // this.append(data)
-                    this.treeFlag = 1
-                    this.isShow.tree = true
-                    this.treeForm.treeNodeTitle = ''
-                    this.treeNode = data
+                    this.treeFlag = 1 // 1为新增 2为编辑
+                    this.isShow.tree = true // 显示条件 默认为false
+                    this.treeForm.treeNodeTitle = '' // 弹出对话框表单名称
+                    this.treeNode = data // 当前节点
                   }
                 }
               })
@@ -231,7 +278,7 @@ export default {
     display: flex;
     background: #FFF;
     .mechanism-manage-left{
-      width: 6.1rem;
+      width: 6rem;
       height: 100%;
       border-right: 1px solid #DDD;
       position: relative;
@@ -252,6 +299,9 @@ export default {
       .ivu-tree-arrow{
         margin-right: 5px;
       }
+    }
+    .content .btn-group{
+      margin-bottom: 0.5rem;
     }
   }
   .mechanism-tree-modal{
