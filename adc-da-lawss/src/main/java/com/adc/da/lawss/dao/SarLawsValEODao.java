@@ -24,4 +24,13 @@ public interface SarLawsValEODao extends BaseDao<SarLawsValEO> {
      * @return java.util.List<com.adc.da.lawss.entity.SarLawsValEO>
      **/
     List<SarLawsValEO> selectByLawsVal(SarLawsValEOPage sarLawsValEO);
+
+    /**
+     * @Author yangxuenan
+     * @Description 删除
+     * Date 2018/9/13 16:56
+     * @Param [id]
+     * @return int
+     **/
+    int deleteByValId(String id);
 }

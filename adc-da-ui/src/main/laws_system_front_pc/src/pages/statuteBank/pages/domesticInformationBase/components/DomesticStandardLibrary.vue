@@ -571,7 +571,7 @@ export default {
       })
     },
     // 保存或修改标准
-    saveOrUpdateStands() {
+    saveOrUpdateStands () {
       // 时间格式修改
       this.sarStandardsInfoEO.issueTime = this.$dateFormat(this.sarStandardsInfoEO.issueTime, 'yyyy-MM-dd')
       this.sarStandardsInfoEO.putTime = this.$dateFormat(this.sarStandardsInfoEO.putTime, 'yyyy-MM-dd')
