@@ -6,6 +6,7 @@
 
 import dateFormat from './date'
 import loading from './loading'
+import confirm from './confirm'
 
 const install = function (Vue) {
   if (install.installed) return
@@ -21,6 +22,13 @@ const install = function (Vue) {
     $loading: {
       get () {
         return loading
+      }
+    }
+  })
+  Object.defineProperties(Vue.prototype, {
+    $confirm: {
+      get () {
+        return confirm
       }
     }
   })

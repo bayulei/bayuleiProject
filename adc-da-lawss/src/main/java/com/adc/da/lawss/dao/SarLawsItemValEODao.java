@@ -12,4 +12,12 @@ import com.adc.da.lawss.entity.SarLawsItemValEO;
  */
 public interface SarLawsItemValEODao extends BaseDao<SarLawsItemValEO> {
 
+    /**
+     * @Author yangxuenan
+     * @Description 根据id删除条目信息
+     * Date 2018/9/14 13:56
+     * @Param [id]
+     * @return int
+     **/
+    int deleteItemsValById(String id);
 }
