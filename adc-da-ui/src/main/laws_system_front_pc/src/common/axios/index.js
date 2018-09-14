@@ -248,7 +248,6 @@ module.exports = {
    * @date: 2018-09-14 09:55:30
    */
   delete (url, param, config, thenFun, exeFun) {
-    var _formData = formData(param)
     // 参数包含this
     let _this = config._this || false
     // 参数包含loading
@@ -256,7 +255,9 @@ module.exports = {
     if (_this) {
       _this[loading] = true
     }
-    axios.delete('/api/' + url, _formData).then(res => {
+    axios.delete('/api/' + url, {
+      params: param
+    }).then(res => {
       if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
