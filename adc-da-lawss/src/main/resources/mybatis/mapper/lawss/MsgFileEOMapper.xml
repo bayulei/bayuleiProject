@@ -137,7 +137,12 @@
         msg_id = #{msgId},
       </if>
     </set>
-     where id = #{id}
+    <!-- where id = #{id}-->
+      where msg_file.id in
+      <foreach item="id" collection="msglist" open="(" separator=","
+               close=")" index="index">
+          #{id}
+      </foreach>
   </update>
 
   <!-- 根据id查询 MSG_FILE -->
@@ -145,7 +150,6 @@
     select <include refid="Base_Column_List" /> 
       from MSG_FILE
      where id = #{value}
-
   </select>
 
   <!-- 删除记录 -->
@@ -182,5 +186,6 @@
              ${pager.orderCondition}
           </if>  -->
         </select>
+
 
       </mapper>

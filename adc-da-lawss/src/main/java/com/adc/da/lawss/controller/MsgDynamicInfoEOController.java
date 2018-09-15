@@ -7,11 +7,13 @@ import java.util.List;
 
 
 import com.adc.da.lawss.entity.MsgFileEO;
+import com.adc.da.lawss.service.MsgFileEOService;
 import com.adc.da.lawss.vo.MsgDynamicInfoVO;
 
 import com.adc.da.util.utils.BeanMapper;
 import com.adc.da.util.utils.StringUtils;
 
+import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
 
     @Autowired
     BeanMapper beanMapper;
+
+    @Autowired
+    private MsgFileEOService msgFileEOService;
 
 	@ApiOperation(value = "|MsgDynamicInfoEO|分页查询")
     @GetMapping("/page")
@@ -95,32 +100,34 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
             return  Result.error("r0016", "动态内容不能为空");
         }
 
-
-
-
-//  李文轩：对新增的动态标题进行重复判断
-/*        if(StringUtils.isBlank(msgDynamicInfoEO.getTitle())){
-            return Result.error("r0014", "动态标题不能为空");
-        }else if(dicTypeEOList!=null && !dicTypeEOList.isEmpty()){
-            return Result.error("r0015","字典类型编码已存在");
-        }*/
-
         MsgDynamicInfoEO  msgDynamicInfoEO=   beanMapper.map(msgDynamicInfoVO, MsgDynamicInfoEO.class);
         msgDynamicInfoEOService.insertSelective( msgDynamicInfoEO);
 
 
 //        调用附件存入动态信息id/文件名称/文件后缀/文件ID
         List<MsgFileEO> msgFileEOList = msgDynamicInfoVO.getMsgFileEOList();
-        msgDynamicInfoEOService.updateIdOfMsgFile(msgFileEOList);
-
+        for( MsgFileEO  msgFileEO :   msgFileEOList){
+            msgFileEO.setId(UUID.randomUUID10());
+            msgFileEOService.insert(msgFileEO);
+        }
+//        msgDynamicInfoEOService.updateIdOfMsgFile(msgFileEOList);
         return Result.success(msgDynamicInfoEO);
     }
-
+//比新增要多添加msgDynamicInfo.getId
     @ApiOperation(value = "|MsgDynamicInfoEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //    @RequiresPermissions("lawss:msgDynamicInfo:update")
-    public ResponseMessage<MsgDynamicInfoEO> update(@RequestBody MsgDynamicInfoEO msgDynamicInfoEO) throws Exception {
+    public ResponseMessage<MsgDynamicInfoEO> update(@RequestBody MsgDynamicInfoVO msgDynamicInfoVO) throws Exception {
+        MsgDynamicInfoEO msgDynamicInfoEO = beanMapper.map(msgDynamicInfoVO, MsgDynamicInfoEO.class);
+//        修改动态信息表
         msgDynamicInfoEOService.updateByPrimaryKeySelective(msgDynamicInfoEO);
+//        修改动态信息附件表（不可以在这里修改只可以插入附件）
+       List<MsgFileEO> msgFileEOList = msgDynamicInfoVO.getMsgFileEOList();
+        /*      msgFileEOService.updateByPrimaryKeySelective(msgFileEOList);*/
+
+        for( MsgFileEO  msgFileEO :   msgFileEOList){
+            msgFileEOService.updateByPrimaryKey(msgFileEO);
+        }
         return Result.success(msgDynamicInfoEO);
     }
 

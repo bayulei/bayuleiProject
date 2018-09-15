@@ -54,6 +54,8 @@ public class MsgDynamicInfoEOService extends BaseService<MsgDynamicInfoEO, Strin
         return dao.updateByPrimaryKeySelective(msgDynamicInfoEO);
     }
 
+
+
 //  调用附件存入动态信息id
     public  Integer updateIdOfMsgFile(List<MsgFileEO> msgFileEOS){
 

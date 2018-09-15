@@ -16,6 +16,7 @@ import java.util.List;
  */
 public interface MsgDynamicInfoEODao extends BaseDao<MsgDynamicInfoEO> {
 
-    public  Integer updateIdOfMsgFile(List<MsgFileEO> msgFileEOS);
+   Integer updateIdOfMsgFile(List<MsgFileEO> msgFileEOS);
+
 
 }
