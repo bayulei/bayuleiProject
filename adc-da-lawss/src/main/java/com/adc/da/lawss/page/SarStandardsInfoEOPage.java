@@ -3,6 +3,7 @@ package com.adc.da.lawss.page;
 import com.adc.da.base.page.BasePage;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <b>功能：</b>SAR_STANDARDS_INFO SarStandardsInfoEOPage<br>
@@ -863,12 +864,28 @@ public class SarStandardsInfoEOPage extends BasePage {
     }
 
     private String  menuId;
-
+    private List<String> applyArctics;
+    private List<String> replaceStandNums;
     public String getMenuId() {
         return menuId;
     }
-
     public void setMenuId(String menuId) {
         this.menuId = menuId;
+    }
+
+    public List<String> getApplyArctics() {
+        return applyArctics;
+    }
+
+    public void setApplyArctics(List<String> applyArctics) {
+        this.applyArctics = applyArctics;
+    }
+
+    public List<String> getReplaceStandNums() {
+        return replaceStandNums;
+    }
+
+    public void setReplaceStandNums(List<String> replaceStandNums) {
+        this.replaceStandNums = replaceStandNums;
     }
 }

@@ -145,6 +145,12 @@
 
   </delete>
 
+    <delete id="deleteDataByStandid" parameterType="java.lang.String">
+    delete from SAR_STAND_VAL
+     where stand_id = #{standId}
+
+  </delete>
+
   <!-- SAR_STAND_VAL 列表总数-->
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
     select count(1) from SAR_STAND_VAL

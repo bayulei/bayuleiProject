@@ -137,7 +137,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         if (standfiles != null) {
             for (MultipartFile file : standfiles) {
                 //* 3.1保存图片 *//*
-                 file = sarStandardsInfoEO.getStandFiles();
+                // file = sarStandardsInfoEO.getStandFiles();
                 String fileid = attFileEOService.saveFileInfo(file);
                 //* 3.2 其他后续操作 *//*
                 //标准文件资源表存数据库
@@ -160,7 +160,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         if (standModifyfiles != null) {
             for (MultipartFile file : standModifyfiles) {
                 //* 3.1保存图片 *//*
-                 file = sarStandardsInfoEO.getStandModifyFiles();
+                // file = sarStandardsInfoEO.getStandModifyFiles();
                  String fileid = attFileEOService.saveFileInfo(file);
                 //* 3.2 其他后续操作 *//*
                 //标准文件资源表存数据库
@@ -222,8 +222,8 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
     @ApiOperation(value = "|SarStandardsInfoEO|修改")
     @PostMapping(value="/updateSarStandardsInfo")
     //@RequiresPermissions("lawss:sarStandardsInfo:update")
-    public ResponseMessage<SarStandardsInfoEO> update(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
-        sarStandardsInfoEOService.updateByPrimaryKeySelective(sarStandardsInfoEO);
+    public ResponseMessage<SarStandardsInfoEO> updateSarStandardsInfo(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
+        sarStandardsInfoEOService.updateSarStandardsInfo(sarStandardsInfoEO);
         return Result.success("","修改成功",sarStandardsInfoEO);
     }
 
