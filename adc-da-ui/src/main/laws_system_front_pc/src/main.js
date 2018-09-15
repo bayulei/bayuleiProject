@@ -26,8 +26,12 @@ import components from '@/common/components'
 // axios
 import axios from 'axios'
 import $axios from '@/common/axios'
+// es6兼容
+import 'babel-polyfill'
 // 表单验证
 import verify from '@/common/verify'
+// 引入公共配置
+import globalConfig from '../config/global.config'
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.prototype.$ = $
@@ -38,6 +42,10 @@ Vue.prototype.verify = verify
 Vue.prototype.axios = axios
 // 封装后的axios
 Vue.prototype.$http = $axios
+// 后台Url路径
+Vue.prototype.globalUrl = globalConfig.serverUrl
+// 后台接口路径
+Vue.prototype.globalInterfaceUrl = globalConfig.interfaceUrl
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

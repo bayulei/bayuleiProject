@@ -22,4 +22,13 @@ public interface DicTypeEODao extends BaseDao<DicTypeEO>{
     public void deleteDicTypeByDicId(String id);
     
 	public void deleteFlagTo1(String id);
+
+	/**
+	 * @Author yangxuenan
+	 * @Description 根据数据字典编码查询字典类型
+	 * Date 2018/9/11 15:09
+	 * @Param [dictionaryCode]
+	 * @return java.util.List<com.adc.da.sys.entity.DicTypeEO>
+	 **/
+	public List<DicTypeEO> getDicTypeByDicCode(String dictionaryCode);
 }

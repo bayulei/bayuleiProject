@@ -3,7 +3,7 @@ package com.adc.da.lawss.dao;
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
-import com.adc.da.lawss.vo.SarStandExcelDto;
+import com.adc.da.lawss.dto.SarStandExcelDto;
 import java.util.List;
 
 /**
@@ -16,7 +16,12 @@ import java.util.List;
  */
 public interface SarStandardsInfoEODao extends BaseDao<SarStandardsInfoEO> {
     List<SarStandardsInfoEO>  getSarStandardsInfoPage(SarStandardsInfoEOPage page);
+
     int getSarStandardsInfoCount(SarStandardsInfoEOPage page);
 
     List<SarStandExcelDto> getSarStandardsInfo(SarStandardsInfoEOPage page);
+
+    List<SarStandardsInfoEO> selectStandardsByStandnumber(SarStandardsInfoEO sarStandardsInfoEO);
+
+    List<SarStandardsInfoEO> getSarStandardsInfoByMenu(SarStandardsInfoEOPage page);
 }

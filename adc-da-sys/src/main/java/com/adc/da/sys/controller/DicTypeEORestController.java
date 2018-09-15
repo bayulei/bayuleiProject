@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
@@ -14,14 +15,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.adc.da.base.page.Pager;
 import com.adc.da.base.web.BaseController;
@@ -173,5 +167,33 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		}*/
 		dicTypeEOService.deleteDicTypeByDicId(id);
 		return Result.success();
+	}
+
+	/**
+	 * @Author yangxuenan
+	 * @Description 根据数据字典编码查询字典类型
+	 * Date 2018/9/12 10:12
+	 * @Param [dicCode]
+	 * @return com.adc.da.util.http.ResponseMessage<java.util.Map<java.lang.String,java.lang.String>>
+	 **/
+	@ApiOperation(value = "|DicTypeEO|查询字典类型")
+	@GetMapping("/getDicTypeByDicCode")
+	public ResponseMessage<List<Map<String,String>>> getDicTypeByDicCode(@RequestParam String dicCode) throws Exception {
+		List<Map<String,String>> dicTypeEO = dicTypeEOService.getDicTypeByDicCode(dicCode);
+		return Result.success(dicTypeEO);
+	}
+
+	/**
+	 * @Author gaoyan
+	 * @Description 分组查询全部字典类型
+	 * Date 2018/9/11 19:09
+	 * @Param [dicCode]
+	 * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.sys.entity.DicTypeEO>>
+	 **/
+	@ApiOperation(value = "|DicTypeEO|查询字典类型")
+	@GetMapping("/getDicTypeListCode")
+	public ResponseMessage<Map<String,Object>> getDicTypeListCode() throws Exception {
+		Map<String,Object> dicTypeEO = dicTypeEOService.getDicTypeListCode();
+		return Result.success(dicTypeEO);
 	}
 }

@@ -11,12 +11,13 @@ import java.util.Date;
  * <b>日期：</b> 2018-09-03 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
+
 public class SarStandardsInfoEO extends BaseEntity {
     //修改时间
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
     //创建时间
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     //是否有效
     private Integer validFlag;
@@ -29,7 +30,7 @@ public class SarStandardsInfoEO extends BaseEntity {
     //责任部门
     private String responsibleUnit;
     //内容摘要
-    private Object synopsis;
+    private String synopsis;
     //关键词
     private String tags;
     //关联文件  支持PDF、doc、docx文件，
@@ -51,20 +52,21 @@ public class SarStandardsInfoEO extends BaseEntity {
     //起草单位
     private String draftingUnit;
     //新生产车实施日期
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date newproductPutTime;
     //在产车实施日期
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date productPutTime;
     //新定型车实施日期
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date newcarPutTime;
     //实施日期
-    //@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+
+    //@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date putTime;
     //发布日期
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date issueTime;
     //适用认证  多选
     private String applyAuth;
@@ -104,7 +106,15 @@ public class SarStandardsInfoEO extends BaseEntity {
     //目录ID   非标准信息表中的字段
     private String  menuId;
 
-
+    private String countryShow;  //国家地区 --单选
+    private String standSortShow; // 标准类别下拉框    --单选
+    private String applyArcticShow; // 适用车型下拉框  --多选
+    private String standStateShow; // 标准状态下拉框   --单选
+    private String standNatureShow; // 标准性质下拉框  --单选
+    private String adoptExtentShow; // 采标程度下拉框  --单选
+    private String emergyKindShow; // 能源种类下拉框   --多选
+    private String applyAuthShow; // 适用认证下拉框    --多选
+    private String categoryShow; // 所属类别下拉框     --多选
 
 
     /**
@@ -360,12 +370,12 @@ public class SarStandardsInfoEO extends BaseEntity {
     }
 
     /**  **/
-    public Object getSynopsis() {
+    public String  getSynopsis() {
         return this.synopsis;
     }
 
     /**  **/
-    public void setSynopsis(Object synopsis) {
+    public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
     }
 
@@ -695,5 +705,77 @@ public class SarStandardsInfoEO extends BaseEntity {
 
     public void setMenuId(String menuId) {
         this.menuId = menuId;
+    }
+
+    public String getCountryShow() {
+        return countryShow;
+    }
+
+    public void setCountryShow(String countryShow) {
+        this.countryShow = countryShow;
+    }
+
+    public String getStandSortShow() {
+        return standSortShow;
+    }
+
+    public void setStandSortShow(String standSortShow) {
+        this.standSortShow = standSortShow;
+    }
+
+    public String getApplyArcticShow() {
+        return applyArcticShow;
+    }
+
+    public void setApplyArcticShow(String applyArcticShow) {
+        this.applyArcticShow = applyArcticShow;
+    }
+
+    public String getStandStateShow() {
+        return standStateShow;
+    }
+
+    public void setStandStateShow(String standStateShow) {
+        this.standStateShow = standStateShow;
+    }
+
+    public String getStandNatureShow() {
+        return standNatureShow;
+    }
+
+    public void setStandNatureShow(String standNatureShow) {
+        this.standNatureShow = standNatureShow;
+    }
+
+    public String getAdoptExtentShow() {
+        return adoptExtentShow;
+    }
+
+    public void setAdoptExtentShow(String adoptExtentShow) {
+        this.adoptExtentShow = adoptExtentShow;
+    }
+
+    public String getEmergyKindShow() {
+        return emergyKindShow;
+    }
+
+    public void setEmergyKindShow(String emergyKindShow) {
+        this.emergyKindShow = emergyKindShow;
+    }
+
+    public String getApplyAuthShow() {
+        return applyAuthShow;
+    }
+
+    public void setApplyAuthShow(String applyAuthShow) {
+        this.applyAuthShow = applyAuthShow;
+    }
+
+    public String getCategoryShow() {
+        return categoryShow;
+    }
+
+    public void setCategoryShow(String categoryShow) {
+        this.categoryShow = categoryShow;
     }
 }

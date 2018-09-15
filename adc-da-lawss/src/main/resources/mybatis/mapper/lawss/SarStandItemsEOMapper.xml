@@ -251,7 +251,27 @@
   </select>
 
    <select id="querySarStandItemsList" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarStandItemsEOPage">
-        select <include refid="Base_Column_List"/> from SAR_STAND_ITEMS
+        select <include refid="Base_Column_List"/>,
+       (
+       SELECT
+       listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_STAND_ITEM_VAL.property_type )
+       FROM
+       SAR_STAND_ITEM_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_STAND_ITEM_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+       WHERE
+       SAR_STAND_ITEM_VAL.ITEM_ID = SAR_STAND_ITEMS.id
+       AND SAR_STAND_ITEM_VAL.property_type = 'APPLY_ARCTIC'
+       ) AS applyArcticShow,
+       (
+       SELECT
+       listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_STAND_ITEM_VAL.property_type )
+       FROM
+       SAR_STAND_ITEM_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_STAND_ITEM_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+       WHERE
+       SAR_STAND_ITEM_VAL.ITEM_ID = SAR_STAND_ITEMS.id
+       AND SAR_STAND_ITEM_VAL.property_type = 'ENERGY_KIND'
+       ) AS emergyKindShow
+        from SAR_STAND_ITEMS
+
         <include refid="Base_Where_Clause"/>
    </select>
 

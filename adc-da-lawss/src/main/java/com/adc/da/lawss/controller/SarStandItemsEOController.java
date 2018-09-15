@@ -72,9 +72,9 @@ public class SarStandItemsEOController extends BaseController<SarStandItemsEO>{
      * date 2018-09-04
      */
     @ApiOperation(value = "|SarStandItemsEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE,value = "/addSarStandItemsList")
-    @RequiresPermissions("lawss:sarStandItems:save")
-    public ResponseMessage<SarStandItemsEO> addSarStandItems(@RequestBody SarStandItemsEO sarStandItemsEO) throws Exception {
+    @PostMapping(value = "/addSarStandItemsList")
+    //@RequiresPermissions("lawss:sarStandItems:save")
+    public ResponseMessage<SarStandItemsEO> addSarStandItems(SarStandItemsEO sarStandItemsEO) throws Exception {
         sarStandItemsEOService.addSarStandItems(sarStandItemsEO);
         return Result.success(sarStandItemsEO);
     }
@@ -123,9 +123,9 @@ public class SarStandItemsEOController extends BaseController<SarStandItemsEO>{
      * date 2018-09-04
      */
     @ApiOperation(value = "|SarStandItemsEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("lawss:sarStandItems:update")
-    public ResponseMessage<SarStandItemsEO> update(@RequestBody SarStandItemsEO sarStandItemsEO) throws Exception {
+    @PostMapping("/updateStandItem")
+    //@RequiresPermissions("/updateStandItem")
+    public ResponseMessage<SarStandItemsEO> updateStandItem(SarStandItemsEO sarStandItemsEO) throws Exception {
         sarStandItemsEOService.updateSarStandItemsEO(sarStandItemsEO);
         return Result.success(sarStandItemsEO);
     }
@@ -138,9 +138,9 @@ public class SarStandItemsEOController extends BaseController<SarStandItemsEO>{
      * date 2018-09-04
      */
     @ApiOperation(value = "|SarStandItemsEO|删除")
-    @DeleteMapping("/{id}")
-    @RequiresPermissions("lawss:sarStandItems:delete")
-    public ResponseMessage delete(@PathVariable List<String> id) throws Exception {
+    @PostMapping("/deleteStandItem")
+    //@RequiresPermissions("lawss:sarStandItems:delete")
+    public ResponseMessage deleteStandItem( String[] id) throws Exception {
         for (String iditem :id){
             //删除标准条目
             sarStandItemsEOService.deleteByPrimaryKey(iditem);
@@ -148,7 +148,7 @@ public class SarStandItemsEOController extends BaseController<SarStandItemsEO>{
             sarStandItemValEOService.deleteSarStandItemValByItemid(iditem);
         }
         logger.info("delete from SAR_STAND_ITEMS where id = {}", id);
-        return Result.success();
+        return Result.success("00","删除成功");
     }
 
     /**
@@ -160,9 +160,8 @@ public class SarStandItemsEOController extends BaseController<SarStandItemsEO>{
      */
     @ApiOperation(value = "|SarStandItemsEO|查询")
     @GetMapping("/getSarStandItemsList")
-    @RequiresPermissions("lawss:sarStandItems:list")
-    public ResponseMessage<List<SarStandItemsVO>> list(SarStandItemsEOPage page) throws Exception {
-
+    //@RequiresPermissions("lawss:sarStandItems:list")
+    public ResponseMessage<List<SarStandItemsVO>> getSarStandItemsList(SarStandItemsEOPage page) throws Exception {
         return Result.success(sarStandItemsEOService.querySarStandItemsList(page));
     }
 }

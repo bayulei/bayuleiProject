@@ -1,6 +1,7 @@
 package com.adc.da.lawss.page;
 
 import com.adc.da.base.page.BasePage;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
@@ -13,13 +14,13 @@ import java.util.Date;
  **/
 public class SarLawsInfoEOPage extends BasePage {
 
-    private String modifyTime;
-    private String modifyTime1;
-    private String modifyTime2;
+    private Date modifyTime;
+    private Date modifyTime1;
+    private Date modifyTime2;
     private String modifyTimeOperator = "=";
-    private String creationTime;
-    private String creationTime1;
-    private String creationTime2;
+    private Date creationTime;
+    private Date creationTime1;
+    private Date creationTime2;
     private String creationTimeOperator = "=";
     private String validFlag;
     private String validFlagOperator = "=";
@@ -43,13 +44,19 @@ public class SarLawsInfoEOPage extends BasePage {
     private String applyArcticOperator = "like";
     private String replaceLawsNum;
     private String replaceLawsNumOperator = "=";
-    private String putTime;
-    private String putTime1;
-    private String putTime2;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date putTime;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date putTime1;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date putTime2;
     private String putTimeOperator = "=";
-    private String issueTime;
-    private String issueTime1;
-    private String issueTime2;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date issueTime;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date issueTime1;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date issueTime2;
     private String issueTimeOperator = "=";
     private String lawsState;
     private String lawsStateOperator = "=";
@@ -68,64 +75,64 @@ public class SarLawsInfoEOPage extends BasePage {
     private String id;
     private String idOperator = "=";
 
-    public String getModifyTime() {
-        return this.modifyTime;
+    public Date getModifyTime() {
+        return modifyTime;
     }
 
-    public void setModifyTime(String modifyTime) {
+    public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
     }
 
-    public String getModifyTime1() {
-        return this.modifyTime1;
+    public Date getModifyTime1() {
+        return modifyTime1;
     }
 
-    public void setModifyTime1(String modifyTime1) {
+    public void setModifyTime1(Date modifyTime1) {
         this.modifyTime1 = modifyTime1;
     }
 
-    public String getModifyTime2() {
-        return this.modifyTime2;
+    public Date getModifyTime2() {
+        return modifyTime2;
     }
 
-    public void setModifyTime2(String modifyTime2) {
+    public void setModifyTime2(Date modifyTime2) {
         this.modifyTime2 = modifyTime2;
     }
 
     public String getModifyTimeOperator() {
-        return this.modifyTimeOperator;
+        return modifyTimeOperator;
     }
 
     public void setModifyTimeOperator(String modifyTimeOperator) {
         this.modifyTimeOperator = modifyTimeOperator;
     }
 
-    public String getCreationTime() {
-        return this.creationTime;
+    public Date getCreationTime() {
+        return creationTime;
     }
 
-    public void setCreationTime(String creationTime) {
+    public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
-    public String getCreationTime1() {
-        return this.creationTime1;
+    public Date getCreationTime1() {
+        return creationTime1;
     }
 
-    public void setCreationTime1(String creationTime1) {
+    public void setCreationTime1(Date creationTime1) {
         this.creationTime1 = creationTime1;
     }
 
-    public String getCreationTime2() {
-        return this.creationTime2;
+    public Date getCreationTime2() {
+        return creationTime2;
     }
 
-    public void setCreationTime2(String creationTime2) {
+    public void setCreationTime2(Date creationTime2) {
         this.creationTime2 = creationTime2;
     }
 
     public String getCreationTimeOperator() {
-        return this.creationTimeOperator;
+        return creationTimeOperator;
     }
 
     public void setCreationTimeOperator(String creationTimeOperator) {
@@ -133,7 +140,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getValidFlag() {
-        return this.validFlag;
+        return validFlag;
     }
 
     public void setValidFlag(String validFlag) {
@@ -141,7 +148,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getValidFlagOperator() {
-        return this.validFlagOperator;
+        return validFlagOperator;
     }
 
     public void setValidFlagOperator(String validFlagOperator) {
@@ -149,7 +156,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getCreationUser() {
-        return this.creationUser;
+        return creationUser;
     }
 
     public void setCreationUser(String creationUser) {
@@ -157,7 +164,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getCreationUserOperator() {
-        return this.creationUserOperator;
+        return creationUserOperator;
     }
 
     public void setCreationUserOperator(String creationUserOperator) {
@@ -165,7 +172,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getRelevanceFile() {
-        return this.relevanceFile;
+        return relevanceFile;
     }
 
     public void setRelevanceFile(String relevanceFile) {
@@ -173,7 +180,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getRelevanceFileOperator() {
-        return this.relevanceFileOperator;
+        return relevanceFileOperator;
     }
 
     public void setRelevanceFileOperator(String relevanceFileOperator) {
@@ -181,7 +188,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getOpinionFile() {
-        return this.opinionFile;
+        return opinionFile;
     }
 
     public void setOpinionFile(String opinionFile) {
@@ -189,7 +196,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getOpinionFileOperator() {
-        return this.opinionFileOperator;
+        return opinionFileOperator;
     }
 
     public void setOpinionFileOperator(String opinionFileOperator) {
@@ -197,7 +204,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsFile() {
-        return this.lawsFile;
+        return lawsFile;
     }
 
     public void setLawsFile(String lawsFile) {
@@ -205,7 +212,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsFileOperator() {
-        return this.lawsFileOperator;
+        return lawsFileOperator;
     }
 
     public void setLawsFileOperator(String lawsFileOperator) {
@@ -213,7 +220,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLinkUri() {
-        return this.linkUri;
+        return linkUri;
     }
 
     public void setLinkUri(String linkUri) {
@@ -221,7 +228,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLinkUriOperator() {
-        return this.linkUriOperator;
+        return linkUriOperator;
     }
 
     public void setLinkUriOperator(String linkUriOperator) {
@@ -229,7 +236,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getResponsibleUnit() {
-        return this.responsibleUnit;
+        return responsibleUnit;
     }
 
     public void setResponsibleUnit(String responsibleUnit) {
@@ -237,7 +244,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getResponsibleUnitOperator() {
-        return this.responsibleUnitOperator;
+        return responsibleUnitOperator;
     }
 
     public void setResponsibleUnitOperator(String responsibleUnitOperator) {
@@ -245,7 +252,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getApplyAuth() {
-        return this.applyAuth;
+        return applyAuth;
     }
 
     public void setApplyAuth(String applyAuth) {
@@ -253,7 +260,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getApplyAuthOperator() {
-        return this.applyAuthOperator;
+        return applyAuthOperator;
     }
 
     public void setApplyAuthOperator(String applyAuthOperator) {
@@ -261,7 +268,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getEnergyKind() {
-        return this.energyKind;
+        return energyKind;
     }
 
     public void setEnergyKind(String energyKind) {
@@ -269,7 +276,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getEnergyKindOperator() {
-        return this.energyKindOperator;
+        return energyKindOperator;
     }
 
     public void setEnergyKindOperator(String energyKindOperator) {
@@ -277,7 +284,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getApplyArctic() {
-        return this.applyArctic;
+        return applyArctic;
     }
 
     public void setApplyArctic(String applyArctic) {
@@ -285,7 +292,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getApplyArcticOperator() {
-        return this.applyArcticOperator;
+        return applyArcticOperator;
     }
 
     public void setApplyArcticOperator(String applyArcticOperator) {
@@ -293,7 +300,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getReplaceLawsNum() {
-        return this.replaceLawsNum;
+        return replaceLawsNum;
     }
 
     public void setReplaceLawsNum(String replaceLawsNum) {
@@ -301,71 +308,71 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getReplaceLawsNumOperator() {
-        return this.replaceLawsNumOperator;
+        return replaceLawsNumOperator;
     }
 
     public void setReplaceLawsNumOperator(String replaceLawsNumOperator) {
         this.replaceLawsNumOperator = replaceLawsNumOperator;
     }
 
-    public String getPutTime() {
-        return this.putTime;
+    public Date getPutTime() {
+        return putTime;
     }
 
-    public void setPutTime(String putTime) {
+    public void setPutTime(Date putTime) {
         this.putTime = putTime;
     }
 
-    public String getPutTime1() {
-        return this.putTime1;
+    public Date getPutTime1() {
+        return putTime1;
     }
 
-    public void setPutTime1(String putTime1) {
+    public void setPutTime1(Date putTime1) {
         this.putTime1 = putTime1;
     }
 
-    public String getPutTime2() {
-        return this.putTime2;
+    public Date getPutTime2() {
+        return putTime2;
     }
 
-    public void setPutTime2(String putTime2) {
+    public void setPutTime2(Date putTime2) {
         this.putTime2 = putTime2;
     }
 
     public String getPutTimeOperator() {
-        return this.putTimeOperator;
+        return putTimeOperator;
     }
 
     public void setPutTimeOperator(String putTimeOperator) {
         this.putTimeOperator = putTimeOperator;
     }
 
-    public String getIssueTime() {
-        return this.issueTime;
+    public Date getIssueTime() {
+        return issueTime;
     }
 
-    public void setIssueTime(String issueTime) {
+    public void setIssueTime(Date issueTime) {
         this.issueTime = issueTime;
     }
 
-    public String getIssueTime1() {
-        return this.issueTime1;
+    public Date getIssueTime1() {
+        return issueTime1;
     }
 
-    public void setIssueTime1(String issueTime1) {
+    public void setIssueTime1(Date issueTime1) {
         this.issueTime1 = issueTime1;
     }
 
-    public String getIssueTime2() {
-        return this.issueTime2;
+    public Date getIssueTime2() {
+        return issueTime2;
     }
 
-    public void setIssueTime2(String issueTime2) {
+    public void setIssueTime2(Date issueTime2) {
         this.issueTime2 = issueTime2;
     }
 
     public String getIssueTimeOperator() {
-        return this.issueTimeOperator;
+        return issueTimeOperator;
     }
 
     public void setIssueTimeOperator(String issueTimeOperator) {
@@ -373,7 +380,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsState() {
-        return this.lawsState;
+        return lawsState;
     }
 
     public void setLawsState(String lawsState) {
@@ -381,7 +388,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsStateOperator() {
-        return this.lawsStateOperator;
+        return lawsStateOperator;
     }
 
     public void setLawsStateOperator(String lawsStateOperator) {
@@ -389,7 +396,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getIssueUnit() {
-        return this.issueUnit;
+        return issueUnit;
     }
 
     public void setIssueUnit(String issueUnit) {
@@ -397,7 +404,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getIssueUnitOperator() {
-        return this.issueUnitOperator;
+        return issueUnitOperator;
     }
 
     public void setIssueUnitOperator(String issueUnitOperator) {
@@ -405,7 +412,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsName() {
-        return this.lawsName;
+        return lawsName;
     }
 
     public void setLawsName(String lawsName) {
@@ -413,7 +420,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsNameOperator() {
-        return this.lawsNameOperator;
+        return lawsNameOperator;
     }
 
     public void setLawsNameOperator(String lawsNameOperator) {
@@ -421,7 +428,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsNumber() {
-        return this.lawsNumber;
+        return lawsNumber;
     }
 
     public void setLawsNumber(String lawsNumber) {
@@ -429,7 +436,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsNumberOperator() {
-        return this.lawsNumberOperator;
+        return lawsNumberOperator;
     }
 
     public void setLawsNumberOperator(String lawsNumberOperator) {
@@ -437,7 +444,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsProperty() {
-        return this.lawsProperty;
+        return lawsProperty;
     }
 
     public void setLawsProperty(String lawsProperty) {
@@ -445,7 +452,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsPropertyOperator() {
-        return this.lawsPropertyOperator;
+        return lawsPropertyOperator;
     }
 
     public void setLawsPropertyOperator(String lawsPropertyOperator) {
@@ -453,7 +460,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getCountry() {
-        return this.country;
+        return country;
     }
 
     public void setCountry(String country) {
@@ -461,7 +468,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getCountryOperator() {
-        return this.countryOperator;
+        return countryOperator;
     }
 
     public void setCountryOperator(String countryOperator) {
@@ -469,7 +476,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsType() {
-        return this.lawsType;
+        return lawsType;
     }
 
     public void setLawsType(String lawsType) {
@@ -477,7 +484,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getLawsTypeOperator() {
-        return this.lawsTypeOperator;
+        return lawsTypeOperator;
     }
 
     public void setLawsTypeOperator(String lawsTypeOperator) {
@@ -485,7 +492,7 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(String id) {
@@ -493,11 +500,10 @@ public class SarLawsInfoEOPage extends BasePage {
     }
 
     public String getIdOperator() {
-        return this.idOperator;
+        return idOperator;
     }
 
     public void setIdOperator(String idOperator) {
         this.idOperator = idOperator;
     }
-
 }

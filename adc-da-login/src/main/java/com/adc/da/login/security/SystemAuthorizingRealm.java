@@ -1,9 +1,8 @@
 package com.adc.da.login.security;
 
-import com.adc.da.sys.entity.UserEO;
-import com.adc.da.login.rest.LoginRestController;
 import com.adc.da.login.security.exception.CaptchaException;
 import com.adc.da.login.util.UserUtils;
+import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.service.UserEOService;
 import com.adc.da.util.utils.Encodes;
 import com.adc.da.util.utils.SpringContextHolder;
@@ -22,7 +21,6 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -62,7 +60,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
         //验证码验证
-        doVerifyCode(token);
+//        doVerifyCode(token);
         /** 验证码验证规则 **/
 /*    	if (verifyCodeMode == 2) {
 			doVerifyCode(token);

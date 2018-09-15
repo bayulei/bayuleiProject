@@ -1,11 +1,10 @@
 package com.adc.da.sys.vo;
 
+import com.adc.da.sys.entity.MenuEO;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.adc.da.sys.entity.MenuEO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class RoleVO {
 	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -24,8 +23,6 @@ public class RoleVO {
     //新添字段
     private String oprUser;
 	private String operUserName;
-	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date updateTime;
 
 
 	// 扩展字段
@@ -134,14 +131,6 @@ public class RoleVO {
 
 	public void setOperUserName(String operUserName) {
 		this.operUserName = operUserName;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
 	}
 
 	public List<MenuEO> getMenus() {

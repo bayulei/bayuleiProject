@@ -1,11 +1,12 @@
-<!-- 国外信息库 -->
+<!-- 已收藏的动态 -->
 <template>
- <div id="index"></div>
+ <div id="CollectionDynamics">
+ </div>
 </template>
 
 <script>
 export default {
-  name: 'index',
+  name: 'CollectionDynamics',
   data () {
     return {}
   },
@@ -19,5 +20,5 @@ export default {
 </script>
 
 <style lang="less">
-   #index{}
+   #CollectionDynamics{}
 </style>

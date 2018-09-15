@@ -3,6 +3,8 @@ package com.adc.da.sys.dao;
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.sys.entity.DictionaryEO;
 
+import java.util.List;
+
 public interface DicEODao extends BaseDao<DictionaryEO>{
 	
 	public DictionaryEO getDictionaryEOById(String id);
@@ -14,5 +16,8 @@ public interface DicEODao extends BaseDao<DictionaryEO>{
 	public DictionaryEO getDictionaryEOByDicName(String dictionaryName);
 
 	public void deleteDic(String id);
+
+	//gaoyan
+	public List<DictionaryEO> getDictionaryEO();
 
 }

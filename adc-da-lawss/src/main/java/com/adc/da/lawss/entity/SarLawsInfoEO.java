@@ -42,6 +42,12 @@ public class SarLawsInfoEO extends BaseEntity {
     private String lawsType;
     private String id;
     private String menuId;
+    private String propertyName;
+    private String stateName;
+    private String applyArcticShow;
+    private String energyKindShow;
+    private String applyAuthShow;
+
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -97,6 +103,11 @@ public class SarLawsInfoEO extends BaseEntity {
             case "lawsType": return "laws_type";
             case "id": return "id";
             case "menuId": return "menu_id";
+            case "propertyName": return "propertyName";
+            case "stateName": return "stateName";
+            case "applyArcticShow": return "applyArcticShow";
+            case "energyKindShow": return "energyKindShow";
+            case "applyAuthShow": return "applyAuthShow";
             default: return null;
         }
     }
@@ -155,6 +166,11 @@ public class SarLawsInfoEO extends BaseEntity {
             case "laws_type": return "lawsType";
             case "id": return "id";
             case "menu_id": return "menuId";
+            case "propertyName": return "propertyName";
+            case "stateName": return "stateName";
+            case "applyArcticShow": return "applyArcticShow";
+            case "energyKindShow": return "energyKindShow";
+            case "applyAuthShow": return "applyAuthShow";
             default: return null;
         }
     }
@@ -395,5 +411,45 @@ public class SarLawsInfoEO extends BaseEntity {
 
     public void setMenuId(String menuId) {
         this.menuId = menuId;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    public String getApplyArcticShow() {
+        return applyArcticShow;
+    }
+
+    public void setApplyArcticShow(String applyArcticShow) {
+        this.applyArcticShow = applyArcticShow;
+    }
+
+    public String getEnergyKindShow() {
+        return energyKindShow;
+    }
+
+    public void setEnergyKindShow(String energyKindShow) {
+        this.energyKindShow = energyKindShow;
+    }
+
+    public String getApplyAuthShow() {
+        return applyAuthShow;
+    }
+
+    public void setApplyAuthShow(String applyAuthShow) {
+        this.applyAuthShow = applyAuthShow;
     }
 }
