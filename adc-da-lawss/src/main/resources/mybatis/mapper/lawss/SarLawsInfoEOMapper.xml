@@ -315,7 +315,7 @@
   <!-- 删除记录 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from SAR_LAWS_INFO
-     where id = #{value}
+     where id = #{id}
 
   </delete>
 

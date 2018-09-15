@@ -27,7 +27,7 @@
     </div>
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
-   <!--新增修改模态框-->
+   <!--新增修改查看法规模态框-->
    <full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">
      <div>
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
@@ -90,17 +90,23 @@
          <Row>
            <Col span="8">
              <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.applyArctic"></Input>
+               <Select v-model="SarLawsInfoEO.applyArctic" multiple style="width:200px">
+                 <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.energyKind"></Input>
+               <Select v-model="SarLawsInfoEO.energyKind" multiple style="width:200px">
+                 <Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="适用认证" prop="applyAuth" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.applyAuth"></Input>
+               <Select v-model="SarLawsInfoEO.applyAuth" multiple style="width:200px">
+                 <Option v-for="item in applyAuthOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
          </Row>
@@ -120,7 +126,7 @@
 
      </div>
      <div class="save-laws-btn">
-       <Button type="primary" @click="saveLawsInfo">提交</Button>
+       <Button v-if="saveInfoBtn" type="primary" @click="saveLawsInfo">提交</Button>
        <Button @click="cancelAdd">取消</Button>
      </div>
    </full-modal>
@@ -129,8 +135,104 @@
    <Modal v-model="modal2" title="导入法规信息" @on-ok="importLawsInfo" @on-cancel="cancelAdd">
      <Form ref="lawsInfoImport" :model="lawsInfoImport" :label-width="80">
        <FormItem label="导入文件" prop="fileName" class="laws-info-item">
-         <input type="file" ref="lawsInfoFile" id="lawsInfoFile" @change="lawsInfoFileBeforeUpload">
-         <Button @click="openFile">导入文件</Button>
+         <input type="file" ref="lawsInfoFile" id="lawsInfoFile">
+       </FormItem>
+     </Form>
+   </Modal>
+
+   <!--查看分解单模态框-->
+   <full-modal v-model="showLawsItemsModal" v-if="showLawsItemsModal" ref="showLawsItemsModal">
+     <Form ref="lawsItemsSearch" :model="lawsItemsSearch" class="label-input-form">
+       <Row>
+         <Col span="8">
+           <FormItem label="责任部门" prop="responsibleUnit" class="laws-info-item">
+             <Input v-model="lawsItemsSearch.responsibleUnit"></Input>
+           </FormItem>
+         </Col>
+         <Col span="10">
+           <Button type="primary" icon="ios-search" @click="searchLawsItemsByUnit"></Button>
+           <Button type="primary" @click="openAddItemsModal">新增</Button>
+           <Button type="primary" @click="importItemsModal = true">导入</Button>
+         </Col>
+       </Row>
+     </Form>
+     <div class="content">
+       <loading :loading="loading">数据获取中</loading>
+       <Table border ref="selection" :columns="itemsTableColumn" :data="itemsData"></Table>
+     </div>
+     <pagination :total="itemsTotal" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
+   </full-modal>
+
+   <!--新增修改查看法规条目模态框-->
+   <full-modal v-model="addLawsItemsModal" v-if="addLawsItemsModal" ref="addLawsItemsModal">
+     <div>
+       <Form ref="SarLawsItemsEO" :model="SarLawsItemsEO" :rules="addLawsItemsFormRules" class="label-input-form">
+         <input v-model="SarLawsItemsEO.id" v-show="false">
+         <input v-model="SarLawsItemsEO.lawsId" v-show="false">
+         <Row>
+           <Col span="8">
+             <FormItem label="条目号" prop="itemsNum" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.itemsNum"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="条目名称" prop="itemsName" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.itemsName"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="涉及零部件" prop="parts" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.parts"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+             <FormItem label="特殊生效日期" prop="tackTime" class="laws-info-item">
+               <DatePicker type="date" v-model="SarLawsItemsEO.tackTime" format="yyyy-MM-dd"></DatePicker>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
+               <Select v-model="SarLawsItemsEO.applyArctic" multiple style="width:200px">
+                 <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
+               <Select v-model="SarLawsItemsEO.energyKind" multiple style="width:200px">
+                 <Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
+             </FormItem>
+           </Col>
+         </Row>
+         <Row>
+           <Col span="8">
+             <FormItem label="责任部门" prop="responsibleUnit" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.responsibleUnit"></Input>
+             </FormItem>
+           </Col>
+           <Col span="8">
+             <FormItem label="备注" prop="remarks" class="laws-info-item">
+               <Input v-model="SarLawsItemsEO.remarks"></Input>
+             </FormItem>
+           </Col>
+         </Row>
+       </Form>
+
+     </div>
+     <div class="save-laws-btn">
+       <Button v-if="saveLawsItemsBtn" type="primary" @click="saveLawsItems">提交</Button>
+       <Button @click="cancelAddItems">取消</Button>
+     </div>
+   </full-modal>
+
+   <!--导入模态框-->
+   <Modal v-model="importItemsModal" title="导入法规条目" @on-ok="importLawsItems" @on-cancel="cancelAdd">
+     <Form ref="lawsItemsImport" :model="lawsItemsImport" :label-width="80">
+       <FormItem label="导入文件" prop="fileName" class="laws-info-item">
+         <input type="file" ref="lawsItemsFile" id="lawsItemsFile">
        </FormItem>
      </Form>
    </Modal>
@@ -138,290 +240,7 @@
    </div>
 </template>
 
-<script>
-export default {
-  name: 'DomesticRegulationsDatabase',
-  data () {
-    return {
-      modal2: false,
-      showLawsInfoModal: false,
-      lawsInfo: {
-        lawsNum: '',
-        lawsName: '',
-        issueTime: ''
-      },
-      SarLawsInfoEO: {
-        editLawsId: '',
-        country: '中国',
-        lawsProperty: '',
-        lawsNumber: '',
-        lawsName: '',
-        issueUnit: '',
-        lawsState: '',
-        issueTime: '',
-        putTime: '',
-        replaceLawsNum: '',
-        applyArctic: '',
-        energyKind: '',
-        applyAuth: '',
-        responsibleUnit: '',
-        linkUri: ''
-      },
-      total: 0,
-      page: 1,
-      rows: 10,
-      loading: false,
-      lawsInfoImport: {},
-      tableColumn: [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center'
-        },
-        {
-          title: '文件号',
-          key: 'lawsNumber'
-        },
-        {
-          title: '文件性质',
-          key: 'propertyName'
-        },
-        {
-          title: '文件名称',
-          key: 'lawsName'
-        },
-        {
-          title: '发布单位',
-          key: 'issueUnit'
-        },
-        {
-          title: '文件状态',
-          key: 'stateName'
-        },
-        {
-          title: '发布日期',
-          key: 'issueTime'
-        },
-        {
-          title: '实施日期',
-          key: 'putTime'
-        },
-        {
-          title: '适用车型',
-          key: 'applyArctic'
-        },
-        {
-          title: '能源种类',
-          key: 'energyKind'
-        },
-        {
-          title: '适用认证',
-          key: 'applyAuth'
-        },
-        {
-          title: '修改时间',
-          key: 'modifyTime'
-        },
-        {
-          title: '操作',
-          key: 'action',
-          width: 150,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.edit(params.row)
-                  }
-                }
-              }, '编辑'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.remove(params.row.id)
-                  }
-                }
-              }, '删除')
-            ])
-          }
-        }
-      ],
-      data: [],
-      lawsPropertyOptions: '',
-      lawsStatusOptions: '',
-      lawsInfoRules: {},
-      lawsInfoFormRules: {
-        lawsName: [
-          { required: true, message: '文件名称不能为空', trigger: 'blur' }
-        ],
-        lawsState: [
-          { required: true, message: '文件状态不能为空', trigger: 'blur' }
-        ],
-        issueTime: [
-          { required: true, message: '发布日期不能为空', trigger: 'blur' }
-        ],
-        putTime: [
-          { required: true, message: '实施日期不能为空', trigger: 'blur' }
-        ]
-
-      }
-    }
-  },
-  methods: {
-    // 分页查询
-    searchLawsInfo () {
-      let SarLawsInfoEOPage = this.lawsInfo
-      SarLawsInfoEOPage.page = this.page
-      SarLawsInfoEOPage.pageSize = this.rows
-      if (SarLawsInfoEOPage.issueTime != null && SarLawsInfoEOPage.issueTime !== '') {
-        SarLawsInfoEOPage.issueTime = this.$dateFormat(SarLawsInfoEOPage.issueTime, 'yyyy-MM-dd')
-      }
-      this.$http.get('lawss/sarLawsInfo/page', SarLawsInfoEOPage, {
-        _this: this,
-        loading: 'loading'
-      }, res => {
-        this.data = res.data.list
-        this.total = res.data.count
-      }, e => {
-
-      })
-    },
-    pageChange (page) {
-      this.page = page
-      this.searchLawsInfo()
-    },
-    pageSizeChange (pageSize) {
-      this.rows = pageSize
-      this.searchLawsInfo()
-    },
-    // 打开新增模态框
-    openLawsModal () {
-      this.showLawsInfoModal = true
-    },
-    // 点击编辑按钮触发
-    edit (row) {
-      this.showLawsInfoModal = true
-      this.SarLawsInfoEO = row
-      this.SarLawsInfoEO.editLawsId = row.id
-    },
-    // 提交新增/修改
-    saveLawsInfo () {
-      this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
-      this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
-      if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
-        this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
-          _this: this
-        }, res => {
-          this.showLawsInfoModal = false
-          this.searchLawsInfo()
-        }, e => {
-
-        })
-      } else {
-        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', this.SarLawsInfoEO, {
-          _this: this
-        }, res => {
-          this.showLawsInfoModal = false
-          this.searchLawsInfo()
-        }, e => {})
-      }
-    },
-    cancelAdd () {
-      this.$refs.showLawsInfoModal.toggleClose()
-    },
-    // 删除
-    remove (id) {
-      this.$Modal.confirm({
-        title: '确认删除',
-        content: '<p>确认删除该条数据？</p>',
-        onOk: () => {
-          this.$http.put('lawss/sarLawsInfo/deleteLawsInfos', {
-            id: id
-          }, {
-            _this: this
-          }, res => {
-            this.searchLawsInfo()
-          }, e => {
-          })
-        },
-        onCancel: () => {
-        }
-      })
-    },
-    openFile () {
-      $('#lawsInfoFile').click()
-    },
-    lawsInfoFileBeforeUpload (val) {
-      let file = this.$refs.lawsInfoFile.files[0].name
-      console.log(file)
-    },
-    // 导入
-    importLawsInfo () {
-      let file = this.$refs.lawsInfoFile.files[0]
-      this.$http.post('lawss/sarLawsInfo/importLawsInfos', {
-        file: file
-      }, {
-        _this: this
-      }, res => {
-        this.searchLawsInfo()
-      }, e => {
-
-      })
-    },
-    // 加载数据字典
-    loadDicTypeDatas1 () {
-      this.$http.get('sys/dictype/getDicTypeByDicCode', {
-        dicCode: 'SARPROPERTY'
-      }, {
-        _this: this
-      }, res => {
-        if (res.data != null) {
-          this.lawsPropertyOptions = res.data
-        }
-      }, e => {
-
-      })
-    },
-    loadDicTypeDatas2 () {
-      this.$http.get('sys/dictype/getDicTypeByDicCode', {
-        dicCode: 'STANDSTATE'
-      }, {
-        _this: this
-      }, res => {
-        if (res.data != null) {
-          this.lawsStatusOptions = res.data
-        }
-      }, e => {
-      })
-    }
-  },
-  components: {},
-  props: {},
-  computed: {},
-  watch: {
-    page (newVal, oldVal) {
-      //
-    }
-  },
-  mounted () {
-    this.searchLawsInfo()
-    this.loadDicTypeDatas1()
-    this.loadDicTypeDatas2()
-  }
-}
-</script>
+<script src="./js/DomesticRegulationsDatabase.js"></script>
 
 <style lang="less">
   .personal-data{

@@ -30,17 +30,23 @@
   background: @containerColor;
   .sub-container{
     top: 1.6rem;
-    width: calc(~'100% - 6.4rem');
+    width: 82.3%;
     float: right;
     height: calc(~'100% - 0.2rem');
-    margin: 0 0.2rem 0.2rem 0.2rem;
-    border: 1px solid #CCCDCE;
+    margin: 0 0.7% 0 0.07%;
+    border: 1px solid #EDEDED;
     background: @subContainerHeaderColor;
+    transition: all .3s linear;
+    &:hover{
+      .box-shadow;
+    }
     &>div{
       width: 100%;
       height: 100%;
       position: relative;
       overflow: hidden;
+      background: #FFF;
+      padding: 0.2rem;
       &>.content{
         width: 100%;
         height: calc(~'100% - 120px');
@@ -210,6 +216,88 @@
 .ivu-input-group-prepend{
   background: #F4F8FB;
 }
+.ivu-modal-confirm{
+  .ivu-modal-confirm-footer{
+    display: none;
+  }
+}
+
+// 右边区域是树形结构和内容
+.tree{
+  flex: 0 0 16%;
+  height: 100%;
+  border-right: 1px solid #EDEDED;
+}
+.tree-right{
+  flex: 0 0 calc(~'84% - 1px');
+  height: 100%;
+  position: relative;
+  padding: 0.2rem;
+  background: rgba(230, 230, 230, 0.1);
+  .table-tools-bar{
+    .ivu-divider-horizontal{
+      margin: 0.2rem 0 0 0 !important;
+    }
+  }
+  .content{
+    width: 100%;
+    height: calc(~'100% - 100px');
+    overflow-y: auto;
+    .action-bar{
+      width: 100%;
+      height: 0.8rem;
+      display: flex;
+      display: -ms-flex;
+      align-items: center;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      padding: 0 0.4rem;
+      .ivu-btn{
+        margin-right: 5px;
+        padding: 2px 18px;
+      }
+    }
+    .content-detail{
+      width: 100%;
+      height: calc(~'100% - 40px');
+      overflow-y: auto;
+      padding: 0.1rem;
+      .card{
+        width: 100%;
+        height: 100px;
+        border: 1px solid #EEE;
+        margin-bottom: 10px;
+        transition: all .2s ease-in-out;
+        cursor: pointer;
+        padding: 5px 15px;
+        background: #FFF;
+        overflow: hidden;
+        border-radius: 5px;
+        &:hover{
+          box-shadow: 0px 1px 13px 0px #DDD;
+        }
+        &.selected{
+          border: 1px solid @baseColor;
+          animation: selectedBoxShadow 2s infinite alternate linear;
+        }
+        @keyframes selectedBoxShadow {
+          0% {
+            box-shadow: -1px -1px 5px 0px #5596CC;
+          }
+          50% {
+            box-shadow: -1px -1px 5px 0px #DDD;
+          }
+          100% {
+            box-shadow: -1px -1px 5px 0px #FFF;
+          }
+        }
+      }
+    }
+  }
+}
+
 //滚动条美化
 ::-webkit-scrollbar {
   width: 14px;

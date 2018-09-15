@@ -64,7 +64,7 @@ export default {
     background: #FFF;
     padding: 0.2rem 0.3rem;
     .container{
-      margin: 2rem 7rem;
+      margin: 1rem 7rem;
       .btn-group{
         float: right;
         margin:1rem 4rem;

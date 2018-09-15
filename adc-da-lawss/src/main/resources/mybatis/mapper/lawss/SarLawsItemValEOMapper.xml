@@ -171,5 +171,11 @@
        ${pager.orderCondition}
     </if>
   </select>
+    <!-- 删除记录 -->
+    <delete id="deleteItemsValById" parameterType="java.lang.String">
+        delete from SAR_LAWS_ITEM_VAL
+        where id = #{id}
+    </delete>
+
 
 </mapper>

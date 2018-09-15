@@ -46,7 +46,7 @@ public class StandardApprovalController {
 
     /**
      *  点击保存按钮，保存流程信息
-     * @MethodName:startStandardApprovalProcess
+     * @MethodName:saveProcessInfo
      * @author: yuzhong
      * @param:[vehicleApprovalEO,userId]
      * @return:void
@@ -57,8 +57,8 @@ public class StandardApprovalController {
     public ResponseMessage<String> saveProcessInfo(StandardApprovalVO standardApprovalVO, String userId,String processInstanceId){
         //启动流程（为了把信息放入流程变量中）
         try{
-            ProcessInstance processInstance = standardApprovalService.startBuyApprovalProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
-            return Result.success(processInstance.getId());
+            processInstanceId = standardApprovalService.startProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
+            return Result.success(processInstanceId);
         }catch(Exception e){
             e.printStackTrace();
             return Result.error("保存失败");
@@ -77,10 +77,10 @@ public class StandardApprovalController {
     @PostMapping ("/startApproval")
     public ResponseMessage<String> startApproval(StandardApprovalVO standardApprovalVO, String userId,String processInstanceId,String comment){
         try{
-            ProcessInstance processInstance = standardApprovalService.startBuyApprovalProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
+            processInstanceId = standardApprovalService.startProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
             //完成第一步的发起审批
-            standardApprovalService.completeFirstApproval(standardApprovalVO,processInstance.getId(),userId,comment);
-            return Result.success(processInstance.getId());
+            standardApprovalService.completeFirstApproval(standardApprovalVO,processInstanceId,userId,comment);
+            return Result.success(processInstanceId);
         }catch(Exception e){
             e.printStackTrace();
             return Result.error("审批失败");
@@ -124,17 +124,17 @@ public class StandardApprovalController {
     }
 
     /**
-     * 查看任务详情
+     * 查看审批历史
      * @MethodName:getTaskInfo
-     * @author: yuzhong
-     * @param:[taskId]
+     * @author:yuzhong
+     * @param:[nowUserId,processInstanceId]
      * @return:Map
      * date: 2018年9月6日 19:07:04
      */
-    @ApiOperation(value = "查看任务详情")
+    @ApiOperation(value = "查看审批历史")
     @PostMapping ("/getTaskInfo")
-    public ResponseMessage<Map<String,Object>> getTaskInfo(String taskId,String processInstanceId) {
-        Map<String,Object> map = standardApprovalService.getTaskInfo(taskId,processInstanceId);
+    public ResponseMessage<Map<String,Object>> getTaskInfo(String nowUserId,String processInstanceId) {
+        Map<String,Object> map = standardApprovalService.getTaskInfo(nowUserId,processInstanceId);
         return Result.success(map);
     }
 }

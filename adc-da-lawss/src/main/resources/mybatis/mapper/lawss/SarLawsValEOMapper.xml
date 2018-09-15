@@ -141,7 +141,7 @@
   <!-- 删除记录 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from SAR_LAWS_VAL
-     where id = #{value}
+     where id = #{id}
 
   </delete>
 
@@ -179,5 +179,11 @@
         <include refid="Base_Where_Clause"/>
 
     </select>
+
+    <!-- 删除记录 -->
+    <delete id="deleteByValId" parameterType="java.lang.String">
+        delete from SAR_LAWS_VAL
+        where id = #{id}
+    </delete>
 
 </mapper>

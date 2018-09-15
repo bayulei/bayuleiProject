@@ -3,13 +3,14 @@ package com.adc.da.activiti.service;
 import com.adc.da.activiti.common.FlowProcessUtil;
 import com.adc.da.activiti.entity.BusExecuProcessEO;
 import com.adc.da.activiti.entity.BusProcessEO;
-import com.adc.da.activiti.vo.BuyApprovalVO;
 import com.adc.da.activiti.page.BusExecuProcessEOPage;
+import com.adc.da.activiti.vo.CorrigendaApprovalVO;
 import com.adc.da.sys.util.UUIDUtils;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.*;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
@@ -32,11 +33,11 @@ import java.util.*;
  * <b>日期：</b> 2018-08-31 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
-@Service("buyApprovalService")
+@Service("corrigendaApprovalService")
 @Transactional(value = "transactionManager", readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
-public class BuyApprovalService {
+public class CorrigendaApprovalService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BuyApprovalService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CorrigendaApprovalService.class);
 
     @Autowired
     private HistoryService historyService;
@@ -66,21 +67,21 @@ public class BuyApprovalService {
      * 启动流程
      *
      * @MethodName:startProcess
-     * @author: yuzhong
-     * @param:[buyApprovalVO,userId,processDefinitionKey,processInstanceId]
-     * @return:String
-     * date: 2018年9月4日 10:24:08
+     * @author:yuzhong
+     * @param:[corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId]
+     * @return:void date: 2018年9月4日 10:24:08
      */
-    public String startProcess(BuyApprovalVO buyApprovalVO,
+    public String startProcess(CorrigendaApprovalVO corrigendaApprovalVO,
             String userId, String processDefinitionKey, String processInstanceId) throws Exception {
-        //如果有流程Id，那么修改流程变量，不要重复启动流程
+        //如果有流程Id，那么就删除这个流程，重新赋值流程变量再启动流程
         if (!StringUtils.isEmpty(processInstanceId)) {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("processNumber", buyApprovalVO.getProcessNumber());
-            map.put("processType", buyApprovalVO.getProcessType());
-            map.put("processDescription", buyApprovalVO.getProcessDescription());
+            map.put("processNumber", corrigendaApprovalVO.getProcessNumber());
+            map.put("processType", corrigendaApprovalVO.getProcessType());
+            map.put("processDescription", corrigendaApprovalVO.getProcessDescription());
             map.put("applicat", userId);
-            map.put("money", buyApprovalVO.getMoney());
+            map.put("fileList",corrigendaApprovalVO.getFileIdList());
+            map.put("corrigendaApprovalVOList",corrigendaApprovalVO.getCorrigendaApprovalList());
             runtimeService.setVariables(processInstanceId,map);
             //往流程业务表修改数据
             BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
@@ -94,8 +95,8 @@ public class BuyApprovalService {
                 busExecuProcessEOService.updateByPrimaryKeySelective(busExecuProcessEO);
                 //往流程业务表修改数据
                 BusProcessEO busProcessEO = new BusProcessEO();
-                busProcessEO.setProcessNumber(buyApprovalVO.getProcessNumber());
-                busProcessEO.setProcessType(buyApprovalVO.getProcessType());
+                busProcessEO.setProcessNumber(corrigendaApprovalVO.getProcessNumber());
+                busProcessEO.setProcessType(corrigendaApprovalVO.getProcessType());
                 busProcessEO.setCreateUserId(userId);
                 busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
                 //1代表未完成
@@ -107,11 +108,12 @@ public class BuyApprovalService {
             identityService.setAuthenticatedUserId(userId);
             //设置此流程的流程变量
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("processNumber", buyApprovalVO.getProcessNumber());
-            map.put("processType", buyApprovalVO.getProcessType());
-            map.put("processDescription", buyApprovalVO.getProcessDescription());
+            map.put("processNumber", corrigendaApprovalVO.getProcessNumber());
+            map.put("processType", corrigendaApprovalVO.getProcessType());
+            map.put("processDescription", corrigendaApprovalVO.getProcessDescription());
             map.put("applicat", userId);
-            map.put("money", buyApprovalVO.getMoney());
+            map.put("fileList",corrigendaApprovalVO.getFileIdList());
+            map.put("corrigendaApprovalVOList", corrigendaApprovalVO.getCorrigendaApprovalList());
             //启动流程
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, map);
 
@@ -125,8 +127,8 @@ public class BuyApprovalService {
 
             //往流程业务表添加数据
             BusProcessEO busProcessEO = new BusProcessEO();
-            busProcessEO.setProcessNumber(buyApprovalVO.getProcessNumber());
-            busProcessEO.setProcessType(buyApprovalVO.getProcessType());
+            busProcessEO.setProcessNumber(corrigendaApprovalVO.getProcessNumber());
+            busProcessEO.setProcessType(corrigendaApprovalVO.getProcessType());
             busProcessEO.setCreateUserId(userId);
             String busprocessId = UUIDUtils.randomUUID20();
             busProcessEO.setId(busprocessId);
@@ -148,8 +150,8 @@ public class BuyApprovalService {
      * 完成审批
      *
      * @MethodName:completeApproval
-     * @author: yuzhong
-     * @param:[processInstanceId,nowUserId]
+     * @author:yuzhong
+     * @param:[processInstanceId,nowUserId,comment]
      * @return:String date: 2018年9月5日 16:40:26
      */
     public String completeApproval(String processInstanceId, String nowUserId, String comment) throws Exception {
@@ -167,7 +169,6 @@ public class BuyApprovalService {
 
         if(!StringUtils.isEmpty(task.getOwner())){
             taskService.resolveTask(task.getId());
-
         }
 
         //将提交申请第一步任务走完 即向后执行一步
@@ -178,8 +179,19 @@ public class BuyApprovalService {
                 .processInstanceId(processInstanceId)
                 .singleResult();
         if (task2 != null) {
-            //设置下一步的代办人
-            taskService.setAssignee(task2.getId(), "下一个人");
+            String taskDefKey = task2.getTaskDefinitionKey();
+            //如果是最后一步标准工程师接收，那么审批人要指定为标准工程师
+            if(taskDefKey.equals("usertask6")){
+                List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId)
+                        .taskDefinitionKey("usertask2").orderByTaskCreateTime().desc().list();
+                if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+                    taskService.setAssignee(task2.getId(),historicTaskInstanceList.get(0).getAssignee());
+                }
+            }else{
+                //设置下一步的代办人
+                taskService.setAssignee(task2.getId(), "下一个人");
+            }
+
             //修改业务表的上一操作人
             BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
             busExecuProcessEOPage.setProcInstId(processInstanceId);
@@ -213,7 +225,7 @@ public class BuyApprovalService {
      * 查看任务详情
      *
      * @MethodName:getTaskInfo
-     * @author: yuzhong
+     * @author:yuzhong
      * @param:[taskId]
      * @return:Map
      * date: 2018年9月5日 16:40:26
@@ -268,7 +280,7 @@ public class BuyApprovalService {
      * @author:yuzhong
      * @param:[processInstanceId,comment]
      * @return:void
-     * date:2018年9月13日 09:29:10
+     * date:2018年9月14日 09:29:10
      */
     public String reject(String processInstanceId,String nowUserId,String comment) throws Exception {
         String message = "";
@@ -277,14 +289,20 @@ public class BuyApprovalService {
         String nowTaskKey = taskEntity.getTaskDefinitionKey();
         //当前任务key
         switch (nowTaskKey){
-            case "usertask2":
-                destTaskKey = "usertask1";
-                break;
-            case "usertask3":
-                destTaskKey = "usertask2";
-                break;
-            default:
-                message = "无需驳回";
+        case "usertask2":
+            destTaskKey = "usertask1";
+            break;
+        case "usertask3":
+            destTaskKey = "usertask1";
+            break;
+        case "usertask4":
+            destTaskKey = "usertask3";
+            break;
+        case "usertask5":
+            destTaskKey = "usertask4";
+            break;
+        default:
+            message = "无需驳回";
         }
         if(message.equals("无需驳回")){
             return message;

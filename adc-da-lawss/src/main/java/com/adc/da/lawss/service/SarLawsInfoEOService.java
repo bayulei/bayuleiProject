@@ -80,18 +80,111 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
                 sarLawsMenuEODao.insertSelective(sarLawsMenuEO);
             }
 
-            SarLawsValEO sarLawsValEO = new SarLawsValEO();
-            sarLawsValEO.setId(UUID.randomUUID(20));
-            sarLawsValEO.setLawsId(infoId);
-            sarLawsValEO.setValidFlag(0);
-            sarLawsValEO.setCreationTime(new Date());
-            sarLawsValEO.setModifyTime(new Date());
             //向法规关联表添加数据
-            sarLawsValEODao.insertSelective(sarLawsValEO);
+            insertLawsVal(sarLawsInfoEO,infoId);
+
             return Result.success("0","新增成功",sarLawsInfoEO);
         } else {
             return Result.error("新增失败");
         }
+    }
+
+    /**
+     * @Author yangxuenan
+     * @Description 向法规关联表添加数据
+     * Date 2018/9/13 16:17
+     * @Param [sarLawsInfoEO, infoId]
+     * @return void
+     **/
+    public void insertLawsVal(SarLawsInfoEO sarLawsInfoEO,String infoId){
+        //向关联表中添加适用车型数据
+        String applyArctics = sarLawsInfoEO.getApplyArctic();
+        if(StringUtils.isNotEmpty(applyArctics)){
+            String[] applyArctic = applyArctics.split(",");
+            for(int a=0;a<applyArctic.length;a++){
+                SarLawsValEO sarLawsValEO = new SarLawsValEO();
+                sarLawsValEO.setId(UUID.randomUUID(20));
+                sarLawsValEO.setLawsId(infoId);
+                sarLawsValEO.setPropertyType("PRODUCTTYPE");
+                sarLawsValEO.setPropertyVal(applyArctic[a]);
+                sarLawsValEO.setValidFlag(0);
+                sarLawsValEO.setCreationTime(new Date());
+                sarLawsValEO.setModifyTime(new Date());
+                //向法规关联表添加数据
+                sarLawsValEODao.insertSelective(sarLawsValEO);
+            }
+        }
+        //向关联表中添加能源种类数据
+        String energyKinds = sarLawsInfoEO.getEnergyKind();
+        if(StringUtils.isNotEmpty(energyKinds)){
+            String[] energyKind = energyKinds.split(",");
+            for(int e=0;e<energyKind.length;e++){
+                SarLawsValEO sarLawsValEO = new SarLawsValEO();
+                sarLawsValEO.setId(UUID.randomUUID(20));
+                sarLawsValEO.setLawsId(infoId);
+                sarLawsValEO.setPropertyType("ENERGYTYPES");
+                sarLawsValEO.setPropertyVal(energyKind[e]);
+                sarLawsValEO.setValidFlag(0);
+                sarLawsValEO.setCreationTime(new Date());
+                sarLawsValEO.setModifyTime(new Date());
+                //向法规关联表添加数据
+                sarLawsValEODao.insertSelective(sarLawsValEO);
+            }
+        }
+        //向关联表中添加适用认证数据
+        String applyAuths = sarLawsInfoEO.getApplyAuth();
+        if(StringUtils.isNotEmpty(applyAuths)){
+            String[] applyAuth = applyAuths.split(",");
+            for(int p=0;p<applyAuth.length;p++){
+                SarLawsValEO sarLawsValEO = new SarLawsValEO();
+                sarLawsValEO.setId(UUID.randomUUID(20));
+                sarLawsValEO.setLawsId(infoId);
+                sarLawsValEO.setPropertyType("ENERGYTYPES");
+                sarLawsValEO.setPropertyVal(applyAuth[p]);
+                sarLawsValEO.setValidFlag(0);
+                sarLawsValEO.setCreationTime(new Date());
+                sarLawsValEO.setModifyTime(new Date());
+                //向法规关联表添加数据
+                sarLawsValEODao.insertSelective(sarLawsValEO);
+            }
+        }
+    }
+
+    /**
+     * @Author yangxuenan
+     * @Description 修改法规信息及关联表
+     * Date 2018/9/13 16:25
+     * @Param [sarLawsInfoEO]
+     * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.SarLawsInfoEO>
+     **/
+    public ResponseMessage<SarLawsInfoEO> updateLawsInfo(SarLawsInfoEO sarLawsInfoEO) throws Exception {
+        //修改info表信息
+        int countUp = dao.updateByPrimaryKeySelective(sarLawsInfoEO);
+        if(countUp > 0){
+            String infoId = sarLawsInfoEO.getId();
+            SarLawsValEOPage sarLawsValEOPage = new SarLawsValEOPage();
+            sarLawsValEOPage.setLawsId(infoId);
+            sarLawsValEOPage.setValidFlag("0");
+            List<SarLawsValEO> listLawsVal = sarLawsValEODao.selectByLawsVal(sarLawsValEOPage);
+            //判断法规关联表是否包含该条法规
+            if(listLawsVal != null){
+                if(!listLawsVal.isEmpty()){
+                    //法规关联表修改有效标识（删除旧关联表信息）
+                    for(int i=0;i<listLawsVal.size();i++){
+                        String lawsValId = listLawsVal.get(i).getId();
+                        sarLawsValEODao.deleteByValId(lawsValId);
+                    }
+                }
+            }
+
+            //添加新的关联表信息
+            insertLawsVal(sarLawsInfoEO,infoId);
+
+            return Result.success("0","修改成功",sarLawsInfoEO);
+        } else {
+            return Result.error("修改失败");
+        }
+
     }
 
     /**
@@ -113,17 +206,19 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             sarLawsMenuEOpage.setValidFlag("0");
             List<SarLawsMenuEO> listLawsMenu =  sarLawsMenuEODao.selectByLawsInfo(sarLawsMenuEOpage);
             //判断法规目录表是否包含该条法规
-            if(!listLawsMenu.isEmpty()){
-                for(int j=0;j<listLawsMenu.size();j++){
-                    String lawsMenuId = listLawsMenu.get(j).getId();
-                    SarLawsMenuEO sarLawsMenuEO = new SarLawsMenuEO();
-                    sarLawsMenuEO.setId(lawsMenuId);
-                    sarLawsMenuEO.setLawsId(infoId);
-                    sarLawsMenuEO.setValidFlag(0);
-                    //法规目录关联表修改有效标识
-                    sarLawsMenuEODao.updateByPrimaryKeySelective(sarLawsMenuEO);
-                }
+            if(listLawsMenu != null) {
+                if (!listLawsMenu.isEmpty()) {
+                    for (int j = 0; j < listLawsMenu.size(); j++) {
+                        String lawsMenuId = listLawsMenu.get(j).getId();
+                        SarLawsMenuEO sarLawsMenuEO = new SarLawsMenuEO();
+                        sarLawsMenuEO.setId(lawsMenuId);
+                        sarLawsMenuEO.setLawsId(infoId);
+                        sarLawsMenuEO.setValidFlag(0);
+                        //法规目录关联表修改有效标识
+                        sarLawsMenuEODao.updateByPrimaryKeySelective(sarLawsMenuEO);
+                    }
 
+                }
             }
 
             SarLawsValEOPage sarLawsValEOPage = new SarLawsValEOPage();
@@ -131,17 +226,19 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             sarLawsValEOPage.setValidFlag("0");
             List<SarLawsValEO> listLawsVal = sarLawsValEODao.selectByLawsVal(sarLawsValEOPage);
             //判断法规关联表是否包含该条法规
-            if(!listLawsVal.isEmpty()){
-                //法规关联表修改有效标识
-                for(int i=0;i<listLawsVal.size();i++){
-                    String lawsValId = listLawsVal.get(i).getId();
-                    SarLawsValEO sarLawsValEO = new SarLawsValEO();
-                    sarLawsValEO.setId(lawsValId);
-                    sarLawsValEO.setLawsId(infoId);
-                    sarLawsValEO.setValidFlag(1);
-                    sarLawsValEODao.updateByPrimaryKeySelective(sarLawsValEO);
-                }
+            if(listLawsVal != null) {
+                if (!listLawsVal.isEmpty()) {
+                    //法规关联表修改有效标识
+                    for (int i = 0; i < listLawsVal.size(); i++) {
+                        String lawsValId = listLawsVal.get(i).getId();
+                        SarLawsValEO sarLawsValEO = new SarLawsValEO();
+                        sarLawsValEO.setId(lawsValId);
+                        sarLawsValEO.setLawsId(infoId);
+                        sarLawsValEO.setValidFlag(1);
+                        sarLawsValEODao.updateByPrimaryKeySelective(sarLawsValEO);
+                    }
 
+                }
             }
 
             return Result.success("0","删除成功",sarLawsInfoEO);

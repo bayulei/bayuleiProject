@@ -3,7 +3,7 @@ package com.adc.da.activiti.vo;
 import java.io.Serializable;
 import java.util.List;
 
-public class StandardApprovalVO extends ApprovalProcessVO implements Serializable {
+public class CorrigendaApprovalVO extends ApprovalProcessVO implements Serializable {
 
 
     private static final long serialVersionUID = 3362990175004982375L;
@@ -13,10 +13,7 @@ public class StandardApprovalVO extends ApprovalProcessVO implements Serializabl
      */
     private List<String> fileIdList;
 
-    /**
-     *  分发的接受人（所有编制部门标准化员）
-     */
-    private List<String> assignerUserList;
+    private List<CorrigendaApprovalListVO> corrigendaApprovalList;
 
     public List<String> getFileIdList() {
         return fileIdList;
@@ -26,12 +23,12 @@ public class StandardApprovalVO extends ApprovalProcessVO implements Serializabl
         this.fileIdList = fileIdList;
     }
 
-    public List<String> getAssignerUserList() {
-        return assignerUserList;
+    public List<CorrigendaApprovalListVO> getCorrigendaApprovalList() {
+        return corrigendaApprovalList;
     }
 
-    public void setAssignerUserList(List<String> assignerUserList) {
-        this.assignerUserList = assignerUserList;
+    public void setCorrigendaApprovalList(List<CorrigendaApprovalListVO> corrigendaApprovalList) {
+        this.corrigendaApprovalList = corrigendaApprovalList;
     }
 
     public static long getSerialVersionUID() {
