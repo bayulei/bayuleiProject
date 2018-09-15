@@ -6,6 +6,7 @@ import com.adc.da.lawss.entity.SarStandItemValEO;
 import com.adc.da.lawss.page.SarStandItemsEOPage;
 import com.adc.da.lawss.vo.SarStandItemsVO;
 import com.adc.da.sys.constant.ValueStateEnum;
+import com.adc.da.sys.util.UUIDUtils;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import com.adc.da.util.utils.UUID;
@@ -60,32 +61,6 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
         //page正常情况下只有标准ID和责任部门两个查询条件
         List<SarStandItemsVO> list = dao.querySarStandItemsList(page);
         //涉及到多选的条件： 适用车型：APPLY_ARCTIC， 能源种类：ENERGY_KIND
-        for(SarStandItemsVO sarStandItemsVO: list){
-            if(StringUtils.isNotEmpty(sarStandItemsVO.getApplyArctic())){
-                String[] applyarr = sarStandItemsVO.getApplyArctic().trim().split(",");
-                List<Map<String,Object>>  applylist = new ArrayList<>();
-                for(String applya:applyarr){
-                    Map<String,Object> applyamap = new HashMap<>();
-                    applyamap.put("id",applya);
-                    //此处空的双引号中需要添加查询语句中查到的数据
-                    applyamap.put("text","");
-                    applylist.add(applyamap);
-                }
-                sarStandItemsVO.setApplyArcticlist(applylist);
-            }
-            if(StringUtils.isNotEmpty(sarStandItemsVO.getEnergyKind())){
-                String[] energyarr = sarStandItemsVO.getEnergyKind().trim().split(",");
-                List<Map<String,Object>>  energylist = new ArrayList<>();
-                for(String energy:energyarr){
-                    Map<String,Object> energymap = new HashMap<>();
-                    energymap.put("id",energy);
-                    //此处空的双引号中需要添加查询语句中查到的数据
-                    energymap.put("text","");
-                    energylist.add(energymap);
-                }
-                sarStandItemsVO.setEnergyKindlist(energylist);
-            }
-        }
         return  list;
     }
 
@@ -100,6 +75,8 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
         sarStandItemsEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
         sarStandItemsEO.setCreationTime(new Date());
         sarStandItemsEO.setModifyTime(new Date());
+        sarStandItemsEO.setCreationUser("gaoyan");
+        sarStandItemsEO.setId(UUIDUtils.randomUUID20());
         int resultint = dao.insertSelective(sarStandItemsEO);
         if(resultint==1){
             //标准关联条目表里插入数据
@@ -112,7 +89,7 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
             if(StringUtils.isNotEmpty(sarStandItemsEO.getApplyArctic())){
                 String[] applyarr = sarStandItemsEO.getApplyArctic().trim().split(",");
                 for(String applya:applyarr){
-                    sarStandItemValEO.setId(UUID.randomUUID(20));
+                    sarStandItemValEO.setId(UUIDUtils.randomUUID20());
                     sarStandItemValEO.setPropertyType(PropertyTypeEnum.APPLY_ARCTIC.getValue());
                     sarStandItemValEO.setPropertyVal(applya);
                     sarStandItemValEODao.insertSelective(sarStandItemValEO);
@@ -121,7 +98,7 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
             if(StringUtils.isNotEmpty(sarStandItemsEO.getEnergyKind())){
                 String[] energyarr = sarStandItemsEO.getEnergyKind().trim().split(",");
                 for(String energy:energyarr){
-                    sarStandItemValEO.setId(UUID.randomUUID(20));
+                    sarStandItemValEO.setId(UUIDUtils.randomUUID20());
                     sarStandItemValEO.setPropertyType(PropertyTypeEnum.ENERGY_KIND.getValue());
                     sarStandItemValEO.setPropertyVal(energy);
                     sarStandItemValEODao.insertSelective(sarStandItemValEO);
@@ -171,7 +148,7 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
             if(StringUtils.isNotEmpty(sarStandItemsEO.getApplyArctic())){
                 String[] applyarr = sarStandItemsEO.getApplyArctic().trim().split(",");
                 for(String applya:applyarr){
-                    sarStandItemValEO.setId(UUID.randomUUID(20));
+                    sarStandItemValEO.setId(UUIDUtils.randomUUID20());
                     sarStandItemValEO.setPropertyType(PropertyTypeEnum.APPLY_ARCTIC.getValue());
                     sarStandItemValEO.setPropertyVal(applya);
                     sarStandItemValEODao.insertSelective(sarStandItemValEO);
@@ -180,7 +157,7 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
             if(StringUtils.isNotEmpty(sarStandItemsEO.getEnergyKind())){
                 String[] energyarr = sarStandItemsEO.getEnergyKind().trim().split(",");
                 for(String energy:energyarr){
-                    sarStandItemValEO.setId(UUID.randomUUID(20));
+                    sarStandItemValEO.setId(UUIDUtils.randomUUID20());
                     sarStandItemValEO.setPropertyType(PropertyTypeEnum.ENERGY_KIND.getValue());
                     sarStandItemValEO.setPropertyVal(energy);
                     sarStandItemValEODao.insertSelective(sarStandItemValEO);
