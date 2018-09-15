@@ -30,6 +30,8 @@ public class SarLawsItemsEO extends BaseEntity {
     private String itemsNum;
     private String lawsId;
     private String id;
+    private String applyArcticShow;
+    private String energyKindShow;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -66,6 +68,8 @@ public class SarLawsItemsEO extends BaseEntity {
             case "itemsNum": return "items_num";
             case "lawsId": return "laws_id";
             case "id": return "id";
+            case "applyArcticShow": return "applyArcticShow";
+            case "energyKindShow": return "energyKindShow";
             default: return null;
         }
     }
@@ -105,6 +109,8 @@ public class SarLawsItemsEO extends BaseEntity {
             case "items_num": return "itemsNum";
             case "laws_id": return "lawsId";
             case "id": return "id";
+            case "applyArcticShow": return "applyArcticShow";
+            case "energyKindShow": return "energyKindShow";
             default: return null;
         }
     }
@@ -249,4 +255,19 @@ public class SarLawsItemsEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getApplyArcticShow() {
+        return applyArcticShow;
+    }
+
+    public void setApplyArcticShow(String applyArcticShow) {
+        this.applyArcticShow = applyArcticShow;
+    }
+
+    public String getEnergyKindShow() {
+        return energyKindShow;
+    }
+
+    public void setEnergyKindShow(String energyKindShow) {
+        this.energyKindShow = energyKindShow;
+    }
 }
