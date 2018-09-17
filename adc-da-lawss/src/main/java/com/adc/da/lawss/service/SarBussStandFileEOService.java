@@ -1,5 +1,8 @@
 package com.adc.da.lawss.service;
 
+import com.adc.da.lawss.entity.SarStandFileEO;
+import com.adc.da.sys.constant.ValueStateEnum;
+import com.adc.da.sys.util.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.SarBussStandFileEODao;
 import com.adc.da.lawss.entity.SarBussStandFileEO;
+
+import java.util.Date;
 
 
 /**
@@ -31,6 +36,15 @@ public class SarBussStandFileEOService extends BaseService<SarBussStandFileEO, S
 
     public SarBussStandFileEODao getDao() {
         return dao;
+    }
+
+    public SarBussStandFileEO insertSarBussStandFileEO(SarBussStandFileEO sarBussStandFileEO){
+        sarBussStandFileEO.setId(UUIDUtils.randomUUID20());
+        sarBussStandFileEO.setCreationTime(new Date());
+        sarBussStandFileEO.setModifyTime(new Date());
+        sarBussStandFileEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
+        dao.insertSelective(sarBussStandFileEO);
+        return sarBussStandFileEO;
     }
 
 }

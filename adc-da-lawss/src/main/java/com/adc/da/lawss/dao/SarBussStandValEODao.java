@@ -11,5 +11,7 @@ import com.adc.da.lawss.entity.SarBussStandValEO;
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public interface SarBussStandValEODao extends BaseDao<SarBussStandValEO> {
+    //通过标准id删除表中数据
+    int deleteDataByStandid(String standId);
 
 }
