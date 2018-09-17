@@ -29,10 +29,18 @@
      <!-- 顶部工具栏 -->
      <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false">
        <div slot="left">
-         <label-input v-model="sarStandardsSearch.country" placeholder="根据国家/地区查找" clearable label="国家/地区"  />
-         <label-input v-model="sarStandardsSearch.standNumber" placeholder="根据标准号查找" clearable label="标准号" />
+         <label-select v-model="sarStandardsSearch.country" :options="countryOptions" label="国家/地区" placeholder="根据国家/地区查找"></label-select>
+         <label-input v-model="sarStandardsSearch.standNumber" placeholder="根据标准号查找" clearable label="标准编号" class="my-input" />
+         <br><br>
+         <label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />
+         <label-select v-model="sarStandardsSearch.standState" :options="standStateOptions" label="标准状态" placeholder="根据标准状态查找"></label-select>
+         <label-select v-model="sarStandardsSearch.standNature" :options="standNatureOptions"  placeholder="根据标准性质查找" clearable label="标准性质"  />
+         <label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />
+         <label-select v-model="sarStandardsSearch.applyArctic" :options="applyArcticOptions" placeholder="根据适用车型查找" clearable label="适用车型" class="my-input" />
+         <label-input v-model="sarStandardsSearch.replaceStandNum" placeholder="根据代替标准查找" clearable label="代替标准" class="my-input" />
+         <label-input v-model="sarStandardsSearch.replacedStandNum" placeholder="根据代替标准查找" clearable label="被代替标准" class="my-input" />
          <Button type="primary" icon="ios-search" :loading="searching" @click="getDomesticStandardTable"></Button>
-         <Button type="primary" @click="clearAllSearch">清空查询</Button>
+         <Button type="primary"  @click="clearAllSearch">清空查询</Button>
        </div>
        <div slot="right">
          <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
@@ -41,9 +49,19 @@
      <div class="content">
        <div class="action-bar">
          <Checkbox :value="checkAll" size="large" @on-change="handleSelectAll" :indeterminate="indeterminate">全选</Checkbox>
-         <Button type="info" size="small">下载</Button>
+         <Button type="info" size="small" @click="exportStandard">下载</Button>
          <Button type="primary" size="small" @click="addModal">新增</Button>
          <Button type="error" size="small" @click="clickDropMenu('deleteMenu')">删除</Button>
+         <Dropdown trigger="click" style="margin-left: 20px" @on-click="clickDropMenu">
+           <Button type="primary" icon="ios-arrow-down">设置</Button>
+           <DropdownMenu slot="list">
+             <DropdownItem name="newMenu">新建</DropdownItem>
+             <DropdownItem name="editMenu">编辑</DropdownItem>
+             <DropdownItem name="deleteMenu">删除</DropdownItem>
+           </DropdownMenu>
+         </Dropdown>
+         <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal(1)">导入标准</Button>
+         <Button type="primary" @click="configurationStandard">配置标准</Button>
        </div>
        <div class="content-detail" v-if="stahndinfoList.length > 0">
          <div class="card " v-for="(item, index) in stahndinfoList" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item)">
@@ -331,7 +349,7 @@
          </div>
          <div slot="right">
            <Button type="primary" icon="ios-add" :loading="searching" @click="addItemModal">新增</Button>
-           <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal">导入</Button>
+           <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal(2)">导入</Button>
            <Button type="primary" @click="isAdvancedSearch = true">删除</Button>
            <Button type="primary" @click="configurationStandard">保存</Button>
            <Button type="primary" @click="exportStandard">导出</Button>
@@ -738,6 +756,7 @@ export default {
         displaySeq: '',
         parentIds: ''
       },
+      importExcelUrl: '', // 导入EXCEL文档
       // 树形结构
       tree: [{
         title: 'parent 1',
@@ -871,6 +890,7 @@ export default {
           _this: this
         }, res => {
           this.getDomesticStandardTable()
+          this.modalshowflag = false
         }, e => {
         })
       } else {
@@ -879,6 +899,7 @@ export default {
           _this: this
         }, res => {
           this.getDomesticStandardTable()
+          this.modalshowflag = false
         }, e => {
         })
       }
@@ -979,7 +1000,12 @@ export default {
     },
     // 导入标准数据成功后执行
     importFileSuccess (response, file) {
-      this.getDomesticStandardTable()
+      // 使用字条目是否展示模态框判断导入的文件是标准，还是条目modalStandItemflag
+      if (this.modalStandItemflag) {
+        this.selectSarStandItems(this.standItemSearch.standId)
+      } else {
+        this.getBussionStandTable()
+      }
     },
     // 二级菜单新建，编辑，删除
     clickDropMenu (name) {
@@ -1074,6 +1100,16 @@ export default {
       }, res => {
         alert(this.standItemSearch.standId)
         this.selectSarStandItems(this.standItemSearch.standId)
+      }, e => {
+      })
+    },
+    // 导出标准条目
+    exportStandardItem () {
+      console.log(this.standItemSearch)
+      this.$http.get('lawss/sarStandItems/exportStandardItemExcel', this.standItemSearch, {
+        _this: this
+      }, res => {
+        console.log(res)
       }, e => {
       })
     },

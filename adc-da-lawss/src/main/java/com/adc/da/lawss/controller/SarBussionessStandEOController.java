@@ -163,7 +163,7 @@ public class SarBussionessStandEOController extends BaseController<SarBussioness
     }
 
     @ApiOperation(value = "|SarBussionessStandEO|导入")
-    @PostMapping(value = "importSarBussionessStand")
+    @PostMapping(value = "/importSarBussionessStand")
     //@RequiresPermissions("lawss:sarStandardsInfo:save")
     public ResponseMessage<SarBussionessStandEO> importSarBussionessStand(@RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
 
@@ -192,9 +192,9 @@ public class SarBussionessStandEOController extends BaseController<SarBussioness
     }
 
     @ApiOperation(value = "|SarBussionessStandEO|企业标准修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/updateSarBussionessStand")
    // @RequiresPermissions("lawss:sarBussionessStand:update")
-    public ResponseMessage<SarBussionessStandEO> updateSarBussionessStand(@RequestBody SarBussionessStandEO sarBussionessStandEO) throws Exception {
+    public ResponseMessage<SarBussionessStandEO> updateSarBussionessStand(SarBussionessStandEO sarBussionessStandEO) throws Exception {
         sarBussionessStandEOService.updateSarBussionessStand(sarBussionessStandEO);
         return Result.success("","修改成功",sarBussionessStandEO);
     }

@@ -244,7 +244,7 @@
         SELECT
         listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_BUSS_STAND_ITEM_VAL.property_type )
         FROM
-        SAR_BUSS_STAND_ITEM_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_ITEM_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+        SAR_BUSS_STAND_ITEM_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_ITEM_VAL.property_value  and TS_DICTYPE.dic_id is not null)
         WHERE
         SAR_BUSS_STAND_ITEM_VAL.ITEM_ID = SAR_BUSS_STAND_ITEMS.id
         AND SAR_BUSS_STAND_ITEM_VAL.property_type = 'APPLY_ARCTIC'
@@ -253,7 +253,7 @@
         SELECT
         listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_BUSS_STAND_ITEM_VAL.property_type )
         FROM
-        SAR_BUSS_STAND_ITEM_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_ITEM_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+        SAR_BUSS_STAND_ITEM_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_ITEM_VAL.property_value  and TS_DICTYPE.dic_id is not null)
         WHERE
         SAR_BUSS_STAND_ITEM_VAL.ITEM_ID = SAR_BUSS_STAND_ITEMS.id
         AND SAR_BUSS_STAND_ITEM_VAL.property_type = 'ENERGY_KIND'
