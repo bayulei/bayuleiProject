@@ -84,13 +84,20 @@ public class UserEOService extends BaseService<UserEO, String> {
 		dao.updateUserEO(dao.get(userEO.getUsid()));
 	}
 
-	/*
-	 * @Transactional(readOnly = true) public PageInfo<UserEO> page(PageInfo
-	 * pageInfo, String userName) { PageInfo<UserEO> pi = dao.page(pageInfo,
-	 * userName); for (UserEO userEO: pi.getList()) {
-	 * userEO.setRoleEOList(roleEODao.getRoleListByUserId(userEO.getUsid())); }
-	 * return pi; }
+	/***
+	 * 用户管理界面分页
+	 * @MethodName:queryUserInfoByPage
+	 * @author: zhangyanduan
+	 * @param:[]
+	 * @return:java.util.List<com.adc.da.sys.entity.UserEO>
+	 * date: 2018/9/15 16:10
 	 */
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
+	public List<UserEO> queryUserInfoByPage(BasePage basePage){
+		int rowCount = dao.queryUserInfoByCount(basePage);
+		basePage.getPager().setRowCount(rowCount);
+		return dao.queryUserInfoByPage(basePage);
+	}
 
 	/**
 	 * 删除用户及用户角色关联
@@ -151,10 +158,6 @@ public class UserEOService extends BaseService<UserEO, String> {
 				orgDao.addOrgRelatedUser(userOrgEO);
 		}*/
 	}
-	
-	/*public  List<UserEO> usnamesel(String usname){
-		return dao.userselect(usname);
-	}*/
 
 	/**
 	 * 根据当前登录用户id查询个人信息及部门
@@ -178,7 +181,7 @@ public class UserEOService extends BaseService<UserEO, String> {
 		userEO.setPassword(PasswordUtils.encryptPassword("1234qwer"));
 		return dao.updatePasswordByPrimaryKey(userEO);
 	}
-	
+
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public UserEO selectByUnameAndPwd(UserEO userEO){
 		return dao.selectByUnameAndPwd(userEO);
@@ -186,30 +189,17 @@ public class UserEOService extends BaseService<UserEO, String> {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<UserEO> queryByOrg(BasePage basePage) {
-		int rowCount = dao.queryByOrgCount(basePage);
+		int rowCount = dao.queryByCount(basePage);
 		basePage.getPager().setRowCount(rowCount);
-		return dao.queryByOrg(basePage);
+		return dao.queryByPage(basePage);
 	}
 
-	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public List<UserEO> findBySetOrg(BasePage basePage) {
-		int rowCount = dao.findBySetOrgCount(basePage);
-		basePage.getPager().setRowCount(rowCount);
-		return dao.findBySetOrg(basePage);
-	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<UserEO> queryByPageAndParams(UserEOPage page) {
 		int rowCount = dao.queryByOrgCount(page);
 		page.getPager().setRowCount(rowCount);
 		return dao.queryByOrg(page);
-	}
-	
-	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public List<UserEO> queryByOrgAndChiles(BasePage basePage) {
-		int rowCount = dao.queryByOrgAndChilesCount(basePage);
-		basePage.getPager().setRowCount(rowCount);
-		return dao.queryByOrgAndChiles(basePage);
 	}
 
 	public List<UserEO> queryOrgByAccount(String account){

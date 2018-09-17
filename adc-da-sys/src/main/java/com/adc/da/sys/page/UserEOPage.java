@@ -19,25 +19,29 @@ public class UserEOPage extends BasePage {
     private String validFlagOperator = "=";
     private String password;
     private String passwordOperator = "=";
-//    private String usname;
     private String uname;
-    private String unameOperator = "=";
-    private String rolename;
-    private String rolenameOperator = "=";
+    private String nameOperator = "=";
+    private String roleName;
+    private String roleNameOperator = "=";
     private String roleId;
     private String roleOperator = "=";
-    private String orgname;
-    private String orgnameOperator = "=";
+    private String orgName;
+    private String orgNameOperator = "=";
     private String workNum;
     private String workNumOperator ="=";
-    private String useCorpId;
-    private String useCorpIdOperator = "=";
-    private String deptId;
-    private String deptIdOperator = "=";
-    private String roleName;
-    private String getCorpId;
+
+    private String orgId;
     
-    
+    private String disableFlag;
+
+    private String disableFlagOperator = "=";
+    private String unlockFlag;
+    private String unlockFLagOperator = "=";
+
+    private String userType;
+
+    private String userTypeOperator = "=";
+
     public String getUsid() {
         return this.usid;
     }
@@ -110,43 +114,28 @@ public class UserEOPage extends BasePage {
         this.uname = uname;
     }
 
-    public String getUnameOperator() {
-        return this.unameOperator;
+    public String getNameOperator() {
+        return this.nameOperator;
     }
 
-    public void setUnameOperator(String unameOperator) {
-        this.unameOperator = unameOperator;
+    public void setNameOperator(String nameOperator) {
+        this.nameOperator = nameOperator;
     }
-    public String getRolename() {
-		return rolename;
+
+	public String getOrgName() {
+		return orgName;
 	}
 
-	public void setRolename(String rolename) {
-		this.rolename = rolename;
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
 	}
 
-	public String getRolenameOperator() {
-		return rolenameOperator;
+	public String getOrgNameOperator() {
+		return orgNameOperator;
 	}
 
-	public void setRolenameOperator(String rolenameOperator) {
-		this.rolenameOperator = rolenameOperator;
-	}
-
-	public String getOrgname() {
-		return orgname;
-	}
-
-	public void setOrgname(String orgname) {
-		this.orgname = orgname;
-	}
-
-	public String getOrgnameOperator() {
-		return orgnameOperator;
-	}
-
-	public void setOrgnameOperator(String orgnameOperator) {
-		this.orgnameOperator = orgnameOperator;
+	public void setOrgNameOperator(String orgNameOperator) {
+		this.orgNameOperator = orgNameOperator;
 	}
 
 	public String getWorkNum() {
@@ -165,22 +154,6 @@ public class UserEOPage extends BasePage {
 		this.workNumOperator = workNumOperator;
 	}
 
-	public String getUseCorpId() {
-		return useCorpId;
-	}
-
-	public void setUseCorpId(String useCorpId) {
-		this.useCorpId = useCorpId;
-	}
-
-	public String getUseCorpIdOperator() {
-		return useCorpIdOperator;
-	}
-
-	public void setUseCorpIdOperator(String useCorpIdOperator) {
-		this.useCorpIdOperator = useCorpIdOperator;
-	}
-
 	public String getRoleId() {
 		return roleId;
 	}
@@ -197,22 +170,6 @@ public class UserEOPage extends BasePage {
 		this.roleOperator = roleOperator;
 	}
 
-	public String getDeptId() {
-		return deptId;
-	}
-
-	public void setDeptId(String deptId) {
-		this.deptId = deptId;
-	}
-
-	public String getDeptIdOperator() {
-		return deptIdOperator;
-	}
-
-	public void setDeptIdOperator(String deptIdOperator) {
-		this.deptIdOperator = deptIdOperator;
-	}
-
     public String getRoleName() {
         return roleName;
     }
@@ -221,11 +178,64 @@ public class UserEOPage extends BasePage {
         this.roleName = roleName;
     }
 
-    public String getGetCorpId() {
-        return getCorpId;
+    public void setDisableFlag(String disableFlag){
+        this.disableFlag=disableFlag;
     }
 
-    public void setGetCorpId(String getCorpId) {
-        this.getCorpId = getCorpId;
+    public String getDisableFlag(){
+        return this.disableFlag;
+    }
+
+    public void setDisableFlagOperator(String disableFlagOperator){
+        this.disableFlagOperator=disableFlagOperator;
+    }
+
+    public String getDisableFlagOperator(){
+        return this.disableFlagOperator;
+    }
+
+    public void setUnlockFlag(String unlockFlag){
+        this.unlockFlag = unlockFlag;
+    }
+
+    public String getUnlockFlag(){
+        return this.unlockFlag;
+    }
+
+    public void setUnlockFLagOperator(String unlockFLagOperator){
+        this.unlockFLagOperator =unlockFLagOperator;
+    }
+
+    public String getUnlockFLagOperator(){
+        return this.unlockFLagOperator;
+    }
+
+    public void setUserType(String userType){
+        this.userType=userType;
+    }
+    public String getUserType(){
+        return this.userType;
+    }
+
+    public String getUserTypeOperator(){
+        return this.userTypeOperator;
+    }
+    public void setUserTypeOperator(String userTypeOperator){
+        this.userTypeOperator=userTypeOperator;
+    }
+
+    public void setRoleNameOperator(String roleNameOperator){
+        this.roleNameOperator=roleNameOperator;
+    }
+    public String getRoleNameOperator(){
+        return this.roleNameOperator;
+    }
+
+    public void setOrgId(String orgId){
+        this.orgId=orgId;
+    }
+
+    public String getOrgId(){
+        return this.orgId;
     }
 }
