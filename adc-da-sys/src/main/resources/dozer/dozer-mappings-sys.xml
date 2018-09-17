@@ -32,19 +32,19 @@
         <class-b>com.adc.da.sys.vo.RoleVO</class-b>
         <field>
             <a>id</a>
-            <b>rid</b>
+            <b>id</b>
         </field>
         <field>
             <a>name</a>
-            <b>rname</b>
+            <b>name</b>
         </field>
         <field>
             <a>remarks</a>
-            <b>rdesc</b>
+            <b>remarks</b>
         </field>
         <field>
             <a>validFlag</a>
-            <b>enabled</b>
+            <b>validFlag</b>
         </field>
         <field>
             <a>menuEOIdList</a>

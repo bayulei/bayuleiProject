@@ -150,173 +150,6 @@ public class FlowProcessUtil {
         }
     }
 
-   /* *//**
-     *  驳回到上一步
-     * @MethodName:reject
-     * @author: yuzhong
-     * @param:[processInstanceId,nowUserId]
-     * @return:String
-     * date: 2018年9月4日 16:25:59
-     *//*
-    public String reject(String processInstanceId,String nowUserId,String comment){
-        try {
-            Map<String, Object> variables;
-            // 取得当前任务
-            Task task = taskService.createTaskQuery()
-                    .processInstanceId(processInstanceId)
-                    .singleResult();
-//            if (!StringUtils.isEmpty(comment)) {
-//                // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
-//                Authentication.setAuthenticatedUserId(nowUserId);//批注人的名称  一定要写，不然查看的时候不知道人物信息
-//                // 添加批注信息
-//                taskService.addComment(task.getId(), null, comment);//comment为批注内容
-//            }
-            HistoricTaskInstance currTask = historyService
-                    .createHistoricTaskInstanceQuery().taskId(task.getId())
-                    .singleResult();
-            // 取得流程实例
-            ProcessInstance instance = runtimeService
-                    .createProcessInstanceQuery()
-                    .processInstanceId(currTask.getProcessInstanceId())
-                    .singleResult();
-            if (instance == null) {
-                return "驳回失败";
-            }
-            variables = instance.getProcessVariables();
-            // 取得流程定义
-            ProcessDefinitionEntity definition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
-                    .getDeployedProcessDefinition(currTask
-                            .getProcessDefinitionId());
-            if (definition == null) {
-                return "驳回失败";
-            }
-            // 取得上一步活动
-            ActivityImpl currActivity = ((ProcessDefinitionImpl) definition)
-                    .findActivity(currTask.getTaskDefinitionKey());
-            List<PvmTransition> nextTransitionList = currActivity
-                    .getIncomingTransitions();
-            // 清除当前活动的出口
-            List<PvmTransition> oriPvmTransitionList = new ArrayList<PvmTransition>();
-            List<PvmTransition> pvmTransitionList = currActivity
-                    .getOutgoingTransitions();
-            for (PvmTransition pvmTransition : pvmTransitionList) {
-                oriPvmTransitionList.add(pvmTransition);
-            }
-            pvmTransitionList.clear();
-
-            // 建立新出口
-            List<TransitionImpl> newTransitions = new ArrayList<TransitionImpl>();
-            for (PvmTransition nextTransition : nextTransitionList) {
-                PvmActivity nextActivity = nextTransition.getSource();
-                ActivityImpl nextActivityImpl = ((ProcessDefinitionImpl) definition)
-                        .findActivity(nextActivity.getId());
-                TransitionImpl newTransition = currActivity
-                        .createOutgoingTransition();
-                newTransition.setDestination(nextActivityImpl);
-                newTransitions.add(newTransition);
-            }
-            // 完成任务
-            List<Task> tasks = taskService.createTaskQuery()
-                    .processInstanceId(instance.getId())
-                    .taskDefinitionKey(currTask.getTaskDefinitionKey()).list();
-            for (Task t : tasks) {
-                taskService.complete(t.getId(), variables);
-                historyService.deleteHistoricTaskInstance(t.getId());
-            }
-            // 恢复方向
-            for (TransitionImpl transitionImpl : newTransitions) {
-                currActivity.getOutgoingTransitions().remove(transitionImpl);
-            }
-            for (PvmTransition pvmTransition : oriPvmTransitionList) {
-                pvmTransitionList.add(pvmTransition);
-            }
-            //修改业务表的上一操作人
-            BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
-            busExecuProcessEOPage.setProcInstId(processInstanceId);
-            List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
-            if (busExecuProcessEOList != null && !busExecuProcessEOList.isEmpty()) {
-                BusProcessEO busProcessEO = new BusProcessEO();
-                busProcessEO.setLastUserId(nowUserId);
-                busProcessEO.setLastUserName("查出来是谁");
-                busProcessEO.setId(busExecuProcessEOList.get(0).getProcessId());
-                busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
-            }
-            return "驳回成功";
-        } catch (Exception e) {
-            return "驳回失败";
-        }
-    }
-
-    public String rejectToStart(String processInstanceId){
-        try {
-            Map<String, Object> variables;
-            // 取得当前任务
-            Task task = taskService.createTaskQuery()
-                    .processInstanceId(processInstanceId)
-                    .singleResult();
-            HistoricTaskInstance currTask = historyService
-                    .createHistoricTaskInstanceQuery().taskId(task.getId())
-                    .singleResult();
-            // 取得流程实例j
-            ProcessInstance instance = runtimeService
-                    .createProcessInstanceQuery()
-                    .processInstanceId(processInstanceId)
-                    .singleResult();
-            variables = instance.getProcessVariables();
-            // 取得流程定义
-            ProcessDefinitionEntity definition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
-                    .getDeployedProcessDefinition(instance.getProcessDefinitionId());
-
-            // 取得初始活动
-            List<HistoricActivityInstance> historicActivityInstanceList = historyService.createHistoricActivityInstanceQuery()
-                    .list();
-            ActivityImpl currActivity = ((ProcessDefinitionImpl) definition)
-                    .findActivity(historicActivityInstanceList.get(1).getActivityId());
-
-            List<PvmTransition> nextTransitionList = currActivity
-                    .getIncomingTransitions();
-            // 清除当前活动的出口
-            List<PvmTransition> oriPvmTransitionList = new ArrayList<PvmTransition>();
-            List<PvmTransition> pvmTransitionList = currActivity
-                    .getOutgoingTransitions();
-            for (PvmTransition pvmTransition : pvmTransitionList) {
-                oriPvmTransitionList.add(pvmTransition);
-            }
-            pvmTransitionList.clear();
-
-            // 建立新出口
-            List<TransitionImpl> newTransitions = new ArrayList<TransitionImpl>();
-            for (PvmTransition nextTransition : nextTransitionList) {
-                PvmActivity nextActivity = nextTransition.getSource();
-                ActivityImpl nextActivityImpl = ((ProcessDefinitionImpl) definition)
-                        .findActivity(nextActivity.getId());
-                TransitionImpl newTransition = currActivity
-                        .createOutgoingTransition();
-                newTransition.setDestination(nextActivityImpl);
-                newTransitions.add(newTransition);
-            }
-
-            // 完成任务
-            List<Task> tasks = taskService.createTaskQuery()
-                    .processInstanceId(instance.getId())
-                    .taskDefinitionKey(currTask.getTaskDefinitionKey()).list();
-            for (Task t : tasks) {
-                taskService.complete(t.getId(), variables);
-                historyService.deleteHistoricTaskInstance(t.getId());
-            }
-            // 恢复方向
-            for (TransitionImpl transitionImpl : newTransitions) {
-                currActivity.getOutgoingTransitions().remove(transitionImpl);
-            }
-            for (PvmTransition pvmTransition : oriPvmTransitionList) {
-                pvmTransitionList.add(pvmTransition);
-            }
-
-            return "驳回成功";
-        } catch (Exception e) {
-            return "驳回失败";
-        }
-    }*/
 
     @ApiOperation(value = "通过任务ID委托人")
     @GetMapping("/entrustByTaskId")
@@ -427,15 +260,18 @@ public class FlowProcessUtil {
 //        Map<String, Object> variables = new HashMap<String, Object>(0);
 //        variables.put(WfConstant.WF_VAR_IS_REJECTED.value(), WfConstant.IS_REJECTED.value());
             //执行当前任务驳回到目标任务draft
-
-            if(!StringUtils.isEmpty(taskEntity.getOwner())){
-                taskService.resolveTask(taskEntity.getId());
+            //查询流程当前所有任务
+            List<Task> taskList = taskService.createTaskQuery().processInstanceId(taskEntity.getProcessInstanceId())
+                    .list();
+            for (Task task :  taskList){
+                if(!StringUtils.isEmpty(task.getOwner())){
+                    taskService.resolveTask(task.getId());
+                }
+                taskService.complete(task.getId());
             }
 
-            taskService.complete(taskEntity.getId());
-
             //获取驳回到目的节点（最新审批的）之前的审批人，并将审批人赋值给最新的节点上
-            Task nowTask = taskService.createTaskQuery().executionId(taskEntity.getExecutionId()).singleResult();
+            Task nowTask = taskService.createTaskQuery().processInstanceId(taskEntity.getProcessInstanceId()).singleResult();
             List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskDefinitionKey(destTaskKey)
                     .orderByTaskCreateTime().desc().list();
             if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){

@@ -163,8 +163,6 @@
 		<trim prefix="(" suffix=")" suffixOverrides="," >
 			<if test="isDefault != null" >is_default,</if>
 			<if test="validFlag != null" >valid_flag,</if>
-			<!--此字段取消-->
-		<!--	<if test="dataScope != null" >data_scope,</if>-->
 			<if test="id != null" >id,</if>
 			<if test="extInfo != null" >ext_info,</if>
 			<if test="remarks != null" >remarks,</if>
@@ -178,7 +176,6 @@
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
 			<if test="isDefault != null" >#{isDefault},</if>
 			<if test="validFlag != null" >#{validFlag},</if>
-			<!--<if test="dataScope != null" >#{dataScope},</if>-->
 			<if test="id != null" >#{id},</if>
 			<if test="extInfo != null" >#{extInfo},</if>
 			<if test="remarks != null" >#{remarks},</if>
@@ -291,12 +288,4 @@
          ${pager.orderCondition}
       </if>
     </select>
-
-	<!--通过用户名查询roleEO-->
-	<select id="queryNameExistenceByName" parameterType="java.lang.String" resultMap="BaseResultMap">
-		SELECT
-		<include refid="Base_Column_List" />
-		FROM TS_ROLE  WHERE TS_ROLE.NAME  =#{name}
-
-	</select>
 </mapper>

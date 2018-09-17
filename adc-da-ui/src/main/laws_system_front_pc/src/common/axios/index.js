@@ -4,7 +4,7 @@
  * @date: 2018-09-04 11:29:34
  */
 const axios = require('axios')
-axios.defaults.headers['Authorization'] = sessionStorage.token || ''
+// axios.defaults.headers['Authorization'] = sessionStorage.token || ''
 
 /**
  * @description: FormData
@@ -18,7 +18,7 @@ let formData = (data) => {
   }
   return _formData
 }
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 10000
 axios.defaults.headers['Content-type'] = 'application/json'
 module.exports = {
   /**

@@ -172,4 +172,10 @@
     </if>
   </select>
 
+    <!-- 根据条目ID删除条目关联 -->
+    <delete id="deleteSarBussStandItemByItemid" parameterType="java.lang.String"  >
+    delete from SAR_BUSS_STAND_ITEM_VAL
+     where ITEM_ID = #{itemid}
+  </delete>
+
 </mapper>

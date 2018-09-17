@@ -113,4 +113,9 @@
     </if>
   </select>
 
+  <delete id="deleteDataByStandid" parameterType="java.lang.String">
+    delete from SAR_BUSS_STAND_VAL
+     where stand_id = #{standId}
+  </delete>
+
 </mapper>

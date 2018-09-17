@@ -12,11 +12,11 @@
         <div class="time-box">{{ currentTime }}</div>
         <div class="user-info">
           <img :src="userAvator" alt="avator">
-          <Dropdown trigger="click">
+          <Dropdown trigger="click" @on-click="userInfoOpen">
             <span>欢迎您，张三 <Icon type="ios-arrow-down"></Icon></span>
             <DropdownMenu slot="list">
-              <DropdownItem><router-link tag="span" to="/personal">个人中心</router-link></DropdownItem>
-              <DropdownItem>退出</DropdownItem>
+              <DropdownItem name="personal">个人中心</DropdownItem>
+              <DropdownItem name="logout">退出</DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -381,6 +381,29 @@ export default {
         this.currentTime = this.$dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
         // this.currentTime = this.$dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss') + ' 星期' + '日一二三四五六'.charAt(new Date().getDay())
       }, 1000)
+    },
+    /**
+     * @description: 用户菜单栏点击
+     * @author: chenxiaoxi
+     * @date: 2018-09-13 10:03:52
+     */
+    userInfoOpen (name) {
+      switch (name) {
+        case 'personal':
+          this.$router.push('/personal')
+          break
+        case 'logout':
+          this.$confirm({
+            title: '登出',
+            tips: '您确认要退出吗？',
+            confirm: () => {
+              this.$store.commit('logout')
+              this.$Modal.remove()
+              this.$router.push('/sign_in')
+            }
+          })
+          break
+      }
     }
   },
   watch: {},
