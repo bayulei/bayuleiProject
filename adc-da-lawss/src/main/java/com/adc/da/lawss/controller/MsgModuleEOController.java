@@ -79,7 +79,7 @@ public class MsgModuleEOController extends BaseController<MsgModuleEO>{
 
     @ApiOperation(value = "|MsgModuleEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("lawss:msgModule:update")
+//    @RequiresPermissions("lawss:msgModule:update")
     public ResponseMessage<MsgModuleEO> update(@RequestBody MsgModuleEO msgModuleEO) throws Exception {
         msgModuleEOService.updateByPrimaryKeySelective(msgModuleEO);
         return Result.success(msgModuleEO);
