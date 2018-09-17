@@ -18,7 +18,7 @@ let formData = (data) => {
   }
   return _formData
 }
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 10000
 axios.defaults.headers['Content-type'] = 'application/json'
 module.exports = {
   /**

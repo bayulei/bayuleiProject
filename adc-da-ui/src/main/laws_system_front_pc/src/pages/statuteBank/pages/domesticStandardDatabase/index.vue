@@ -42,11 +42,11 @@
        <div class="action-bar">
          <Checkbox :value="checkAll" size="large" @on-change="handleSelectAll" :indeterminate="indeterminate">全选</Checkbox>
          <Button type="info" size="small">下载</Button>
-         <Button type="primary" size="small" @click="clickDropMenu(newMenu)">新增</Button>
-         <Button type="error" size="small" @click="clickDropMenu(deleteMenu)">删除</Button>
+         <Button type="primary" size="small" @click="addModal">新增</Button>
+         <Button type="error" size="small" @click="clickDropMenu('deleteMenu')">删除</Button>
        </div>
        <div class="content-detail" v-if="stahndinfoList.length > 0">
-         <div class="card" v-for="(item, index) in stahndinfoList" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item)">
+         <div class="card " v-for="(item, index) in stahndinfoList" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item)">
              <Row>
                <Col span="5">
                  <Checkbox v-model="item.checked" size="large"></Checkbox>
@@ -63,12 +63,14 @@
                </Col>
              </Row>
              <Row>
-               <Col span="4">新车型实施时间: {{ item.putTime }}</Col>
+               <Col span="4">新车型实施时间: {{ item.putTime }}</Col>  
                <Col span="4" push="2">在产车实施时间: {{ item.issueTime }}</Col>
                <Col span="4" push="3">适用车型: -</Col>
                <Col span="6" push="6">
-                 <span class="card-edit">修改</span>
-                 <Button type="primary" ghost @click="goProcess(item)">流程</Button>
+                 <Button @click = "goProcess(item)">流程</Button>
+                 <Button @click = "selectStandardPro(item,'show')">查看</Button>
+                 <Button @click = "selectStandardPro(item,'edit')">编辑</Button>
+                 <Button @click = "selectSarStandItems(item.id)">查看表单</Button>
                </Col>
              </Row>
            </div>
@@ -387,6 +389,7 @@ export default {
       searching: false,
       checkAll: false, // 是否全选
       indeterminate: false, // 是否半选
+      selectedList: [],
       loading: false,
       total: 0,
       tableColumn: [
@@ -823,12 +826,12 @@ export default {
       this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', this.sarStandardsSearch, {
         _this: this, loading: 'loading'
       }, res => {
-        console.log(res)
-        this.stahndinfoList = res.data.list
-        for (let i = 0; i < this.stahndinfoList.length; i++) {
-          this.stahndinfoList[i]['collectIcontype'] = 'ios-star-outline'
-          this.stahndinfoList[i]['collectIconcolor'] = '#5c6b77'
+        for (let i = 0; i < res.data.list.length; i++) {
+          res.data.list[i]['collectIcontype'] = 'ios-star-outline'
+          res.data.list[i]['collectIconcolor'] = '#5c6b77'
+          res.data.list[i].checked = false
         }
+        this.stahndinfoList = res.data.list
         this.total = res.data.count
       }, e => {
       })
