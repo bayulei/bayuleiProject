@@ -4,6 +4,7 @@ import com.adc.da.base.page.Pager;
 import com.adc.da.base.web.BaseController;
 import com.adc.da.sys.common.LayUiResult;
 import com.adc.da.sys.entity.OrgEO;
+import com.adc.da.sys.entity.RoleEO;
 import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.page.UserEOPage;
 import com.adc.da.sys.service.OrgEOService;
@@ -54,7 +55,7 @@ public class UserEOController extends BaseController<UserEO> {
 	@ApiOperation(value = "|UserEO|分页查询")
 	@GetMapping("")
 //	@RequiresPermissions("sys:user:list")
-	public ResponseMessage<PageInfo<UserEO>> page(Integer pageNo, Integer pageSize, String uname,String roleId,String orgname) throws Exception {
+	public ResponseMessage<PageInfo<UserEO>> UserInfoPage(Integer pageNo, Integer pageSize,String userType,String userName,String roleId,String disableFlag) throws Exception {
 		UserEOPage page = new UserEOPage();
 		if (pageNo != null) {
 			page.setPage(pageNo);
@@ -62,33 +63,26 @@ public class UserEOController extends BaseController<UserEO> {
 		if (pageSize != null) {
 			page.setPageSize(pageSize);
 		}
-		if (StringUtils.isNotEmpty(uname)) {
-			page.setUname("%"+uname+"%");
-			page.setUnameOperator("LIKE");
+		if (StringUtils.isNotEmpty(userName)) {
+			page.setUname("%"+userName+"%");
+			page.setUname("LIKE");
+		}
+		if(StringUtils.isNotEmpty(userType)){
+			page.setUserType(userType);
+		}
+		if(StringUtils.isNotEmpty(disableFlag)){
+			page.setDisableFlag(disableFlag);
 		}
 		if (StringUtils.isNotEmpty(roleId)) {
 			page.setRoleId(roleId);
 		}
-		if (StringUtils.isNotEmpty(orgname)) {
-//	此字段是通过下拉菜单传入了具体值
-			page.setOrgname(orgname);
-			//page.setRolenameOperator("LIKE");
-		}
-//		String userId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
-//		if(userId != null || userId != ""){
-//			UserEO getUser = userEOService.selectOrgByPrimaryKey(userId);
-//			/*if(getUser != null){
-//				if(!("").equals(getUser.getUseCorpId()) && getUser.getUseCorpId() != null){
-//					page.setGetCorpId(getUser.getUseCorpId());
-//				}
-//			}*/
-//		}
 		page.setPager(new Pager());
-		
-		List<UserEO> userEOs = userEOService.queryByPageAndParams(page);
-//		return new LayUiResult(getPageInfo(page.getPager(), userEOs));
+
+		List<UserEO> userEOs = userEOService.queryUserInfoByPage(page);
 		return  Result.success(getPageInfo(page.getPager(), userEOs));
 	}
+
+
 
 	@ApiOperation(value = "|UserEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
@@ -164,33 +158,22 @@ public class UserEOController extends BaseController<UserEO> {
 	
 	@ApiOperation(value = "|UserEO|组织机构查询用户")
 	@GetMapping("/findByOrg")
-	public LayUiResult<UserVO> queryByOrg(UserEOPage page){
+	public ResponseMessage<PageInfo<UserVO>> queryByOrg(UserEOPage page){
 		if(StringUtils.isNotBlank(page.getUname()))
 			page.setUname("%"+page.getUname()+"%");
 		List<UserEO> rows = userEOService.queryByOrg(page);
-		return new LayUiResult(getPageInfo(page.getPager(), rows));
+//		return new LayUiResult(getPageInfo(page.getPager(), rows));
+		PageInfo<UserVO> mapPage=beanMapper.mapPage(getPageInfo(page.getPager(), rows), UserVO.class);
+		return Result.success(mapPage);
 	}
 	
 	@ApiOperation(value = "|UserEO|查询未配置组织机构的用户")
 	@GetMapping("/findBySetOrg")
 	public LayUiResult<UserVO> findBySetOrg(UserEOPage page){
-		List<UserEO> rows = userEOService.findBySetOrg(page);
-		return new LayUiResult(getPageInfo(page.getPager(), rows));
-	}
-	
-	@ApiOperation(value = "|UserEO|查询组织机构以及子机构用户")
-	@GetMapping("/queryByOrgAndChiles")
-	public LayUiResult<UserVO> queryByOrgAndChiles(UserEOPage page, String userCorpName){
-		List<OrgEO> eos = orgEOService.findById(page.getUseCorpId(), userCorpName);
-		StringBuilder corpStr = new StringBuilder();
-		for (OrgEO orgEO : eos) {
-			corpStr.append("'"+orgEO.getId()+"',");
-		}
-		page.setUseCorpId(corpStr.substring(0, corpStr.length()-1));
-		if(StringUtils.isNotBlank(page.getUname()))
-			page.setUname("%"+page.getUname()+"%");
-		List<UserEO> rows = userEOService.queryByOrgAndChiles(page);
-		return new LayUiResult(getPageInfo(page.getPager(), rows));
+		//TODO 此处暂时未实现
+//		List<UserEO> rows = userEOService.findBySetOrg(page);
+//		return new LayUiResult(getPageInfo(page.getPager(), rows));
+		return null;
 	}
 	
 	
