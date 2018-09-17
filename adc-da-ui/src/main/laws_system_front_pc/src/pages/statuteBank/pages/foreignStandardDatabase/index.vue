@@ -1,11 +1,13 @@
-<!-- 试验项目库 -->
+<!-- 国外标准库 -->
 <template>
- <div id="TestItemLibrary">试验项目库</div>
+  <div id="foreignStandardDatabase">
+    国外标准库
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'TestItemLibrary',
+  name: 'foreignStandardDatabase',
   data () {
     return {}
   },
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="less">
-   #TestItemLibrary{}
+  #foreignStandardDatabase{
+
+  }
 </style>

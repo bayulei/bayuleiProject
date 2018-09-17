@@ -39,8 +39,8 @@ public class SarBussStandItemsEOPage extends BasePage {
     private String partsOperator = "=";
     private String itemsName;
     private String itemsNameOperator = "=";
-    private String tiemsNum;
-    private String tiemsNumOperator = "=";
+    private String itemsNum;
+    private String itemsNumOperator = "=";
     private String standId;
     private String standIdOperator = "=";
     private String id;
@@ -254,20 +254,20 @@ public class SarBussStandItemsEOPage extends BasePage {
         this.itemsNameOperator = itemsNameOperator;
     }
 
-    public String getTiemsNum() {
-        return this.tiemsNum;
+    public String getItemsNum() {
+        return this.itemsNum;
     }
 
-    public void setTiemsNum(String tiemsNum) {
-        this.tiemsNum = tiemsNum;
+    public void setItemsNum(String itemsNum) {
+        this.itemsNum = itemsNum;
     }
 
-    public String getTiemsNumOperator() {
-        return this.tiemsNumOperator;
+    public String getItemsNumOperator() {
+        return this.itemsNumOperator;
     }
 
-    public void setTiemsNumOperator(String tiemsNumOperator) {
-        this.tiemsNumOperator = tiemsNumOperator;
+    public void setItemsNumOperator(String itemsNumOperator) {
+        this.itemsNumOperator = itemsNumOperator;
     }
 
     public String getStandId() {

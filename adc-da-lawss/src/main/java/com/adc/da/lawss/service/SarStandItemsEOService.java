@@ -2,8 +2,12 @@ package com.adc.da.lawss.service;
 
 import com.adc.da.lawss.common.PropertyTypeEnum;
 import com.adc.da.lawss.dao.SarStandItemValEODao;
+import com.adc.da.lawss.dto.SarStandExcelDto;
+import com.adc.da.lawss.dto.SarStandItemsExcelDto;
 import com.adc.da.lawss.entity.SarStandItemValEO;
+import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandItemsEOPage;
+import com.adc.da.lawss.page.SarStandardsInfoEOPage;
 import com.adc.da.lawss.vo.SarStandItemsVO;
 import com.adc.da.sys.constant.ValueStateEnum;
 import com.adc.da.sys.util.UUIDUtils;
@@ -13,6 +17,7 @@ import com.adc.da.util.utils.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -118,10 +123,20 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
      * @author gaoyan
      * date 2018-09-04
      */
-    public ResponseMessage<SarStandItemsEO> importSarStandItemsData(List<SarStandItemsEO> list){
+    public ResponseMessage<SarStandItemsEO> importSarStandItemsData(List<SarStandItemsExcelDto> list,String standId){
         //此处需要做各种验证，数据库操作
-        SarStandItemsEO sarStandItemsEO = new SarStandItemsEO();
-        return Result.success(sarStandItemsEO);
+        //将导入数据循环新增至相应表
+        for(SarStandItemsExcelDto importDto : list){
+            SarStandItemsEO sarStandItemsEO = new SarStandItemsEO();
+            BeanUtils.copyProperties(importDto,sarStandItemsEO);
+            try {
+                sarStandItemsEO.setStandId(standId);
+                addSarStandItems(sarStandItemsEO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return Result.success("0","导入数据成功");
     }
 
     /**

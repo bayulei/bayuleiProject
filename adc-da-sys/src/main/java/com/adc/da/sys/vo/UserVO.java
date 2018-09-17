@@ -36,6 +36,12 @@ public class UserVO {
 	private String rname;
 	private String deptId;
 
+	private Integer disableFlag;
+
+	private Integer unlockFlag;
+
+	private String userType;
+
 	public Integer getValidFlag() {
 		return validFlag;
 	}
@@ -212,5 +218,28 @@ public class UserVO {
 		}
 	}
 
+	public void setDisableFlag(Integer disableFlag){
+		this.disableFlag=disableFlag;
+	}
+
+	public Integer getDisableFlag(){
+		return this.disableFlag;
+	}
+
+	public void setUnlockFlag(Integer unlockFlag){
+		this.unlockFlag=unlockFlag;
+	}
+
+	public Integer getUnlockFlag(){
+		return this.unlockFlag;
+	}
+
+	public void setUserType(String userType){
+		this.userType=userType;
+	}
+
+	public String getUserType(){
+		return this.userType;
+	}
 
 }

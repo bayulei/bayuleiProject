@@ -1,6 +1,7 @@
 package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
@@ -12,9 +13,9 @@ import java.util.Date;
  */
 public class SarBussionessStandEO extends BaseEntity {
 
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private Integer validTime;
     private String putUser;
@@ -26,13 +27,13 @@ public class SarBussionessStandEO extends BaseEntity {
     private String replacedStandNum;
     private String replaceStandNum;
     private String quoteStand;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date firstPutTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date putYear;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date putTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date issueTime;
     private String energyKind;
     private String applyArctic;
@@ -43,6 +44,13 @@ public class SarBussionessStandEO extends BaseEntity {
     private String standSubclass;
     private String standGenera;
     private String id;
+
+    //目录ID   非标准信息表中的字段
+    private String  menuId;
+    private String standStatusShow; // 标准状态下拉框   --单选
+    private String applyArcticShow; // 适用车型下拉框  --多选
+    private String energyKindShow; // 能源种类下拉框   --多选
+
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -416,4 +424,11 @@ public class SarBussionessStandEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
 }
