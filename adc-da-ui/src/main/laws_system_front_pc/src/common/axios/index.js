@@ -4,7 +4,7 @@
  * @date: 2018-09-04 11:29:34
  */
 const axios = require('axios')
-axios.defaults.headers['Authorization'] = sessionStorage.token || ''
+// axios.defaults.headers['Authorization'] = sessionStorage.token || ''
 
 /**
  * @description: FormData
