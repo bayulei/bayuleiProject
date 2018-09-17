@@ -97,15 +97,6 @@ public class OrgEORestController extends BaseController<OrgEO>{
 //	@RequiresPermissions("sys:org:getTree")
 	public ResponseMessage<List<OrgEO>> getTree(){
 		OrgEO orgEO = new OrgEO();
-		String userId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
-		if(userId != null && !userId.isEmpty()){
-			UserEO getUser = userEOService.selectOrgByPrimaryKey(userId);
-			/*if(getUser != null){
-				if(!("").equals(getUser.getUseCorpId()) && getUser.getUseCorpId() != null){
-					orgEO.setCorpId(getUser.getUseCorpId());
-				}
-			}*/
-		}
 		List<OrgEO> eos = orgEOService.selectOrgAllNode(orgEO);
 		return Result.success(eos);
 	}
