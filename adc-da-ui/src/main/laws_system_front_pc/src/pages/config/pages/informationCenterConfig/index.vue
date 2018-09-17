@@ -6,15 +6,17 @@
           <Button type="info" @click="informationAdd">新增</Button>
           <Button type="error" style="margin-left: 15px">删除</Button>
           <!-- 显示模态框 -->
-          <Modal
-            v-model="informationModal"
-            :title="informationTitle">
-            <div v-if="modalType === 1">
-              <p>我是新增内容</p>
-            </div>
-            <div v-else>
-              <p>我是编辑内容</p>
-            </div>
+          <Modal v-model="informationModal" :title="informationTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"
+                 @on-ok="saveInformation">
+            <Form :model="informationModelAdd" label-position="right" :label-width="80">
+              <input v-model="informationModelAdd.id" v-show="false">
+              <FormItem label="模块类型">
+                <Input v-model="informationModelAdd.moduleType" :style="{width:6+'rem'}" disabled></Input>
+              </FormItem>
+              <FormItem label="模块名称">
+                <Input v-model="informationModelAdd.moduleName" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
+              </FormItem>
+            </Form>
           </Modal>
         </div>
         <div class="content">
@@ -38,6 +40,10 @@ export default {
       total: 0,
       page: 1,
       rows: 10,
+      informationModelAdd: {
+        moduleType: '资料中心', // 模块类型
+        moduleName: '' // 模块名称
+      },
       informationTable: [
         {
           type: 'selection',
@@ -45,7 +51,7 @@ export default {
           align: 'center'
         }, {
           title: '参数',
-          key: 'parameter',
+          key: 'moduleName',
           align: 'center'
         },
         {
@@ -92,7 +98,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.categoryDel(params.row.id)
+                    this.remove(params.row.id)
                   }
                 }
               }, '删除')
@@ -100,9 +106,7 @@ export default {
           }
         }
       ],
-      informationData: [{
-        parameter: '通知'
-      }]
+      informationData: []
     }
   },
   methods: {
@@ -111,21 +115,55 @@ export default {
       this.informationModal = true
       this.informationTitle = '新增参数'
       this.modalType = 1
+      this.informationModelAdd.moduleName = ''
     },
     // 编辑
     informationEdit (row) {
       this.informationModal = true
       this.informationTitle = '编辑参数'
       this.modalType = 2
+      this.informationModelAdd.moduleName = row.moduleName
+      this.informationModelAdd.id = row.id
     },
-    show (index) {
-      this.$Modal.info({
-        title: '查看参数',
-        content: `参数：${this.data1[index].parameter}`
+    // 查看
+    viewData (row) {
+      this.informationModal = true
+      this.modalType = 3
+      this.informationTitle = '查看标准'
+      this.informationModelAdd.moduleName = row.moduleName
+      this.informationModelAdd.id = row.id
+    },
+    // 删除
+    remove (id) {
+      this.handleSelectAll(false)
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.delete('lawss/msgModule', {
+            ids: id
+          }, {
+            _this: this
+          }, res => {
+            this.selectInformation()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
       })
     },
-    remove (index) {
-      this.data1.splice(index, 1)
+    // 批量删除
+    instance (type, content) {
+      const title = '请选择'
+      switch (type) {
+        case 'warning':
+          this.$Modal.warning({
+            title: title,
+            content: content
+          })
+          break
+      }
     },
     //  全选
     handleSelectAll (status) {
@@ -143,16 +181,42 @@ export default {
       this.rows = pageSize
       this.selectInformation()
     },
+    // 提交
+    saveInformation () {
+      let data = {
+        moduleType: '资料中心',
+        moduleName: this.informationModelAdd.moduleName
+      }
+      if (this.modalType === 1) {
+        this.$http.postData('lawss/msgModule', data, {
+          _this: this
+        }, res => {
+          this.selectInformation()
+        }, e => {
+        })
+      } else {
+        this.$http.putData('lawss/msgModule', {
+          moduleType: '资料中心',
+          moduleName: this.informationModelAdd.moduleName,
+          id: this.informationModelAdd.id
+        }, {
+          _this: this
+        }, res => {
+          this.selectInformation()
+        }, e => {
+        })
+      }
+    },
     // 加载表格
     selectInformation () {
-      this.$http.get('sys/lawss/msgModule/page', {
+      this.$http.get('lawss/msgModule/page', {
         pageNo: this.page,
         pageSize: this.rows
       }, {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.categoryData = res.data.list
+        this.informationData = res.data.list
         this.total = res.data.count
       }, e => {})
     }
@@ -163,7 +227,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   .InformationCenterConfig{
     display: flex;
     background: #FFF;
@@ -175,5 +239,13 @@ export default {
       margin-bottom:0.7rem;
 
     }
+  }
+  .hide-modal-footer{
+    .ivu-modal-footer{
+      display: none;
+    }
+  }
+  .ivu-modal-confirm .ivu-modal-confirm-footer{
+    display: block;
   }
 </style>

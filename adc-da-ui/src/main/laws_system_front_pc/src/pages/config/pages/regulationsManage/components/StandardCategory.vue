@@ -25,7 +25,7 @@
           </Modal>
         </div>
       </table-tools-bar>
-    <div class="content">
+      <div class="content">
       <loading :loading="loading">数据获取中</loading>
       <Table border ref="selection" :columns="categoryTable" :data="categoryData" @on-selection-change=" handleSelectone">
       </Table>
@@ -42,6 +42,7 @@ export default {
       modalType: '',
       categoryTitle: '', // 模态框标题
       selectNum: '', // 接收选中行数据
+      deleteType: '',
       standardForm: {
         standName: '', // 选项
         standCode: '', // 数据编码
@@ -149,17 +150,53 @@ export default {
     handleSelectone (row) {
       this.selectNum = row
     },
-    // 选择提示框
     instance (type, content) {
       const title = '请选择'
       switch (type) {
+        case 'info':
+          this.$Modal.info({
+            title: title,
+            content: content
+          })
+          break
+        case 'success':
+          this.$Modal.success({
+            title: title,
+            content: content
+          })
+          break
         case 'warning':
           this.$Modal.warning({
             title: title,
             content: content
           })
           break
+        case 'error':
+          this.$Modal.error({
+            title: title,
+            content: content
+          })
+          break
       }
+    },
+    // 删除选择提示框
+    confirm (content, id, url) {
+      this.$Modal.confirm({
+        title: '请选择',
+        content: content,
+        onOk: () => {
+          this.$http.delete('sys/dictype/deleteArr', {
+            ids: id
+          }, {
+            _this: this
+          }, res => {
+            this.selectCategory()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
+      })
     },
     // 新增
     categoryAdd () {
@@ -193,22 +230,8 @@ export default {
     // 删除
     categoryDel (id) {
       this.handleSelectAll(false)
-      this.$Modal.confirm({
-        title: '确认删除',
-        content: '<p>确认删除该条数据？</p>',
-        onOk: () => {
-          this.$http.delete('sys/dictype/deleteArr', {
-            ids: id
-          }, {
-            _this: this
-          }, res => {
-            this.selectCategory()
-          }, e => {
-          })
-        },
-        onCancel: () => {
-        }
-      })
+      const url = 'sys/dictype/deleteArr'
+      this.confirm('确定删除这一条数据', id, url)
     },
     // 批量删除
     categoryBatchDel () {
@@ -220,22 +243,8 @@ export default {
           delIds.push(this.selectNum[i].id)
         }
         delIds = delIds.join(',')
-        this.$Modal.confirm({
-          title: '确认删除',
-          content: '<p>确认删除该这些数据？</p>',
-          onOk: () => {
-            this.$http.delete('sys/dictype/deleteArr', {
-              ids: delIds
-            }, {
-              _this: this
-            }, res => {
-              this.selectCategory()
-            }, e => {
-            })
-          },
-          onCancel: () => {
-          }
-        })
+        const url = 'sys/dictype/deleteArr'
+        this.confirm('确认删除该这些数据', delIds, url)
       }
     },
     pageChange (page) {
@@ -275,7 +284,6 @@ export default {
         }, res => {
           this.selectCategory()
         }, e => {
-
         })
       } else if (this.modalType === 2) {
         this.$http.putData('sys/dictype', {
@@ -288,13 +296,9 @@ export default {
         }, res => {
           this.selectCategory()
         }, e => {
-
         })
       }
     }
-  },
-  components: {},
-  computed: {
   },
   mounted () {
     this.selectCategory()
@@ -302,14 +306,6 @@ export default {
 }
 </script>
 
-<style lang="less" >
+<style lang="less">
   .standard-classification {}
-  .hide-modal-footer{
-    .ivu-modal-footer{
-      display: none;
-    }
-  }
-  .ivu-modal-confirm .ivu-modal-confirm-footer{
-    display: block;
-  }
 </style>

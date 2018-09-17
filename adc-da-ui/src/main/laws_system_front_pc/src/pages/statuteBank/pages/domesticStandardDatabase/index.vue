@@ -380,7 +380,6 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
 export default {
   name: 'DomesticStandardLibrary',
   data () {
@@ -1172,9 +1171,7 @@ export default {
       parent.children.splice(index, 1)
     }
   },
-  components: {
-    draggable
-  },
+  components: {},
   props: {},
   watch: {
     stahndinfoList: {

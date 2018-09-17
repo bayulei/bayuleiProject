@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import StandardCategory from './components/StandardCategory'
 import StandardClassification from './components/StandardClassification'
-import ApplicableModel from './components/ApplicableModel'
+import StandardCategory from './components/StandardCategory'
+import NationalArea from './components/NationalArea'
 import ApplicableAuthentication from './components/ApplicableAuthentication'
 import DriveType from './components/DriveType'
 import Category from './components/Category'
@@ -21,16 +21,16 @@ export default {
   name: 'regulations-manage',
   data () {
     return {
-      active: 'StandardCategory',
-      tabsList: [{
+      active: 'StandardClassification',
+      tabsList: [ {
+        title: '标准/文件性质',
+        name: 'StandardClassification'
+      }, {
         title: '标准类别',
         name: 'StandardCategory'
       }, {
-        title: '标准分类',
-        name: 'StandardClassification'
-      }, {
-        title: '适用车型',
-        name: 'ApplicableModel'
+        title: '国家/地区',
+        name: 'NationalArea'
       }, {
         title: '适用认证',
         name: 'ApplicableAuthentication'
@@ -54,9 +54,9 @@ export default {
     }
   },
   components: {
-    StandardCategory,
     StandardClassification,
-    ApplicableModel,
+    StandardCategory,
+    NationalArea,
     ApplicableAuthentication,
     DriveType,
     Category

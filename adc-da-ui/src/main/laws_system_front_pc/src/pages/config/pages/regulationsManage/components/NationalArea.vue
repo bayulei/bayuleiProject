@@ -1,42 +1,41 @@
-<!-- 标准/文件性质 -->
 <template>
-  <div class="standard-classification">
-    <table-tools-bar>
-      <div slot="left">
-        <label-input v-model="standardForm.standName" placeholder="请输入选项" label="选项"></label-input>
-        <label-input v-model="standardForm.standCode" placeholder="请输入选项" label="数据编码"></label-input>
-        <Button type="info" class="query-button" @click="selectClass">查询</Button>
-      </div>
-      <div slot="right">
-        <Button type="info" @click="classAdd">增加</Button>
-        <Button type="error"  @click="classBatchDel">删除</Button>
-        <!--显示模态框-->
-        <Modal v-model="classModal" :title="classTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"
-               @on-ok="saveClass">
-          <Form :model="classModelAdd" label-position="right" :label-width="80">
-            <input v-model="classModelAdd.id" v-show="false">
-            <FormItem label="选项">
-              <Input v-model="classModelAdd.parts" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
-            </FormItem>
-            <FormItem label="数据编码">
-              <Input v-model="classModelAdd.coding" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
-            </FormItem>
-          </Form>
-        </Modal>
-      </div>
-    </table-tools-bar>
-    <div class="content">
-      <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="classTable" :data="classData" @on-selection-change=" handleSelectone">
-      </Table>
-      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-    </div>
-  </div>
+ <div id="national-area">
+   <table-tools-bar>
+     <div slot="left">
+       <label-input v-model="standardForm.standName" placeholder="请输入选项" label="选项"></label-input>
+       <label-input v-model="standardForm.standCode" placeholder="请输入选项" label="数据编码"></label-input>
+       <Button type="info" class="query-button" @click="selectClass">查询</Button>
+     </div>
+     <div slot="right">
+       <Button type="info" @click="classAdd">增加</Button>
+       <Button type="error"  @click="classBatchDel">删除</Button>
+       <!--显示模态框-->
+       <Modal v-model="classModal" :title="classTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"
+              @on-ok="saveClass">
+         <Form :model="classModelAdd" label-position="right" :label-width="80">
+           <input v-model="classModelAdd.id" v-show="false">
+           <FormItem label="选项">
+             <Input v-model="classModelAdd.parts" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
+           </FormItem>
+           <FormItem label="数据编码">
+             <Input v-model="classModelAdd.coding" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
+           </FormItem>
+         </Form>
+       </Modal>
+     </div>
+   </table-tools-bar>
+   <div class="content">
+     <loading :loading="loading">数据获取中</loading>
+     <Table border ref="selection" :columns="classTable" :data="classData" @on-selection-change=" handleSelectone">
+     </Table>
+     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
+   </div>
+ </div>
 </template>
 
 <script>
 export default {
-  name: 'standard-classification',
+  name: 'national-area',
   data () {
     return {
       modalType: '',
@@ -197,7 +196,7 @@ export default {
         title: '确认删除',
         content: '<p>确认删除该条数据？</p>',
         onOk: () => {
-          this.$http.delete('sys/dictype/delete', {
+          this.$http.delete('sys/dictype/deleteArr', {
             ids: id
           }, {
             _this: this
@@ -293,9 +292,6 @@ export default {
       }
     }
   },
-  components: {},
-  computed: {
-  },
   mounted () {
     this.selectClass()
   }
@@ -303,14 +299,5 @@ export default {
 </script>
 
 <style lang="less">
-  .standard-classification {
-  }
-  .hide-modal-footer{
-    .ivu-modal-footer{
-      display: none;
-    }
-  }
-  .ivu-modal-confirm .ivu-modal-confirm-footer{
-    display: block;
-  }
+   #national-area{}
 </style>
