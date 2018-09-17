@@ -39,7 +39,8 @@ module.exports = {
       '@': resolve('src'),
       'assets': resolve('src/assets'),
       'styles': resolve('src/assets/styles'),
-      'pages': resolve('src/pages')
+      'pages': resolve('src/pages'),
+      'zTree': resolve('src/assets/zTree')
     }
   },
   module: {

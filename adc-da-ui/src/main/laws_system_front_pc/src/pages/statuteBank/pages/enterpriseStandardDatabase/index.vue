@@ -1,11 +1,13 @@
-<!-- 试验报告库 -->
+<!-- 企业标准库 -->
 <template>
- <div id="TestReportLibrary">试验报告库</div>
+  <div id="enterpriseStandardDatabase">
+    企业标准库
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'TestReportLibrary',
+  name: 'index',
   data () {
     return {}
   },
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="less">
-   #TestReportLibrary{}
+  #enterpriseStandardDatabase{
+
+  }
 </style>

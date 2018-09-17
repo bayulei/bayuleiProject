@@ -1,6 +1,7 @@
 package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
+import com.adc.da.lawss.dto.SarStandItemsExcelDto;
 import com.adc.da.lawss.entity.SarStandItemsEO;
 import com.adc.da.lawss.page.SarStandItemsEOPage;
 import com.adc.da.lawss.vo.SarStandItemsVO;
@@ -18,5 +19,6 @@ import java.util.List;
 public interface SarStandItemsEODao extends BaseDao<SarStandItemsEO> {
 
     List<SarStandItemsVO> querySarStandItemsList(SarStandItemsEOPage page);
+
 
 }

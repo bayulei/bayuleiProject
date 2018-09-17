@@ -84,6 +84,22 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
+
+
+	@ApiOperation(value = "|SarStandardsInfoEO|查询")
+    @GetMapping("")
+    @RequiresPermissions("lawss:sarStandardsInfo:list")
+    public ResponseMessage<List<SarStandardsInfoEO>> list(SarStandardsInfoEOPage page) throws Exception {
+        return Result.success(sarStandardsInfoEOService.queryByList(page));
+	}
+
+    @ApiOperation(value = "|SarStandardsInfoEO|详情")
+    @GetMapping("/{id}")
+    @RequiresPermissions("lawss:sarStandardsInfo:get")
+    public ResponseMessage<SarStandardsInfoEO> find(@PathVariable String id) throws Exception {
+        return Result.success(sarStandardsInfoEOService.selectByPrimaryKey(id));
+    }
+
     /**
      * 自定义分页查询
      * @param page  标准信息
@@ -99,19 +115,6 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
-	@ApiOperation(value = "|SarStandardsInfoEO|查询")
-    @GetMapping("")
-    @RequiresPermissions("lawss:sarStandardsInfo:list")
-    public ResponseMessage<List<SarStandardsInfoEO>> list(SarStandardsInfoEOPage page) throws Exception {
-        return Result.success(sarStandardsInfoEOService.queryByList(page));
-	}
-
-    @ApiOperation(value = "|SarStandardsInfoEO|详情")
-    @GetMapping("/{id}")
-    @RequiresPermissions("lawss:sarStandardsInfo:get")
-    public ResponseMessage<SarStandardsInfoEO> find(@PathVariable String id) throws Exception {
-        return Result.success(sarStandardsInfoEOService.selectByPrimaryKey(id));
-    }
 
     /**
      * 添加一条标准
@@ -219,6 +222,13 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         }
     }
 
+    /**
+     * 修改标准
+     * @param sarStandardsInfoEO  标准信息
+     * @return
+     * @author gaoyan
+     * date 2018-09-04
+     */
     @ApiOperation(value = "|SarStandardsInfoEO|修改")
     @PostMapping(value="/updateSarStandardsInfo")
     //@RequiresPermissions("lawss:sarStandardsInfo:update")

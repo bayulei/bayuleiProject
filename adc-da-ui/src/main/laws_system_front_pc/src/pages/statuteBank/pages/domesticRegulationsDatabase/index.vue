@@ -1,6 +1,6 @@
 <!-- 国内法规库 -->
 <template>
- <div class="personal-data">
+ <div id="domesticRegulationsDatabase">
     <table-tools-bar>
       <div class="laws-info-form" slot="left">
         <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" class="label-input-form">
@@ -39,7 +39,7 @@
              </FormItem>
           </Col>
            <Col span="8">
-             <FormItem label="文件性质" prop="country" class="laws-info-item">
+             <FormItem label="文件性质" prop="lawsProperty" class="laws-info-item">
                <Select v-model="SarLawsInfoEO.lawsProperty">
                  <Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
                </Select>
@@ -243,7 +243,7 @@
 <script src="./js/DomesticRegulationsDatabase.js"></script>
 
 <style lang="less">
-  .personal-data{
+  #domesticRegulationsDatabase{
     .searchBtn{
       width: 2rem;
       height: 0.72rem;

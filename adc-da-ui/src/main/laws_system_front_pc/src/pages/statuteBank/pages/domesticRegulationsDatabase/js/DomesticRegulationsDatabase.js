@@ -6,9 +6,7 @@ export default {
       showLawsInfoModal: false,
       showLawsItemsModal: false,
       addLawsItemsModal: false,
-      importItemsModal: false,
       saveInfoBtn: true,
-      saveLawsItemsBtn: true,
       lawsInfo: {
         lawsNum: '',
         lawsName: '',
@@ -36,7 +34,6 @@ export default {
       },
       SarLawsItemsEO: {
         id: '',
-        lawsId: '',
         itemsNum: '',
         itemsName: '',
         parts: '',
@@ -46,11 +43,11 @@ export default {
         responsibleUnit: '',
         remarks: ''
       },
-      saveLawsId: '',
       total: 0,
       page: 1,
       rows: 10,
       loading: false,
+      lawsInfoImport: {},
       tableColumn: [
         {
           type: 'selection',
@@ -87,15 +84,15 @@ export default {
         },
         {
           title: '适用车型',
-          key: 'applyArcticShow'
+          key: 'applyArctic'
         },
         {
           title: '能源种类',
-          key: 'energyKindShow'
+          key: 'energyKind'
         },
         {
           title: '适用认证',
-          key: 'applyAuthShow'
+          key: 'applyAuth'
         },
         {
           title: '修改时间',
@@ -195,11 +192,11 @@ export default {
         },
         {
           title: '适用车型',
-          key: 'applyArcticShow'
+          key: 'applyArctic'
         },
         {
           title: '能源类型',
-          key: 'energyKindShow'
+          key: 'energyKind'
         },
         {
           title: '责任部门',
@@ -227,8 +224,8 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.editLawsItems(params.row)
-                    this.saveLawsItemsBtn = false
+                    this.edit(params.row)
+                    this.saveInfoBtn = false
                   }
                 }
               }, '属性'),
@@ -242,7 +239,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.editLawsItems(params.row)
+                    this.edit(params.row)
                   }
                 }
               }, '编辑'),
@@ -263,13 +260,8 @@ export default {
       ],
       itemsData: [],
       data: [],
-      lawsInfoImport: {},
-      lawsItemsImport: {},
       lawsPropertyOptions: '',
       lawsStatusOptions: '',
-      applyArcticOptions: '',
-      energyKindOptions: '',
-      applyAuthOptions: '',
       lawsInfoRules: {},
       lawsInfoFormRules: {
         lawsName: [
@@ -317,7 +309,6 @@ export default {
     },
     // 打开新增模态框
     openLawsModal () {
-      this.SarLawsInfoEO = ''
       this.showLawsInfoModal = true
       this.saveInfoBtn = true
     },
@@ -327,15 +318,9 @@ export default {
       this.saveInfoBtn = true
       this.SarLawsInfoEO = row
       this.SarLawsInfoEO.editLawsId = row.id
-      this.SarLawsInfoEO.applyArctic = this.combineToArray(this.SarLawsInfoEO.applyArctic)
-      this.SarLawsInfoEO.energyKind = this.combineToArray(this.SarLawsInfoEO.energyKind)
-      this.SarLawsInfoEO.applyAuth = this.combineToArray(this.SarLawsInfoEO.applyAuth)
     },
     // 提交新增/修改
     saveLawsInfo () {
-      this.SarLawsInfoEO.applyArctic = this.breakMultiSelect(this.SarLawsInfoEO.applyArctic)
-      this.SarLawsInfoEO.energyKind = this.breakMultiSelect(this.SarLawsInfoEO.energyKind)
-      this.SarLawsInfoEO.applyAuth = this.breakMultiSelect(this.SarLawsInfoEO.applyAuth)
       this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
       this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
       if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
@@ -378,6 +363,13 @@ export default {
         }
       })
     },
+    openFile () {
+      $('#lawsInfoFile').click()
+    },
+    lawsInfoFileBeforeUpload (val) {
+      let file = this.$refs.lawsInfoFile.files[0].name
+      console.log(file)
+    },
     // 导入
     importLawsInfo () {
       let file = this.$refs.lawsInfoFile.files[0]
@@ -393,7 +385,6 @@ export default {
     },
     // 分页查询条目
     searchLawsItems (lawsId) {
-      this.saveLawsId = lawsId
       this.$http.get('lawss/sarLawsItems/page', {
         lawsId: lawsId,
         page: this.itemPage,
@@ -409,90 +400,48 @@ export default {
 
       })
     },
-    searchLawsItemsByUnit () {
-      let lawsId = this.saveLawsId
-      this.searchLawsItems(lawsId)
-    },
     // 打开新增条目模态框
     openAddItemsModal () {
-      this.SarLawsItemsEO = ''
       this.addLawsItemsModal = true
-      this.saveLawsItemsBtn = true
-    },
-    // 打开编辑条目模态框
-    editLawsItems (row) {
-      this.addLawsItemsModal = true
-      this.saveLawsItemsBtn = true
-      this.SarLawsItemsEO = row
-      this.SarLawsItemsEO.applyArctic = this.combineToArray(this.SarLawsItemsEO.applyArctic)
-      this.SarLawsItemsEO.energyKind = this.combineToArray(this.SarLawsItemsEO.energyKind)
-    },
-    cancelAddItems () {
-      this.addLawsItemsModal = false
     },
     // 保存条目数据
     saveLawsItems () {
-      this.SarLawsItemsEO.applyArctic = this.breakMultiSelect(this.SarLawsItemsEO.applyArctic)
-      this.SarLawsItemsEO.energyKind = this.breakMultiSelect(this.SarLawsItemsEO.energyKind)
-      this.SarLawsItemsEO.lawsId = this.saveLawsId
-      if (this.SarLawsItemsEO.tackTime != null) {
-        this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
-      }
+      this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
       if (this.SarLawsItemsEO.id == null || this.SarLawsItemsEO.id === '') {
         this.$http.post('lawss/sarLawsItems/addLawsItems', this.SarLawsItemsEO, {
           _this: this
         }, res => {
           this.addLawsItemsModal = false
-          this.searchLawsItems(this.saveLawsId)
+          this.searchLawsItems()
         }, e => {
         })
       } else {
-        this.$http.put('lawss/sarLawsItems/updateLawsItems', this.SarLawsItemsEO, {
+        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', this.SarLawsInfoEO, {
           _this: this
         }, res => {
-          this.addLawsItemsModal = false
-          this.searchLawsItems(this.saveLawsId)
+          this.showLawsInfoModal = false
+          this.searchLawsInfo()
         }, e => {})
       }
     },
     // 删除条目
     removeLawsItems (id) {
-      this.$http.put('lawss/sarLawsItems/deleteLawsItems', {
-        id: id
-      }, {
-        _this: this
-      }, res => {
-        this.searchLawsItems(this.saveLawsId)
-      }, e => {
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.put('lawss/sarLawsItems/deleteLawsItems', {
+            id: id
+          }, {
+            _this: this
+          }, res => {
+            this.searchLawsItems()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
       })
-    },
-    // 导入条目
-    importLawsItems () {
-      let file = this.$refs.lawsItemsFile.files[0]
-      let lawsId = this.saveLawsId
-      this.$http.post('lawss/sarLawsItems/importLawsItems', {
-        file: file,
-        lawsId: lawsId
-      }, {
-        _this: this
-      }, res => {
-        this.searchLawsItems(this.saveLawsId)
-      }, e => {
-
-      })
-    },
-    // 分解多选下拉
-    breakMultiSelect (value) {
-      let stringValue = ''
-      for (let i = 0; i < value.length; i++) {
-        stringValue += value[i] + ','
-      }
-      return stringValue
-    },
-    // 多选合并为数组显示
-    combineToArray (value) {
-      let arrayValue = value.split(',')
-      return arrayValue
     },
     // 加载数据字典
     loadDicTypeDatas1 () {
@@ -519,42 +468,6 @@ export default {
         }
       }, e => {
       })
-    },
-    loadDicTypeDatas3 () {
-      this.$http.get('sys/dictype/getDicTypeByDicCode', {
-        dicCode: 'PRODUCTTYPE'
-      }, {
-        _this: this
-      }, res => {
-        if (res.data != null) {
-          this.applyArcticOptions = res.data
-        }
-      }, e => {
-      })
-    },
-    loadDicTypeDatas4 () {
-      this.$http.get('sys/dictype/getDicTypeByDicCode', {
-        dicCode: 'ENERGYTYPES'
-      }, {
-        _this: this
-      }, res => {
-        if (res.data != null) {
-          this.energyKindOptions = res.data
-        }
-      }, e => {
-      })
-    },
-    loadDicTypeDatas5 () {
-      this.$http.get('sys/dictype/getDicTypeByDicCode', {
-        dicCode: 'PROVETYPE'
-      }, {
-        _this: this
-      }, res => {
-        if (res.data != null) {
-          this.applyAuthOptions = res.data
-        }
-      }, e => {
-      })
     }
   },
   components: {},
@@ -569,8 +482,5 @@ export default {
     this.searchLawsInfo()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()
-    this.loadDicTypeDatas3()
-    this.loadDicTypeDatas4()
-    this.loadDicTypeDatas5()
   }
 }

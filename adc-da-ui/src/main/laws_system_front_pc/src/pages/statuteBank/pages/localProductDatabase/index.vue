@@ -1,11 +1,13 @@
-<!-- 云端适应性分析 -->
+<!-- 本地产品/项目库 -->
 <template>
- <div id="index"></div>
+  <div id="localProductDatabase">
+    本地产品项目库
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'index',
+  name: 'localProductDatabase',
   data () {
     return {}
   },
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="less">
-   #index{}
+  #localProductDatabase{
+
+  }
 </style>

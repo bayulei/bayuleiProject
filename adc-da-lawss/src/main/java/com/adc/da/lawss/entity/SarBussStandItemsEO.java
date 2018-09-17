@@ -26,7 +26,7 @@ public class SarBussStandItemsEO extends BaseEntity {
     private Date tackTime;
     private String parts;
     private String itemsName;
-    private String tiemsNum;
+    private String itemsNum;
     private String standId;
     private String id;
 
@@ -43,7 +43,7 @@ public class SarBussStandItemsEO extends BaseEntity {
      * <li>tackTime -> tack_time</li>
      * <li>parts -> parts</li>
      * <li>itemsName -> items_name</li>
-     * <li>tiemsNum -> tiems_num</li>
+     * <li>itemsNum -> items_num</li>
      * <li>standId -> stand_id</li>
      * <li>id -> id</li>
      */
@@ -60,7 +60,7 @@ public class SarBussStandItemsEO extends BaseEntity {
             case "tackTime": return "tack_time";
             case "parts": return "parts";
             case "itemsName": return "items_name";
-            case "tiemsNum": return "tiems_num";
+            case "itemsNum": return "items_num";
             case "standId": return "stand_id";
             case "id": return "id";
             default: return null;
@@ -80,7 +80,7 @@ public class SarBussStandItemsEO extends BaseEntity {
      * <li>tack_time -> tackTime</li>
      * <li>parts -> parts</li>
      * <li>items_name -> itemsName</li>
-     * <li>tiems_num -> tiemsNum</li>
+     * <li>items_num -> itemsNum</li>
      * <li>stand_id -> standId</li>
      * <li>id -> id</li>
      */
@@ -97,7 +97,7 @@ public class SarBussStandItemsEO extends BaseEntity {
             case "tack_time": return "tackTime";
             case "parts": return "parts";
             case "items_name": return "itemsName";
-            case "tiems_num": return "tiemsNum";
+            case "items_num": return "itemsNum";
             case "stand_id": return "standId";
             case "id": return "id";
             default: return null;
@@ -205,13 +205,13 @@ public class SarBussStandItemsEO extends BaseEntity {
     }
 
     /**  **/
-    public String getTiemsNum() {
-        return this.tiemsNum;
+    public String getItemsNum() {
+        return this.itemsNum;
     }
 
     /**  **/
-    public void setTiemsNum(String tiemsNum) {
-        this.tiemsNum = tiemsNum;
+    public void setItemsNum(String itemsNum) {
+        this.itemsNum = itemsNum;
     }
 
     /**  **/
