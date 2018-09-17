@@ -174,9 +174,6 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		dicTypeEOService.delete(Arrays.asList(ids));
 		return Result.success("","删除成功",null);
 	}
-
-
-
 	/**
 	 * @Author liwenxuan
 	 * @Description  删除一条数据
@@ -185,9 +182,9 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	 * @return com.adc.da.util.http.ResponseMessage
 	 **/
 	@ApiOperation(value = "|DicTypeEO|删除一条数据")
-	@DeleteMapping("/delete/{ids}")
+	@DeleteMapping("/delete")
 //	@RequiresPermissions("sys:dicType:deleteArr")
-	public ResponseMessage deleteArr(@NotNull @PathVariable("ids") String id) throws Exception {
+	public ResponseMessage deleteArr( String id) throws Exception {
 		dicTypeEOService.deleteDicTypeByDicId(id);
 		return Result.success("","删除成功",null);
 	}

@@ -73,6 +73,8 @@ public class MsgModuleEOController extends BaseController<MsgModuleEO>{
 //    @RequiresPermissions("lawss:msgModule:save")
     public ResponseMessage<MsgModuleEO> create(@RequestBody MsgModuleEO msgModuleEO) throws Exception {
         msgModuleEO.setId(UUIDUtils.randomUUID10());
+        msgModuleEO.setValidFlag(0);
+        msgModuleEO.setDefaultFlag(0);
         msgModuleEOService.insertSelective(msgModuleEO);
         return Result.success(msgModuleEO);
     }
