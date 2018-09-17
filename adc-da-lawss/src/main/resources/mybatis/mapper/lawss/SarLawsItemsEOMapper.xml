@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adc.da.lawss.dao.SarStandItemsEODao" >
+<mapper namespace="com.adc.da.lawss.dao.SarLawsItemsEODao" >
   <!-- Result Map-->
-  <resultMap id="BaseResultMap" type="com.adc.da.lawss.vo.SarStandItemsVO" >
+  <resultMap id="BaseResultMap" type="com.adc.da.lawss.entity.SarLawsItemsEO" >
     <id column="id" property="id" />
     <result column="modify_time" property="modifyTime" />
     <result column="creation_time" property="creationTime" />
@@ -16,14 +16,14 @@
     <result column="parts" property="parts" />
     <result column="items_name" property="itemsName" />
     <result column="items_num" property="itemsNum" />
-    <result column="stand_id" property="standId" />
+    <result column="laws_id" property="lawsId" />
+    <result column="applyArcticShow" property="applyArcticShow" />
+    <result column="energyKindShow" property="energyKindShow" />
   </resultMap>
 
-
-
-  <!-- SAR_STAND_ITEMS table all fields -->
+  <!-- SAR_LAWS_ITEMS table all fields -->
   <sql id="Base_Column_List" >
-     modify_time, creation_time, creation_user, valid_flag, remarks, responsible_unit, energy_kind, apply_arctic, tack_time, parts, items_name, items_num, stand_id, id
+     modify_time, creation_time, creation_user, valid_flag, remarks, responsible_unit, energy_kind, apply_arctic, tack_time, parts, items_name, items_num, laws_id, id
   </sql>
 
   <!-- 查询条件 -->
@@ -58,7 +58,7 @@
         and remarks ${remarksOperator} #{remarks}
       </if>
       <if test="responsibleUnit != null" >
-        and responsible_unit ${responsibleUnitOperator} #{responsibleUnit}
+        and responsible_unit ${responsibleUnitOperator} concat(concat('%',#{responsibleUnit}),'%')
       </if>
       <if test="energyKind != null" >
         and energy_kind ${energyKindOperator} #{energyKind}
@@ -84,8 +84,8 @@
       <if test="itemsNum != null" >
         and items_num ${itemsNumOperator} #{itemsNum}
       </if>
-      <if test="standId != null" >
-        and stand_id ${standIdOperator} #{standId}
+      <if test="lawsId != null" >
+        and laws_id ${lawsIdOperator} #{lawsId}
       </if>
       <if test="id != null" >
         and id ${idOperator} #{id}
@@ -94,20 +94,20 @@
   </sql>
 
   <!-- 插入记录 -->
-  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarStandItemsEO" >
+  <insert id="insert" parameterType="com.adc.da.lawss.entity.SarLawsItemsEO" >
     <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_SAR_STAND_ITEMS.NEXTVAL FROM DUAL
+        SELECT SEQ_SAR_LAWS_ITEMS.NEXTVAL FROM DUAL
     </selectKey> -->
-    insert into SAR_STAND_ITEMS(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{creationUser, jdbcType=VARCHAR}, #{validFlag, jdbcType=INTEGER}, #{remarks, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{energyKind, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{tackTime, jdbcType=TIMESTAMP}, #{parts, jdbcType=VARCHAR}, #{itemsName, jdbcType=VARCHAR}, #{itemsNum, jdbcType=VARCHAR}, #{standId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+    insert into SAR_LAWS_ITEMS(<include refid="Base_Column_List" />)
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{creationUser, jdbcType=VARCHAR}, #{validFlag, jdbcType=INTEGER}, #{remarks, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{energyKind, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{tackTime, jdbcType=TIMESTAMP}, #{parts, jdbcType=VARCHAR}, #{itemsName, jdbcType=VARCHAR}, #{itemsNum, jdbcType=VARCHAR}, #{lawsId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
-  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarStandItemsEO" >
+  <insert id="insertSelective" parameterType="com.adc.da.lawss.entity.SarLawsItemsEO" >
         <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_SAR_STAND_ITEMS.NEXTVAL FROM DUAL
+        SELECT SEQ_SAR_LAWS_ITEMS.NEXTVAL FROM DUAL
     </selectKey> -->
-        insert into SAR_STAND_ITEMS
+        insert into SAR_LAWS_ITEMS
     <trim prefix="(" suffix=")" suffixOverrides="," >
                 <if test="modifyTime != null" >modify_time,</if>
                 <if test="creationTime != null" >creation_time,</if>
@@ -121,7 +121,7 @@
                 <if test="parts != null" >parts,</if>
                 <if test="itemsName != null" >items_name,</if>
                 <if test="itemsNum != null" >items_num,</if>
-                <if test="standId != null" >stand_id,</if>
+                <if test="lawsId != null" >laws_id,</if>
                 <if test="id != null" >id,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -137,14 +137,14 @@
                 <if test="parts != null" >#{parts, jdbcType=VARCHAR},</if>
                 <if test="itemsName != null" >#{itemsName, jdbcType=VARCHAR},</if>
                 <if test="itemsNum != null" >#{itemsNum, jdbcType=VARCHAR},</if>
-                <if test="standId != null" >#{standId, jdbcType=VARCHAR},</if>
+                <if test="lawsId != null" >#{lawsId, jdbcType=VARCHAR},</if>
                 <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
             </trim>
   </insert>
 
   <!-- 根据pk，修改记录-->
-  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarStandItemsEO" >
-    update SAR_STAND_ITEMS
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.lawss.entity.SarLawsItemsEO" >
+    update SAR_LAWS_ITEMS
        set  modify_time = #{modifyTime},
             creation_time = #{creationTime},
             creation_user = #{creationUser},
@@ -157,13 +157,13 @@
             parts = #{parts},
             items_name = #{itemsName},
             items_num = #{itemsNum},
-            stand_id = #{standId}
+            laws_id = #{lawsId}
      where  id = #{id}
   </update>
 
   <!-- 修改记录，只修改只不为空的字段 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarStandItemsEO" >
-    update SAR_STAND_ITEMS
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.lawss.entity.SarLawsItemsEO" >
+    update SAR_LAWS_ITEMS
     <set >
       <if test="modifyTime != null" >
         modify_time = #{modifyTime},
@@ -201,39 +201,58 @@
       <if test="itemsNum != null" >
         items_num = #{itemsNum},
       </if>
-      <if test="standId != null" >
-        stand_id = #{standId},
+      <if test="lawsId != null" >
+        laws_id = #{lawsId},
       </if>
     </set>
      where id = #{id}
   </update>
 
-  <!-- 根据id查询 SAR_STAND_ITEMS -->
+  <!-- 根据id查询 SAR_LAWS_ITEMS -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List" /> 
-      from SAR_STAND_ITEMS
+      from SAR_LAWS_ITEMS
      where id = #{value}
 
   </select>
 
   <!-- 删除记录 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from SAR_STAND_ITEMS
+    delete from SAR_LAWS_ITEMS
      where id = #{value}
 
   </delete>
 
-  <!-- SAR_STAND_ITEMS 列表总数-->
+  <!-- SAR_LAWS_ITEMS 列表总数-->
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
-    select count(1) from SAR_STAND_ITEMS
+    select count(1) from SAR_LAWS_ITEMS
     <include refid="Base_Where_Clause"/>
   </select>
 
-  <!-- 查询SAR_STAND_ITEMS列表 -->
+  <!-- 查询SAR_LAWS_ITEMS列表 -->
   <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-	select <include refid="Base_Column_List" /> from
+	select <include refid="Base_Column_List" />,applyArcticShow,energyKindShow from
 		(select tmp_tb.* , rownum rn from
-			(select <include refid="Base_Column_List" /> from SAR_STAND_ITEMS
+			(select <include refid="Base_Column_List" />,
+              (
+                  SELECT
+                  listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_LAWS_ITEM_VAL.PROPERTY_TYPE )
+                  FROM
+                  SAR_LAWS_ITEM_VAL left join TS_DICTYPE  on  (TS_DICTYPE.DIC_TYPE_CODE = SAR_LAWS_ITEM_VAL.PROPERTY_VAL  and TS_DICTYPE.DIC_ID is not null)
+                  WHERE
+                  SAR_LAWS_ITEM_VAL.LAWS_ITEM_ID = SAR_LAWS_ITEMS.ID
+                  AND SAR_LAWS_ITEM_VAL.PROPERTY_TYPE = 'PRODUCTTYPE'
+              ) AS applyArcticShow,
+              (
+                  SELECT
+                  listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_LAWS_ITEM_VAL.PROPERTY_TYPE )
+                  FROM
+                  SAR_LAWS_ITEM_VAL left join TS_DICTYPE  on  (TS_DICTYPE.DIC_TYPE_CODE = SAR_LAWS_ITEM_VAL.PROPERTY_VAL  and TS_DICTYPE.DIC_ID is not null)
+                  WHERE
+                  SAR_LAWS_ITEM_VAL.LAWS_ITEM_ID = SAR_LAWS_ITEMS.ID
+                  AND SAR_LAWS_ITEM_VAL.PROPERTY_TYPE = 'ENERGYTYPES'
+              ) AS energyKindShow
+              from SAR_LAWS_ITEMS
 			 <include refid="Base_Where_Clause"/>
 			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
 			 	${pager.orderCondition}
@@ -243,36 +262,11 @@
   </select>
 
   <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-    select <include refid="Base_Column_List"/> from SAR_STAND_ITEMS
+    select <include refid="Base_Column_List"/> from SAR_LAWS_ITEMS
     <include refid="Base_Where_Clause"/>
     <if test="pager.orderCondition != null and pager.orderCondition != ''" >
        ${pager.orderCondition}
     </if>
   </select>
-
-   <select id="querySarStandItemsList" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarStandItemsEOPage">
-        select <include refid="Base_Column_List"/>,
-       (
-       SELECT
-       listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_STAND_ITEM_VAL.property_type )
-       FROM
-       SAR_STAND_ITEM_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_STAND_ITEM_VAL.property_val  and TS_DICTYPE.dic_id is not null)
-       WHERE
-       SAR_STAND_ITEM_VAL.ITEM_ID = SAR_STAND_ITEMS.id
-       AND SAR_STAND_ITEM_VAL.property_type = 'APPLY_ARCTIC'
-       ) AS applyArcticShow,
-       (
-       SELECT
-       listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_STAND_ITEM_VAL.property_type )
-       FROM
-       SAR_STAND_ITEM_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_STAND_ITEM_VAL.property_val  and TS_DICTYPE.dic_id is not null)
-       WHERE
-       SAR_STAND_ITEM_VAL.ITEM_ID = SAR_STAND_ITEMS.id
-       AND SAR_STAND_ITEM_VAL.property_type = 'ENERGY_KIND'
-       ) AS emergyKindShow
-        from SAR_STAND_ITEMS
-
-        <include refid="Base_Where_Clause"/>
-   </select>
 
 </mapper>

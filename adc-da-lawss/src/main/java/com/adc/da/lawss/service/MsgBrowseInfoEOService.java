@@ -1,5 +1,6 @@
 package com.adc.da.lawss.service;
 
+import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.MsgBrowseInfoEODao;
 import com.adc.da.lawss.entity.MsgBrowseInfoEO;
+
+import java.util.Date;
 
 
 /**
@@ -32,5 +35,19 @@ public class MsgBrowseInfoEOService extends BaseService<MsgBrowseInfoEO, String>
     public MsgBrowseInfoEODao getDao() {
         return dao;
     }
+//新增
+    public int insertSelective(MsgBrowseInfoEO msgBrowseInfoEO) throws Exception {
+        msgBrowseInfoEO.setId(UUID.randomUUID10());
+        msgBrowseInfoEO.setCreationTime(new Date());
+        msgBrowseInfoEO.setModifyTime(new Date());
+//        浏览了多长时间
+//        msgBrowseInfoEO.setBrowseTime(new Date());
+        return dao.insertSelective(msgBrowseInfoEO);
+    }
 
+//修改
+public int updateByPrimaryKeySelective(MsgBrowseInfoEO msgBrowseInfoEO) throws Exception {
+    msgBrowseInfoEO.setModifyTime(new Date());
+    return dao.updateByPrimaryKeySelective(msgBrowseInfoEO);
+}
 }

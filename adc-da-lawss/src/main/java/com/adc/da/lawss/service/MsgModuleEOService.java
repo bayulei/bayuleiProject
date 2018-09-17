@@ -33,4 +33,9 @@ public class MsgModuleEOService extends BaseService<MsgModuleEO, String> {
         return dao;
     }
 
+
+//    详情
+public MsgModuleEO selectByPrimaryKey(String id) throws Exception {
+    return dao.selectByPrimaryKey(id);
+}
 }

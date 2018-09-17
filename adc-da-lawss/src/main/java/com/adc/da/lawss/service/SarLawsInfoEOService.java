@@ -139,7 +139,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
                 SarLawsValEO sarLawsValEO = new SarLawsValEO();
                 sarLawsValEO.setId(UUID.randomUUID(20));
                 sarLawsValEO.setLawsId(infoId);
-                sarLawsValEO.setPropertyType("ENERGYTYPES");
+                sarLawsValEO.setPropertyType("PROVETYPE");
                 sarLawsValEO.setPropertyVal(applyAuth[p]);
                 sarLawsValEO.setValidFlag(0);
                 sarLawsValEO.setCreationTime(new Date());
@@ -167,11 +167,13 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             sarLawsValEOPage.setValidFlag("0");
             List<SarLawsValEO> listLawsVal = sarLawsValEODao.selectByLawsVal(sarLawsValEOPage);
             //判断法规关联表是否包含该条法规
-            if(!listLawsVal.isEmpty()){
-                //法规关联表修改有效标识（删除旧关联表信息）
-                for(int i=0;i<listLawsVal.size();i++){
-                    String lawsValId = listLawsVal.get(i).getId();
-                    sarLawsValEODao.deleteByValId(lawsValId);
+            if(listLawsVal != null){
+                if(!listLawsVal.isEmpty()){
+                    //法规关联表修改有效标识（删除旧关联表信息）
+                    for(int i=0;i<listLawsVal.size();i++){
+                        String lawsValId = listLawsVal.get(i).getId();
+                        sarLawsValEODao.deleteByValId(lawsValId);
+                    }
                 }
             }
 
@@ -204,17 +206,19 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             sarLawsMenuEOpage.setValidFlag("0");
             List<SarLawsMenuEO> listLawsMenu =  sarLawsMenuEODao.selectByLawsInfo(sarLawsMenuEOpage);
             //判断法规目录表是否包含该条法规
-            if(!listLawsMenu.isEmpty()){
-                for(int j=0;j<listLawsMenu.size();j++){
-                    String lawsMenuId = listLawsMenu.get(j).getId();
-                    SarLawsMenuEO sarLawsMenuEO = new SarLawsMenuEO();
-                    sarLawsMenuEO.setId(lawsMenuId);
-                    sarLawsMenuEO.setLawsId(infoId);
-                    sarLawsMenuEO.setValidFlag(0);
-                    //法规目录关联表修改有效标识
-                    sarLawsMenuEODao.updateByPrimaryKeySelective(sarLawsMenuEO);
-                }
+            if(listLawsMenu != null) {
+                if (!listLawsMenu.isEmpty()) {
+                    for (int j = 0; j < listLawsMenu.size(); j++) {
+                        String lawsMenuId = listLawsMenu.get(j).getId();
+                        SarLawsMenuEO sarLawsMenuEO = new SarLawsMenuEO();
+                        sarLawsMenuEO.setId(lawsMenuId);
+                        sarLawsMenuEO.setLawsId(infoId);
+                        sarLawsMenuEO.setValidFlag(0);
+                        //法规目录关联表修改有效标识
+                        sarLawsMenuEODao.updateByPrimaryKeySelective(sarLawsMenuEO);
+                    }
 
+                }
             }
 
             SarLawsValEOPage sarLawsValEOPage = new SarLawsValEOPage();
@@ -222,17 +226,19 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             sarLawsValEOPage.setValidFlag("0");
             List<SarLawsValEO> listLawsVal = sarLawsValEODao.selectByLawsVal(sarLawsValEOPage);
             //判断法规关联表是否包含该条法规
-            if(!listLawsVal.isEmpty()){
-                //法规关联表修改有效标识
-                for(int i=0;i<listLawsVal.size();i++){
-                    String lawsValId = listLawsVal.get(i).getId();
-                    SarLawsValEO sarLawsValEO = new SarLawsValEO();
-                    sarLawsValEO.setId(lawsValId);
-                    sarLawsValEO.setLawsId(infoId);
-                    sarLawsValEO.setValidFlag(1);
-                    sarLawsValEODao.updateByPrimaryKeySelective(sarLawsValEO);
-                }
+            if(listLawsVal != null) {
+                if (!listLawsVal.isEmpty()) {
+                    //法规关联表修改有效标识
+                    for (int i = 0; i < listLawsVal.size(); i++) {
+                        String lawsValId = listLawsVal.get(i).getId();
+                        SarLawsValEO sarLawsValEO = new SarLawsValEO();
+                        sarLawsValEO.setId(lawsValId);
+                        sarLawsValEO.setLawsId(infoId);
+                        sarLawsValEO.setValidFlag(1);
+                        sarLawsValEODao.updateByPrimaryKeySelective(sarLawsValEO);
+                    }
 
+                }
             }
 
             return Result.success("0","删除成功",sarLawsInfoEO);

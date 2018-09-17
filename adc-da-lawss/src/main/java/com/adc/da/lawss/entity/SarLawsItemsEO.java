@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * <b>功能：</b>SAR_STAND_ITEMS SarStandItemsEOEntity<br>
+ * <b>功能：</b>SAR_LAWS_ITEMS SarLawsItemsEOEntity<br>
  * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2018-09-03 <br>
+ * <b>日期：</b> 2018-09-13 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
-public class SarStandItemsEO extends BaseEntity {
+public class SarLawsItemsEO extends BaseEntity {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
@@ -28,8 +28,10 @@ public class SarStandItemsEO extends BaseEntity {
     private String parts;
     private String itemsName;
     private String itemsNum;
-    private String standId;
+    private String lawsId;
     private String id;
+    private String applyArcticShow;
+    private String energyKindShow;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -46,7 +48,7 @@ public class SarStandItemsEO extends BaseEntity {
      * <li>parts -> parts</li>
      * <li>itemsName -> items_name</li>
      * <li>itemsNum -> items_num</li>
-     * <li>standId -> stand_id</li>
+     * <li>lawsId -> laws_id</li>
      * <li>id -> id</li>
      */
     public static String fieldToColumn(String fieldName) {
@@ -64,8 +66,10 @@ public class SarStandItemsEO extends BaseEntity {
             case "parts": return "parts";
             case "itemsName": return "items_name";
             case "itemsNum": return "items_num";
-            case "standId": return "stand_id";
+            case "lawsId": return "laws_id";
             case "id": return "id";
+            case "applyArcticShow": return "applyArcticShow";
+            case "energyKindShow": return "energyKindShow";
             default: return null;
         }
     }
@@ -85,7 +89,7 @@ public class SarStandItemsEO extends BaseEntity {
      * <li>parts -> parts</li>
      * <li>items_name -> itemsName</li>
      * <li>items_num -> itemsNum</li>
-     * <li>stand_id -> standId</li>
+     * <li>laws_id -> lawsId</li>
      * <li>id -> id</li>
      */
     public static String columnToField(String columnName) {
@@ -103,8 +107,10 @@ public class SarStandItemsEO extends BaseEntity {
             case "parts": return "parts";
             case "items_name": return "itemsName";
             case "items_num": return "itemsNum";
-            case "stand_id": return "standId";
+            case "laws_id": return "lawsId";
             case "id": return "id";
+            case "applyArcticShow": return "applyArcticShow";
+            case "energyKindShow": return "energyKindShow";
             default: return null;
         }
     }
@@ -230,13 +236,13 @@ public class SarStandItemsEO extends BaseEntity {
     }
 
     /**  **/
-    public String getStandId() {
-        return this.standId;
+    public String getLawsId() {
+        return this.lawsId;
     }
 
     /**  **/
-    public void setStandId(String standId) {
-        this.standId = standId;
+    public void setLawsId(String lawsId) {
+        this.lawsId = lawsId;
     }
 
     /**  **/
@@ -249,4 +255,19 @@ public class SarStandItemsEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getApplyArcticShow() {
+        return applyArcticShow;
+    }
+
+    public void setApplyArcticShow(String applyArcticShow) {
+        this.applyArcticShow = applyArcticShow;
+    }
+
+    public String getEnergyKindShow() {
+        return energyKindShow;
+    }
+
+    public void setEnergyKindShow(String energyKindShow) {
+        this.energyKindShow = energyKindShow;
+    }
 }

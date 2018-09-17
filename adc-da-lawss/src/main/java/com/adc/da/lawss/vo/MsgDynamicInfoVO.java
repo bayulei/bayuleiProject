@@ -1,16 +1,17 @@
-package com.adc.da.lawss.entity;
+package com.adc.da.lawss.vo;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.adc.da.lawss.entity.MsgFileEO;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
- * <b>功能：</b>MSG_DYNAMIC_INFO MsgDynamicInfoEOEntity<br>
- * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2018-09-03 <br>
- * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
+ * Created by Administrator on 2018/9/13 19:29
  */
-public class MsgDynamicInfoEO extends BaseEntity {
+public class MsgDynamicInfoVO extends BaseEntity {
+
 
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
@@ -27,6 +28,19 @@ public class MsgDynamicInfoEO extends BaseEntity {
     private String msgMode;
     private String msgType;
     private String id;
+
+//新填字段
+//    文件ID
+    private String attId;
+//    文件后缀（类型）
+    private String fileSuffix;
+//    文件名称
+    private String fileName;
+//    消息Id
+    private String msgId;
+
+//
+    List<MsgFileEO> msgFileEOList = new ArrayList<MsgFileEO>();
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -97,73 +111,59 @@ public class MsgDynamicInfoEO extends BaseEntity {
             default: return null;
         }
     }
-    
-    /**  **/
+
     public Date getModifyTime() {
-        return this.modifyTime;
+        return modifyTime;
     }
 
-    /**  **/
     public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
     }
 
-    /**  **/
     public Date getCreationTime() {
-        return this.creationTime;
+        return creationTime;
     }
 
-    /**  **/
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
-    /**  **/
     public Integer getValidFlag() {
-        return this.validFlag;
+        return validFlag;
     }
 
-    /**  **/
     public void setValidFlag(Integer validFlag) {
         this.validFlag = validFlag;
     }
 
-    /**  **/
     public String getPubOrg() {
-        return this.pubOrg;
+        return pubOrg;
     }
 
-    /**  **/
     public void setPubOrg(String pubOrg) {
         this.pubOrg = pubOrg;
     }
 
-    /**  **/
     public String getPubUser() {
-        return this.pubUser;
+        return pubUser;
     }
 
-    /**  **/
     public void setPubUser(String pubUser) {
         this.pubUser = pubUser;
     }
 
-    /**  **/
     public Date getPubTime() {
-        return this.pubTime;
+        return pubTime;
     }
 
-    /**  **/
     public void setPubTime(Date pubTime) {
         this.pubTime = pubTime;
     }
 
-    /**  **/
     public String getLinkUri() {
-        return this.linkUri;
+        return linkUri;
     }
 
-    /**  **/
     public void setLinkUri(String linkUri) {
         this.linkUri = linkUri;
     }
@@ -176,44 +176,75 @@ public class MsgDynamicInfoEO extends BaseEntity {
         this.content = content;
     }
 
-    /**  **/
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
-    /**  **/
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**  **/
     public String getMsgMode() {
-        return this.msgMode;
+        return msgMode;
     }
 
-    /**  **/
     public void setMsgMode(String msgMode) {
         this.msgMode = msgMode;
     }
 
-    /**  **/
     public String getMsgType() {
-        return this.msgType;
+        return msgType;
     }
 
-    /**  **/
     public void setMsgType(String msgType) {
         this.msgType = msgType;
     }
 
-    /**  **/
     public String getId() {
-        return this.id;
+        return id;
     }
 
-    /**  **/
     public void setId(String id) {
         this.id = id;
     }
 
+    public String getAttId() {
+        return attId;
+    }
+
+    public void setAttId(String attId) {
+        this.attId = attId;
+    }
+
+    public String getFileSuffix() {
+        return fileSuffix;
+    }
+
+    public void setFileSuffix(String fileSuffix) {
+        this.fileSuffix = fileSuffix;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
+    public List<MsgFileEO> getMsgFileEOList() {
+        return msgFileEOList;
+    }
+
+    public void setMsgFileEOList(List<MsgFileEO> msgFileEOList) {
+        this.msgFileEOList = msgFileEOList;
+    }
 }

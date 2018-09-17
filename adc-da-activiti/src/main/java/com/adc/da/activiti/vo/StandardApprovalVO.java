@@ -11,19 +11,19 @@ public class StandardApprovalVO extends ApprovalProcessVO implements Serializabl
     /**
      *  附件
      */
-    private String fileUrl;
+    private List<String> fileIdList;
 
     /**
      *  分发的接受人（所有编制部门标准化员）
      */
     private List<String> assignerUserList;
 
-    public String getFileUrl() {
-        return fileUrl;
+    public List<String> getFileIdList() {
+        return fileIdList;
     }
 
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+    public void setFileIdList(List<String> fileIdList) {
+        this.fileIdList = fileIdList;
     }
 
     public List<String> getAssignerUserList() {

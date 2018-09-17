@@ -90,17 +90,23 @@
          <Row>
            <Col span="8">
              <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.applyArctic"></Input>
+               <Select v-model="SarLawsInfoEO.applyArctic" multiple style="width:200px">
+                 <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.energyKind"></Input>
+               <Select v-model="SarLawsInfoEO.energyKind" multiple style="width:200px">
+                 <Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="适用认证" prop="applyAuth" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.applyAuth"></Input>
+               <Select v-model="SarLawsInfoEO.applyAuth" multiple style="width:200px">
+                 <Option v-for="item in applyAuthOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
          </Row>
@@ -129,8 +135,7 @@
    <Modal v-model="modal2" title="导入法规信息" @on-ok="importLawsInfo" @on-cancel="cancelAdd">
      <Form ref="lawsInfoImport" :model="lawsInfoImport" :label-width="80">
        <FormItem label="导入文件" prop="fileName" class="laws-info-item">
-         <input type="file" ref="lawsInfoFile" id="lawsInfoFile" @change="lawsInfoFileBeforeUpload">
-         <Button @click="openFile">导入文件</Button>
+         <input type="file" ref="lawsInfoFile" id="lawsInfoFile">
        </FormItem>
      </Form>
    </Modal>
@@ -144,9 +149,10 @@
              <Input v-model="lawsItemsSearch.responsibleUnit"></Input>
            </FormItem>
          </Col>
-         <Col span="8">
+         <Col span="10">
+           <Button type="primary" icon="ios-search" @click="searchLawsItemsByUnit"></Button>
            <Button type="primary" @click="openAddItemsModal">新增</Button>
-           <Button type="primary" @click="modal2 = true">导入</Button>
+           <Button type="primary" @click="importItemsModal = true">导入</Button>
          </Col>
        </Row>
      </Form>
@@ -160,8 +166,9 @@
    <!--新增修改查看法规条目模态框-->
    <full-modal v-model="addLawsItemsModal" v-if="addLawsItemsModal" ref="addLawsItemsModal">
      <div>
-       <Form ref="SarLawsItemsEO" :model="SarLawsItemsEO" :rules="lawsItemsFormRules" class="label-input-form">
+       <Form ref="SarLawsItemsEO" :model="SarLawsItemsEO" :rules="addLawsItemsFormRules" class="label-input-form">
          <input v-model="SarLawsItemsEO.id" v-show="false">
+         <input v-model="SarLawsItemsEO.lawsId" v-show="false">
          <Row>
            <Col span="8">
              <FormItem label="条目号" prop="itemsNum" class="laws-info-item">
@@ -187,12 +194,16 @@
            </Col>
            <Col span="8">
              <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
-               <Input v-model="SarLawsItemsEO.applyArctic"></Input>
+               <Select v-model="SarLawsItemsEO.applyArctic" multiple style="width:200px">
+                 <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
            <Col span="8">
              <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
-               <Input v-model="SarLawsItemsEO.energyKind"></Input>
+               <Select v-model="SarLawsItemsEO.energyKind" multiple style="width:200px">
+                 <Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               </Select>
              </FormItem>
            </Col>
          </Row>
@@ -212,10 +223,19 @@
 
      </div>
      <div class="save-laws-btn">
-       <Button v-if="saveInfoBtn" type="primary" @click="saveLawsItems">提交</Button>
-       <Button @click="cancelAdd">取消</Button>
+       <Button v-if="saveLawsItemsBtn" type="primary" @click="saveLawsItems">提交</Button>
+       <Button @click="cancelAddItems">取消</Button>
      </div>
    </full-modal>
+
+   <!--导入模态框-->
+   <Modal v-model="importItemsModal" title="导入法规条目" @on-ok="importLawsItems" @on-cancel="cancelAdd">
+     <Form ref="lawsItemsImport" :model="lawsItemsImport" :label-width="80">
+       <FormItem label="导入文件" prop="fileName" class="laws-info-item">
+         <input type="file" ref="lawsItemsFile" id="lawsItemsFile">
+       </FormItem>
+     </Form>
+   </Modal>
 
    </div>
 </template>

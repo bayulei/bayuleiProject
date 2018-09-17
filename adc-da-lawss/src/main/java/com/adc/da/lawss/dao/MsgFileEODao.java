@@ -2,6 +2,9 @@ package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.MsgFileEO;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -12,4 +15,6 @@ import com.adc.da.lawss.entity.MsgFileEO;
  */
 public interface MsgFileEODao extends BaseDao<MsgFileEO> {
 
+//修改动态信息附件表
+    int updateByPrimaryKeySelective(List<MsgFileEO> msgFileEO);
 }

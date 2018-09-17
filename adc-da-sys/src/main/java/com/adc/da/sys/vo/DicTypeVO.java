@@ -8,7 +8,7 @@ public class DicTypeVO {
     private Integer validFlag;
     private String parentId;
 
-    
+
     public String getId() {
         return id;
     }
