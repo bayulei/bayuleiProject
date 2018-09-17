@@ -124,7 +124,6 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
 //        修改动态信息附件表（不可以在这里修改只可以插入附件）
        List<MsgFileEO> msgFileEOList = msgDynamicInfoVO.getMsgFileEOList();
         /*      msgFileEOService.updateByPrimaryKeySelective(msgFileEOList);*/
-
         for( MsgFileEO  msgFileEO :   msgFileEOList){
             msgFileEOService.updateByPrimaryKey(msgFileEO);
         }

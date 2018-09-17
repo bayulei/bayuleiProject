@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-import com.adc.da.sys.entity.DictionaryEO;
-import com.adc.da.sys.vo.DictionaryVO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
