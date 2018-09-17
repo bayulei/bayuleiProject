@@ -26,7 +26,9 @@
       </div>
     </div>
     <div class="login-footer">
-      <div class="comp">广汽研究院</div>
+      <div class="comp">
+        <img :src="logoSm" alt="logo_sm">
+      </div>
       <div class="system-text">
         <div class="system"></div>
         <div class="line"></div>
@@ -37,6 +39,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   name: 'login',
   data () {
@@ -44,6 +47,7 @@ export default {
       logo: require('assets/images/login/login-logo-top.png'), // logo
       bgImage: require('assets/images/login/login-bg.png'), // 登录页背景
       loginBtn: require('assets/images/login/login-btn.png'), // 登录按钮,
+      logoSm: require('assets/images/home/logo_sm.png'),
       username: '',
       password: ''
     }
@@ -55,8 +59,15 @@ export default {
      * @date: 2018-08-30 19:18:30
      */
     signin () {
+      this.setToken('isLogin')
       this.$router.push('/')
-    }
+    },
+    /**
+     * @description: vuex拓展方法
+     * @author: chenxiaoxi
+     * @date: 2018-09-13 10:25:43
+     */
+    ...mapMutations(['setToken'])
   },
   mounted () {
     $('.system').stop().animate({ left: 0, opacity: 1 }, 2000)
@@ -157,10 +168,12 @@ export default {
       color: #FFF;
       box-sizing: border-box;
       .comp{
-        width: 5.92rem;
-        height: 0.94rem;
+        width: 5.5rem;
+        height: 0.8rem;
         margin: 0 auto;
-        border: 1px solid #DDD;
+        img{
+          width: 100%;
+        }
         .flex-center;
       }
       .system-text{

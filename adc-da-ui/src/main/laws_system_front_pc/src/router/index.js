@@ -5,13 +5,13 @@
  */
 
 import Vue from 'vue'
+import iView from 'iview'
 import VueRouter from 'vue-router'
+import store from '../store'
 import Login from '@/pages/login'
 import Home from '@/pages/home'
 import Test from '@/pages/home/test'
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
-
+Vue.use(iView)
 Vue.use(VueRouter)
 
 const routes = [
@@ -20,7 +20,7 @@ const routes = [
     redirect: '/'
   },
   {
-    path: '/signin',
+    path: '/sign_in',
     name: 'Login',
     component: Login
   },
@@ -179,34 +179,79 @@ const routes = [
   {
     path: '/statuteBank',
     name: 'StatuteBank',
-    redirect: '/domesticInformationBase',
+    redirect: '/domesticStandardDatabase',
     component: resolve => require(['pages/statuteBank'], resolve),
     children: [
       {
-        path: '/domesticInformationBase',
-        name: 'DomesticInformationBase',
-        component: resolve => require(['pages/statuteBank/pages/domesticInformationBase'], resolve),
+        path: '/domesticStandardDatabase',
+        name: 'DomesticStandardDatabase',
+        component: resolve => require(['pages/statuteBank/pages/domesticStandardDatabase'], resolve),
         meta: {
           requireAuth: true,
           title: '国内标准库'
         }
       },
       {
-        path: '/foreignInformationBase',
-        name: 'ForeignInformationBase',
-        component: resolve => require(['pages/statuteBank/pages/foreignInformationBase'], resolve),
+        path: '/domesticRegulationsDatabase',
+        name: 'DomesticRegulationsDatabase',
+        component: resolve => require(['pages/statuteBank/pages/domesticRegulationsDatabase'], resolve),
         meta: {
           requireAuth: true,
-          title: '国外信息库'
+          title: '国内法规库'
         }
       },
       {
-        path: '/cloudAdaptationAnalysis',
-        name: 'CloudAdaptationAnalysis',
-        component: resolve => require(['pages/statuteBank/pages/cloudAdaptationAnalysis'], resolve),
+        path: '/foreignStandardDatabase',
+        name: 'ForeignStandardDatabase',
+        component: resolve => require(['pages/statuteBank/pages/foreignStandardDatabase'], resolve),
         meta: {
           requireAuth: true,
-          title: '云端适应性分析'
+          title: '国外标准库'
+        }
+      },
+      {
+        path: '/foreignRegulationsDatabase',
+        name: 'ForeignRegulationsDatabase',
+        component: resolve => require(['pages/statuteBank/pages/foreignRegulationsDatabase'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '国外法规库'
+        }
+      },
+      {
+        path: '/enterpriseStandardDatabase',
+        name: 'EnterpriseStandardDatabase',
+        component: resolve => require(['pages/statuteBank/pages/enterpriseStandardDatabase'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '企业标准库'
+        }
+      },
+      {
+        path: '/accessStandardsAndRegulations',
+        name: 'AccessStandardsAndRegulations',
+        component: resolve => require(['pages/statuteBank/pages/accessStandardsAndRegulations'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '准入标准法规清单'
+        }
+      },
+      {
+        path: '/testItemDatabase',
+        name: 'TestItemDatabase',
+        component: resolve => require(['pages/statuteBank/pages/testItemDatabase'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '试验项目库'
+        }
+      },
+      {
+        path: '/localProductDatabase',
+        name: 'LocalProductDatabase',
+        component: resolve => require(['pages/statuteBank/pages/localProductDatabase'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '本地产品/项目库'
         }
       }
     ]
@@ -271,12 +316,33 @@ const router = new VueRouter({
 })
 
 // 全局路由配置
+iView.LoadingBar.config({
+  color: '#5596CC',
+  failedColor: '#f0ad4e',
+  height: 5
+})
 router.beforeEach((to, from, next) => {
-  next()
+  iView.LoadingBar.start()
+  let toName = to.name
+  let token = store.state.token
+  // 返回值为登录状态
+  if ((token === null || token === '') && (toName !== 'Login' && to.meta.requireAuth)) {
+    router.push({
+      name: 'Login'
+    })
+  } else {
+    if (token !== null && token !== '' && toName === 'Login') {
+      router.push({
+        path: '/'
+      })
+    } else {
+      next()
+    }
+  }
 })
 // 路由完成之后的操作
 router.afterEach(route => {
-  NProgress.done()
+  iView.LoadingBar.finish()
 })
 
 export default router
