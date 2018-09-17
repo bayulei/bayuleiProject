@@ -2,6 +2,8 @@ package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarStandValEO;
+import com.adc.da.lawss.page.SarStandardsInfoEOPage;
+
 /**
  *
  * <br>
@@ -11,5 +13,8 @@ import com.adc.da.lawss.entity.SarStandValEO;
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public interface SarStandValEODao extends BaseDao<SarStandValEO> {
+
+    //通过标准id删除表中数据
+    int deleteDataByStandid(String standId);
 
 }

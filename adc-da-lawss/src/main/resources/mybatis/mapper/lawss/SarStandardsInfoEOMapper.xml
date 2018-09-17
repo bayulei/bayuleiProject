@@ -47,9 +47,9 @@
   <resultMap id="BaseResultMapExcel" type="com.adc.da.lawss.dto.SarStandExcelDto" >
         <!--<result column="modify_time" property="modifyTime" />
         <result column="creation_time" property="creationTime" />
-        <result column="valid_flag" property="validFlag" />-->
-        <result column="creation_user" property="creationUser" />
-       <!-- <result column="remark" property="remark" />
+        <result column="valid_flag" property="validFlag" />
+        <result column="creation_user" property="creationUser" />-->
+       <result column="remark" property="remark" />
         <result column="category" property="category" />
         <result column="responsible_unit" property="responsibleUnit" />
         <result column="synopsis" property="synopsis" />
@@ -83,11 +83,15 @@
         <result column="apply_arctic" property="applyArctic" />
         <result column="stand_sort" property="standSort" />
         <result column="country" property="country" />
-        <result column="stand_type" property="standType" />-->
+        <!--<result column="stand_type" property="standType" />-->
     </resultMap>
   <!-- SAR_STANDARDS_INFO table all fields -->
   <sql id="Base_Column_List" >
      modify_time, creation_time, valid_flag, creation_user, remark, category, responsible_unit, synopsis, tags, relevance_file, approval_file, sent_screen_file, opinion_file, draft_file, stand_modify_file, stand_file, draft_user, drafting_unit, newproduct_put_time, product_put_time, newcar_put_time, put_time, issue_time, apply_auth, emergy_kind, adopt_extent, inter_stand_num, replaced_stand_num, replace_stand_num, stand_nature, stand_state, stand_en_name, stand_name, stand_year, stand_number, apply_arctic, stand_sort, country, stand_type, id
+  </sql>
+  <sql id="Base_Column_List_show" >
+     SAR_STANDARDS_INFO.modify_time, SAR_STANDARDS_INFO.creation_time, SAR_STANDARDS_INFO.valid_flag, SAR_STANDARDS_INFO.creation_user, remark, category, responsible_unit, synopsis, tags, relevance_file, approval_file, sent_screen_file, opinion_file, draft_file, stand_modify_file, stand_file, draft_user, drafting_unit, newproduct_put_time, product_put_time, newcar_put_time, put_time, issue_time, apply_auth, emergy_kind, adopt_extent, inter_stand_num, replaced_stand_num, replace_stand_num, stand_nature, stand_state, stand_en_name, stand_name, stand_year, stand_number, apply_arctic, stand_sort, country, stand_type, SAR_STANDARDS_INFO.id,
+     dicountry.DIC_TYPE_NAME as countryShow, dicstandSort.DIC_TYPE_NAME as standSortShow, dicstandState.DIC_TYPE_NAME as standStateShow,  dicstandNature.DIC_TYPE_NAME as standNatureShow, dicadoptExtent.DIC_TYPE_NAME as adoptExtentShow
   </sql>
 
   <!-- 查询条件 -->
@@ -566,6 +570,11 @@
 
   <!-- 分页查询条件 -->
   <sql id="SarStandardsInfo_Where_Clause">
+        left join TS_DICTYPE dicountry on (dicountry.dic_type_code = SAR_STANDARDS_INFO.country  and dicountry.dic_id is not null)
+        left join TS_DICTYPE dicstandSort on  (dicstandSort.dic_type_code = SAR_STANDARDS_INFO.stand_sort  and dicstandSort.dic_id is not null)
+        left join TS_DICTYPE dicstandState on  (dicstandState.dic_type_code = SAR_STANDARDS_INFO.stand_state  and dicstandState.dic_id is not null)
+        left join TS_DICTYPE dicstandNature on  (dicstandNature.dic_type_code = SAR_STANDARDS_INFO.stand_nature  and dicstandNature.dic_id is not null)
+        left join TS_DICTYPE dicadoptExtent on  (dicadoptExtent.dic_type_code = SAR_STANDARDS_INFO.adopt_extent  and dicadoptExtent.dic_id is not null)
         where 1=1
         <trim suffixOverrides="," >
             <!-- 标准分类 国内标准，国外标准  必要搜索项                 -->
@@ -594,23 +603,20 @@
             <if test="standNature != null" >
                 and stand_nature = #{standNature}
             </if>
-            <!--  发布日期 需要修改 -->
-            <if test="issueTime != null" >
-                and issue_time ${issueTimeOperator} #{issueTime}
-            </if>
+            <!--  发布日期  -->
             <if test="issueTime1 != null" >
-                and issue_time &gt;= #{issueTime1}
+                and to_char(issue_time,'YYYY-MM-DD') &gt;= #{issueTime1}
             </if>
             <if test="issueTime2 != null" >
-                and issue_time &lt;= #{issueTime2}
+                and to_char(issue_time,'YYYY-MM-DD') &lt;= #{issueTime2}
             </if>
             <!--  适用车型  多选需要修改-->
             <if test="applyArctic != null" >
-                and apply_arctic ${applyArcticOperator} #{applyArctic}
+                and apply_arctic like concat(concat('%',#{applyArctic}),'%')
             </if>
             <!--  代替标准  允许输入的时候输入多个-->
             <if test="replaceStandNum != null" >
-                and replace_stand_num ${replaceStandNumOperator} #{replaceStandNum}
+                and replace_stand_num like concat(concat('%',#{replaceStandNum}),'%')
             </if>
             <!--  被代替标准 -->
             <if test="replacedStandNum != null" >
@@ -742,9 +748,46 @@
   </sql>
   <!-- 分页查询条件当页数据 -->
   <select id="getSarStandardsInfoPage" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarStandardsInfoEOPage">
-      select <include refid="Base_Column_List" /> from
+       select * from
       (select tmp_tb.* , rownum rn from
-      (select <include refid="Base_Column_List" /> from SAR_STANDARDS_INFO
+      (select <include refid="Base_Column_List_show" /> ,
+      (
+      SELECT
+      listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_STAND_VAL.property_type )
+      FROM
+      SAR_STAND_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_STAND_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+      WHERE
+      SAR_STAND_VAL.stand_id = SAR_STANDARDS_INFO.id
+      AND SAR_STAND_VAL.property_type = 'APPLY_ARCTIC'
+      ) AS applyArcticShow,
+      (
+      SELECT
+      listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_STAND_VAL.property_type )
+      FROM
+      SAR_STAND_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_STAND_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+      WHERE
+      SAR_STAND_VAL.stand_id  = SAR_STANDARDS_INFO.id
+      AND SAR_STAND_VAL.property_type = 'APPLY_AUTH'
+      ) AS applyAuthShow,
+      (
+      SELECT
+      listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_STAND_VAL.property_type )
+      FROM
+      SAR_STAND_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_STAND_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+      WHERE
+      SAR_STAND_VAL.stand_id = SAR_STANDARDS_INFO.id
+      AND SAR_STAND_VAL.property_type = 'CATEGORY'
+      ) AS categoryShow,
+      (
+      SELECT
+      listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_STAND_VAL.property_type )
+      FROM
+      SAR_STAND_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_STAND_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+      WHERE
+      SAR_STAND_VAL.stand_id = SAR_STANDARDS_INFO.id
+      AND SAR_STAND_VAL.property_type = 'ENERGY_KIND'
+      ) AS emergyKindShow
+      from SAR_STANDARDS_INFO
       <include refid="SarStandardsInfo_Where_Clause"/>
       <if test="pager.orderCondition != null and pager.orderCondition != ''" >
           ${pager.orderCondition}
@@ -767,7 +810,7 @@
 
   <!-- 条件查询后，用于导出标准信息数据-->
   <select id="getSarStandardsInfo" resultMap="BaseResultMapExcel" parameterType="com.adc.da.lawss.page.SarStandardsInfoEOPage">
-        select <include refid="Base_Column_List" /> from SAR_STANDARDS_INFO
+        select <include refid="Base_Column_List_show" /> from SAR_STANDARDS_INFO
         <include refid="SarStandardsInfo_Where_Clause"/>
         <if test="pager.orderCondition != null and pager.orderCondition != ''" >
             ${pager.orderCondition}

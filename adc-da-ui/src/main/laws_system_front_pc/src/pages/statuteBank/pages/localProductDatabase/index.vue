@@ -1,11 +1,13 @@
-<!-- 试验项目库 -->
+<!-- 本地产品/项目库 -->
 <template>
- <div id="TestItemLibrary">试验项目库</div>
+  <div id="localProductDatabase">
+    本地产品项目库
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'TestItemLibrary',
+  name: 'localProductDatabase',
   data () {
     return {}
   },
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="less">
-   #TestItemLibrary{}
+  #localProductDatabase{
+
+  }
 </style>

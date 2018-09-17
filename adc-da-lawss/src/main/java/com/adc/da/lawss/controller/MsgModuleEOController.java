@@ -34,29 +34,29 @@ public class MsgModuleEOController extends BaseController<MsgModuleEO>{
 
 	@ApiOperation(value = "|MsgModuleEO|分页查询")
     @GetMapping("/page")
-    @RequiresPermissions("lawss:msgModule:page")
+//    @RequiresPermissions("lawss:msgModule:page")
     public ResponseMessage<PageInfo<MsgModuleEO>> page(MsgModuleEOPage page) throws Exception {
         List<MsgModuleEO> rows = msgModuleEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
-
+//
 	@ApiOperation(value = "|MsgModuleEO|查询")
     @GetMapping("")
-    @RequiresPermissions("lawss:msgModule:list")
+//   @RequiresPermissions("lawss:msgModule:list")
     public ResponseMessage<List<MsgModuleEO>> list(MsgModuleEOPage page) throws Exception {
         return Result.success(msgModuleEOService.queryByList(page));
 	}
-
+//使用此方法对新增动态信息管理中进行回显
     @ApiOperation(value = "|MsgModuleEO|详情")
     @GetMapping("/{id}")
-    @RequiresPermissions("lawss:msgModule:get")
+    //   @RequiresPermissions("lawss:msgModule:get")
     public ResponseMessage<MsgModuleEO> find(@PathVariable String id) throws Exception {
         return Result.success(msgModuleEOService.selectByPrimaryKey(id));
     }
 
     @ApiOperation(value = "|MsgModuleEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("lawss:msgModule:save")
+//    @RequiresPermissions("lawss:msgModule:save")
     public ResponseMessage<MsgModuleEO> create(@RequestBody MsgModuleEO msgModuleEO) throws Exception {
         msgModuleEOService.insertSelective(msgModuleEO);
         return Result.success(msgModuleEO);
@@ -72,7 +72,7 @@ public class MsgModuleEOController extends BaseController<MsgModuleEO>{
 
     @ApiOperation(value = "|MsgModuleEO|删除")
     @DeleteMapping("/{id}")
-    @RequiresPermissions("lawss:msgModule:delete")
+//    @RequiresPermissions("lawss:msgModule:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         msgModuleEOService.deleteByPrimaryKey(id);
         logger.info("delete from MSG_MODULE where id = {}", id);

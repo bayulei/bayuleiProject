@@ -109,4 +109,12 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 		int count = dao.isBelong(userId, roleId);
 		return count > 0;
 	}
+//	如果用户存在，返回true，否则返回false
+	public boolean queryNameExistenceByName(String name){
+	  List<RoleEO> roleEOS = dao.queryNameExistenceByName(name);
+	  if(roleEOS!=null && !roleEOS.isEmpty()){
+	  	return true;
+	  }
+	  return  false;
+	}
 }

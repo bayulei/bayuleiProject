@@ -2,7 +2,9 @@ package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <b>功能：</b>MSG_FILE MsgFileEOEntity<br>
@@ -22,6 +24,7 @@ public class MsgFileEO extends BaseEntity {
     private String fileName;
     private String msgId;
     private String id;
+
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -156,5 +159,6 @@ public class MsgFileEO extends BaseEntity {
     public void setId(String id) {
         this.id = id;
     }
+
 
 }

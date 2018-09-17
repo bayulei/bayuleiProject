@@ -1,11 +1,13 @@
-<!-- 国外信息库 -->
+<!-- 国外标准库 -->
 <template>
- <div id="index"></div>
+  <div id="foreignStandardDatabase">
+    国外标准库
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'index',
+  name: 'foreignStandardDatabase',
   data () {
     return {}
   },
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="less">
-   #index{}
+  #foreignStandardDatabase{
+
+  }
 </style>

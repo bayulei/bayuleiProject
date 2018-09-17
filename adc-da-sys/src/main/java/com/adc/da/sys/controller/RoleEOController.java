@@ -2,8 +2,8 @@ package com.adc.da.sys.controller;
 
 import com.adc.da.base.page.Pager;
 import com.adc.da.base.web.BaseController;
-import com.adc.da.sys.common.LayUiResult;
 import com.adc.da.sys.constant.IsBelongEnum;
+import com.adc.da.sys.constant.ValidFlagEnum;
 import com.adc.da.sys.entity.RoleEO;
 import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.entity.UserRoleEO;
@@ -50,7 +50,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 	@ApiOperation(value = "|RoleEO|分页查询")
 	@GetMapping("/page")
 //	@RequiresPermissions("sys:role:pageList")
-	public LayUiResult<RoleVO> page(Integer pageNo, Integer pageSize, String roleName,String useFlag) throws Exception {
+	public ResponseMessage<PageInfo<RoleEO>> page(Integer pageNo, Integer pageSize, String roleName,String useFlag) throws Exception {
 		RoleEOPage page = new RoleEOPage();
 		if (pageNo != null) {
 			page.setPage(pageNo);
@@ -73,12 +73,14 @@ public class RoleEOController extends BaseController<RoleEO> {
 		if(rows!=null && rows.size()>0){
 			for(RoleEO role:rows){
 				String userId = role.getOperUser();
-				UserEO user = userService.selectByPrimaryKey(userId);
-				role.setOperUserName(user!=null?user.getUname():null);
+				if(userId!=null && !userId.isEmpty()){
+					UserEO user = userService.selectByPrimaryKey(userId);
+					role.setOperUserName(user!=null?user.getUname():null);
+				}
 			}
 		}
-		PageInfo<RoleVO> mapPage = beanMapper.mapPage(getPageInfo(page.getPager(), rows), RoleVO.class);
-		return new LayUiResult<RoleVO>(mapPage);
+//		PageInfo<RoleVO> mapPage = beanMapper.mapPage(getPageInfo(page.getPager(), rows), RoleVO.class);
+		return Result.success(getPageInfo(page.getPager(), rows));
 	}
 
 	@ApiOperation(value = "|RoleEO|详情")
@@ -94,6 +96,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 //	@RequiresPermissions("sys:role:list")
 	public ResponseMessage<List<RoleVO>> list(String userId) {
 		RoleVO setRole = new RoleVO();
+		setRole.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue());
 		String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 		if(loginUserId != null && !loginUserId.isEmpty()){
 			UserEO getUser = userService.selectOrgByPrimaryKey(loginUserId);
@@ -125,6 +128,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 		//TODO 此处调用了登录接口数据 暂时注销
 //		roleVO.setOprUser(LoginUserUtil.getUserId());
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
+		logger.info("获取角色相关信息:"+map.getName());
 		map.setRemarks(roleVO.getRemarks());
 		RoleEO roleEO = roleEOService.save(map);
 		roleVO.setRid(roleEO.getId());
@@ -211,18 +215,6 @@ public class RoleEOController extends BaseController<RoleEO> {
 //	@RequiresPermissions("sys:role:list")
 	public ResponseMessage<List<RoleVO>> findAll(String userId) {
 		RoleVO setRole = new RoleVO();
-		String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
-		if(loginUserId != null && !loginUserId.isEmpty()){
-			UserEO getUser = userService.selectOrgByPrimaryKey(loginUserId);
-			/*if(getUser != null){
-				if(("0").equals(getUser.getCorpType())){
-					setRole.setExtInfo("0");
-				} else if(("1").equals(getUser.getCorpType())){
-					setRole.setExtInfo("1");
-				}
-
-			}*/
-		}
 		List<RoleVO> roleVOs = beanMapper.mapList(roleEOService.findAll(setRole), RoleVO.class);
 		return Result.success(roleVOs);
 	}

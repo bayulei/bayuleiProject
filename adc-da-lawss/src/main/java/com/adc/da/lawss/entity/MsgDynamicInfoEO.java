@@ -22,7 +22,7 @@ public class MsgDynamicInfoEO extends BaseEntity {
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date pubTime;
     private String linkUri;
-    private Object content;
+    private String content;
     private String title;
     private String msgMode;
     private String msgType;
@@ -168,13 +168,11 @@ public class MsgDynamicInfoEO extends BaseEntity {
         this.linkUri = linkUri;
     }
 
-    /**  **/
-    public Object getContent() {
-        return this.content;
+    public String getContent() {
+        return content;
     }
 
-    /**  **/
-    public void setContent(Object content) {
+    public void setContent(String content) {
         this.content = content;
     }
 

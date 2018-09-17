@@ -13,6 +13,7 @@ import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
 import com.adc.da.lawss.dto.SarStandExcelDto;
 import com.adc.da.sys.constant.ValueStateEnum;
+import com.adc.da.sys.dao.DicTypeEODao;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import com.adc.da.util.utils.UUID;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,9 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
     @Autowired
     private SarStandValEODao sarStandValEODao;
 
+    @Autowired
+    private DicTypeEODao dicTypeEODao;
+
     public SarStandardsInfoEODao getDao() {
         return sarStandardsInfoEOdao;
     }
@@ -81,48 +86,7 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
 
             //标准关联表中插入数据，对于标准多选属性，标准信息表中存储已逗号隔开，标准关联表中还需要存入相关数据
             //具体多选属性包括( 适用车型:applyArctic 能源种类:emergyKind 适用认证:applyAuth 所属类别:category;  代替标准号前台页面要求是多选，但常量EXCEL中没有提及需要确认)
-            SarStandValEO sarStandValEO = new SarStandValEO();
-            sarStandValEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
-            sarStandValEO.setCreationTime(new Date());
-            sarStandValEO.setModifyTime(new Date());
-            sarStandValEO.setStandId(sarStandardsInfoEO.getId());
-            if(StringUtils.isNotEmpty(sarStandardsInfoEO.getApplyArctic())){
-               String []applyarr = sarStandardsInfoEO.getApplyArctic().trim().split(",");
-                for (String apply:applyarr){
-                    sarStandValEO.setId(UUID.randomUUID(20));
-                    sarStandValEO.setPropertyType(PropertyTypeEnum.APPLY_ARCTIC.getValue());
-                    sarStandValEO.setPropertyVal(apply);
-                    sarStandValEODao.insertSelective(sarStandValEO);
-                }
-            }
-            if(StringUtils.isNotEmpty(sarStandardsInfoEO.getEmergyKind())){
-                String []emergyKindarr = sarStandardsInfoEO.getEmergyKind().trim().split(",");
-                for (String emergyKind:emergyKindarr){
-                    sarStandValEO.setId(UUID.randomUUID(20));
-                    sarStandValEO.setPropertyType(PropertyTypeEnum.ENERGY_KIND.getValue());
-                    sarStandValEO.setPropertyVal(emergyKind);
-                    sarStandValEODao.insertSelective(sarStandValEO);
-                }
-            }
-            if(StringUtils.isNotEmpty(sarStandardsInfoEO.getApplyAuth())){
-                String []applyAutharr = sarStandardsInfoEO.getApplyAuth().trim().split(",");
-                for (String applyAuth:applyAutharr){
-                    sarStandValEO.setId(UUID.randomUUID(20));
-                    sarStandValEO.setPropertyType(PropertyTypeEnum.APPLY_AUTH.getValue());
-                    sarStandValEO.setPropertyVal(applyAuth);
-                    sarStandValEODao.insertSelective(sarStandValEO);
-                }
-            }
-            if(StringUtils.isNotEmpty(sarStandardsInfoEO.getCategory())){
-                String []categoryarr = sarStandardsInfoEO.getCategory().trim().split(",");
-                for (String category:categoryarr){
-                    sarStandValEO.setId(UUID.randomUUID(20));
-                    sarStandValEO.setPropertyType(PropertyTypeEnum.CATEGORY.getValue());
-                    sarStandValEO.setPropertyVal(category);
-                    sarStandValEODao.insertSelective(sarStandValEO);
-                }
-            }
-            //标准文件资源表，标准文件详情表中插入数据
+            insertSarStandVal(sarStandardsInfoEO);
             return  Result.success("00","插入数据成功",sarStandardsInfoEO);
         }
         else {
@@ -155,6 +119,22 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
     }
 
     /**
+     * 修改页面
+     * @param sarStandardsInfoEO  标准信息
+     * @return
+     * @author gaoyan
+     * date 2018-09-14
+     */
+    public ResponseMessage<SarStandardsInfoEO> updateSarStandardsInfo(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
+        sarStandardsInfoEO.setModifyTime(new Date());
+        sarStandardsInfoEOdao.updateByPrimaryKeySelective(sarStandardsInfoEO);
+        //先删除标准关联表，然后插入数据
+        sarStandValEODao.deleteDataByStandid(sarStandardsInfoEO.getId());
+        insertSarStandVal(sarStandardsInfoEO);
+        return  Result.success("00","修改数据成功",sarStandardsInfoEO);
+    }
+
+    /**
      * 自定义分页查询
      * @param page  标准信息
      * @return
@@ -162,9 +142,53 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
      * date 2018-09-04
      */
     public List<SarStandardsInfoEO> getSarStandardsInfoPage(SarStandardsInfoEOPage page){
+        if(StringUtils.isNotEmpty(page.getIssueTime())) {
+            //发布时间条件设置
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            Long datetime = date.getTime();
+            String issuetime = formatter.format(date);
+            switch (page.getIssueTime()) {
+                //本月
+                case "1":
+                    page.setIssueTime1(issuetime.substring(0, 8) + "00");
+                    page.setIssueTime2(issuetime.substring(0, 8) + "31");
+                    break;
+                    //近三个月
+                case "2":
+                    page.setIssueTime1(formatter.format(new Date(datetime - (91 * 24 * 60 * 60 * 1000L))));
+                    page.setIssueTime2(issuetime);
+                    break;
+                    //近一年
+                case "3":
+                    page.setIssueTime1(formatter.format(new Date(datetime - (91 * 24 * 60 * 60 * 1000L))));
+                    page.setIssueTime2(issuetime);
+                    break;
+                    //近三年
+                case "4":
+                    page.setIssueTime1(formatter.format(new Date(datetime - (3 * 365 * 24 * 60 * 60 * 1000L))));
+                    page.setIssueTime2(issuetime);
+                    break;
+                    //三年以上
+                case "5":
+                    page.setIssueTime2(formatter.format(new Date(datetime - (3 * 365 * 24 * 60 * 60 * 1000L))));
+            }
+        }
         Integer rowCount = sarStandardsInfoEOdao.getSarStandardsInfoCount(page);
         page.getPager().setRowCount(rowCount);
-        return  sarStandardsInfoEOdao.getSarStandardsInfoPage(page);
+        List<SarStandardsInfoEO> sarlist = sarStandardsInfoEOdao.getSarStandardsInfoPage(page);
+       /* dicTypeEODao.getDicTypeEOById()
+         countryShow;
+         standSortShow; // 标准类别下拉框
+         applyArcticShow; // 适用车型下拉框
+         standStateShow; // 标准状态下拉框
+         standNatureShow; // 标准性质下拉框
+         adoptExtentShow; // 采标程度下拉框
+         emergyKindShow; // 能源种类下拉框
+         applyAuthShow; // 适用认证下拉框
+         categoryShow; // 所属类别下拉框*/
+
+        return sarlist;
     }
 
     public List<SarStandExcelDto> getSarStandardsInfo(SarStandardsInfoEOPage page){
@@ -180,5 +204,49 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
 
     public List<SarStandardsInfoEO> getSarStandardsInfoByMenu(SarStandardsInfoEOPage page){
         return  sarStandardsInfoEOdao.getSarStandardsInfoByMenu(page);
+    }
+
+    public void insertSarStandVal(SarStandardsInfoEO sarStandardsInfoEO){
+        SarStandValEO sarStandValEO = new SarStandValEO();
+        sarStandValEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
+        sarStandValEO.setCreationTime(new Date());
+        sarStandValEO.setModifyTime(new Date());
+        sarStandValEO.setStandId(sarStandardsInfoEO.getId());
+        if(StringUtils.isNotEmpty(sarStandardsInfoEO.getApplyArctic())){
+            String []applyarr = sarStandardsInfoEO.getApplyArctic().trim().split(",");
+            for (String apply:applyarr){
+                sarStandValEO.setId(UUID.randomUUID(20));
+                sarStandValEO.setPropertyType(PropertyTypeEnum.APPLY_ARCTIC.getValue());
+                sarStandValEO.setPropertyVal(apply);
+                sarStandValEODao.insertSelective(sarStandValEO);
+            }
+        }
+        if(StringUtils.isNotEmpty(sarStandardsInfoEO.getEmergyKind())){
+            String []emergyKindarr = sarStandardsInfoEO.getEmergyKind().trim().split(",");
+            for (String emergyKind:emergyKindarr){
+                sarStandValEO.setId(UUID.randomUUID(20));
+                sarStandValEO.setPropertyType(PropertyTypeEnum.ENERGY_KIND.getValue());
+                sarStandValEO.setPropertyVal(emergyKind);
+                sarStandValEODao.insertSelective(sarStandValEO);
+            }
+        }
+        if(StringUtils.isNotEmpty(sarStandardsInfoEO.getApplyAuth())){
+            String []applyAutharr = sarStandardsInfoEO.getApplyAuth().trim().split(",");
+            for (String applyAuth:applyAutharr){
+                sarStandValEO.setId(UUID.randomUUID(20));
+                sarStandValEO.setPropertyType(PropertyTypeEnum.APPLY_AUTH.getValue());
+                sarStandValEO.setPropertyVal(applyAuth);
+                sarStandValEODao.insertSelective(sarStandValEO);
+            }
+        }
+        if(StringUtils.isNotEmpty(sarStandardsInfoEO.getCategory())){
+            String []categoryarr = sarStandardsInfoEO.getCategory().trim().split(",");
+            for (String category:categoryarr){
+                sarStandValEO.setId(UUID.randomUUID(20));
+                sarStandValEO.setPropertyType(PropertyTypeEnum.CATEGORY.getValue());
+                sarStandValEO.setPropertyVal(category);
+                sarStandValEODao.insertSelective(sarStandValEO);
+            }
+        }
     }
 }

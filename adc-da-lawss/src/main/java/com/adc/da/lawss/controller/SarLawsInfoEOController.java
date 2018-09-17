@@ -132,12 +132,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
     /*@RequiresPermissions("lawss:sarLawsInfo:update")*/
     public ResponseMessage<SarLawsInfoEO> update(SarLawsInfoEO sarLawsInfoEO) throws Exception {
         sarLawsInfoEO.setModifyTime(new Date());
-        int countUpdate = sarLawsInfoEOService.updateByPrimaryKeySelective(sarLawsInfoEO);
-        if(countUpdate > 0){
-            return Result.success("0","修改成功",sarLawsInfoEO);
-        } else {
-            return Result.error("修改失败");
-        }
+        return sarLawsInfoEOService.updateLawsInfo(sarLawsInfoEO);
     }
 
     /**

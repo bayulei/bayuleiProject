@@ -1,6 +1,7 @@
 package com.adc.da.lawss.vo;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -14,9 +15,9 @@ import java.util.Map;
  */
 public class SarStandItemsVO extends BaseEntity {
 
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private String creationUser;
     private Integer validFlag;
@@ -26,7 +27,7 @@ public class SarStandItemsVO extends BaseEntity {
     private String energyKind;
     //试用车型
     private String applyArctic;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date tackTime;
     private String parts;
     private String itemsName;
@@ -34,24 +35,10 @@ public class SarStandItemsVO extends BaseEntity {
     private String standId;
     private String id;
 
-    public List<Map<String, Object>> getApplyArcticlist() {
-        return applyArcticlist;
-    }
 
-    public void setApplyArcticlist(List<Map<String, Object>> applyArcticlist) {
-        this.applyArcticlist = applyArcticlist;
-    }
+    private String emergyKindShow;
+    private String applyArcticShow;
 
-    public List<Map<String, Object>> getEnergyKindlist() {
-        return energyKindlist;
-    }
-
-    public void setEnergyKindlist(List<Map<String, Object>> energyKindlist) {
-        this.energyKindlist = energyKindlist;
-    }
-
-    private List<Map<String,Object>> applyArcticlist;
-    private List<Map<String,Object>> energyKindlist;
 
     /**  **/
     public Date getModifyTime() {
@@ -193,4 +180,19 @@ public class SarStandItemsVO extends BaseEntity {
         this.id = id;
     }
 
+    public String getEmergyKindShow() {
+        return emergyKindShow;
+    }
+
+    public void setEmergyKindShow(String emergyKindShow) {
+        this.emergyKindShow = emergyKindShow;
+    }
+
+    public String getApplyArcticShow() {
+        return applyArcticShow;
+    }
+
+    public void setApplyArcticShow(String applyArcticShow) {
+        this.applyArcticShow = applyArcticShow;
+    }
 }

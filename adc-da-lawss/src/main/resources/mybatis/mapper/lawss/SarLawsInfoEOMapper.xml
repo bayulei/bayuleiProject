@@ -28,6 +28,9 @@
     <result column="laws_type" property="lawsType" />
     <result column="propertyName" property="propertyName" />
     <result column="stateName" property="stateName" />
+    <result column="applyArcticShow" property="applyArcticShow" />
+    <result column="energyKindShow" property="energyKindShow" />
+    <result column="applyAuthShow" property="applyAuthShow" />
   </resultMap>
 
   <!-- SAR_LAWS_INFO table all fields -->
@@ -315,7 +318,7 @@
   <!-- 删除记录 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from SAR_LAWS_INFO
-     where id = #{value}
+     where id = #{id}
 
   </delete>
 
@@ -328,9 +331,37 @@
 
   <!-- 查询SAR_LAWS_INFO列表 -->
   <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-	select <include refid="Base_Column_List" />,propertyName,stateName from
+	select <include refid="Base_Column_List" />,propertyName,stateName,applyArcticShow,energyKindShow,applyAuthShow
+      from
 		(select tmp_tb.* , rownum rn from
-			(select SAR_LAWS_INFO.*,dic1.dic_type_name as propertyName,dic2.dic_type_name as stateName
+			(select SAR_LAWS_INFO.*,dic1.dic_type_name as propertyName,dic2.dic_type_name as stateName,
+              (
+                  SELECT
+                  listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_LAWS_VAL.PROPERTY_TYPE )
+                  FROM
+                  SAR_LAWS_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.DIC_TYPE_CODE = SAR_LAWS_VAL.PROPERTY_VAL  and TS_DICTYPE.DIC_ID is not null)
+                  WHERE
+                  SAR_LAWS_VAL.LAWS_ID = SAR_LAWS_INFO.ID
+                  AND SAR_LAWS_VAL.PROPERTY_TYPE = 'PRODUCTTYPE'
+              ) AS applyArcticShow,
+              (
+                  SELECT
+                  listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_LAWS_VAL.PROPERTY_TYPE )
+                  FROM
+                  SAR_LAWS_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.DIC_TYPE_CODE = SAR_LAWS_VAL.PROPERTY_VAL  and TS_DICTYPE.DIC_ID is not null)
+                  WHERE
+                  SAR_LAWS_VAL.LAWS_ID = SAR_LAWS_INFO.ID
+                  AND SAR_LAWS_VAL.PROPERTY_TYPE = 'ENERGYTYPES'
+              ) AS energyKindShow,
+              (
+                  SELECT
+                  listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_LAWS_VAL.PROPERTY_TYPE )
+                  FROM
+                  SAR_LAWS_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.DIC_TYPE_CODE = SAR_LAWS_VAL.PROPERTY_VAL  and TS_DICTYPE.DIC_ID is not null)
+                  WHERE
+                  SAR_LAWS_VAL.LAWS_ID = SAR_LAWS_INFO.ID
+                  AND SAR_LAWS_VAL.PROPERTY_TYPE = 'PROVETYPE'
+              ) AS applyAuthShow
               from SAR_LAWS_INFO
               left join TS_DICTYPE dic1 on SAR_LAWS_INFO.laws_property = dic1.dic_type_code
               left join TS_DICTYPE dic2 on SAR_LAWS_INFO.laws_state = dic2.dic_type_code

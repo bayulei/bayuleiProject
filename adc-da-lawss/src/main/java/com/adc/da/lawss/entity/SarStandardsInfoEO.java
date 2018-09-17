@@ -2,7 +2,6 @@ package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -12,12 +11,13 @@ import java.util.Date;
  * <b>日期：</b> 2018-09-03 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
+
 public class SarStandardsInfoEO extends BaseEntity {
     //修改时间
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
     //创建时间
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     //是否有效
     private Integer validFlag;
@@ -105,9 +105,16 @@ public class SarStandardsInfoEO extends BaseEntity {
 
     //目录ID   非标准信息表中的字段
     private String  menuId;
-    private MultipartFile standFiles;
-    private MultipartFile standModifyFiles;
 
+    private String countryShow;  //国家地区 --单选
+    private String standSortShow; // 标准类别下拉框    --单选
+    private String applyArcticShow; // 适用车型下拉框  --多选
+    private String standStateShow; // 标准状态下拉框   --单选
+    private String standNatureShow; // 标准性质下拉框  --单选
+    private String adoptExtentShow; // 采标程度下拉框  --单选
+    private String emergyKindShow; // 能源种类下拉框   --多选
+    private String applyAuthShow; // 适用认证下拉框    --多选
+    private String categoryShow; // 所属类别下拉框     --多选
 
 
     /**
@@ -700,19 +707,75 @@ public class SarStandardsInfoEO extends BaseEntity {
         this.menuId = menuId;
     }
 
-    public MultipartFile getStandFiles() {
-        return standFiles;
+    public String getCountryShow() {
+        return countryShow;
     }
 
-    public void setStandFiles(MultipartFile standFiles) {
-        this.standFiles = standFiles;
+    public void setCountryShow(String countryShow) {
+        this.countryShow = countryShow;
     }
 
-    public MultipartFile getStandModifyFiles() {
-        return standModifyFiles;
+    public String getStandSortShow() {
+        return standSortShow;
     }
 
-    public void setStandModifyFiles(MultipartFile standModifyFiles) {
-        this.standModifyFiles = standModifyFiles;
+    public void setStandSortShow(String standSortShow) {
+        this.standSortShow = standSortShow;
+    }
+
+    public String getApplyArcticShow() {
+        return applyArcticShow;
+    }
+
+    public void setApplyArcticShow(String applyArcticShow) {
+        this.applyArcticShow = applyArcticShow;
+    }
+
+    public String getStandStateShow() {
+        return standStateShow;
+    }
+
+    public void setStandStateShow(String standStateShow) {
+        this.standStateShow = standStateShow;
+    }
+
+    public String getStandNatureShow() {
+        return standNatureShow;
+    }
+
+    public void setStandNatureShow(String standNatureShow) {
+        this.standNatureShow = standNatureShow;
+    }
+
+    public String getAdoptExtentShow() {
+        return adoptExtentShow;
+    }
+
+    public void setAdoptExtentShow(String adoptExtentShow) {
+        this.adoptExtentShow = adoptExtentShow;
+    }
+
+    public String getEmergyKindShow() {
+        return emergyKindShow;
+    }
+
+    public void setEmergyKindShow(String emergyKindShow) {
+        this.emergyKindShow = emergyKindShow;
+    }
+
+    public String getApplyAuthShow() {
+        return applyAuthShow;
+    }
+
+    public void setApplyAuthShow(String applyAuthShow) {
+        this.applyAuthShow = applyAuthShow;
+    }
+
+    public String getCategoryShow() {
+        return categoryShow;
+    }
+
+    public void setCategoryShow(String categoryShow) {
+        this.categoryShow = categoryShow;
     }
 }

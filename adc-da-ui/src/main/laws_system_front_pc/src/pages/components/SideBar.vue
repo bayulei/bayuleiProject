@@ -58,24 +58,29 @@ export default {
 <style lang="less" scoped>
   @import '~styles/style';
   .side-bar{
-    width: 6rem;
+    width: 16.17%;
     height: 100%;
     position: relative;
     float: left;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     &:hover{
       .side-bar-left{
         box-shadow: -1px 17px 20px 0px #CCC;
       }
     }
     .side-bar-left{
-      width: 5.2rem;
+      width: 84.6%;
       height: 100%;
       border-top: 1px solid #EDEDED;
       border-right: 1px solid #EDEDED;
       background: @sideBarColor;
       transition: box-shadow .3s linear;
       .content{
-        width: 3.8rem;
+        width: 77.54%;
+        height: 100%;
         margin: 0 auto;
         .user-info{
           height: 2.8rem;
@@ -148,7 +153,7 @@ export default {
       }
     }
     .side-bar-position{
-      width: 0.8rem;
+      width: 15.4%;
       height: 4rem;
       writing-mode:lr-tb;
       color: #333;

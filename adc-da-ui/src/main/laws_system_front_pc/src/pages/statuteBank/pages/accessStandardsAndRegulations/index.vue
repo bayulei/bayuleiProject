@@ -1,11 +1,13 @@
-<!-- 试验报告库 -->
+<!-- 准入标准法规清单 -->
 <template>
- <div id="TestReportLibrary">试验报告库</div>
+  <div id="accessStandardsAndRegulations">
+    准入标准法规清单
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'TestReportLibrary',
+  name: 'accessStandardsAndRegulations',
   data () {
     return {}
   },
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="less">
-   #TestReportLibrary{}
+  #accessStandardsAndRegulations{
+
+  }
 </style>

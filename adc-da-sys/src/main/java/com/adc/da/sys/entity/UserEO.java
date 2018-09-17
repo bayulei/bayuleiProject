@@ -28,7 +28,10 @@ public class UserEO extends BaseEntity {
     private String password;
     private String account;
     private String usid;
-    
+
+    private  String userType;
+    private String orgId;
+    private String orgName;
     private List<String> roleIdList = new ArrayList<>();
     private List<RoleEO> roleEOList = new ArrayList<>();
     
@@ -232,5 +235,29 @@ public class UserEO extends BaseEntity {
 
     public void setOrgEOList(List<OrgEO> orgEOList) {
         this.orgEOList = orgEOList;
+    }
+
+    public void setUserType(String userType){
+        this.userType=userType;
+    }
+
+    public String getUserType(){
+        return this.userType;
+    }
+
+    public void setOrgName(String orgName){
+        this.orgName=orgName;
+    }
+
+    public String getOrgName(){
+        return this.orgName;
+    }
+
+    public void setOrgId(String orgId){
+        this.orgId=orgId;
+    }
+
+    public String getOrgId(){
+        return orgId;
     }
 }

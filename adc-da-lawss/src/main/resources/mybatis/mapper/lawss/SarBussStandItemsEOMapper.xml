@@ -14,13 +14,13 @@
     <result column="tack_time" property="tackTime" />
     <result column="parts" property="parts" />
     <result column="items_name" property="itemsName" />
-    <result column="tiems_num" property="tiemsNum" />
+    <result column="items_num" property="itemsNum" />
     <result column="stand_id" property="standId" />
   </resultMap>
 
   <!-- SAR_BUSS_STAND_ITEMS table all fields -->
   <sql id="Base_Column_List" >
-     modify_time, creation_time, valid_flag, remarks, responsible_unit, energy_kind, apply_arctic, tack_time, parts, items_name, tiems_num, stand_id, id
+     modify_time, creation_time, valid_flag, remarks, responsible_unit, energy_kind, apply_arctic, tack_time, parts, items_name, items_num, stand_id, id
   </sql>
 
   <!-- 查询条件 -->
@@ -75,8 +75,8 @@
       <if test="itemsName != null" >
         and items_name ${itemsNameOperator} #{itemsName}
       </if>
-      <if test="tiemsNum != null" >
-        and tiems_num ${tiemsNumOperator} #{tiemsNum}
+      <if test="itemsNum != null" >
+        and items_num ${itemsNumOperator} #{itemsNum}
       </if>
       <if test="standId != null" >
         and stand_id ${standIdOperator} #{standId}
@@ -93,7 +93,7 @@
         SELECT SEQ_SAR_BUSS_STAND_ITEMS.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into SAR_BUSS_STAND_ITEMS(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{remarks, jdbcType=CLOB}, #{responsibleUnit, jdbcType=VARCHAR}, #{energyKind, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{tackTime, jdbcType=TIMESTAMP}, #{parts, jdbcType=VARCHAR}, #{itemsName, jdbcType=VARCHAR}, #{tiemsNum, jdbcType=VARCHAR}, #{standId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{remarks, jdbcType=CLOB}, #{responsibleUnit, jdbcType=VARCHAR}, #{energyKind, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{tackTime, jdbcType=TIMESTAMP}, #{parts, jdbcType=VARCHAR}, #{itemsName, jdbcType=VARCHAR}, #{itemsNum, jdbcType=VARCHAR}, #{standId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -113,7 +113,7 @@
                 <if test="tackTime != null" >tack_time,</if>
                 <if test="parts != null" >parts,</if>
                 <if test="itemsName != null" >items_name,</if>
-                <if test="tiemsNum != null" >tiems_num,</if>
+                <if test="itemsNum != null" >items_num,</if>
                 <if test="standId != null" >stand_id,</if>
                 <if test="id != null" >id,</if>
             </trim>
@@ -128,7 +128,7 @@
                 <if test="tackTime != null" >#{tackTime, jdbcType=TIMESTAMP},</if>
                 <if test="parts != null" >#{parts, jdbcType=VARCHAR},</if>
                 <if test="itemsName != null" >#{itemsName, jdbcType=VARCHAR},</if>
-                <if test="tiemsNum != null" >#{tiemsNum, jdbcType=VARCHAR},</if>
+                <if test="itemsNum != null" >#{itemsNum, jdbcType=VARCHAR},</if>
                 <if test="standId != null" >#{standId, jdbcType=VARCHAR},</if>
                 <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
             </trim>
@@ -147,7 +147,7 @@
             tack_time = #{tackTime},
             parts = #{parts},
             items_name = #{itemsName},
-            tiems_num = #{tiemsNum},
+            items_num = #{itemsNum},
             stand_id = #{standId}
      where  id = #{id}
   </update>
@@ -186,8 +186,8 @@
       <if test="itemsName != null" >
         items_name = #{itemsName},
       </if>
-      <if test="tiemsNum != null" >
-        tiems_num = #{tiemsNum},
+      <if test="itemsNum != null" >
+        items_num = #{itemsNum},
       </if>
       <if test="standId != null" >
         stand_id = #{standId},
@@ -238,4 +238,28 @@
     </if>
   </select>
 
+    <select id="querySarBussStandItemsList" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarBussStandItemsEOPage">
+        select <include refid="Base_Column_List"/>,
+        (
+        SELECT
+        listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_BUSS_STAND_ITEM_VAL.property_type )
+        FROM
+        SAR_BUSS_STAND_ITEM_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_ITEM_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+        WHERE
+        SAR_BUSS_STAND_ITEM_VAL.ITEM_ID = SAR_BUSS_STAND_ITEMS.id
+        AND SAR_BUSS_STAND_ITEM_VAL.property_type = 'APPLY_ARCTIC'
+        ) AS applyArcticShow,
+        (
+        SELECT
+        listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_BUSS_STAND_ITEM_VAL.property_type )
+        FROM
+        SAR_BUSS_STAND_ITEM_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_ITEM_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+        WHERE
+        SAR_BUSS_STAND_ITEM_VAL.ITEM_ID = SAR_BUSS_STAND_ITEMS.id
+        AND SAR_BUSS_STAND_ITEM_VAL.property_type = 'ENERGY_KIND'
+        ) AS energyKindShow
+        from SAR_BUSS_STAND_ITEMS
+
+        <include refid="Base_Where_Clause"/>
+    </select>
 </mapper>

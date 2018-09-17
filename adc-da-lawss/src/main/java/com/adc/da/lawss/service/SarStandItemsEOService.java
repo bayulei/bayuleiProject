@@ -2,16 +2,22 @@ package com.adc.da.lawss.service;
 
 import com.adc.da.lawss.common.PropertyTypeEnum;
 import com.adc.da.lawss.dao.SarStandItemValEODao;
+import com.adc.da.lawss.dto.SarStandExcelDto;
+import com.adc.da.lawss.dto.SarStandItemsExcelDto;
 import com.adc.da.lawss.entity.SarStandItemValEO;
+import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import com.adc.da.lawss.page.SarStandItemsEOPage;
+import com.adc.da.lawss.page.SarStandardsInfoEOPage;
 import com.adc.da.lawss.vo.SarStandItemsVO;
 import com.adc.da.sys.constant.ValueStateEnum;
+import com.adc.da.sys.util.UUIDUtils;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import com.adc.da.util.utils.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,32 +66,6 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
         //page正常情况下只有标准ID和责任部门两个查询条件
         List<SarStandItemsVO> list = dao.querySarStandItemsList(page);
         //涉及到多选的条件： 适用车型：APPLY_ARCTIC， 能源种类：ENERGY_KIND
-        for(SarStandItemsVO sarStandItemsVO: list){
-            if(StringUtils.isNotEmpty(sarStandItemsVO.getApplyArctic())){
-                String[] applyarr = sarStandItemsVO.getApplyArctic().trim().split(",");
-                List<Map<String,Object>>  applylist = new ArrayList<>();
-                for(String applya:applyarr){
-                    Map<String,Object> applyamap = new HashMap<>();
-                    applyamap.put("id",applya);
-                    //此处空的双引号中需要添加查询语句中查到的数据
-                    applyamap.put("text","");
-                    applylist.add(applyamap);
-                }
-                sarStandItemsVO.setApplyArcticlist(applylist);
-            }
-            if(StringUtils.isNotEmpty(sarStandItemsVO.getEnergyKind())){
-                String[] energyarr = sarStandItemsVO.getEnergyKind().trim().split(",");
-                List<Map<String,Object>>  energylist = new ArrayList<>();
-                for(String energy:energyarr){
-                    Map<String,Object> energymap = new HashMap<>();
-                    energymap.put("id",energy);
-                    //此处空的双引号中需要添加查询语句中查到的数据
-                    energymap.put("text","");
-                    energylist.add(energymap);
-                }
-                sarStandItemsVO.setEnergyKindlist(energylist);
-            }
-        }
         return  list;
     }
 
@@ -100,6 +80,8 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
         sarStandItemsEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
         sarStandItemsEO.setCreationTime(new Date());
         sarStandItemsEO.setModifyTime(new Date());
+        sarStandItemsEO.setCreationUser("gaoyan");
+        sarStandItemsEO.setId(UUIDUtils.randomUUID20());
         int resultint = dao.insertSelective(sarStandItemsEO);
         if(resultint==1){
             //标准关联条目表里插入数据
@@ -112,7 +94,7 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
             if(StringUtils.isNotEmpty(sarStandItemsEO.getApplyArctic())){
                 String[] applyarr = sarStandItemsEO.getApplyArctic().trim().split(",");
                 for(String applya:applyarr){
-                    sarStandItemValEO.setId(UUID.randomUUID(20));
+                    sarStandItemValEO.setId(UUIDUtils.randomUUID20());
                     sarStandItemValEO.setPropertyType(PropertyTypeEnum.APPLY_ARCTIC.getValue());
                     sarStandItemValEO.setPropertyVal(applya);
                     sarStandItemValEODao.insertSelective(sarStandItemValEO);
@@ -121,7 +103,7 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
             if(StringUtils.isNotEmpty(sarStandItemsEO.getEnergyKind())){
                 String[] energyarr = sarStandItemsEO.getEnergyKind().trim().split(",");
                 for(String energy:energyarr){
-                    sarStandItemValEO.setId(UUID.randomUUID(20));
+                    sarStandItemValEO.setId(UUIDUtils.randomUUID20());
                     sarStandItemValEO.setPropertyType(PropertyTypeEnum.ENERGY_KIND.getValue());
                     sarStandItemValEO.setPropertyVal(energy);
                     sarStandItemValEODao.insertSelective(sarStandItemValEO);
@@ -141,10 +123,20 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
      * @author gaoyan
      * date 2018-09-04
      */
-    public ResponseMessage<SarStandItemsEO> importSarStandItemsData(List<SarStandItemsEO> list){
+    public ResponseMessage<SarStandItemsEO> importSarStandItemsData(List<SarStandItemsExcelDto> list,String standId){
         //此处需要做各种验证，数据库操作
-        SarStandItemsEO sarStandItemsEO = new SarStandItemsEO();
-        return Result.success(sarStandItemsEO);
+        //将导入数据循环新增至相应表
+        for(SarStandItemsExcelDto importDto : list){
+            SarStandItemsEO sarStandItemsEO = new SarStandItemsEO();
+            BeanUtils.copyProperties(importDto,sarStandItemsEO);
+            try {
+                sarStandItemsEO.setStandId(standId);
+                addSarStandItems(sarStandItemsEO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return Result.success("0","导入数据成功");
     }
 
     /**
@@ -171,7 +163,7 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
             if(StringUtils.isNotEmpty(sarStandItemsEO.getApplyArctic())){
                 String[] applyarr = sarStandItemsEO.getApplyArctic().trim().split(",");
                 for(String applya:applyarr){
-                    sarStandItemValEO.setId(UUID.randomUUID(20));
+                    sarStandItemValEO.setId(UUIDUtils.randomUUID20());
                     sarStandItemValEO.setPropertyType(PropertyTypeEnum.APPLY_ARCTIC.getValue());
                     sarStandItemValEO.setPropertyVal(applya);
                     sarStandItemValEODao.insertSelective(sarStandItemValEO);
@@ -180,7 +172,7 @@ public class SarStandItemsEOService extends BaseService<SarStandItemsEO, String>
             if(StringUtils.isNotEmpty(sarStandItemsEO.getEnergyKind())){
                 String[] energyarr = sarStandItemsEO.getEnergyKind().trim().split(",");
                 for(String energy:energyarr){
-                    sarStandItemValEO.setId(UUID.randomUUID(20));
+                    sarStandItemValEO.setId(UUIDUtils.randomUUID20());
                     sarStandItemValEO.setPropertyType(PropertyTypeEnum.ENERGY_KIND.getValue());
                     sarStandItemValEO.setPropertyVal(energy);
                     sarStandItemValEODao.insertSelective(sarStandItemValEO);

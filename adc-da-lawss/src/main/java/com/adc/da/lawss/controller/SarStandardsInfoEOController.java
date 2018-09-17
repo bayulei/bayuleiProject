@@ -84,6 +84,22 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
+
+
+	@ApiOperation(value = "|SarStandardsInfoEO|查询")
+    @GetMapping("")
+    @RequiresPermissions("lawss:sarStandardsInfo:list")
+    public ResponseMessage<List<SarStandardsInfoEO>> list(SarStandardsInfoEOPage page) throws Exception {
+        return Result.success(sarStandardsInfoEOService.queryByList(page));
+	}
+
+    @ApiOperation(value = "|SarStandardsInfoEO|详情")
+    @GetMapping("/{id}")
+    @RequiresPermissions("lawss:sarStandardsInfo:get")
+    public ResponseMessage<SarStandardsInfoEO> find(@PathVariable String id) throws Exception {
+        return Result.success(sarStandardsInfoEOService.selectByPrimaryKey(id));
+    }
+
     /**
      * 自定义分页查询
      * @param page  标准信息
@@ -99,19 +115,6 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
-	@ApiOperation(value = "|SarStandardsInfoEO|查询")
-    @GetMapping("")
-    @RequiresPermissions("lawss:sarStandardsInfo:list")
-    public ResponseMessage<List<SarStandardsInfoEO>> list(SarStandardsInfoEOPage page) throws Exception {
-        return Result.success(sarStandardsInfoEOService.queryByList(page));
-	}
-
-    @ApiOperation(value = "|SarStandardsInfoEO|详情")
-    @GetMapping("/{id}")
-    @RequiresPermissions("lawss:sarStandardsInfo:get")
-    public ResponseMessage<SarStandardsInfoEO> find(@PathVariable String id) throws Exception {
-        return Result.success(sarStandardsInfoEOService.selectByPrimaryKey(id));
-    }
 
     /**
      * 添加一条标准
@@ -137,7 +140,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         if (standfiles != null) {
             for (MultipartFile file : standfiles) {
                 //* 3.1保存图片 *//*
-                 file = sarStandardsInfoEO.getStandFiles();
+                // file = sarStandardsInfoEO.getStandFiles();
                 String fileid = attFileEOService.saveFileInfo(file);
                 //* 3.2 其他后续操作 *//*
                 //标准文件资源表存数据库
@@ -160,7 +163,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         if (standModifyfiles != null) {
             for (MultipartFile file : standModifyfiles) {
                 //* 3.1保存图片 *//*
-                 file = sarStandardsInfoEO.getStandModifyFiles();
+                // file = sarStandardsInfoEO.getStandModifyFiles();
                  String fileid = attFileEOService.saveFileInfo(file);
                 //* 3.2 其他后续操作 *//*
                 //标准文件资源表存数据库
@@ -219,11 +222,18 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
         }
     }
 
+    /**
+     * 修改标准
+     * @param sarStandardsInfoEO  标准信息
+     * @return
+     * @author gaoyan
+     * date 2018-09-04
+     */
     @ApiOperation(value = "|SarStandardsInfoEO|修改")
     @PostMapping(value="/updateSarStandardsInfo")
     //@RequiresPermissions("lawss:sarStandardsInfo:update")
-    public ResponseMessage<SarStandardsInfoEO> update(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
-        sarStandardsInfoEOService.updateByPrimaryKeySelective(sarStandardsInfoEO);
+    public ResponseMessage<SarStandardsInfoEO> updateSarStandardsInfo(SarStandardsInfoEO sarStandardsInfoEO) throws Exception {
+        sarStandardsInfoEOService.updateSarStandardsInfo(sarStandardsInfoEO);
         return Result.success("","修改成功",sarStandardsInfoEO);
     }
 

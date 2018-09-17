@@ -14,7 +14,7 @@ public interface OrgEODao extends BaseDao<OrgEO>{
 
 	public List<OrgEO> listOrgEOByOrgName(@Param("orgName") String orgName);
 	
-	public OrgEO getOrgEOByNameAndPid(String name,String parentId);
+	public OrgEO getOrgEOByNameAndPid(String orgName,String parentId);
 	
 	public List<OrgEO> getOrgEOByPid(String parentId);
 

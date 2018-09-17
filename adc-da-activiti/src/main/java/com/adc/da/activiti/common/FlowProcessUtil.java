@@ -264,6 +264,9 @@ public class FlowProcessUtil {
             List<Task> taskList = taskService.createTaskQuery().processInstanceId(taskEntity.getProcessInstanceId())
                     .list();
             for (Task task :  taskList){
+                if(!StringUtils.isEmpty(task.getOwner())){
+                    taskService.resolveTask(task.getId());
+                }
                 taskService.complete(task.getId());
             }
 

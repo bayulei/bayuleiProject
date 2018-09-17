@@ -44,7 +44,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	BeanMapper beanMapper;
 	
 	@ApiOperation(value = "|DicTypeEO|新增")
-	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+	@PostMapping("/create")
 //	@RequiresPermissions("sys:dicType:save")
 	public ResponseMessage<DicTypeVO> create(@RequestBody DicTypeVO dicTypeVO) throws Exception {
 
@@ -73,7 +73,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	@ApiOperation(value = "|DicTypeEO|分页列表")
 	@GetMapping("/page")
 //	@RequiresPermissions("sys:dicType:page")
-    public ResponseMessage<PageInfo<DicTypeEO>> pageListByDicId(Integer pageNo, Integer pageSize,String dicId, String dicTypeName) throws Exception{
+    public ResponseMessage<PageInfo<DicTypeEO>> pageListByDicId(Integer pageNo, Integer pageSize,String dicId, String dicTypeName,String dicTypeCode) throws Exception{
 		DicTypeEOPage page = new DicTypeEOPage();
 		if (pageNo != null) {
 			page.setPage(pageNo);
@@ -88,6 +88,11 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 			page.setDicTypeName(dicTypeName);
 			page.setDicTypeNameOperator("LIKE");
 		}
+//		根据code也可以进行模糊查找
+		if (StringUtils.isNotEmpty(dicTypeCode)) {
+			page.setDicTypeCode(dicTypeCode);
+			page.setDicTypeCodeOperator("LIKE");
+		}
 		page.setPager(new Pager());
 		List<DicTypeEO> rows = dicTypeEOService.queryByPage(page);
 		//PageInfo<DicTypeVO> mapPage = beanMapper.mapPage( rows, DicTypeVO.class);
@@ -101,16 +106,27 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	public ResponseMessage<DicTypeVO> update(@RequestBody DicTypeVO dicTypeVO) throws Exception {
 		List<DicTypeEO> dicTypeEOList = dicTypeEOService.getDicTypeEOByDicTypeCode(dicTypeVO.getDicTypeCode());
 		List<DicTypeEO> dicTypeEOS = dicTypeEOService.getTypeIdByDicIdAndTypeName(dicTypeVO.getDicId(),dicTypeVO.getDicTypeName());
+		DicTypeEO   dicTypeEO  =   dicTypeEOService.getDicTypeById(dicTypeVO.getId());
 
+
+//		如果修改的字典类型编码不改变也可以进行修改   通过用户id获得字段名字和输入的名字一致也可以
 		if(StringUtils.isBlank(dicTypeVO.getDicTypeCode())){
 			return Result.error("r0014", "字典类型编码不能为空");
-		}else if(dicTypeEOList!=null && !dicTypeEOList.isEmpty()){
-			return Result.error("r0015","字典类型编码已存在");
-		}
+		 //原name和新输入的name进行对比,如果一样不算在字典类型编码重复
+		}else if(dicTypeEO.getDicTypeCode().equals(dicTypeVO.getDicTypeCode())){
+					if(dicTypeEOList!=null && !dicTypeEOList.isEmpty()  ){
+				return Result.error("r0015","字典类型编码已存在");
+			        }
+			}
+
+
 		if(StringUtils.isBlank(dicTypeVO.getDicTypeName())){
 			return Result.error("r0016", "字典类型名称不能为空");
-		}else if(dicTypeEOS!=null && !dicTypeEOS.isEmpty() ){
-			return Result.error("r0017","字典类型名称存在");
+		 //原name和新输入的name进行对比,如果一样不算在字典类型名称重复
+		}else	if(dicTypeEO.getDicTypeName().equals(dicTypeVO.getDicTypeName())){
+			if(dicTypeEOS!=null && !dicTypeEOS.isEmpty() ){
+				return Result.error("r0017","字典类型名称存在");
+			}
 		}
 
 		dicTypeEOService.updateByPrimaryKeySelective(beanMapper.map(dicTypeVO, DicTypeEO.class));
@@ -124,11 +140,14 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		DicTypeVO dicTypeVO = beanMapper.map(dicTypeEOService.getDicTypeById(id), DicTypeVO.class);
 		return Result.success(dicTypeVO);
 	}
-//	删除多条数据
+//	删除多条数据  修改
 	@ApiOperation(value = "|DicTypeEO|删除多条数据")
-	@DeleteMapping("/deleteArr/{ids}")
+	//@DeleteMapping("/deleteArr/{ids}")
+	@DeleteMapping("/deleteArr")
+//	@PostMapping("/deleteArr/{ids}")
 //	@RequiresPermissions("sys:dicType:delete")
-	public ResponseMessage delete(@NotNull @PathVariable("ids") String[] ids) throws Exception {
+	//public ResponseMessage delete(@NotNull @PathVariable("ids") String[] ids) throws Exception {
+	public ResponseMessage delete(String ids) throws Exception {
 		dicTypeEOService.delete(Arrays.asList(ids));
 		return Result.success();
 	}

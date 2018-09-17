@@ -12,6 +12,7 @@ import LabelSelect from './labelSelect'
 import Pagination from './pagination'
 import TableToolsBar from './tableToolsBar'
 import FullModal from './fullModal'
+import HasNoData from './hasNoData'
 
 const install = function (Vue) {
   Vue.component('PanelHeader', PanelHeader)
@@ -22,6 +23,7 @@ const install = function (Vue) {
   Vue.component('pagination', Pagination)
   Vue.component('tableToolsBar', TableToolsBar)
   Vue.component('fullModal', FullModal)
+  Vue.component('hasNoData', HasNoData)
 }
 
 export default {

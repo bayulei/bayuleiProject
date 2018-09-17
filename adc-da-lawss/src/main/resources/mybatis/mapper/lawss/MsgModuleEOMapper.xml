@@ -134,8 +134,8 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List" /> 
       from MSG_MODULE
-     where id = #{value}
-
+      <!--   where id = #{value} -->
+      where id = #{id}
   </select>
 
   <!-- 删除记录 -->

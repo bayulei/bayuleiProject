@@ -1,6 +1,8 @@
-<!-- 云端适应性分析 -->
+<!-- 企业标准库 -->
 <template>
- <div id="index"></div>
+  <div id="enterpriseStandardDatabase">
+    企业标准库
+  </div>
 </template>
 
 <script>
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="less">
-   #index{}
+  #enterpriseStandardDatabase{
+
+  }
 </style>
