@@ -1,5 +1,6 @@
 package com.adc.da.lawss.service;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.MsgFileEODao;
 import com.adc.da.lawss.entity.MsgFileEO;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -32,5 +36,17 @@ public class MsgFileEOService extends BaseService<MsgFileEO, String> {
     public MsgFileEODao getDao() {
         return dao;
     }
+
+//    更新消息附件表
+    public int updateByPrimaryKeySelective(List<MsgFileEO> msgFileEO) throws Exception {
+//必须修改成List
+        for ( MsgFileEO msgFileEO1:msgFileEO) {
+            msgFileEO1.setModifyTime(new Date());
+            return dao.updateByPrimaryKeySelective(msgFileEO1);
+        }
+        return dao.updateByPrimaryKeySelective(msgFileEO);
+    }
+
+
 
 }

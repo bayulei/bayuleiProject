@@ -19,14 +19,29 @@ export default {
   data () {
     return {
       navList: [{
-        title: '国内信息库',
-        path: '/domesticInformationBase'
+        title: '国内标准库',
+        path: '/domesticStandardDatabase'
       }, {
-        title: '国外信息库',
-        path: '/foreignInformationBase'
+        title: '国内法规库',
+        path: '/domesticRegulationsDatabase'
       }, {
-        title: '云端适应性分析',
-        path: '/cloudAdaptationAnalysis'
+        title: '国外标准库',
+        path: '/foreignStandardDatabase'
+      }, {
+        title: '国外法规库',
+        path: '/foreignRegulationsDatabase'
+      }, {
+        title: '企业标准库',
+        path: '/enterpriseStandardDatabase'
+      }, {
+        title: '准入标准法规清单',
+        path: '/accessStandardsAndRegulations'
+      }, {
+        title: '试验项目库',
+        path: '/testItemDatabase'
+      }, {
+        title: '本地产品/项目库',
+        path: '/localProductDatabase'
       }]
     }
   },

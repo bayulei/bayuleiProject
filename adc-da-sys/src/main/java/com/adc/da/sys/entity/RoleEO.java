@@ -33,7 +33,11 @@ public class RoleEO extends BaseEntity {
     private List<MenuEO> menuEOList = new ArrayList<>();
     private List<String> menuEOIdList = new ArrayList<>();
     
-    
+    private String orgUseName;
+
+    private Integer disableFlag;
+
+    private Integer unlockFlag;
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -55,6 +59,8 @@ public class RoleEO extends BaseEntity {
             case "modifyTime": return "modify_time";
             case "creationTime": return "creation_time";
             case "validFlag": return "valid_flag";
+            case "disableFlag": return "disable_flag";
+            case "unlockFlag": return "unlock_flag";
             case "operUser": return "oper_user";
             case "extInfo": return "ext_info";
             case "remarks": return "remarks";
@@ -88,6 +94,8 @@ public class RoleEO extends BaseEntity {
             case "modify_time": return "modifyTime";
             case "creation_time": return "creationTime";
             case "valid_flag": return "validFlag";
+            case "disable_flag": return "disableFlag";
+            case "unlock_flag": return "unlockFlag";
             case "oper_user": return "operUser";
             case "ext_info": return "extInfo";
             case "remarks": return "remarks";
@@ -100,7 +108,7 @@ public class RoleEO extends BaseEntity {
         }
     }
     public  RoleEO(){}
-    public RoleEO(Date modifyTime, Date creationTime, Integer validFlag, String operUser, String extInfo, String remarks, Integer isDefault, Integer useFlag, String roleType, String name, String id, List<MenuEO> menuEOList, List<String> menuEOIdList) {
+    public RoleEO(Date modifyTime, Date creationTime, Integer validFlag, String operUser, String extInfo, String remarks, Integer isDefault, Integer useFlag, String roleType, String name, String id, List<MenuEO> menuEOList, List<String> menuEOIdList,Integer disableFlag,Integer unlockFlag) {
         this.modifyTime = modifyTime;
         this.creationTime = creationTime;
         this.validFlag = validFlag;
@@ -114,6 +122,8 @@ public class RoleEO extends BaseEntity {
         this.id = id;
         this.menuEOList = menuEOList;
         this.menuEOIdList = menuEOIdList;
+        this.disableFlag=disableFlag;
+        this.unlockFlag=unlockFlag;
     }
 
     /**  **/
@@ -250,5 +260,29 @@ public class RoleEO extends BaseEntity {
 
     public void setOperUserName(String operUserName) {
         this.operUserName = operUserName;
+    }
+
+    public void setOrgUseName(String orgUseName) {
+        this.orgUseName =orgUseName;
+    }
+
+    public String getOrgUseName(){
+        return this.orgUseName;
+    }
+
+    public void setDisableFlag(Integer disableFlag){
+        this.disableFlag=disableFlag;
+    }
+
+    public Integer getDisableFlag(){
+        return this.disableFlag;
+    }
+
+    public void setUnlockFlag(Integer unlockFlag){
+        this.unlockFlag=unlockFlag;
+    }
+
+    public Integer getUnlockFlag(){
+        return this.unlockFlag;
     }
 }

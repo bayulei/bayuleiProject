@@ -1,6 +1,6 @@
 <!-- 国内法规库 -->
 <template>
- <div class="personal-data">
+ <div id="domesticRegulationsDatabase">
     <table-tools-bar>
       <div class="laws-info-form" slot="left">
         <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" class="label-input-form">
@@ -243,7 +243,7 @@
 <script src="./js/DomesticRegulationsDatabase.js"></script>
 
 <style lang="less">
-  .personal-data{
+  #domesticRegulationsDatabase{
     .searchBtn{
       width: 2rem;
       height: 0.72rem;

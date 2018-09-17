@@ -139,7 +139,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
                 SarLawsValEO sarLawsValEO = new SarLawsValEO();
                 sarLawsValEO.setId(UUID.randomUUID(20));
                 sarLawsValEO.setLawsId(infoId);
-                sarLawsValEO.setPropertyType("ENERGYTYPES");
+                sarLawsValEO.setPropertyType("PROVETYPE");
                 sarLawsValEO.setPropertyVal(applyAuth[p]);
                 sarLawsValEO.setValidFlag(0);
                 sarLawsValEO.setCreationTime(new Date());

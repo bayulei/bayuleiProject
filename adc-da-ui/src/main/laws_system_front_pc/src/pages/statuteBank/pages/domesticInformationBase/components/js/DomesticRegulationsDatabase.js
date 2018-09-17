@@ -87,15 +87,15 @@ export default {
         },
         {
           title: '适用车型',
-          key: 'applyArctic'
+          key: 'applyArcticShow'
         },
         {
           title: '能源种类',
-          key: 'energyKind'
+          key: 'energyKindShow'
         },
         {
           title: '适用认证',
-          key: 'applyAuth'
+          key: 'applyAuthShow'
         },
         {
           title: '修改时间',
@@ -195,11 +195,11 @@ export default {
         },
         {
           title: '适用车型',
-          key: 'applyArctic'
+          key: 'applyArcticShow'
         },
         {
           title: '能源类型',
-          key: 'energyKind'
+          key: 'energyKindShow'
         },
         {
           title: '责任部门',

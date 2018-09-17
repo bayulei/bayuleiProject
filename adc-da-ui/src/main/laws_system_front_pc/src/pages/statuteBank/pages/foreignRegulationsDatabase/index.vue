@@ -1,11 +1,13 @@
-<!-- 产品库 -->
+<!-- 国外法规库 -->
 <template>
- <div id="ProductLibrary">产品库</div>
+  <div id="foreignRegulationsDatabase">
+    国外法规库
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'ProductLibrary',
+  name: 'foreignRegulationsDatabase',
   data () {
     return {}
   },
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="less">
-   #ProductLibrary{}
+  #foreignRegulationsDatabase{
+
+  }
 </style>
