@@ -24,18 +24,16 @@ public class UserVO {
 	private String account;
 	private String usid;
 	// 扩展字段
-    private String updateTime;
 	private List<String> rolesstr = new ArrayList<>();
 	private List<RoleEO> roles = new ArrayList<>();
 
 	private List<String> orgsstr = new ArrayList<>();
 	private List<OrgEO> orgs = new ArrayList<>();
-	
-	private String useCorpId;
-	private String orgUseName;
+	private String orgId;
+	private String orgName;
 	private String rname;
-	private String deptId;
-
+	private String roleId;
+	private String roleName;
 	private Integer disableFlag;
 
 	private Integer unlockFlag;
@@ -114,23 +112,6 @@ public class UserVO {
 		this.orgs = orgs;
 	}
 
-	public String getUseCorpId() {
-		return useCorpId;
-	}
-
-	public void setUseCorpId(String useCorpId) {
-		this.useCorpId = useCorpId;
-	}
-
-	public String getOrgUseName() {
-		return orgUseName;
-	}
-
-	public void setOrgUseName(String orgUseName) {
-		this.orgUseName = orgUseName;
-	}
-
-
 	public String getRname() {
 		return rname;
 	}
@@ -139,28 +120,12 @@ public class UserVO {
 		this.rname = rname;
 	}
 
-	public String getDeptId() {
-		return deptId;
-	}
-
-	public void setDeptId(String deptId) {
-		this.deptId = deptId;
-	}
-
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
 	}
 
 	public String getUserSource() {
@@ -241,5 +206,29 @@ public class UserVO {
 	public String getUserType(){
 		return this.userType;
 	}
+
+	public void setOrgId(String orgId){
+		this.orgId=orgId;
+	}
+
+	public String getOrgId(){
+		return this.orgId;
+	}
+
+	public void setOrgName(String orgName){
+		this.orgName=orgName;
+	}
+
+	public String getOrgName(){
+		return this.orgName;
+	}
+
+	public void setRoleId(String roleId){ this.roleId=roleId;}
+
+	public String getRoleId(){return this.roleId;}
+
+	public String getRoleName(){return this.roleName;}
+
+	public void setRoleName(String roleName){this.roleName=roleName;}
 
 }
