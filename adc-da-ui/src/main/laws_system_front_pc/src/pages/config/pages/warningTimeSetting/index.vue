@@ -4,8 +4,8 @@
         <div class="warningSelect">
             <label-select v-model="warningForm.warning" :options="warningList" placeholder="请设置预警时间" label="预警时间设置" ></label-select>
         <div class="btn-group">
-          <Button type="primary" @click="handleSubmit('warningForm')">保存</Button>
-          <Button style="margin-left: 8px" @click="handleReset ('warningForm')">返回</Button>
+          <Button type="primary" @click="handleSubmit()">保存</Button>
+          <Button style="margin-left: 8px" @click="handleReset ()">返回</Button>
         </div>
   </div>
   </div>
@@ -21,19 +21,19 @@ export default {
       },
       warningList: [
         {
-          value: 'Three Months',
+          value: 'THREEMONTH',
           label: '3个月'
         },
         {
-          value: 'Six Months',
+          value: 'SIXMONTH',
           label: '6个月'
         },
         {
-          value: 'One Year',
+          value: 'SIXMONTH',
           label: '一年'
         },
         {
-          value: 'two Year',
+          value: 'TWOYEAR',
           label: '两年'
         }
       ],
@@ -45,10 +45,16 @@ export default {
     }
   },
   methods: {
-    handleSubmit (name) {
-      alert('提交的数据是' + this.warningForm.warning)
+    handleSubmit () {
+      this.$http.putData('sys/warnTime/updateSource',
+        {warnTimeType: this.warningForm.warning},
+        {_this: this}, res => {
+          if (res.ok) {
+            this.$Message.success('设置成功！')
+          }
+        })
     },
-    handleReset (name) {
+    handleReset () {
       this.warningForm.warning = ''
     }
   }

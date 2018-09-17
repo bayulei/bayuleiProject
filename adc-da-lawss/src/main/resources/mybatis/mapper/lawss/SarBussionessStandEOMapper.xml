@@ -59,7 +59,7 @@
   </sql>
   <sql id="Base_Column_List_show" >
      SAR_BUSSIONESS_STAND.modify_time, SAR_BUSSIONESS_STAND.creation_time, SAR_BUSSIONESS_STAND.valid_time, SAR_BUSSIONESS_STAND.put_user, SAR_BUSSIONESS_STAND.citation_user, responsible_unit, stand_file, tags, stand_status, replaced_stand_num, replace_stand_num, quote_stand, first_put_time, put_year, put_time, issue_time, energy_kind, apply_arctic, stand_en_name, stand_name, stand_code, classify_code, stand_subclass, stand_genera,
-      id,dicstandStatus.DIC_TYPE_NAME as standStatusShow
+     SAR_BUSSIONESS_STAND.id,dicstandStatus.DIC_TYPE_NAME as standStatusShow
   </sql>
 
 
@@ -412,7 +412,7 @@
         left join TS_DICTYPE dicountry on (dicountry.dic_type_code = SAR_BUSSIONESS_STAND.country  and dicountry.dic_id is not null)
         left join TS_DICTYPE dicstandSort on  (dicstandSort.dic_type_code = SAR_BUSSIONESS_STAND.stand_sort  and dicstandSort.dic_id is not null
         )-->
-        left join TS_DICTYPE dicstandStatus on  (dicadoptExtent.dic_type_code = SAR_BUSSIONESS_STAND.STAND_STATUS  and dicadoptExtent.dic_id is not null)
+        left join TS_DICTYPE dicstandStatus on  (dicstandStatus.dic_type_code = SAR_BUSSIONESS_STAND.STAND_STATUS  and dicstandStatus.dic_id is not null)
         where 1=1
         <trim suffixOverrides="," >
             <!--                     基本搜索项                         -->
@@ -458,7 +458,7 @@
         SELECT
         listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_BUSS_STAND_VAL.property_type )
         FROM
-        SAR_BUSS_STAND_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+        SAR_BUSS_STAND_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_VAL.property_value  and TS_DICTYPE.dic_id is not null)
         WHERE
         SAR_BUSS_STAND_VAL.stand_id = SAR_BUSSIONESS_STAND.id
         AND SAR_BUSS_STAND_VAL.property_type = 'APPLY_ARCTIC'
@@ -467,7 +467,7 @@
         SELECT
         listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_BUSS_STAND_VAL.property_type )
         FROM
-        SAR_BUSS_STAND_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+        SAR_BUSS_STAND_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_VAL.property_value  and TS_DICTYPE.dic_id is not null)
         WHERE
         SAR_BUSS_STAND_VAL.stand_id = SAR_BUSSIONESS_STAND.id
         AND SAR_BUSS_STAND_VAL.property_type = 'ENERGY_KIND'

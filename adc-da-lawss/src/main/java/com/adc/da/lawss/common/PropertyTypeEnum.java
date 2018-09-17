@@ -7,7 +7,7 @@ package com.adc.da.lawss.common;
  */
 public enum PropertyTypeEnum {
 
-	APPLY_ARCTIC("APPLY_ARCTIC","适用车型"),ENERGY_KIND("ENERGY_KIND","能源种类"),APPLY_AUTH("APPLY_AUTH","适用认证"),CATEGORY("CATEGORY","所属类别");
+	APPLY_ARCTIC("APPLY_ARCTIC","适用车型"),ENERGY_KIND("ENERGY_KIND","能源种类"),APPLY_AUTH("APPLY_AUTH","适用认证"),CATEGORY("CATEGORY","所属类别"),PRODUCT_TYPE("PRODUCT_TYPE","产品类别");
 	
 	private String value;
 	private String lable;
@@ -22,8 +22,5 @@ public enum PropertyTypeEnum {
 	public String getLable() {
 		return lable;
 	}
-	
-	
-	
-	
+
 }

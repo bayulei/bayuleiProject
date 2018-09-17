@@ -16,6 +16,8 @@
 		<result column="modify_time" property="modifyTime" />
 		<result column="user_type" property="userType" />
 		<result column="role_name" property="roleName" />
+		<result column="role_id" property="roleId" />
+		<result column="org_id" property="orgId" />
 		<result column="oper_user" property="operUser" />
 		<result column="disable_flag" property="disableFlag" />
 		<result column="unlock_flag" property="unlockFlag" />
@@ -247,8 +249,9 @@
 		insert into TS_USER(
 		<include refid="Base_Column_List" />
 		)
-		values (#{usid}, #{account}, #{validFlag}, #{password}, #{uname}, #{extInfo},#{email},#{workNum},#{creationTime},#{modifyTime},#{operUser},#{userSource},#{disableFlag},#{unlockFlag})
+		values (#{usid}, #{account}, #{validFlag}, #{password}, #{uname}, #{extInfo},#{email},#{workNum},#{creationTime},#{modifyTime},#{operUser},#{userSource},#{disableFlag},#{unlockFlag},#{userType})
 	</insert>
+
 
 	<!-- 根据pk，修改记录 -->
 	<update id="updateByPrimaryKey" parameterType="com.adc.da.sys.entity.UserEO">
@@ -363,8 +366,8 @@
 			FROM(
 				SELECT
 				TU.usid,TU.USER_TYPE,TU."ACCOUNT",TU.UNAME,TU.EMAIL,TU.WORK_NUM,
-				tu.modify_time,tr. NAME,tui.mobile_phone,tui.office_phone,
-				tor.org_name
+				tu.modify_time,tr.NAME AS ROLE_NAME,tui.mobile_phone,tui.office_phone,
+				tor.org_name,tuo.ORG_ID,tur.ROLE_ID
 				FROM TS_USER tu
 				LEFT JOIN TS_USER_ROLE tur ON TU.USID = TUR.USER_ID
 				LEFT JOIN TS_USER_INFO tui ON tu.usid = tui.user_id

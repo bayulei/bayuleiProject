@@ -492,7 +492,6 @@ export default {
       }, res => {
         this.searchLawsItems(this.saveLawsId)
       }, e => {
-
       })
     },
     // 分解多选下拉

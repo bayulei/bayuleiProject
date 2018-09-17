@@ -190,8 +190,7 @@ export default {
           return h('div', [
             h('Button', {
               props: {
-                type: 'primary',
-                size: 'small'
+                type: 'primary'
               },
               style: {
                 marginRight: '5px'
@@ -204,8 +203,7 @@ export default {
             }, '查看'),
             h('Button', {
               props: {
-                type: 'primary',
-                size: 'smaill'
+                type: 'primary'
               },
               style: {
                 marginRight: '5px'
@@ -218,8 +216,7 @@ export default {
             }, '编辑'),
             h('Button', {
               props: {
-                type: 'primary',
-                size: 'smaill'
+                type: 'primary'
               },
               style: {
                 marginRight: '5px'

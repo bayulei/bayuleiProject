@@ -140,7 +140,7 @@ public class SarBussStandItemsEOController extends BaseController<SarBussStandIt
             sarBussStandItemValEOService.deleteSarBussStandItemByItemid(iditem);
         }
         logger.info("delete from SAR_STAND_ITEMS where id = {}", id);
-        return Result.success("00","删除成功");
+        return Result.success("00","删除成功",id);
     }
 
     @ApiOperation(value = "|SarBussStandItemsEO|导入企业标准分解单")
