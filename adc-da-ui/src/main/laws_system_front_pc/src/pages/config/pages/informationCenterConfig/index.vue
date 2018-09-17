@@ -4,8 +4,7 @@
       <div class="container">
         <div class="header">
           <Button type="info" @click="informationAdd">新增</Button>
-          <Button type="success" style="margin-left: 15px" @click="informationEdit">编辑</Button>
-          <Button type="warning" style="margin-left: 15px">删除</Button>
+          <Button type="error" style="margin-left: 15px">删除</Button>
           <!-- 显示模态框 -->
           <Modal
             v-model="informationModal"
@@ -18,7 +17,12 @@
             </div>
           </Modal>
         </div>
-        <Table border :columns="informationTable " :data="data1"></Table>
+        <div class="content">
+          <loading :loading="loading">数据获取中</loading>
+          <Table border ref="selection" :columns="informationTable" :data="informationData" @on-selection-change="handleSelectone">
+          </Table>
+          <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
+        </div>
       </div>
   </div>
 </template>
@@ -30,6 +34,10 @@ export default {
       informationModal: false,
       informationTitle: '',
       modalType: '',
+      loading: false,
+      total: 0,
+      page: 1,
+      rows: 10,
       informationTable: [
         {
           type: 'selection',
@@ -38,17 +46,7 @@ export default {
         }, {
           title: '参数',
           key: 'parameter',
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Icon', {
-                props: {
-                  type: 'person'
-                }
-              }),
-              h('strong', params.row.parameter)
-            ])
-          }
+          align: 'center'
         },
         {
           title: '操作',
@@ -66,7 +64,21 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.show(params.index)
+                    this.informationEdit(params.row)
+                  }
+                }
+              }, '编辑'),
+              h('Button', {
+                props: {
+                  type: 'warning',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.viewData(params.row)
                   }
                 }
               }, '查看'),
@@ -75,9 +87,12 @@ export default {
                   type: 'error',
                   size: 'small'
                 },
+                style: {
+                  marginRight: '5px'
+                },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+                    this.categoryDel(params.row.id)
                   }
                 }
               }, '删除')
@@ -85,20 +100,9 @@ export default {
           }
         }
       ],
-      data1: [
-        {
-          parameter: '通知'
-        },
-        {
-          parameter: '共享资料'
-        },
-        {
-          parameter: '标准法规月报'
-        },
-        {
-          parameter: '会议资料'
-        }
-      ]
+      informationData: [{
+        parameter: '通知'
+      }]
     }
   },
   methods: {
@@ -109,7 +113,7 @@ export default {
       this.modalType = 1
     },
     // 编辑
-    informationEdit () {
+    informationEdit (row) {
       this.informationModal = true
       this.informationTitle = '编辑参数'
       this.modalType = 2
@@ -122,7 +126,39 @@ export default {
     },
     remove (index) {
       this.data1.splice(index, 1)
+    },
+    //  全选
+    handleSelectAll (status) {
+      this.$refs.selection.selectAll(status)
+    },
+    // 非全选
+    handleSelectone (row) {
+      this.selectNum = row
+    },
+    pageChange (page) {
+      this.page = page
+      this.selectInformation()
+    },
+    pageSizeChange (pageSize) {
+      this.rows = pageSize
+      this.selectInformation()
+    },
+    // 加载表格
+    selectInformation () {
+      this.$http.get('sys/lawss/msgModule/page', {
+        pageNo: this.page,
+        pageSize: this.rows
+      }, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        this.categoryData = res.data.list
+        this.total = res.data.count
+      }, e => {})
     }
+  },
+  mounted () {
+    this.selectInformation()
   }
 }
 </script>

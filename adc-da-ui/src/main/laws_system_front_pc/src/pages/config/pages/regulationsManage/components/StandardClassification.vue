@@ -214,10 +214,11 @@ export default {
     // 加载表格
     selectClass () {
       this.$http.get('sys/dictype/page', {
-        page: this.page,
+        pageNo: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
-        dicTypeCode: this.standardForm.standCode
+        dicTypeCode: this.standardForm.standCode,
+        dicId: 'FDFDFDVFTGR'
       }, {
         _this: this,
         loading: 'loading'

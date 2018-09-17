@@ -8,11 +8,10 @@
             <Button type="info" class="query-button" @click="selectCategory">查询</Button>
         </div>
         <div slot="right">
-          <Button type="success" @click="categoryAdd">增加</Button>
-          <Button type="warning" @click="categoryEdit">编辑</Button>
-          <Button type="error"  @click="categoryDel">删除</Button>
+          <Button type="info" @click="categoryAdd">增加</Button>
+          <Button type="error"  @click="categoryBatchDel">删除</Button>
           <!--显示模态框-->
-          <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }"
+          <Modal v-model="categoryModal" :title="categoryTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"
                  @on-ok="saveCategory">
               <Form :model="categoryModelAdd" label-position="right" :label-width="80">
                 <input v-model="categoryModelAdd.id" v-show="false">
@@ -88,7 +87,6 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 150,
           align: 'center',
           render: (h, params) => {
             return h('div', [
@@ -102,10 +100,38 @@ export default {
                 },
                 on: {
                   click: () => {
+                    this.categoryEdit(params.row)
+                  }
+                }
+              }, '编辑'),
+              h('Button', {
+                props: {
+                  type: 'warning',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
                     this.viewData(params.row)
                   }
                 }
-              }, '查看')
+              }, '查看'),
+              h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.categoryDel(params.row.id)
+                  }
+                }
+              }, '删除')
             ])
           }
         }
@@ -122,8 +148,6 @@ export default {
     // 非全选
     handleSelectone (row) {
       this.selectNum = row
-      console.log(this.selectNum)
-      console.log(this.selectNum.length)
     },
     // 选择提示框
     instance (type, content) {
@@ -149,22 +173,13 @@ export default {
       this.categoryModelAdd.id = ''
     },
     // 编辑
-    categoryEdit () {
-      console.log(this.selectNum)
-      if (this.selectNum === '' || this.selectNum.length === 0) {
-        this.instance('warning', '请务必选择一条数据')
-      } else {
-        if (this.selectNum.length === 1) {
-          this.categoryModal = true
-          this.modalType = 2
-          this.categoryTitle = '编辑标准'
-          this.categoryModelAdd.parts = this.selectNum[0].dicTypeName
-          this.categoryModelAdd.coding = this.selectNum[0].dicTypeCode
-          this.categoryModelAdd.id = this.selectNum[0].id
-        } else {
-          this.instance('warning', '最多只能选择一条数据')
-        }
-      }
+    categoryEdit (item) {
+      this.categoryModal = true
+      this.modalType = 2
+      this.categoryTitle = '编辑标准'
+      this.categoryModelAdd.parts = item.dicTypeName
+      this.categoryModelAdd.coding = item.dicTypeCode
+      this.categoryModelAdd.id = item.id
     },
     // 查看
     viewData (row) {
@@ -176,7 +191,27 @@ export default {
       this.categoryModelAdd.id = row.id
     },
     // 删除
-    categoryDel () {
+    categoryDel (id) {
+      this.handleSelectAll(false)
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.delete('sys/dictype/deleteArr', {
+            ids: id
+          }, {
+            _this: this
+          }, res => {
+            this.selectCategory()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    // 批量删除
+    categoryBatchDel () {
       if (this.selectNum === '' || this.selectNum.length === 0) {
         this.instance('warning', '请选择一条数据进行删除')
       } else {
@@ -184,13 +219,13 @@ export default {
         for (let i = 0; i < this.selectNum.length; i++) {
           delIds.push(this.selectNum[i].id)
         }
-        console.log(delIds)
+        delIds = delIds.join(',')
         this.$Modal.confirm({
           title: '确认删除',
-          content: '<p>确认删除该条数据？</p>',
+          content: '<p>确认删除该这些数据？</p>',
           onOk: () => {
-            this.$http.put('deleteArr/{ids}', {
-              id: JSON.stringify(delIds)
+            this.$http.delete('sys/dictype/deleteArr', {
+              ids: delIds
             }, {
               _this: this
             }, res => {
@@ -214,7 +249,7 @@ export default {
     // 加载表格
     selectCategory () {
       this.$http.get('sys/dictype/page', {
-        page: this.page,
+        pageNo: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
         dicTypeCode: this.standardForm.standCode,
@@ -229,23 +264,25 @@ export default {
     },
     // 提交新增/修改
     saveCategory () {
+      let data = {
+        dicTypeName: this.categoryModelAdd.parts,
+        dicTypeCode: this.categoryModelAdd.coding,
+        dicId: 'JKSADFH564S'
+      }
       if (this.modalType === 1) {
-        this.$http.post('sys/dictype/create', {
-          dicTypeName: this.categoryModelAdd.parts,
-          dicTypeCode: this.categoryModelAdd.coding,
-          dicId: 'JKSADFH564S'
-        }, {
+        this.$http.postData('sys/dictype/create', data, {
           _this: this
         }, res => {
           this.selectCategory()
         }, e => {
 
         })
-      } else {
-        this.$http.put('sys/dictype', {
+      } else if (this.modalType === 2) {
+        this.$http.putData('sys/dictype', {
           dicTypeName: this.categoryModelAdd.parts,
           dicTypeCode: this.categoryModelAdd.coding,
-          dicId: 1
+          dicId: 'JKSADFH564S',
+          id: this.categoryModelAdd.id
         }, {
           _this: this
         }, res => {
@@ -271,5 +308,8 @@ export default {
     .ivu-modal-footer{
       display: none;
     }
+  }
+  .ivu-modal-confirm .ivu-modal-confirm-footer{
+    display: block;
   }
 </style>
