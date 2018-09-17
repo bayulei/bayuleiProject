@@ -63,7 +63,7 @@
                </Col>
              </Row>
              <Row>
-               <Col span="4">新车型实施时间: {{ item.putTime }}</Col>  
+               <Col span="4">新车型实施时间: {{ item.putTime }}</Col>
                <Col span="4" push="2">在产车实施时间: {{ item.issueTime }}</Col>
                <Col span="4" push="3">适用车型: -</Col>
                <Col span="6" push="6">
