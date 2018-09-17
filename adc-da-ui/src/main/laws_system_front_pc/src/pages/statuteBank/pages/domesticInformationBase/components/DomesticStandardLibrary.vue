@@ -16,7 +16,7 @@
        <Button type="primary" icon="ios-search" :loading="searching" @click="getDomesticStandardTable"></Button>
        <Button type="primary"  @click="clearAllSearch">清空查询</Button>
      </div>
-     <div slot="right">
+     <div slot="right" >
        <Dropdown trigger="click" style="margin-left: 20px" @on-click="clickDropMenu">
          <Button type="primary" icon="ios-arrow-down">设置</Button>
          <DropdownMenu slot="list">
@@ -26,7 +26,7 @@
          </DropdownMenu>
        </Dropdown>
        <Button type="primary" icon="ios-add" :loading="searching" @click="addModal">新增标准</Button>
-       <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal">导入标准</Button>
+       <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal(1)">导入标准</Button>
        <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
        <Button type="primary" @click="configurationStandard">配置标准</Button>
        <Button type="primary" @click="exportStandard">导出</Button>
@@ -299,7 +299,7 @@
    </full-modal>
    <!-- 导入模态窗 -->
    <Modal v-model="importModalshowflag" title="导入文件" >
-     <Upload action="/api/lawss/sarStandardsInfo/importStandardsInfo?standType='INLAND'" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
+     <Upload :action="importExcelUrl" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
        <Button icon="ios-cloud-upload-outline">选择文件</Button>
      </Upload>
    </Modal>
@@ -319,12 +319,11 @@
      <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false" class="label-input-form">
        <div slot="left">
        </div>
-       <div slot="right">
+       <div slot="right" style="margin-right: 70px">
          <Button type="primary" icon="ios-add" :loading="searching" @click="addItemModal">新增</Button>
-         <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal">导入</Button>
+         <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal(2)">导入</Button>
          <Button type="primary" @click="isAdvancedSearch = true">删除</Button>
-         <Button type="primary" @click="configurationStandard">保存</Button>
-         <Button type="primary" @click="exportStandard">导出</Button>
+         <Button type="primary" @click="exportStandardItem">导出</Button>
        </div>
      </table-tools-bar>
      <Table border ref="" :columns="standItemTableColumn" :data="standItemList"></Table>
@@ -722,7 +721,8 @@ export default {
         sorDivide: 'INLAND_STAND',
         displaySeq: '',
         parentIds: ''
-      }
+      },
+      importExcelUrl: '' // 导入EXCEL文档
     }
   },
   methods: {
@@ -870,10 +870,15 @@ export default {
       this.$refs.modalshow.toggleClose()
       this.$refs.menuRefModal.toggleClose()
     },
-    // 点击导入标准
-    addImportModal () {
+    // 点击导入按钮 flag:1 导入标准  flag:2 导入标准条目
+    addImportModal (flag) {
       this.importModalshowflag = true
       this.$refs.importfile.clearFiles()
+      if (flag === 1) {
+        this.importExcelUrl = '/api/lawss/sarStandardsInfo/importStandardsInfo?standType=INLAND'
+      } else {
+        this.importExcelUrl = '/api/lawss/sarStandItems/importSarStandItemsList?standId=' + this.standItemSearch.standId
+      }
     },
     // 导入标准文件格式错误执行
     handleFormatError (file) {
@@ -885,6 +890,7 @@ export default {
     // 导入标准数据成功后执行
     importFileSuccess (response, file) {
       this.getDomesticStandardTable()
+      this.selectSarStandItems(this.standItemSearch.standId)
     },
     // 二级菜单新建，编辑，删除
     clickDropMenu (name) {
@@ -981,7 +987,18 @@ export default {
         this.selectSarStandItems(this.standItemSearch.standId)
       }, e => {
       })
-    }
+    },
+    // 导出标准条目
+    exportStandardItem () {
+      console.log("aaaaaaaaaaaaaa")
+      console.log(this.standItemSearch)
+      this.$http.get('lawss/sarStandItems/exportStandardItemExcel', this.standItemSearch, {
+        _this: this
+      }, res => {
+        console.log(res)
+      }, e => {
+      })
+    },
   },
   components: {},
   props: {},

@@ -30,10 +30,38 @@
     <result column="stand_genera" property="standGenera" />
   </resultMap>
 
+    <resultMap id="BaseResultMapExcel" type="com.adc.da.lawss.dto.SarBussionessStandExcelDto" >
+        <result column="citation_user" property="citationUser" />
+        <result column="responsible_unit" property="responsibleUnit" />
+        <result column="stand_file" property="standFile" />
+        <result column="tags" property="tags" />
+        <result column="stand_status" property="standStatus" />
+        <result column="replaced_stand_num" property="replacedStandNum" />
+        <result column="replace_stand_num" property="replaceStandNum" />
+        <result column="quote_stand" property="quoteStand" />
+        <result column="first_put_time" property="firstPutTime" />
+        <result column="put_year" property="putYear" />
+        <result column="put_time" property="putTime" />
+        <result column="issue_time" property="issueTime" />
+        <result column="energy_kind" property="energyKind" />
+        <result column="apply_arctic" property="applyArctic" />
+        <result column="stand_en_name" property="standEnName" />
+        <result column="stand_name" property="standName" />
+        <result column="stand_code" property="standCode" />
+        <result column="classify_code" property="classifyCode" />
+        <result column="stand_subclass" property="standSubclass" />
+        <result column="stand_genera" property="standGenera" />
+    </resultMap>
+
   <!-- SAR_BUSSIONESS_STAND table all fields -->
   <sql id="Base_Column_List" >
      modify_time, creation_time, valid_time, put_user, citation_user, responsible_unit, stand_file, tags, stand_status, replaced_stand_num, replace_stand_num, quote_stand, first_put_time, put_year, put_time, issue_time, energy_kind, apply_arctic, stand_en_name, stand_name, stand_code, classify_code, stand_subclass, stand_genera, id
   </sql>
+  <sql id="Base_Column_List_show" >
+     SAR_BUSSIONESS_STAND.modify_time, SAR_BUSSIONESS_STAND.creation_time, SAR_BUSSIONESS_STAND.valid_time, SAR_BUSSIONESS_STAND.put_user, SAR_BUSSIONESS_STAND.citation_user, responsible_unit, stand_file, tags, stand_status, replaced_stand_num, replace_stand_num, quote_stand, first_put_time, put_year, put_time, issue_time, energy_kind, apply_arctic, stand_en_name, stand_name, stand_code, classify_code, stand_subclass, stand_genera,
+      id,dicstandStatus.DIC_TYPE_NAME as standStatusShow
+  </sql>
+
 
   <!-- 查询条件 -->
   <sql id="Base_Where_Clause">
@@ -375,5 +403,97 @@
        ${pager.orderCondition}
     </if>
   </select>
+
+
+    <!-- 分页查询条件 -->
+    <sql id="SarBussionInfo_Where_Clause">
+        <!--
+        此处两个需要和数据字典关联，后续改变
+        left join TS_DICTYPE dicountry on (dicountry.dic_type_code = SAR_BUSSIONESS_STAND.country  and dicountry.dic_id is not null)
+        left join TS_DICTYPE dicstandSort on  (dicstandSort.dic_type_code = SAR_BUSSIONESS_STAND.stand_sort  and dicstandSort.dic_id is not null
+        )-->
+        left join TS_DICTYPE dicstandStatus on  (dicadoptExtent.dic_type_code = SAR_BUSSIONESS_STAND.STAND_STATUS  and dicadoptExtent.dic_id is not null)
+        where 1=1
+        <trim suffixOverrides="," >
+            <!--                     基本搜索项                         -->
+            <if test="classifyCode != null" >
+                and classify_code like  concat(concat('%',#{classifyCode}),'%')
+            </if>
+            <if test="standCode != null" >
+                and stand_code like  concat(concat('%',#{standCode}),'%')
+            </if>
+            <if test="standName != null" >
+                and stand_name like  concat(concat('%',#{standName}),'%')
+            </if>
+            <!--                     高级搜索项                         -->
+            <if test="standSubclass != null" >
+                and stand_subclass like  concat(concat('%',#{standSubclass}),'%')
+            </if>
+            <if test="standGenera != null" >
+                and stand_genera like  concat(concat('%',#{standGenera}),'%')
+            </if>
+            <if test="putTime1 != null" >
+                and to_char(put_time,'YYYY-MM-DD') &gt;= #{putTime1}
+            </if>
+            <if test="putTime2 != null" >
+                and to_char(put_time,'YYYY-MM-DD') &lt;= #{putTime2}
+            </if>
+            <if test="issueTime1 != null" >
+                and to_char(issue_time,'YYYY-MM-DD') &gt;= #{issueTime1}
+            </if>
+            <if test="issueTime2 != null" >
+                and to_char(issue_time,'YYYY-MM-DD') &lt;= #{issueTime2}
+            </if>
+            <if test="responsibleUnit != null" >
+                and responsible_unit = #{responsibleUnit}
+            </if>
+        </trim>
+    </sql>
+    <!-- 分页查询条件当页数据 -->
+    <select id="getBussionessStandInfoPage" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarBussionessStandEOPage">
+        select * from
+        (select tmp_tb.* , rownum rn from
+        (select <include refid="Base_Column_List_show" /> ,
+        (
+        SELECT
+        listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_BUSS_STAND_VAL.property_type )
+        FROM
+        SAR_BUSS_STAND_VAL  left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+        WHERE
+        SAR_BUSS_STAND_VAL.stand_id = SAR_BUSSIONESS_STAND.id
+        AND SAR_BUSS_STAND_VAL.property_type = 'APPLY_ARCTIC'
+        ) AS applyArcticShow,
+        (
+        SELECT
+        listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_BUSS_STAND_VAL.property_type )
+        FROM
+        SAR_BUSS_STAND_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_BUSS_STAND_VAL.property_val  and TS_DICTYPE.dic_id is not null)
+        WHERE
+        SAR_BUSS_STAND_VAL.stand_id = SAR_BUSSIONESS_STAND.id
+        AND SAR_BUSS_STAND_VAL.property_type = 'ENERGY_KIND'
+        ) AS energyKindShow
+        from SAR_BUSSIONESS_STAND
+        <include refid="SarBussionInfo_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+            ${pager.orderCondition}
+        </if>
+        ) tmp_tb where rownum &lt;= ${pager.endIndex})
+        where rn &gt;= ${pager.startIndex}
+    </select>
+    <!-- 分页查询条件查询一共有多少条数据，配合分页 -->
+    <select id="getBussionessStandInfoCount" resultType="java.lang.Integer" parameterType="com.adc.da.lawss.page.SarBussionessStandEOPage">
+        select count(1) from SAR_BUSSIONESS_STAND
+        <include refid="SarBussionInfo_Where_Clause"/>
+    </select>
+
+    <!-- 条件查询后，用于导出标准信息数据-->
+    <select id="getSarBussionessStand" resultMap="BaseResultMapExcel" parameterType="com.adc.da.lawss.page.SarBussionessStandEOPage">
+        select <include refid="Base_Column_List_show" /> from SAR_BUSSIONESS_STAND
+        <include refid="SarBussionInfo_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+            ${pager.orderCondition}
+        </if>
+    </select>
+
 
 </mapper>
