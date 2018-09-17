@@ -990,7 +990,6 @@ export default {
     },
     // 导出标准条目
     exportStandardItem () {
-      console.log("aaaaaaaaaaaaaa")
       console.log(this.standItemSearch)
       this.$http.get('lawss/sarStandItems/exportStandardItemExcel', this.standItemSearch, {
         _this: this
@@ -998,7 +997,7 @@ export default {
         console.log(res)
       }, e => {
       })
-    },
+    }
   },
   components: {},
   props: {},
