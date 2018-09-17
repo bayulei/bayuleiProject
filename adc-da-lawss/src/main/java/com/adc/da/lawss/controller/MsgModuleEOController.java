@@ -4,7 +4,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import com.adc.da.sys.util.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,13 @@ public class MsgModuleEOController extends BaseController<MsgModuleEO>{
 
     @Autowired
     private MsgModuleEOService msgModuleEOService;
-
+/**
+ * @Author liwenxuan
+ * @Description  分页查找
+ * @Date Administrator 2018/9/17
+ * @Param [page]
+ * @return com.adc.da.util.http.ResponseMessage<com.adc.da.util.http.PageInfo<com.adc.da.lawss.entity.MsgModuleEO>>
+ **/
 	@ApiOperation(value = "|MsgModuleEO|分页查询")
     @GetMapping("/page")
 //    @RequiresPermissions("lawss:msgModule:page")
@@ -39,25 +47,32 @@ public class MsgModuleEOController extends BaseController<MsgModuleEO>{
         List<MsgModuleEO> rows = msgModuleEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
-//
+
 	@ApiOperation(value = "|MsgModuleEO|查询")
     @GetMapping("")
 //   @RequiresPermissions("lawss:msgModule:list")
     public ResponseMessage<List<MsgModuleEO>> list(MsgModuleEOPage page) throws Exception {
         return Result.success(msgModuleEOService.queryByList(page));
 	}
-//使用此方法对新增动态信息管理中进行回显
+
     @ApiOperation(value = "|MsgModuleEO|详情")
     @GetMapping("/{id}")
     //   @RequiresPermissions("lawss:msgModule:get")
     public ResponseMessage<MsgModuleEO> find(@PathVariable String id) throws Exception {
         return Result.success(msgModuleEOService.selectByPrimaryKey(id));
     }
-
+/**
+ * @Author liwenxuan
+ * @Description //新增资料中心
+ * @Date Administrator 2018/9/17
+ * @Param [msgModuleEO]
+ * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.MsgModuleEO>
+ **/
     @ApiOperation(value = "|MsgModuleEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //    @RequiresPermissions("lawss:msgModule:save")
     public ResponseMessage<MsgModuleEO> create(@RequestBody MsgModuleEO msgModuleEO) throws Exception {
+        msgModuleEO.setId(UUIDUtils.randomUUID10());
         msgModuleEOService.insertSelective(msgModuleEO);
         return Result.success(msgModuleEO);
     }
