@@ -272,9 +272,13 @@ export default {
       applyAuthOptions: '',
       lawsInfoRules: {},
       lawsInfoFormRules: {
+        country: [],
+        lawsProperty: [],
+        lawsNumber: [],
         lawsName: [
           { required: true, message: '文件名称不能为空', trigger: 'blur' }
         ],
+        issueUnit: [],
         lawsState: [
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
@@ -283,9 +287,19 @@ export default {
         ],
         putTime: [
           { required: true, message: '实施日期不能为空', trigger: 'blur' }
-        ]
+        ],
+        replaceLawsNum: [],
+        applyArctic: [],
+        energyKind: [],
+        applyAuth: [],
+        responsibleUnit: [],
+        linkUri: []
       },
-      addLawsItemsFormRules: {}
+      addLawsItemsFormRules: {
+        // itemsNum: [
+        //  { required: true, message: '条目号不能为空', trigger: 'blur' }
+        // ]
+      }
     }
   },
   methods: {
