@@ -34,10 +34,7 @@ export default {
       if (value === '') {
         callback(new Error('请输入您的新密码'))
       } else {
-        if (this.formCustom.passwdCheck !== '') {
-          // 对第二个密码框单独验证
-          this.$refs.formCustom.validateField('passwdCheck')
-        } else if (value === this.formCustom.passwdOld) {
+        if (value === this.formCustom.passwdOld) {
           callback(new Error('新密码跟旧密码重复！'))
         }
       }callback()

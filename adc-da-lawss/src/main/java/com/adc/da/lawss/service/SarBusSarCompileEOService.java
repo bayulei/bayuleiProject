@@ -1,5 +1,9 @@
 package com.adc.da.lawss.service;
 
+import com.adc.da.lawss.page.SarBusSarCompileEOPage;
+import com.adc.da.util.http.ResponseMessage;
+import com.adc.da.util.http.Result;
+import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.SarBusSarCompileEODao;
 import com.adc.da.lawss.entity.SarBusSarCompileEO;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -31,6 +38,89 @@ public class SarBusSarCompileEOService extends BaseService<SarBusSarCompileEO, S
 
     public SarBusSarCompileEODao getDao() {
         return dao;
+    }
+
+    /**
+     * @Author yangxuenan
+     * @Description 新增标准台账
+     * Date 2018/9/17 9:07
+     * @Param [sarBusSarCompileEO]
+     * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.SarBusSarCompileEO>
+     **/
+    public ResponseMessage<SarBusSarCompileEO> insertSarBusSarCompile(SarBusSarCompileEO sarBusSarCompileEO) throws Exception {
+        SarBusSarCompileEOPage sarBussPage = new SarBusSarCompileEOPage();
+        sarBussPage.setStandCode(sarBusSarCompileEO.getStandCode());
+        sarBussPage.setValidFlag("0");
+        List<SarBusSarCompileEO> getList = dao.queryByStandCode(sarBussPage);
+        if(getList != null){
+            if(getList.size() > 0){
+                return Result.error("新增失败,企业标准编码已存在！");
+            } else {
+                sarBusSarCompileEO.setId(UUID.randomUUID(20));
+                sarBusSarCompileEO.setValidFlag(0);
+                sarBusSarCompileEO.setCreationTime(new Date());
+                sarBusSarCompileEO.setModifyTime(new Date());
+                int countAdd = dao.insertSelective(sarBusSarCompileEO);
+
+                if(countAdd > 0){
+                    return Result.success("0","新增成功",sarBusSarCompileEO);
+                } else {
+                    return Result.error("新增失败");
+                }
+            }
+        } else {
+            sarBusSarCompileEO.setId(UUID.randomUUID(20));
+            sarBusSarCompileEO.setValidFlag(0);
+            sarBusSarCompileEO.setCreationTime(new Date());
+            sarBusSarCompileEO.setModifyTime(new Date());
+            int countAdd = dao.insertSelective(sarBusSarCompileEO);
+
+            if(countAdd > 0){
+                return Result.success("0","新增成功",sarBusSarCompileEO);
+            } else {
+                return Result.error("新增失败");
+            }
+        }
+    }
+
+    /**
+     * @Author yangxuenan
+     * @Description  修改标准台账
+     * Date 2018/9/17 9:45
+     * @Param [sarBusSarCompileEO]
+     * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.SarBusSarCompileEO>
+     **/
+    public ResponseMessage<SarBusSarCompileEO> updateSarBusSarCompile(SarBusSarCompileEO sarBusSarCompileEO) throws Exception{
+        SarBusSarCompileEOPage sarBussPage = new SarBusSarCompileEOPage();
+        sarBussPage.setId(sarBusSarCompileEO.getId());
+        sarBussPage.setStandCode(sarBusSarCompileEO.getStandCode());
+        sarBussPage.setValidFlag("0");
+        List<SarBusSarCompileEO> getList = dao.queryByStandCode(sarBussPage);
+        if(getList != null){
+            if(getList.size() > 0){
+                return Result.error("修改失败,企业标准编码已存在！");
+            } else {
+                sarBusSarCompileEO.setId(sarBusSarCompileEO.getId());
+                sarBusSarCompileEO.setModifyTime(new Date());
+                int countAdd = dao.updateByPrimaryKeySelective(sarBusSarCompileEO);
+
+                if(countAdd > 0){
+                    return Result.success("0","修改成功",sarBusSarCompileEO);
+                } else {
+                    return Result.error("修改失败");
+                }
+            }
+        } else {
+            sarBusSarCompileEO.setId(sarBusSarCompileEO.getId());
+            sarBusSarCompileEO.setModifyTime(new Date());
+            int countAdd = dao.updateByPrimaryKeySelective(sarBusSarCompileEO);
+
+            if(countAdd > 0){
+                return Result.success("0","修改成功",sarBusSarCompileEO);
+            } else {
+                return Result.error("修改失败");
+            }
+        }
     }
 
 }

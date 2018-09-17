@@ -39,7 +39,7 @@
              </FormItem>
           </Col>
            <Col span="8">
-             <FormItem label="文件性质" prop="country" class="laws-info-item">
+             <FormItem label="文件性质" prop="lawsProperty" class="laws-info-item">
                <Select v-model="SarLawsInfoEO.lawsProperty">
                  <Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
                </Select>

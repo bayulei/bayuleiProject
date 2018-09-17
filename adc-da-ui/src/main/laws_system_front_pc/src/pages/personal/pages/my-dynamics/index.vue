@@ -20,6 +20,7 @@
           </Row>
         </Card>
       </div>
+      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
     </div>
   </div>
 </template>
@@ -32,6 +33,9 @@ export default {
       search: {
         dynamicsName: ''
       },
+      total: 0,
+      page: 1,
+      rows: 10,
       dynamicsList: [{
         text: 'XX标准已更新',
         creationTime: '2018年/09/13  12：00'
@@ -47,12 +51,36 @@ export default {
   methods: {
     // 查找
     dynamicsSelect () {
+    },
+    selectDynamics () {
+      this.$http.get('person/personMsg/page', {
+        page: this.page,
+        pageSize: this.rows,
+        msgTitle: '',
+        msgContent: ''
+      }, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        console.log(res)
+      }, e => {})
+    },
+    pageChange (page) {
+      this.page = page
+      this.selectCategory()
+    },
+    pageSizeChange (pageSize) {
+      this.rows = pageSize
+      this.selectCategory()
     }
+  },
+  mounted () {
+    this.selectDynamics()
   }
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .my-dynamics{
     background: #FFF;
     padding: 0.2rem 0.3rem;
