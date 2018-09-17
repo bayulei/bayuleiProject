@@ -38,14 +38,30 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	
 	@Autowired
 	private BeanMapper beanMapper;
-//	李文轩：需求可能会变成分页查找+模糊查找（根据类型/用户名称/角色名称/用户状态）
+
+	/**
+	 * @Author liwenxuan
+	 * @Description 需求可能会变成分页查找+模糊查找（根据类型/用户名称/角色名称/用户状态）
+	 * @Date Administrator 2018/9/17
+	 * @Param [orgName]
+	 * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.sys.vo.OrgVO>>
+	 **/
 	@ApiOperation(value = "组织机构列表|OrgEO|")
 	@GetMapping("/listOrgByOrgName")
 //	@RequiresPermissions("sys:org:listMenuByUserId")
 	public ResponseMessage<List<OrgVO>> listOrgByOrgName(String orgName) {
 		return Result.success(beanMapper.mapList(orgEOService.listOrgEOByOrgName(orgName), OrgVO.class));
 	}
-//新增组织机构（入参：部门名称+部门简介+部门表述(不必须填写)）
+
+	/**
+	 * @Author liwenxuan
+	 * @Description 新增组织机构（入参：部门名称+部门简介+部门表述(不必须填写)）
+	 * 1.判断部门简称不能为空，不能已经存在
+	 * 2.先判断返回对象不为空，然后在进行判断shotname
+	 * @Date Administrator 2018/9/17
+	 * @Param [orgVO]
+	 * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.OrgVO>
+	 **/
 	@SuppressWarnings("unchecked")
 	@ApiOperation(value = "|OrgEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
@@ -56,27 +72,35 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		} else if (orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()) != null) {
 			return Result.error("r0015", "组织机构名称已存在");
 		}
-//判断部门简称不能为空，不能已经存在
 		if (StringUtils.isBlank(orgVO.getShotName())) {
 			return Result.error("r0014", "组织机构简称不能为空");
-			//先判断返回对象不为空，然后在进行判断shotname
 		} else if (orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()) != null) {
 			if(orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()).getShotName()!=null){
 				return Result.error("r0015", "组织机构简称已存在");
 			}
-
 		}
-		
 		return orgEOService.save(beanMapper.map(orgVO, OrgEO.class));
 	}
-	
+	/**
+	 * @Author liwenxuan
+	 * @Description   修改组织机构
+	 * @Date Administrator 2018/9/17
+	 * @Param [orgVO]
+	 * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.OrgVO>
+	 **/
 	@ApiOperation(value = "|OrgEO|修改")
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:org:update")
 	public ResponseMessage<OrgVO> update(@RequestBody OrgVO orgVO) throws Exception {
-		return orgEOService.updateById(beanMapper.map(orgVO, OrgEO.class));//updateByPrimaryKeySelective(beanMapper.map(orgVO, OrgEO.class));
+		return orgEOService.updateById(beanMapper.map(orgVO, OrgEO.class));
 	}
-	
+	/**
+	 * @Author liwenxuan
+	 * @Description //详情，根据id查询组织机构
+	 * @Date Administrator 2018/9/17
+	 * @Param [id]
+	 * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.OrgVO>
+	 **/
 	@ApiOperation(value = "|OrgEO|详情")
 	@GetMapping("/{id}")
 //	@RequiresPermissions("sys:org:get")
@@ -84,14 +108,22 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		OrgVO orgVO = beanMapper.map(orgEOService.getOrgEOById(id), OrgVO.class);
 		return Result.success(orgVO);
 	}
-//删除组织机构
+
+/**
+ * @Author liwenxuan
+ * @Description 删除组织机构
+ * @Date Administrator 2018/9/17
+ * @Param [id]
+ * @return com.adc.da.util.http.ResponseMessage
+ **/
 	@ApiOperation(value = "|OrgEO|删除")
 	@DeleteMapping("/{id}")
 //	@RequiresPermissions("sys:org:delete")
 	public ResponseMessage delete(@NotNull @PathVariable("id") String id) throws Exception {
 		return orgEOService.delete(id);
 	}
-	
+
+
 	@ApiOperation(value = "|OrgEO|获取树结构")
 	@GetMapping("/getTree")
 //	@RequiresPermissions("sys:org:getTree")
@@ -100,8 +132,8 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		List<OrgEO> eos = orgEOService.selectOrgAllNode(orgEO);
 		return Result.success(eos);
 	}
-	
-//	根据userID和orgId删除用户和组织机构关联
+
+
 	@ApiOperation(value = "|OrgEO|删除组织机构下的一些用户")
 	@DeleteMapping("/{userId}/{orgId}")
 //	@RequiresPermissions("sys:org:delOrgOfUser")
@@ -110,7 +142,14 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		return orgEOService.delOrgRelatedUser(userId, orgId);
 	}
 
-//前台传入类型：[{"userId":"QJX2Z8E678","orgId":"5W2J4AQ8KA"}]
+
+	/**
+	 * @Author liwenxuan
+	 * @Description 前台传入类型：[{"userId":"QJX2Z8E678","orgId":"5W2J4AQ8KA"}]
+	 * @Date Administrator 2018/9/17
+	 * @Param [userOrgs]
+	 * @return com.adc.da.util.http.ResponseMessage<java.lang.Integer>
+	 **/
 	@ApiOperation(value = "|OrgEO|给用户设置组织机构")
 	@PostMapping("/addOrgRelateUsers")
 //	@RequiresPermissions("sys:org:addOrgRelateUsers")
@@ -139,6 +178,6 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		return Result.success(eos);
 	}
 
-//	分页查询
+
 	
 }

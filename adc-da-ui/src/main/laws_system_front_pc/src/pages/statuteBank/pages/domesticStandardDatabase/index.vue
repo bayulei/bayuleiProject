@@ -2,29 +2,8 @@
 <template>
  <div id="domesticStandardDatabase">
    <div class="tree">
-     <Tree :data="tree" :render="renderContent"></Tree>
+     <ul id="treeDemo" class="ztree"></ul>
    </div>
-     <!--<table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false">-->
-       <!--<div slot="left">-->
-         <!--<label-input v-model="sarStandardsSearch.country" placeholder="根据国家/地区查找" clearable label="国家/地区"  />-->
-         <!--<label-input v-model="sarStandardsSearch.standNumber" placeholder="根据标准号查找" clearable label="标准号" class="my-input" />-->
-         <!--<label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />-->
-         <!--<label-input v-model="sarStandardsSearch.standState" placeholder="根据标准状态查找" clearable label="标准状态" class="my-input" />-->
-         <!--<Button type="primary" icon="ios-search" :loading="searching" @click="searchData"></Button>-->
-         <!--<Dropdown trigger="click" style="margin-left: 20px" @on-click="clickDropMenu">-->
-           <!--<Button type="primary" icon="ios-arrow-down">设置</Button>-->
-           <!--<DropdownMenu slot="list">-->
-             <!--<DropdownItem name="newMenu">新建</DropdownItem>-->
-             <!--<DropdownItem name="editMenu">编辑</DropdownItem>-->
-             <!--<DropdownItem name="deleteMenu">删除</DropdownItem>-->
-           <!--</DropdownMenu>-->
-         <!--</Dropdown>-->
-         <!--<Button type="primary" icon="ios-add" :loading="searching" @click="addModal">新增标准</Button>-->
-         <!--<Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal">导入标准</Button>-->
-         <!--<Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>-->
-         <!--<Button type="primary" @click="isAdvancedSearch = true">配置标准</Button>-->
-       <!--</div>-->
-     <!--</table-tools-bar>-->
    <div class="tree-right">
      <!-- 顶部工具栏 -->
      <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false">
@@ -64,7 +43,7 @@
          <Button type="primary" @click="configurationStandard">配置标准</Button>
        </div>
        <div class="content-detail" v-if="stahndinfoList.length > 0">
-         <div class="card " v-for="(item, index) in stahndinfoList" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item)">
+         <div class="card domBtn" v-for="(item, index) in stahndinfoList" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
              <Row>
                <Col span="5">
                  <Checkbox v-model="item.checked" size="large"></Checkbox>
@@ -398,7 +377,9 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
+import 'zTree/js/jquery.ztree.core.js'
+import 'zTree/js/jquery.ztree.excheck.js'
+import 'zTree/js/jquery.ztree.exedit.js'
 export default {
   name: 'DomesticStandardLibrary',
   data () {
@@ -836,7 +817,13 @@ export default {
       buttonProps: {
         type: 'default',
         size: 'small'
-      }
+      },
+      // tree function
+      MoveTest: '',
+      // tree setting
+      setting: '',
+      // tree zNodes
+      zNodes: []
     }
   },
   methods: {
@@ -1143,7 +1130,7 @@ export default {
      * @author: chenxiaoxi
      * @date: 2018-09-15 10:47:57
      */
-    handleCardClick (item) {
+    handleCardClick (item, event) {
       item.checked = !item.checked
     },
     renderContent (h, { root, node, data }) {
@@ -1208,9 +1195,7 @@ export default {
       parent.children.splice(index, 1)
     }
   },
-  components: {
-    draggable
-  },
+  components: {},
   props: {},
   watch: {
     stahndinfoList: {
@@ -1231,6 +1216,11 @@ export default {
           this.checkAll = false
           this.indeterminate = false
         }
+        this.$nextTick(() => {
+          $.fn.zTree.init($('#treeDemo'), this.setting, this.zNodes)
+          this.MoveTest.updateType()
+          this.MoveTest.bindDom()
+        })
       }
     },
     // 已选择的列表
@@ -1260,6 +1250,213 @@ export default {
       this.applyAuthOptions = res.data.PROVETYPE // 适用认证下拉框
       this.categoryOptions = res.data.CATEGORY
     }, e => {
+    })
+
+    /**
+     * @description: zTree初始化
+     * @author: chenxiaoxi
+     * @date: 2018-09-17 11:07:53
+     */
+    let MoveTest = {
+      errorMsg: '放错了...请选择正确的类别！',
+      curTarget: null,
+      curTmpTarget: null,
+      noSel: function () {
+        try {
+          window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty()
+        } catch (e) {}
+      },
+      dragTree2Dom: function (treeId, treeNodes) {
+        return !treeNodes[0].isParent
+      },
+      prevTree: function (treeId, treeNodes, targetNode) {
+        return !targetNode.isParent && targetNode.parentTId === treeNodes[0].parentTId
+      },
+      nextTree: function (treeId, treeNodes, targetNode) {
+        return !targetNode.isParent && targetNode.parentTId === treeNodes[0].parentTId
+      },
+      innerTree: function (treeId, treeNodes, targetNode) {
+        return targetNode != null && targetNode.isParent && targetNode.tId === treeNodes[0].parentTId
+      },
+      dragMove: function (e, treeId, treeNodes) {
+        console.log('drapMove')
+        console.log(treeId)
+        console.log(treeNodes)
+        let p = null
+        let pId = 'dom_' + treeNodes[0].pId
+        if (e.target.id === pId) {
+          p = $(e.target)
+        } else {
+          p = $(e.target).parent('#' + pId)
+          if (!p.get(0)) {
+            p = null
+          }
+        }
+
+        $('.domBtn .active').removeClass('active')
+        if (p) {
+          p.addClass('active')
+        }
+      },
+      dropTree2Dom: function (e, treeId, treeNodes, targetNode, moveType) {
+        console.log(2)
+        console.log(treeId)
+        console.log(targetNode)
+      },
+      // 拖拽对象id,拖拽目标对象
+      dom2Tree: function (e, treeId, treeNode) {
+        console.log('点击')
+        let pid = treeNode.id
+        console.log(pid)
+        if (MoveTest.curTarget === null) return
+        let id = MoveTest.curTarget.attr('domId')
+        console.log(id)
+        // 移除原来的节点
+        MoveTest.curTarget.remove()
+        let tmpTarget = MoveTest.curTmpTarget
+        // 移除拖拽元素
+        if (tmpTarget) tmpTarget.remove()
+        MoveTest.updateType()
+        MoveTest.curTarget = null
+        MoveTest.curTmpTarget = null
+      },
+      updateType: function () {
+        let zTree = $.fn.zTree.getZTreeObj('treeDemo')
+        let nodes = zTree.getNodes()
+        for (let i = 0, l = nodes.length; i < l; i++) {
+          let num = nodes[i].children ? nodes[i].children.length : 0
+          nodes[i].name = nodes[i].name.replace(/ \(.*\)/gi, '') + ' (' + num + ')'
+          zTree.updateNode(nodes[i])
+        }
+      },
+      bindDom: function () {
+        // 如果已有这个事件，先去掉
+        $('.domBtn').unbind('mousedown')
+        $('.domBtn').bind('mousedown', MoveTest.bindMouseDown)
+      },
+      bindMouseDown: function (e) {
+        let card = ''
+        if (!$(e.target).hasClass('domBtn')) {
+          // 向上查找包含domBtn的父节点
+          card = $(e.target).closest('.domBtn')[0]
+        } else {
+          card = e.target
+        }
+        if (card != null && card.className.indexOf('domBtn') > -1) {
+          let doc = $(document)
+          card = $(card)
+          let docScrollTop = doc.scrollTop()
+          let docScrollLeft = doc.scrollLeft()
+          card.addClass('domBtn_Disabled')
+          card.removeClass('domBtn')
+          let curDom = ''
+          curDom = $("<div class='dom_tmp'>" + card.html() + '</div>')
+          curDom.appendTo('body')
+
+          curDom.css({
+            'top': (e.clientY + docScrollTop + 3) + 'px',
+            'left': (e.clientX + docScrollLeft + 3) + 'px'
+          })
+          MoveTest.curTarget = card
+          MoveTest.curTmpTarget = curDom
+
+          doc.bind('mousemove', MoveTest.bindMouseMove)
+          doc.bind('mouseup', MoveTest.bindMouseUp)
+          doc.bind('selectstart', MoveTest.docSelect)
+        }
+        if (e.preventDefault) {
+          e.preventDefault()
+        }
+      },
+      bindMouseMove: function (e) {
+        MoveTest.noSel()
+        const doc = $(document)
+        let docScrollTop = doc.scrollTop()
+        let docScrollLeft = doc.scrollLeft()
+        let tmpTarget = MoveTest.curTmpTarget
+        if (tmpTarget) {
+          tmpTarget.css({
+            'top': (e.clientY + docScrollTop + 3) + 'px',
+            'left': (e.clientX + docScrollLeft + 3) + 'px'
+          })
+        }
+        return false
+      },
+      bindMouseUp: function (e) {
+        var doc = $(document)
+        doc.unbind('mousemove', MoveTest.bindMouseMove)
+        doc.unbind('mouseup', MoveTest.bindMouseUp)
+        doc.unbind('selectstart', MoveTest.docSelect)
+
+        let target = MoveTest.curTarget
+        let tmpTarget = MoveTest.curTmpTarget
+        if (tmpTarget) {
+          tmpTarget.remove()
+        }
+        if ($(e.target).parents('#treeDemo').length === 0) {
+          if (target) {
+            target.removeClass('domBtn_Disabled')
+            target.addClass('domBtn')
+          }
+          MoveTest.curTarget = null
+          MoveTest.curTmpTarget = null
+        }
+      },
+      bindSelect: function () {
+        return false
+      }
+    }
+    this.MoveTest = MoveTest
+
+    let setting = {
+      edit: {
+        enable: true,
+        showRemoveBtn: false,
+        showRenameBtn: false,
+        drag: {
+          prev: MoveTest.prevTree,
+          next: MoveTest.nextTree,
+          inner: MoveTest.innerTree
+        }
+      },
+      data: {
+        keep: {
+          parent: true,
+          leaf: true
+        },
+        simpleData: {
+          enable: true
+        }
+      },
+      callback: {
+        beforeDrag: MoveTest.dragTree2Dom,
+        onDrop: MoveTest.dropTree2Dom,
+        onDragMove: MoveTest.dragMove,
+        onMouseUp: MoveTest.dom2Tree
+      },
+      view: {
+        selectedMulti: false
+      }
+    }
+    this.setting = setting
+
+    let zNodes = [
+      {id: 1, pId: 0, name: '植物', isParent: true, open: true},
+      {id: 2, pId: 0, name: '动物', isParent: true, open: true},
+      {id: 20, pId: 2, name: '大象', isParent: true},
+      {id: 29, pId: 2, name: '鲨鱼', isParent: true},
+      {id: 10, pId: 1, name: '大白菜', isParent: true},
+      {id: 19, pId: 1, name: '西红柿', isParent: true}
+    ]
+    this.zNodes = zNodes
+
+    this.$nextTick(() => {
+      let _this = this
+      $(document).ready(function () {
+        $.fn.zTree.init($('#treeDemo'), _this.setting, _this.zNodes)
+        MoveTest.updateType()
+        MoveTest.bindDom()
+      })
     })
   }
 }
@@ -1309,4 +1506,25 @@ export default {
         }
       }
     }
+  .domBtn {border:1px gray solid;background-color:#FFE6B0}
+  .domBtn_Disabled {border:1px gray solid;background-color:#DFDFDF;color:#999999}
+  .dom_tmp {
+    position:absolute;
+    padding: 15px;
+    background: #FFE6B0;
+    border: 1px solid gray;
+    width: 75%;
+    height: 100px;
+    .ivu-row{
+      height: 50%;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      display: -ms-flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+    }
+  }
+  .active {background-color: #93C3CF}
 </style>

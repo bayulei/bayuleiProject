@@ -1,6 +1,7 @@
 package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Clob;
 import java.util.Date;
@@ -13,9 +14,9 @@ import java.util.Date;
  */
 public class SarBusSarCompileEO extends BaseEntity {
 
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private Integer validFlag;
     private String creationUser;
@@ -23,9 +24,9 @@ public class SarBusSarCompileEO extends BaseEntity {
     private String replaceStandNum;
     private String remarks;
     private String putYear;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date putTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date issueTime;
     private String standName;
     private String standYear;
