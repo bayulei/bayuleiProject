@@ -3,12 +3,14 @@ package com.adc.da.sys.controller;
 import com.adc.da.base.page.Pager;
 import com.adc.da.base.web.BaseController;
 import com.adc.da.sys.common.LayUiResult;
+import com.adc.da.sys.constant.ValidFlagEnum;
 import com.adc.da.sys.entity.OrgEO;
 import com.adc.da.sys.entity.RoleEO;
 import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.page.UserEOPage;
 import com.adc.da.sys.service.OrgEOService;
 import com.adc.da.sys.service.UserEOService;
+import com.adc.da.sys.util.LoginUserUtil;
 import com.adc.da.sys.vo.UserVO;
 import com.adc.da.util.http.PageInfo;
 import com.adc.da.util.http.ResponseMessage;
@@ -76,6 +78,7 @@ public class UserEOController extends BaseController<UserEO> {
 		if (StringUtils.isNotEmpty(roleId)) {
 			page.setRoleId(roleId);
 		}
+		page.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue()+"");
 		page.setPager(new Pager());
 
 		List<UserEO> userEOs = userEOService.queryUserInfoByPage(page);
@@ -93,9 +96,10 @@ public class UserEOController extends BaseController<UserEO> {
 		} else if (userEOService.getUserByLoginName(userVO.getAccount()) != null) {
 			return Result.error("r0015", "账号已存在");
 		}
-
 		// 前台如果base64传输密文，则需要解码
 		// userVO.setPassword(new String(Encodes.decodeBase64(userVO.getPassword())));
+//		userVO.setOperUser(LoginUserUtil.getUserId());
+		userVO.setOperUser("111111");
 		UserEO userEO = userEOService.save(beanMapper.map(userVO, UserEO.class));
 		return Result.success(beanMapper.map(userEO, UserVO.class));
 	}

@@ -13,10 +13,10 @@ import org.apache.ibatis.annotations.Param;
 public interface OrgEODao extends BaseDao<OrgEO>{
 
 	public List<OrgEO> listOrgEOByOrgName(@Param("orgName") String orgName);
+
+	public OrgEO getOrgEOByNameAndPid(@Param("orgName") String orgName,@Param("parentId")String parentId);
 	
-	public OrgEO getOrgEOByNameAndPid(String orgName,String parentId);
-	
-	public List<OrgEO> getOrgEOByPid(String parentId);
+	public List<OrgEO> getOrgEOByPid(@Param("parentId") String parentId);
 
 	public OrgEO getOrgEOById(String id);
 	

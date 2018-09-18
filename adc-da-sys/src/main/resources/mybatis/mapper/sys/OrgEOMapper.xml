@@ -105,7 +105,7 @@
 		where id = #{id}
 	</update>
 
-    <!-- 修改记录，只修改只不为空的字段 -->
+    <!-- 修改记录，只修改不为空的字段 -->
     <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.sys.entity.OrgEO">
         update TS_ORG
         <set>
@@ -153,15 +153,23 @@
 		where id = #{id}
 	</select>
 
-    
-    <select id="getOrgEOByNameAndPid" resultMap="BaseResultMap"	>
+    <!--liwenxuan:添加了判断-->
+    <select id="getOrgEOByNameAndPid" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from TS_ORG WHERE
-		org_name = #{0} and parent_id = #{1} and valid_flag = 0
+		from TS_ORG
+	    WHERE 1=1
+		<if test="orgName != null">
+	    	AND org_name = #{orgName}
+		</if>
+		<if test="parentId != null">
+		    AND parent_id = #{parentId}
+		</if>
+			and valid_flag = 0
+
 	</select>
-	
-	<select id="getOrgEOByPid" resultMap="BaseResultMap"	>
+	<!--liwenxuan:添加了入参-->
+	<select id="getOrgEOByPid" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from TS_ORG WHERE

@@ -170,7 +170,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	//@DeleteMapping("/deleteArr/{ids}")
 	@DeleteMapping("/deleteArr")
 //	@RequiresPermissions("sys:dicType:delete")
-	public ResponseMessage delete(String[] ids) throws Exception {
+	public ResponseMessage deleteArr(String[] ids) throws Exception {
 		dicTypeEOService.delete(Arrays.asList(ids));
 		return Result.success("","删除成功",null);
 	}
@@ -184,8 +184,8 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	@ApiOperation(value = "|DicTypeEO|删除一条数据")
 	@DeleteMapping("/delete")
 //	@RequiresPermissions("sys:dicType:deleteArr")
-	public ResponseMessage deleteArr( String id) throws Exception {
-		dicTypeEOService.deleteDicTypeByDicId(id);
+	public ResponseMessage delete( String dicTypeEOId) throws Exception {
+		dicTypeEOService.deleteDicTypeByDicId(dicTypeEOId);
 		return Result.success("","删除成功",null);
 	}
 

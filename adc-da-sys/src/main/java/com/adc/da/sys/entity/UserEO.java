@@ -32,13 +32,20 @@ public class UserEO extends BaseEntity {
     private  String userType;
     private String orgId;
     private String orgName;
+    private String roleId;
+    private String roleName;
     private List<String> roleIdList = new ArrayList<>();
     private List<RoleEO> roleEOList = new ArrayList<>();
     
     private List<String> orgIdList = new ArrayList<>();
     private List<OrgEO> orgEOList = new ArrayList<>();
-    
-    
+
+    private String mobilePhone;
+    private String officePhone;
+
+    private int disableFlag;
+
+    private int unlockFlag;
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -260,4 +267,52 @@ public class UserEO extends BaseEntity {
     public String getOrgId(){
         return orgId;
     }
+
+    public void setRoleId(String roleId){
+        this.roleId=roleId;
+    }
+
+    public String getRoleId(){
+        return this.roleId;
+    }
+
+    public void setMobilePhone(String mobilePhone){
+        this.mobilePhone=mobilePhone;
+    }
+
+    public String getMobilePhone(){
+        return this.mobilePhone;
+    }
+
+    public void setOfficePhone(String officePhone){
+        this.officePhone=officePhone;
+    }
+    public String getOfficePhone(){
+        return this.officePhone;
+    }
+
+    public void setDisableFlag(int disableFlag){
+        this.disableFlag=disableFlag;
+    }
+
+    public int getDisableFlag(){
+        return this.disableFlag;
+    }
+
+    public void setUnlockFlag(int unlockFlag){
+        this.unlockFlag=unlockFlag;
+    }
+
+    public int getUnlockFlag(){
+        return this.unlockFlag;
+    }
+
+    public void setRoleName(String roleName){
+        this.roleName=roleName;
+    }
+
+    public String getRoleName(){
+        return this.roleName;
+    }
+
 }
