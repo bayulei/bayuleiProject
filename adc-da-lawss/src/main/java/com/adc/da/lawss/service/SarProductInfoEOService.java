@@ -2,11 +2,11 @@ package com.adc.da.lawss.service;
 
 import com.adc.da.lawss.common.PropertyTypeEnum;
 import com.adc.da.lawss.dao.SarProductValEODao;
-import com.adc.da.lawss.entity.SarProductValEO;
-import com.adc.da.lawss.entity.SarStandValEO;
-import com.adc.da.lawss.entity.SarStandardsInfoEO;
+import com.adc.da.lawss.entity.*;
 import com.adc.da.lawss.page.SarProductInfoEOPage;
 import com.adc.da.sys.constant.ValueStateEnum;
+import com.adc.da.sys.dao.DicTypeEODao;
+import com.adc.da.sys.entity.DicTypeEO;
 import com.adc.da.sys.util.UUIDUtils;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
@@ -21,10 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.SarProductInfoEODao;
-import com.adc.da.lawss.entity.SarProductInfoEO;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -46,6 +44,9 @@ public class SarProductInfoEOService extends BaseService<SarProductInfoEO, Strin
 
     @Autowired
     private SarProductValEODao sarProductValEODao;
+
+    @Autowired
+    private DicTypeEODao dicTypeEODao;
 
     public SarProductInfoEODao getDao() {
         return sarProductInfoEODao;
@@ -111,4 +112,24 @@ public class SarProductInfoEOService extends BaseService<SarProductInfoEO, Strin
         }
     }
 
+    public Map<String,List<SarProductStandEO>> selectProductLawAndStandByKey(SarProductInfoEOPage sarProductInfoEOPage){
+        //查询所有的认证类型
+        List<DicTypeEO> dictypelist = dicTypeEODao.getDicTypeByDicCode("PROVETYPE");
+        Map<String,List<SarProductStandEO>> map =new HashMap<>();
+        for (DicTypeEO dicTypeEO : dictypelist){
+            sarProductInfoEOPage.setTypeCode(dicTypeEO.getDicTypeCode());
+         List<SarProductStandEO> resultlist = sarProductInfoEODao.selectStandLawsByKey(sarProductInfoEOPage);
+         map.put(dicTypeEO.getDicTypeCode(),resultlist);
+        }
+        return map;
+    }
+
+    public List<SarProductStandEO> selectLawAndStandByPro(SarProductInfoEOPage sarProductInfoEOPage){
+        String[] protype = sarProductInfoEOPage.getProductType().split(",");
+        sarProductInfoEOPage.setProductTypeList(protype);
+        String[] energy = sarProductInfoEOPage.getEnergyKind().split(",");
+        sarProductInfoEOPage.setEnergyKindList(energy);
+        List<SarProductStandEO> resultlist = sarProductInfoEODao.selectLawAndStandByPro(sarProductInfoEOPage);
+        return resultlist;
+    }
 }

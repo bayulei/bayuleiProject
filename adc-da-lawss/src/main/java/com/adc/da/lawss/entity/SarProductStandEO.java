@@ -23,6 +23,10 @@ public class SarProductStandEO extends BaseEntity {
     private String productId;
     private String id;
 
+    private String shownumber;
+    private String showname;
+    private String country;
+
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -157,4 +161,27 @@ public class SarProductStandEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getShownumber() {
+        return shownumber;
+    }
+
+    public void setShownumber(String shownumber) {
+        this.shownumber = shownumber;
+    }
+
+    public String getShowname() {
+        return showname;
+    }
+
+    public void setShowname(String showname) {
+        this.showname = showname;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }

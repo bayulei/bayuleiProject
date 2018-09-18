@@ -3,6 +3,7 @@ package com.adc.da.lawss.page;
 import com.adc.da.base.page.BasePage;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <b>功能：</b>SAR_PRODUCT_INFO SarProductInfoEOPage<br>
@@ -247,4 +248,31 @@ public class SarProductInfoEOPage extends BasePage {
         this.idOperator = idOperator;
     }
 
+    private String typeCode;
+    private String[] energyKindList;
+    private String[] productTypeList;
+
+    public String getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
+    }
+
+    public String[] getEnergyKindList() {
+        return energyKindList;
+    }
+
+    public void setEnergyKindList(String[] energyKindList) {
+        this.energyKindList = energyKindList;
+    }
+
+    public String[] getProductTypeList() {
+        return productTypeList;
+    }
+
+    public void setProductTypeList(String[] productTypeList) {
+        this.productTypeList = productTypeList;
+    }
 }
