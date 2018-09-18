@@ -17,6 +17,12 @@ export default {
         lawsName: '',
         issueTime: ''
       },
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
+      },
       SarLawsInfoEO: {
         editLawsId: '',
         country: '中国',
@@ -169,10 +175,10 @@ export default {
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
         issueTime: [
-          { required: true, message: '发布日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: 'Please select the date', trigger: 'change' }
         ],
         putTime: [
-          { required: true, message: '实施日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '实施日期不能为空', trigger: 'change' }
         ],
         replaceLawsNum: [],
         applyArctic: [],
@@ -218,7 +224,9 @@ export default {
     },
     // 打开新增模态框
     openLawsModal () {
-      this.SarLawsInfoEO = ''
+      this.$nextTick(() => {
+        this.$refs['SarLawsInfoEO'].resetFields()
+      })
       this.showLawsInfoModal = true
       this.saveInfoBtn = true
     },
