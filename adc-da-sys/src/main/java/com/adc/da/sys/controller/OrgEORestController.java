@@ -2,9 +2,7 @@ package com.adc.da.sys.controller;
 
 import com.adc.da.base.web.BaseController;
 import com.adc.da.sys.entity.OrgEO;
-import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.service.OrgEOService;
-import com.adc.da.sys.service.UserEOService;
 import com.adc.da.sys.vo.OrgVO;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
@@ -33,8 +31,6 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	
 	@Autowired
 	private OrgEOService orgEOService;
-	@Autowired
-	private UserEOService userEOService;
 	
 	@Autowired
 	private BeanMapper beanMapper;
@@ -83,7 +79,7 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	}
 	/**
 	 * @Author liwenxuan
-	 * @Description   修改组织机构
+	 * @Description   修改组织机构（前台需要传入id）
 	 * @Date Administrator 2018/9/17
 	 * @Param [orgVO]
 	 * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.OrgVO>
@@ -145,7 +141,7 @@ public class OrgEORestController extends BaseController<OrgEO>{
 
 	/**
 	 * @Author liwenxuan
-	 * @Description 前台传入类型：[{"userId":"QJX2Z8E678","orgId":"5W2J4AQ8KA"}]
+	 * @Description 前台传入类型(格式)：[{"userId":"QJX2Z8E678","orgId":"5W2J4AQ8KA"}]
 	 * @Date Administrator 2018/9/17
 	 * @Param [userOrgs]
 	 * @return com.adc.da.util.http.ResponseMessage<java.lang.Integer>
@@ -154,9 +150,18 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	@PostMapping("/addOrgRelateUsers")
 //	@RequiresPermissions("sys:org:addOrgRelateUsers")
 	public ResponseMessage<Integer> addOrgRelatedUser(String userOrgs){
+
 		return orgEOService.addOrgRelatedUser(userOrgs);
 	}
-	
+
+	/**
+	 * @Author liwenxuan
+	 * @Description 传入字段是用户表id的String字符串中间用逗号隔开
+	 * 1.删除的是用户和组织机构表中的数据（是真删除，关系表中没有validflag字段）
+	 * @Date Administrator 2018/9/18
+	 * @Param [ids]
+	 * @return com.adc.da.util.http.ResponseMessage<java.lang.Integer>
+	 **/
 	@ApiOperation(value = "|OrgEO|批量删除组织机构下的一些用户")
 	@DeleteMapping("/deleteList/{idList}")
 //	@RequiresPermissions("sys:org:delListOfUser")

@@ -154,7 +154,7 @@ export default {
         }
       ],
       itemsData: [],
-      data: [],
+      infoListData: [],
       lawsInfoImport: {},
       lawsItemsImport: {},
       lawsPropertyOptions: '',
@@ -196,7 +196,7 @@ export default {
   },
   methods: {
     // 法规信息相关方法
-    // 分页查询
+    // 分页查询法规信息
     searchLawsInfo () {
       let SarLawsInfoEOPage = this.lawsInfo
       SarLawsInfoEOPage.page = this.page
@@ -208,7 +208,7 @@ export default {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.data = res.data.list
+        this.infoListData = res.data.list
         this.total = res.data.count
       }, e => {
 
@@ -245,7 +245,7 @@ export default {
       this.SarLawsInfoEO.energyKind = this.combineToArray(this.SarLawsInfoEO.energyKind)
       this.SarLawsInfoEO.applyAuth = this.combineToArray(this.SarLawsInfoEO.applyAuth)
     },
-    // 提交新增/修改
+    // 提交新增/修改法规信息
     saveLawsInfo () {
       this.SarLawsInfoEO.applyArctic = this.breakMultiSelect(this.SarLawsInfoEO.applyArctic)
       this.SarLawsInfoEO.energyKind = this.breakMultiSelect(this.SarLawsInfoEO.energyKind)
@@ -273,8 +273,8 @@ export default {
     cancelAdd () {
       this.$refs.showLawsInfoModal.toggleClose()
     },
-    // 删除
-    remove (id) {
+    // 删除法规信息
+    removeLawsInfo (id) {
       this.$Modal.confirm({
         title: '确认删除',
         content: '<p>确认删除该条数据？</p>',
@@ -292,7 +292,7 @@ export default {
         }
       })
     },
-    // 导入
+    // 导入法规信息
     importLawsInfo () {
       let file = this.$refs.lawsInfoFile.files[0]
       this.$http.post('lawss/sarLawsInfo/importLawsInfos', {
@@ -304,6 +304,10 @@ export default {
       }, e => {
 
       })
+    },
+    // 导出法规信息
+    exportLawsInfo () {
+      console.log(this.selectedList)
     },
     // 法规条目相关方法
     // 分页查询条目
@@ -407,7 +411,6 @@ export default {
       } else {
         return value
       }
-
     },
     // 多选合并为数组显示
     combineToArray (value) {
@@ -486,16 +489,16 @@ export default {
       if (checked) {
         // 1.遍历数据,把每一项的checkbox置为选中状态
         this.selectedList = []
-        for (let i = 0; i < this.stahndinfoList.length; i++) {
-          this.$set(this.stahndinfoList[i], 'checked', true)
+        for (let i = 0; i < this.infoListData.length; i++) {
+          this.$set(this.infoListData[i], 'checked', true)
           // 2.把每一项的id都放入selectedList数组中
-          this.selectedList.push(this.stahndinfoList[i].id)
+          this.selectedList.push(this.infoListData[i].id)
         }
         // 全部取消选中
       } else {
         // 1.遍历数据,把每一项的checkbox置为取消选中状态
-        for (let i = 0; i < this.stahndinfoList.length; i++) {
-          this.$set(this.stahndinfoList[i], 'checked', false)
+        for (let i = 0; i < this.infoListData.length; i++) {
+          this.$set(this.infoListData[i], 'checked', false)
           // 2.清空selectedList数组
           this.selectedList = []
         }
@@ -509,8 +512,35 @@ export default {
   props: {},
   computed: {},
   watch: {
-    page (newVal, oldVal) {
-      //
+    infoListData: {
+      deep: true,
+      handler (newVal, oldVal) {
+        this.selectedList = []
+        for (let i = 0; i < newVal.length; i++) {
+          if (newVal[i].checked) {
+            this.selectedList.push(newVal[i].id)
+          }
+        }
+        if (this.selectedList.length === newVal.length && newVal.length !== 0) {
+          this.checkAll = true
+          this.indeterminate = false
+        } else if (this.selectedList.length === 0) {
+          this.checkAll = false
+        } else {
+          this.checkAll = false
+          this.indeterminate = false
+        }
+      }
+    },
+    // 已选择的列表
+    selectedList (newVal, oldVal) {
+      if (oldVal.length === this.infoListData.length && newVal.length !== 0) {
+        this.checkAll = false
+        this.indeterminate = true
+      } else if (newVal.length === 0) {
+        this.checkAll = false
+        this.indeterminate = false
+      }
     }
   },
   mounted () {

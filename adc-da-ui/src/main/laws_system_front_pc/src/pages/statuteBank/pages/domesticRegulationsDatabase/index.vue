@@ -18,13 +18,13 @@
     <div class="content">
       <div class="action-bar">
         <Checkbox :value="checkAll" size="large" @on-change="handleSelectAll" :indeterminate="indeterminate">全选</Checkbox>
-        <Button type="info" size="small">下载</Button>
+        <Button type="info" size="small" @click="exportLawsInfo">导出</Button>
         <Button type="primary" @click="openLawsModal">新增</Button>
         <Button type="primary" @click="modal2 = true">导入</Button>
       </div>
 
-      <div class="content-detail" v-if="data.length > 0">
-        <div class="card domBtn" v-for="(item, index) in data" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
+      <div class="content-detail" v-if="infoListData.length > 0">
+        <div class="card domBtn" v-for="(item, index) in infoListData" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
           <Row>
             <Col span="5">
             <Checkbox v-model="item.checked" size="large"></Checkbox>
@@ -45,9 +45,9 @@
             <Col span="4" push="2">发布日期: {{ item.issueTime }}</Col>
             <Col span="4" push="3">适用车型: {{ item.applyArcticShow }}</Col>
             <Col span="6" push="6">
-            <Button>流程</Button>
             <Button @click = "editLawsInfo(item,'show')">查看</Button>
             <Button @click = "editLawsInfo(item,'edit')">编辑</Button>
+            <Button @click = "removeLawsInfo(item.id)">删除</Button>
             <Button @click = "searchLawsItems(item.id)">查看表单</Button>
             </Col>
           </Row>

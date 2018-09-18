@@ -150,6 +150,7 @@ export default {
     handleSelectone (row) {
       this.selectNum = row
     },
+    // 对话框
     instance (type, content) {
       const title = '请选择'
       switch (type) {
@@ -234,7 +235,7 @@ export default {
     // 删除
     categoryDel (id) {
       this.handleSelectAll(false)
-      let url = 'sys/dictype/delete'
+      let url = 'lawss/msgModule'
       let type = 1
       this.confirm('确定删除这一条数据', id, url, type)
     },

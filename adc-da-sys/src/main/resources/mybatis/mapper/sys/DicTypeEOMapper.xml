@@ -49,6 +49,9 @@
 			<if test="dicTypeName != null">
 				and dic_type_name ${dicTypeNameOperator} concat(concat('%',#{dicTypeName}),'%')
 			</if>
+			<if test="dicTypeCode != null">
+				and dic_type_code ${dicTypeCodeOperator} concat(concat('%',#{dicTypeCode}),'%')
+			</if>
 			<if test="validFlag != null" >
         		and valid_flag ${validFlagOperator} #{validFlag}
       		</if>
@@ -199,7 +202,7 @@
 	<update id="deleteDicTypeByDicId" parameterType="java.lang.String">
 		update TS_DICTYPE
 		set valid_flag = 1
-		where DIC_ID = #{id}
+		where ID = #{id}
 	</update>
 	<!--李文轩：这是删除一条数据和上面的写重复了-->
 	<!--<update id="deleteFlagTo1" parameterType="java.lang.String">

@@ -27,7 +27,7 @@ import com.alibaba.fastjson.JSON;
 public class OrgEOService extends BaseService<OrgEO, String> {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrgEOService.class);
-	
+
 	@Autowired
 	private OrgEODao dao;
 	
@@ -121,9 +121,21 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 			}
 		}
 	}
-
+/**
+ * @Author liwenxuan
+ * @Description 修改组织机构简称和名称不能为空
+ * @Date Administrator 2018/9/18
+ * @Param [orgEO]
+ * @return com.adc.da.util.http.ResponseMessage
+ **/
 	public ResponseMessage updateById(OrgEO orgEO) {
 		orgEO.setModifyTime(new Date());
+		if(StringUtils.isBlank(orgEO.getShotName())){
+			return Result.error("组织机构简称不能为空");
+		}
+		if(StringUtils.isBlank(orgEO.getOrgName())){
+			return Result.error("组织机构名称不能为空");
+		}
 		int line = dao.updateByPrimaryKeySelective(orgEO);
 		if(line > 0) {
 			return Result.success();
