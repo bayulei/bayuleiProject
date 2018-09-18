@@ -2,11 +2,16 @@ export default {
   name: 'DomesticRegulationsDatabase',
   data () {
     return {
+      isAdvancedSearch: false, // 高级检索窗口是否打开
+      checkAll: false, // 是否全选
+      indeterminate: false, // 是否半选
       modal2: false,
       showLawsInfoModal: false,
       showLawsItemsModal: false,
       addLawsItemsModal: false,
+      importItemsModal: false,
       saveInfoBtn: true,
+      saveLawsItemsBtn: true,
       lawsInfo: {
         lawsNum: '',
         lawsName: '',
@@ -34,6 +39,7 @@ export default {
       },
       SarLawsItemsEO: {
         id: '',
+        lawsId: '',
         itemsNum: '',
         itemsName: '',
         parts: '',
@@ -43,128 +49,11 @@ export default {
         responsibleUnit: '',
         remarks: ''
       },
+      saveLawsId: '',
       total: 0,
       page: 1,
       rows: 10,
       loading: false,
-      lawsInfoImport: {},
-      tableColumn: [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center'
-        },
-        {
-          title: '文件号',
-          key: 'lawsNumber'
-        },
-        {
-          title: '文件性质',
-          key: 'propertyName'
-        },
-        {
-          title: '文件名称',
-          key: 'lawsName'
-        },
-        {
-          title: '发布单位',
-          key: 'issueUnit'
-        },
-        {
-          title: '文件状态',
-          key: 'stateName'
-        },
-        {
-          title: '发布日期',
-          key: 'issueTime'
-        },
-        {
-          title: '实施日期',
-          key: 'putTime'
-        },
-        {
-          title: '适用车型',
-          key: 'applyArctic'
-        },
-        {
-          title: '能源种类',
-          key: 'energyKind'
-        },
-        {
-          title: '适用认证',
-          key: 'applyAuth'
-        },
-        {
-          title: '修改时间',
-          key: 'modifyTime'
-        },
-        {
-          title: '操作',
-          key: 'action',
-          // fixed: 'right',
-          width: 250,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.showLawsItemsModal = true
-                    this.searchLawsItems(params.row.id)
-                  }
-                }
-              }, '查看表单'),
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.edit(params.row)
-                    this.saveInfoBtn = false
-                  }
-                }
-              }, '属性'),
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.edit(params.row)
-                  }
-                }
-              }, '编辑'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.remove(params.row.id)
-                  }
-                }
-              }, '删除')
-            ])
-          }
-        }
-      ],
       itemsTotal: 0,
       itemPage: 1,
       itemPageSize: 10,
@@ -192,11 +81,11 @@ export default {
         },
         {
           title: '适用车型',
-          key: 'applyArctic'
+          key: 'applyArcticShow'
         },
         {
           title: '能源类型',
-          key: 'energyKind'
+          key: 'energyKindShow'
         },
         {
           title: '责任部门',
@@ -224,8 +113,8 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.edit(params.row)
-                    this.saveInfoBtn = false
+                    this.editLawsItems(params.row)
+                    this.saveLawsItemsBtn = false
                   }
                 }
               }, '属性'),
@@ -239,7 +128,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.edit(params.row)
+                    this.editLawsItems(params.row)
                   }
                 }
               }, '编辑'),
@@ -260,13 +149,22 @@ export default {
       ],
       itemsData: [],
       data: [],
+      lawsInfoImport: {},
+      lawsItemsImport: {},
       lawsPropertyOptions: '',
       lawsStatusOptions: '',
+      applyArcticOptions: '',
+      energyKindOptions: '',
+      applyAuthOptions: '',
       lawsInfoRules: {},
       lawsInfoFormRules: {
+        country: [],
+        lawsProperty: [],
+        lawsNumber: [],
         lawsName: [
           { required: true, message: '文件名称不能为空', trigger: 'blur' }
         ],
+        issueUnit: [],
         lawsState: [
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
@@ -275,12 +173,23 @@ export default {
         ],
         putTime: [
           { required: true, message: '实施日期不能为空', trigger: 'blur' }
-        ]
+        ],
+        replaceLawsNum: [],
+        applyArctic: [],
+        energyKind: [],
+        applyAuth: [],
+        responsibleUnit: [],
+        linkUri: []
       },
-      addLawsItemsFormRules: {}
+      addLawsItemsFormRules: {
+        // itemsNum: [
+        //  { required: true, message: '条目号不能为空', trigger: 'blur' }
+        // ]
+      }
     }
   },
   methods: {
+    // 法规信息相关方法
     // 分页查询
     searchLawsInfo () {
       let SarLawsInfoEOPage = this.lawsInfo
@@ -309,18 +218,30 @@ export default {
     },
     // 打开新增模态框
     openLawsModal () {
+      this.SarLawsInfoEO = ''
       this.showLawsInfoModal = true
       this.saveInfoBtn = true
     },
     // 点击编辑按钮触发
-    edit (row) {
+    editLawsInfo (row, optType) {
+      if (optType === 'edit') {
+        this.saveInfoBtn = true
+      } else {
+        this.saveInfoBtn = false
+      }
       this.showLawsInfoModal = true
       this.saveInfoBtn = true
       this.SarLawsInfoEO = row
       this.SarLawsInfoEO.editLawsId = row.id
+      this.SarLawsInfoEO.applyArctic = this.combineToArray(this.SarLawsInfoEO.applyArctic)
+      this.SarLawsInfoEO.energyKind = this.combineToArray(this.SarLawsInfoEO.energyKind)
+      this.SarLawsInfoEO.applyAuth = this.combineToArray(this.SarLawsInfoEO.applyAuth)
     },
     // 提交新增/修改
     saveLawsInfo () {
+      this.SarLawsInfoEO.applyArctic = this.breakMultiSelect(this.SarLawsInfoEO.applyArctic)
+      this.SarLawsInfoEO.energyKind = this.breakMultiSelect(this.SarLawsInfoEO.energyKind)
+      this.SarLawsInfoEO.applyAuth = this.breakMultiSelect(this.SarLawsInfoEO.applyAuth)
       this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
       this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
       if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
@@ -363,13 +284,6 @@ export default {
         }
       })
     },
-    openFile () {
-      $('#lawsInfoFile').click()
-    },
-    lawsInfoFileBeforeUpload (val) {
-      let file = this.$refs.lawsInfoFile.files[0].name
-      console.log(file)
-    },
     // 导入
     importLawsInfo () {
       let file = this.$refs.lawsInfoFile.files[0]
@@ -383,8 +297,11 @@ export default {
 
       })
     },
+    // 法规条目相关方法
     // 分页查询条目
     searchLawsItems (lawsId) {
+      this.showLawsItemsModal = true
+      this.saveLawsId = lawsId
       this.$http.get('lawss/sarLawsItems/page', {
         lawsId: lawsId,
         page: this.itemPage,
@@ -400,48 +317,98 @@ export default {
 
       })
     },
+    searchLawsItemsByUnit () {
+      let lawsId = this.saveLawsId
+      this.searchLawsItems(lawsId)
+    },
     // 打开新增条目模态框
     openAddItemsModal () {
+      this.SarLawsItemsEO = ''
       this.addLawsItemsModal = true
+      this.saveLawsItemsBtn = true
+    },
+    // 打开编辑条目模态框
+    editLawsItems (row) {
+      this.addLawsItemsModal = true
+      this.saveLawsItemsBtn = true
+      this.SarLawsItemsEO = row
+      this.SarLawsItemsEO.applyArctic = this.combineToArray(this.SarLawsItemsEO.applyArctic)
+      this.SarLawsItemsEO.energyKind = this.combineToArray(this.SarLawsItemsEO.energyKind)
+    },
+    cancelAddItems () {
+      this.addLawsItemsModal = false
     },
     // 保存条目数据
     saveLawsItems () {
-      this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
+      this.SarLawsItemsEO.applyArctic = this.breakMultiSelect(this.SarLawsItemsEO.applyArctic)
+      this.SarLawsItemsEO.energyKind = this.breakMultiSelect(this.SarLawsItemsEO.energyKind)
+      this.SarLawsItemsEO.lawsId = this.saveLawsId
+      if (this.SarLawsItemsEO.tackTime != null) {
+        this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
+      }
       if (this.SarLawsItemsEO.id == null || this.SarLawsItemsEO.id === '') {
         this.$http.post('lawss/sarLawsItems/addLawsItems', this.SarLawsItemsEO, {
           _this: this
         }, res => {
           this.addLawsItemsModal = false
-          this.searchLawsItems()
+          this.searchLawsItems(this.saveLawsId)
         }, e => {
         })
       } else {
-        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', this.SarLawsInfoEO, {
+        this.$http.put('lawss/sarLawsItems/updateLawsItems', this.SarLawsItemsEO, {
           _this: this
         }, res => {
-          this.showLawsInfoModal = false
-          this.searchLawsInfo()
+          this.addLawsItemsModal = false
+          this.searchLawsItems(this.saveLawsId)
         }, e => {})
       }
     },
     // 删除条目
     removeLawsItems (id) {
-      this.$Modal.confirm({
-        title: '确认删除',
-        content: '<p>确认删除该条数据？</p>',
-        onOk: () => {
-          this.$http.put('lawss/sarLawsItems/deleteLawsItems', {
-            id: id
-          }, {
-            _this: this
-          }, res => {
-            this.searchLawsItems()
-          }, e => {
-          })
-        },
-        onCancel: () => {
-        }
+      this.$http.put('lawss/sarLawsItems/deleteLawsItems', {
+        id: id
+      }, {
+        _this: this
+      }, res => {
+        this.searchLawsItems(this.saveLawsId)
+      }, e => {
       })
+    },
+    // 导入条目
+    importLawsItems () {
+      let file = this.$refs.lawsItemsFile.files[0]
+      let lawsId = this.saveLawsId
+      this.$http.post('lawss/sarLawsItems/importLawsItems', {
+        file: file,
+        lawsId: lawsId
+      }, {
+        _this: this
+      }, res => {
+        this.searchLawsItems(this.saveLawsId)
+      }, e => {
+      })
+    },
+    // 分解多选下拉
+    breakMultiSelect (value) {
+      if (value != null && value !== '') {
+        let stringValue = ''
+        for (let i = 0; i < value.length; i++) {
+          stringValue += value[i] + ','
+        }
+        return stringValue
+      } else {
+        return value
+      }
+
+    },
+    // 多选合并为数组显示
+    combineToArray (value) {
+      if (value != null && value !== '') {
+        let arrayValue = value.split(',')
+        return arrayValue
+      } else {
+        return value
+      }
     },
     // 加载数据字典
     loadDicTypeDatas1 () {
@@ -468,6 +435,66 @@ export default {
         }
       }, e => {
       })
+    },
+    loadDicTypeDatas3 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'PRODUCTTYPE'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.applyArcticOptions = res.data
+        }
+      }, e => {
+      })
+    },
+    loadDicTypeDatas4 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'ENERGYTYPES'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.energyKindOptions = res.data
+        }
+      }, e => {
+      })
+    },
+    loadDicTypeDatas5 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'PROVETYPE'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.applyAuthOptions = res.data
+        }
+      }, e => {
+      })
+    },
+    // 列表相关方法
+    handleSelectAll (checked) {
+      // 全部选中
+      if (checked) {
+        // 1.遍历数据,把每一项的checkbox置为选中状态
+        this.selectedList = []
+        for (let i = 0; i < this.stahndinfoList.length; i++) {
+          this.$set(this.stahndinfoList[i], 'checked', true)
+          // 2.把每一项的id都放入selectedList数组中
+          this.selectedList.push(this.stahndinfoList[i].id)
+        }
+        // 全部取消选中
+      } else {
+        // 1.遍历数据,把每一项的checkbox置为取消选中状态
+        for (let i = 0; i < this.stahndinfoList.length; i++) {
+          this.$set(this.stahndinfoList[i], 'checked', false)
+          // 2.清空selectedList数组
+          this.selectedList = []
+        }
+      }
+    },
+    handleCardClick (item, event) {
+      item.checked = !item.checked
     }
   },
   components: {},
@@ -482,5 +509,8 @@ export default {
     this.searchLawsInfo()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()
+    this.loadDicTypeDatas3()
+    this.loadDicTypeDatas4()
+    this.loadDicTypeDatas5()
   }
 }
