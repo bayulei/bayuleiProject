@@ -1,6 +1,7 @@
 package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Clob;
 import java.util.Date;
@@ -13,22 +14,25 @@ import java.util.Date;
  */
 public class SarBussStandItemsEO extends BaseEntity {
 
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private Integer validFlag;
     private String remarks;
     private String responsibleUnit;
     private String energyKind;
     private String applyArctic;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date tackTime;
     private String parts;
     private String itemsName;
     private String itemsNum;
     private String standId;
     private String id;
+
+    private String energyKindShow;
+    private String applyArcticShow;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -234,4 +238,19 @@ public class SarBussStandItemsEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getEnergyKindShow() {
+        return energyKindShow;
+    }
+
+    public void setEnergyKindShow(String energyKindShow) {
+        this.energyKindShow = energyKindShow;
+    }
+
+    public String getApplyArcticShow() {
+        return applyArcticShow;
+    }
+
+    public void setApplyArcticShow(String applyArcticShow) {
+        this.applyArcticShow = applyArcticShow;
+    }
 }

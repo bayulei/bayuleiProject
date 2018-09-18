@@ -58,11 +58,29 @@
 		</trim>
 	</sql>
 
-
+<!--对修改做了判断-->
 	<update id="updateByPrimaryKeySelective" parameterType="com.adc.da.sys.entity.DicTypeEO">
 		update TS_DICTYPE
-		<set>
+	<!--	<set>
 			dic_type_code = #{dicTypeCode},dic_type_name = #{dicTypeName},dic_id = #{dicId},valid_flag = #{validFlag},parent_id = #{parentId}
+		</set>
+-->
+		<set >
+			<if test="dicTypeCode != null" >
+				dic_type_code = #{dicTypeCode},
+			</if>
+			<if test="dicTypeName != null" >
+				dic_type_name = #{dicTypeName},
+			</if>
+			<if test="dicId != null" >
+				dic_id = #{dicId},
+			</if>
+			<if test="validFlag != null" >
+				valid_flag = #{validFlag},
+			</if>
+			<if test="parentId != null" >
+				parent_id = #{parentId},
+			</if>
 		</set>
 		where id = #{id}
 	</update>
@@ -100,7 +118,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_DICTYPE
-		where dic_type_code = #{dicTypeCode}
+		where dic_type_code = #{dicTypeCode}  AND valid_flag = 0
 	</select>
 
 

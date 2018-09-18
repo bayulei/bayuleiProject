@@ -12,4 +12,6 @@ import com.adc.da.lawss.entity.SarProductValEO;
  */
 public interface SarProductValEODao extends BaseDao<SarProductValEO> {
 
+    //通过企业id删除表中数据
+    int deleteDataByProductid(String productId);
 }

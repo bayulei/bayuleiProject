@@ -8,15 +8,12 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-import com.adc.da.sys.entity.DictionaryEO;
-import com.adc.da.sys.vo.DictionaryVO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import com.adc.da.base.page.Pager;
 import com.adc.da.base.web.BaseController;
 import com.adc.da.sys.common.LayUiResult;
@@ -39,10 +36,16 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 	private static final Logger logger = LoggerFactory.getLogger(DicTypeEO.class);
 	@Autowired
 	private DicTypeEOService dicTypeEOService;
-
 	@Autowired
 	BeanMapper beanMapper;
-	
+
+/**
+ * @Author liwenxuan
+ * @Description 新增数据字典，必填字段：字典类型编码、字典类型名称
+ * @Date Administrator 2018/9/17
+ * @Param [dicTypeVO]
+ * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.DicTypeVO>
+ **/
 	@ApiOperation(value = "|DicTypeEO|新增")
 	@PostMapping("/create")
 //	@RequiresPermissions("sys:dicType:save")
@@ -52,24 +55,29 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		List<DicTypeEO> dicTypeEOS = dicTypeEOService.getTypeIdByDicIdAndTypeName(dicTypeVO.getDicId(),dicTypeVO.getDicTypeName());
 
 		if(StringUtils.isBlank(dicTypeVO.getDicTypeCode())){
-			return Result.error("r0014", "字典类型编码不能为空");
+			return Result.error("字典类型编码不能为空");
 		}else if(dicTypeEOList!=null && !dicTypeEOList.isEmpty()){
-			return Result.error("r0015","字典类型编码已存在");
+			return Result.error("字典类型编码已存在");
 		}
 		if(StringUtils.isBlank(dicTypeVO.getDicTypeName())){
-			return Result.error("r0016", "字典类型名称不能为空");
+			return Result.error( "字典类型名称不能为空");
 		}else if(dicTypeEOS!=null && !dicTypeEOS.isEmpty() ){
-			return Result.error("r0017","字典类型名称存在");
+			return Result.error("字典类型名称存在");
 		}
 
-//		DicTypeEO dicTypeEO = dicTypeEOService.save(beanMapper.map(dicTypeVO, DicTypeEO.class));
 		DicTypeEO dicTypeEO = dicTypeEOService.saveDictype(beanMapper.map(dicTypeVO,DicTypeEO.class));
 
-//		dicTypeVO.setId(dicTypeEO.getId());
-		return Result.success(dicTypeVO);
+		return Result.success("","新增成功",dicTypeVO);
 	}
 
-	
+
+	/**
+	 * @Author liwenxuan
+	 * @Description 分页查询(根据code也可以进行模糊查找)
+	 * @Date Administrator 2018/9/17
+	 * @Param [pageNo, pageSize, dicId, dicTypeName, dicTypeCode]
+	 * @return com.adc.da.util.http.ResponseMessage<com.adc.da.util.http.PageInfo<com.adc.da.sys.entity.DicTypeEO>>
+	 **/
 	@ApiOperation(value = "|DicTypeEO|分页列表")
 	@GetMapping("/page")
 //	@RequiresPermissions("sys:dicType:page")
@@ -88,7 +96,6 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 			page.setDicTypeName(dicTypeName);
 			page.setDicTypeNameOperator("LIKE");
 		}
-//		根据code也可以进行模糊查找
 		if (StringUtils.isNotEmpty(dicTypeCode)) {
 			page.setDicTypeCode(dicTypeCode);
 			page.setDicTypeCodeOperator("LIKE");
@@ -100,6 +107,16 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		return  Result.success(getPageInfo(page.getPager(), rows));
     }
 	
+
+    /**
+     * @Author liwenxuan
+	 * @Description  修改数据字典编码和名称
+	 * 1.如果修改的字典类型编码不改变也可以进行修改   通过用户id获得字段名字和输入的名字一致也可以
+	 * 2.原name和新输入的name进行对比,如果一样不算在字典类型编码重复
+     * @Date Administrator 2018/9/17
+     * @Param [dicTypeVO]
+     * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.DicTypeVO>
+     **/
 	@ApiOperation(value = "|DicTypeEO|修改")
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:dicType:update")
@@ -108,31 +125,31 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		List<DicTypeEO> dicTypeEOS = dicTypeEOService.getTypeIdByDicIdAndTypeName(dicTypeVO.getDicId(),dicTypeVO.getDicTypeName());
 		DicTypeEO   dicTypeEO  =   dicTypeEOService.getDicTypeById(dicTypeVO.getId());
 
-
-//		如果修改的字典类型编码不改变也可以进行修改   通过用户id获得字段名字和输入的名字一致也可以
 		if(StringUtils.isBlank(dicTypeVO.getDicTypeCode())){
-			return Result.error("r0014", "字典类型编码不能为空");
-		 //原name和新输入的name进行对比,如果一样不算在字典类型编码重复
+			return Result.error( "字典类型编码不能为空");
 		}else if(dicTypeEO.getDicTypeCode().equals(dicTypeVO.getDicTypeCode())){
 					if(dicTypeEOList!=null && !dicTypeEOList.isEmpty()  ){
-				return Result.error("r0015","字典类型编码已存在");
+				return Result.error("字典类型编码已存在");
 			        }
 			}
 
-
 		if(StringUtils.isBlank(dicTypeVO.getDicTypeName())){
-			return Result.error("r0016", "字典类型名称不能为空");
-		 //原name和新输入的name进行对比,如果一样不算在字典类型名称重复
+			return Result.error("字典类型名称不能为空");
 		}else	if(dicTypeEO.getDicTypeName().equals(dicTypeVO.getDicTypeName())){
 			if(dicTypeEOS!=null && !dicTypeEOS.isEmpty() ){
-				return Result.error("r0017","字典类型名称存在");
+				return Result.error("字典类型名称存在");
 			}
 		}
-
 		dicTypeEOService.updateByPrimaryKeySelective(beanMapper.map(dicTypeVO, DicTypeEO.class));
-		return Result.success(dicTypeVO);
+		return Result.success("","修改成功",dicTypeVO);
 	}
-	
+	/**
+	 * @Author liwenxuan
+	 * @Description   根据数据字典参数表id获取数据字典参数表信息
+	 * @Date Administrator 2018/9/17
+	 * @Param [id]
+	 * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.DicTypeVO>
+	 **/
 	@ApiOperation(value = "|DicTypeEO|详情")
 	@GetMapping("/{id}")
 //	@RequiresPermissions("sys:dicType:get")
@@ -140,33 +157,36 @@ public class DicTypeEORestController extends BaseController<DicTypeEO>{
 		DicTypeVO dicTypeVO = beanMapper.map(dicTypeEOService.getDicTypeById(id), DicTypeVO.class);
 		return Result.success(dicTypeVO);
 	}
-//	删除多条数据  修改
+
+
+	/**
+	 * @Author liwenxuan
+	 * @Description  删除多条数据  ,实际上设置vilid_flag=1
+	 * @Date Administrator 2018/9/17
+	 * @Param [ids]
+	 * @return com.adc.da.util.http.ResponseMessage
+	 **/
 	@ApiOperation(value = "|DicTypeEO|删除多条数据")
 	//@DeleteMapping("/deleteArr/{ids}")
 	@DeleteMapping("/deleteArr")
-//	@PostMapping("/deleteArr/{ids}")
 //	@RequiresPermissions("sys:dicType:delete")
-	//public ResponseMessage delete(@NotNull @PathVariable("ids") String[] ids) throws Exception {
-	public ResponseMessage delete(String ids) throws Exception {
+	public ResponseMessage delete(String[] ids) throws Exception {
 		dicTypeEOService.delete(Arrays.asList(ids));
-		return Result.success();
+		return Result.success("","删除成功",null);
 	}
-
-//	删除一条数据
+	/**
+	 * @Author liwenxuan
+	 * @Description  删除一条数据
+	 * @Date Administrator 2018/9/17
+	 * @Param [id]
+	 * @return com.adc.da.util.http.ResponseMessage
+	 **/
 	@ApiOperation(value = "|DicTypeEO|删除一条数据")
-	@DeleteMapping("/delete/{ids}")
+	@DeleteMapping("/delete")
 //	@RequiresPermissions("sys:dicType:deleteArr")
-	public ResponseMessage deleteArr(@NotNull @PathVariable("ids") String id) throws Exception {
-
-//		删除一条数据
-	/*	String[] idList = ids.split(",");
-		if(idList!=null && idList.length>0){
-			for(String id:idList){
-				dicTypeEOService.deleteDicTypeByDicId(id);
-			}
-		}*/
+	public ResponseMessage deleteArr( String id) throws Exception {
 		dicTypeEOService.deleteDicTypeByDicId(id);
-		return Result.success();
+		return Result.success("","删除成功",null);
 	}
 
 	/**

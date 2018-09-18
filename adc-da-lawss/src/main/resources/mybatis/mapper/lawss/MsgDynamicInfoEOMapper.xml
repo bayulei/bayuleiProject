@@ -236,19 +236,6 @@
     </if>
   </select>
 
-    <!--李文轩：添加动态信息管理id到附件表中-->
-<update id="updateIdOfMsgFile" parameterType="com.adc.da.lawss.entity.MsgFileEO">
-    UPDATE msg_file set
-    msg_file.msg_id = #{msgId},
-    msg_file.file_name=#{fileName},
-    msg_file.file_suffix=#{fileSuffix},
-    msg_file.att_id=#{attId}
-    where msg_file.id in
-    <foreach item="id" collection="list" open="(" separator=","
-             close=")" index="index">
-        #{id}
-    </foreach>
-</update>
 
 
 

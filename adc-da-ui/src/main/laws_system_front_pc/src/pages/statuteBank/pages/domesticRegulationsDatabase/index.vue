@@ -1,29 +1,60 @@
 <!-- 国内法规库 -->
 <template>
  <div id="domesticRegulationsDatabase">
-    <table-tools-bar>
-      <div class="laws-info-form" slot="left">
-        <Form ref="lawsInfo" :model="lawsInfo" :rules="lawsInfoRules" class="label-input-form">
-          <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
-            <Input v-model="lawsInfo.lawsNumber"></Input>
-          </FormItem>
-          <FormItem label="文件名称" prop="lawsName" class="laws-info-item">
-            <Input v-model="lawsInfo.lawsName"></Input>
-          </FormItem>
-          <FormItem label="发布日期" prop="issueTime" class="laws-info-item">
-            <DatePicker type="date" v-model="lawsInfo.issueTime" format="yyyy-MM-dd"></DatePicker>
-          </FormItem>
-          <Button type="primary" icon="ios-search" @click="searchLawsInfo"></Button>
-        </Form>
+   <div class="tree">
+     <ul id="treeDemo" class="ztree"></ul>
+   </div>
+   <div class="tree-right">
+    <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false">
+      <div slot="left">
+        <label-input v-model="lawsInfo.lawsNumber" placeholder="根据文件号查找" clearable label="文件号"  />
+        <label-input v-model="lawsInfo.lawsName" placeholder="根据文件名称查找" clearable label="文件名称"  />
+        <Button type="primary" icon="ios-search" @click="searchLawsInfo"></Button>
       </div>
       <div slot="right">
-        <Button type="primary" @click="openLawsModal">新增</Button>
-        <Button type="primary" @click="modal2 = true">导入</Button>
+        <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
       </div>
     </table-tools-bar>
     <div class="content">
+      <div class="action-bar">
+        <Checkbox :value="checkAll" size="large" @on-change="handleSelectAll" :indeterminate="indeterminate">全选</Checkbox>
+        <Button type="info" size="small">下载</Button>
+        <Button type="primary" @click="openLawsModal">新增</Button>
+        <Button type="primary" @click="modal2 = true">导入</Button>
+      </div>
+
+      <div class="content-detail" v-if="data.length > 0">
+        <div class="card domBtn" v-for="(item, index) in data" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
+          <Row>
+            <Col span="5">
+            <Checkbox v-model="item.checked" size="large"></Checkbox>
+            文件号: {{ item.lawsNumber }}
+            </Col>
+            <Col span="4" push="1">
+            <b>文件性质：{{ item.propertyName }}</b>
+            </Col>
+            <Col span="4" push="2">文件名称：{{ item.lawsName }}</Col>
+            <Col span="4" push="2">发布单位：{{ item.issueUnit }}</Col>
+            <Col span="3" push="4">
+            <Icon type="md-star" size="26" style="margin-right:5px"></Icon>
+            <Icon type="ios-redo" size="26"></Icon>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="4">实施日期: {{ item.putTime }}</Col>
+            <Col span="4" push="2">发布日期: {{ item.issueTime }}</Col>
+            <Col span="4" push="3">适用车型: {{ item.applyArcticShow }}</Col>
+            <Col span="6" push="6">
+            <Button @click = "">流程</Button>
+            <Button @click = "editLawsInfo(item,'show')">查看</Button>
+            <Button @click = "editLawsInfo(item,'edit')">编辑</Button>
+            <Button @click = "searchLawsItems(item.id)">查看表单</Button>
+            </Col>
+          </Row>
+        </div>
+      </div>
+      <has-no-data pClass="content-detail" v-else></has-no-data>
       <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="tableColumn" :data="data"></Table>
     </div>
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
@@ -236,25 +267,75 @@
        </FormItem>
      </Form>
    </Modal>
-
    </div>
+ </div>
 </template>
 
 <script src="./js/DomesticRegulationsDatabase.js"></script>
 
 <style lang="less">
+  @import '~styles/style';
+  @import '~styles/mixins';
+  @import '../../../../assets/zTree/css/metroStyle/metroStyle.css';
   #domesticRegulationsDatabase{
-    .searchBtn{
-      width: 2rem;
-      height: 0.72rem;
-      line-height: 0.72rem;
-      margin-left:0.2rem;
+    padding: 0;
+    display: flex;
+    display: -ms-flex;
+    .standards-info-form{
+      min-height: 400px;
+      overflow : auto;
+      .save{
+        width: 4.24rem;
+        height: 0.72rem;
+        line-height: 0.72rem;
+        margin: 0.5rem 0 0 0.2rem;
+      }
     }
-    .laws-info-item{
-      display:inline-block;
+    .content-detail{
+      .ivu-row{
+        height: 50%;
+        display: flex;
+        display: -ms-flex;
+        align-items: center;
+        .ivu-col{
+          &:last-child{
+            display: flex;
+            display: -ms-flex;
+            justify-content: flex-end;
+            align-items: center;
+            .ivu-btn{
+              padding: 0 13px 1px;
+            }
+          }
+          .card-edit{
+            color: @baseColor;
+            display: inline-block;
+            height: 100%;
+            margin-right: 15px;
+          }
+        }
+      }
     }
   }
-  .save-laws-btn{
-    text-align: center;
+  .domBtn {border:1px gray solid;background-color:#FFE6B0}
+  .domBtn_Disabled {border:1px gray solid;background-color:#DFDFDF;color:#999999}
+  .dom_tmp {
+    position:absolute;
+    padding: 15px;
+    background: #FFE6B0;
+    border: 1px solid gray;
+    width: 75%;
+    height: 100px;
+    .ivu-row{
+      height: 50%;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      display: -ms-flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+    }
   }
+  .active {background-color: #93C3CF}
 </style>
