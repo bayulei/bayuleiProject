@@ -88,12 +88,12 @@ public class MsgModuleEOController extends BaseController<MsgModuleEO>{
     }
 
     @ApiOperation(value = "|MsgModuleEO|删除")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete")
 //    @RequiresPermissions("lawss:msgModule:delete")
-    public ResponseMessage delete(@PathVariable String id) throws Exception {
+    public ResponseMessage delete( String id) throws Exception {
         msgModuleEOService.deleteByPrimaryKey(id);
         logger.info("delete from MSG_MODULE where id = {}", id);
-        return Result.success();
+        return Result.success("","删除成功","");
     }
 
 }

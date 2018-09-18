@@ -20,6 +20,7 @@
   <!-- 查询条件 -->
   <sql id="Base_Where_Clause">
     where 1=1
+      AND valid_flag=0
     <trim suffixOverrides="," >
       <if test="modifyTime != null" >
         and modify_time ${modifyTimeOperator} #{modifyTime}
@@ -138,12 +139,20 @@
       where id = #{id}
   </select>
 
-  <!-- 删除记录 -->
+  <!-- 删除记录
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from MSG_MODULE
      where id = #{value}
-
   </delete>
+  -->
+    <!-- liwenxuan：删除资料中心数据-->
+    <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+        update MSG_MODULE
+        SET
+        MSG_MODULE.valid_flag=1
+        WHERE
+        MSG_MODULE.id=#{id}
+    </update>
 
   <!-- MSG_MODULE 列表总数-->
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
