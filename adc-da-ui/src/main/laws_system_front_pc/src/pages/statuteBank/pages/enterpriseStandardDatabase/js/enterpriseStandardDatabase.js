@@ -1,4 +1,3 @@
-import draggable from 'vuedraggable'
 export default {
   name: 'EnterpriseStandardLibrary',
   data () {
