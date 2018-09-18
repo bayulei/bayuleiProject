@@ -16,6 +16,8 @@
     <result column="prodect_code" property="prodectCode" />
   </resultMap>
 
+
+
   <!-- SAR_PRODUCT_INFO table all fields -->
   <sql id="Base_Column_List" >
      modify_time, creation_time, creation_user, car_mode_file, energy_kind, product_type, product_brand, product_name, product_set, prodect_code, id
@@ -210,6 +212,93 @@
     <if test="pager.orderCondition != null and pager.orderCondition != ''" >
        ${pager.orderCondition}
     </if>
+  </select>
+
+  <sql id="Base_Column_List_show" >
+     SAR_PRODUCT_INFO.modify_time, SAR_PRODUCT_INFO.creation_time, SAR_PRODUCT_INFO.creation_user, car_mode_file, energy_kind, product_type, product_brand, product_name, product_set, prodect_code, SAR_PRODUCT_INFO.id
+  </sql>
+  <sql id="SarProductInfo_Where_Clause">
+        where 1=1
+        <trim suffixOverrides="," >
+            <if test="modifyTime != null" >
+                and modify_time ${modifyTimeOperator} #{modifyTime}
+            </if>
+            <if test="modifyTime1 != null" >
+                and modify_time &gt;= #{modifyTime1}
+            </if>
+            <if test="modifyTime2 != null" >
+                and modify_time &lt;= #{modifyTime2}
+            </if>
+            <if test="creationTime != null" >
+                and creation_time ${creationTimeOperator} #{creationTime}
+            </if>
+            <if test="creationTime1 != null" >
+                and creation_time &gt;= #{creationTime1}
+            </if>
+            <if test="creationTime2 != null" >
+                and creation_time &lt;= #{creationTime2}
+            </if>
+            <if test="creationUser != null" >
+                and creation_user ${creationUserOperator} #{creationUser}
+            </if>
+            <if test="carModeFile != null" >
+                and car_mode_file ${carModeFileOperator} #{carModeFile}
+            </if>
+            <if test="energyKind != null" >
+                and energy_kind ${energyKindOperator} #{energyKind}
+            </if>
+            <if test="productType != null" >
+                and product_type ${productTypeOperator} #{productType}
+            </if>
+            <if test="productBrand != null" >
+                and product_brand ${productBrandOperator} #{productBrand}
+            </if>
+            <if test="productName != null" >
+                and product_name ${productNameOperator} #{productName}
+            </if>
+            <if test="productSet != null" >
+                and product_set ${productSetOperator} #{productSet}
+            </if>
+            <if test="prodectCode != null" >
+                and prodect_code ${prodectCodeOperator} #{prodectCode}
+            </if>
+        </trim>
+    </sql>
+  <!-- 分页查询条件当页数据 -->
+  <select id="getSarProductInfoPage" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarProductInfoEOPage">
+        select * from
+        (select tmp_tb.* , rownum rn from
+        (select <include refid="Base_Column_List_show" /> ,
+        (
+        SELECT
+        listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_PRODUCT_VAL.property_type )
+        FROM
+        SAR_PRODUCT_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_PRODUCT_VAL.PROPERTY_VALUE  and TS_DICTYPE.dic_id is not null)
+        WHERE
+        SAR_PRODUCT_VAL.PRODUCT_ID = SAR_PRODUCT_INFO.id
+        AND SAR_PRODUCT_VAL.property_type = 'ENERGY_KIND'
+        ) AS energyKindShow,
+       (
+       SELECT
+       listagg ( TS_DICTYPE.DIC_TYPE_NAME, ',' ) within GROUP ( ORDER BY SAR_PRODUCT_VAL.property_type )
+       FROM
+       SAR_PRODUCT_VAL left join TS_DICTYPE  on  (TS_DICTYPE.dic_type_code = SAR_PRODUCT_VAL.PROPERTY_VALUE  and TS_DICTYPE.dic_id is not null)
+       WHERE
+       SAR_PRODUCT_VAL.PRODUCT_ID = SAR_PRODUCT_INFO.id
+       AND SAR_PRODUCT_VAL.property_type = 'PRODUCT_TYPE'
+       ) AS productTypeShow
+        from SAR_PRODUCT_INFO
+        <include refid="SarProductInfo_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+            ${pager.orderCondition}
+        </if>
+        ) tmp_tb where rownum &lt;= ${pager.endIndex})
+        where rn &gt;= ${pager.startIndex}
+    </select>
+  <!-- 分页查询条件查询一共有多少条数据，配合分页 -->
+  <select id="getSarProductInfoCount" resultType="java.lang.Integer" parameterType="com.adc.da.lawss.page.SarProductInfoEOPage">
+        select count(1) from SAR_STANDARDS_INFO
+        <include refid="SarProductInfo_Where_Clause"/>
   </select>
 
 </mapper>

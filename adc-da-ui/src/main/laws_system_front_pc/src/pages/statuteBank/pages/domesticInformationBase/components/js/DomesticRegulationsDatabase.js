@@ -283,7 +283,7 @@ export default {
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
         issueTime: [
-          { required: true, message: '发布日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '发布日期不能为空', trigger: 'change' }
         ],
         putTime: [
           { required: true, message: '实施日期不能为空', trigger: 'blur' }
@@ -504,8 +504,12 @@ export default {
     },
     // 多选合并为数组显示
     combineToArray (value) {
-      let arrayValue = value.split(',')
-      return arrayValue
+      if (value != null && value !== '') {
+        let arrayValue = value.split(',')
+        return arrayValue
+      } else {
+        return value
+      }
     },
     // 加载数据字典
     loadDicTypeDatas1 () {

@@ -1,10 +1,17 @@
 package com.adc.da.sys.service;
 
+import java.beans.Transient;
 import java.util.Date;
 import java.util.List;
 
 import com.adc.da.base.page.BasePage;
 
+import com.adc.da.person.dao.UserInfoEODao;
+import com.adc.da.person.entity.UserInfoEO;
+import com.adc.da.sys.constant.UserSourceEnum;
+import com.adc.da.sys.constant.ValidFlagEnum;
+import com.adc.da.sys.entity.UserRoleEO;
+import com.adc.da.sys.util.UUIDUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,33 +48,51 @@ public class UserEOService extends BaseService<UserEO, String> {
 
 	@Autowired
 	private UserEODao dao;
-
 	@Autowired
-	private RoleEODao roleEODao;
-	@Autowired
-	private OrgEODao orgDao;
+	private UserInfoEODao userInfoEODao;
 	
 	public UserEODao getDao() {
 		return dao;
 	}
 
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public UserEO save(UserEO userEO) {
 		userEO.setUsid(UUID.randomUUID10());
 		userEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 		userEO.setCreationTime(new Date(System.currentTimeMillis()));
 		userEO.setModifyTime(new Date(System.currentTimeMillis()));
 		userEO.setPassword(PasswordUtils.encryptPassword(userEO.getPassword()));
+		userEO.setUserSource(UserSourceEnum.LOCAL_USER.getValue());
 		if(userEO.getExtInfo() != null){
 			userEO.setExtInfo(userEO.getExtInfo());
+		}else{
+			userEO.setExtInfo("");
 		}
 		dao.insert(userEO);
 		//TODO 此处需要维护用户的组织机构
-/*		if(userEO.getUseCorpId() != null && !"".equals(userEO.getUseCorpId())) {
-			UserOrgEO userOrgEO = new UserOrgEO();
-			userOrgEO.setUserId(userEO.getUsid());
-			userOrgEO.setOrgId(userEO.getUseCorpId());
-			orgDao.addOrgRelatedUser(userOrgEO);
-		}*/
+		if(StringUtils.isNotEmpty(userEO.getOrgId())){
+			dao.saveUserOrg(userEO.getUsid(),userEO.getOrgId());
+		}
+		// 此处需要维护用户角色
+		if(StringUtils.isNotEmpty(userEO.getRoleId())){
+			dao.saveUserRole(userEO.getUsid(),userEO.getRoleId());
+		}
+		// 此处维护用户的相关电话信息
+		if(StringUtils.isNotEmpty(userEO.getMobilePhone())||StringUtils.isNotEmpty(userEO.getOfficePhone())){
+			UserInfoEO userInfoEO=new UserInfoEO();
+			userInfoEO.setId(UUIDUtils.randomUUID20());
+			if(StringUtils.isNotEmpty(userEO.getOfficePhone())){
+				userInfoEO.setOfficePhone(userEO.getOfficePhone());
+			}
+			if(StringUtils.isNotEmpty(userEO.getMobilePhone())){
+				userInfoEO.setMobilePhone(userEO.getMobilePhone());
+			}
+			userInfoEO.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue());
+			userInfoEO.setCreationTime(new Date());
+			userInfoEO.setModifyTime(new Date());
+			userInfoEODao.insert(userInfoEO);
+		}
+
 		return userEO;
 	}
 

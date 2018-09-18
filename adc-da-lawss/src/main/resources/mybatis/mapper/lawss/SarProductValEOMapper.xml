@@ -172,4 +172,10 @@
     </if>
   </select>
 
+  <delete id="deleteDataByProductid" parameterType="java.lang.String">
+    delete from SAR_PRODUCT_VAL
+     where PRODUCT_ID = #{productId}
+
+  </delete>
+
 </mapper>

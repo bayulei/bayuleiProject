@@ -39,7 +39,9 @@ public class SarBussionessStandEO extends BaseEntity {
     private String applyArctic;
     private String standEnName;
     private String standName;
+    //标准编码
     private String standCode;
+    //分类代号
     private String classifyCode;
     private String standSubclass;
     private String standGenera;

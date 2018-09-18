@@ -281,7 +281,8 @@
   <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
 	select <include refid="Base_Column_List" /> from
 		(select tmp_tb.* , rownum rn from
-			(select <include refid="Base_Column_List" /> from SAR_BUSS_STAND_PLAN
+			(select <include refid="Base_Column_List" />
+              from SAR_BUSS_STAND_PLAN
 			 <include refid="Base_Where_Clause"/>
 			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
 			 	${pager.orderCondition}
