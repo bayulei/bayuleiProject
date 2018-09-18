@@ -504,8 +504,12 @@ export default {
     },
     // 多选合并为数组显示
     combineToArray (value) {
-      let arrayValue = value.split(',')
-      return arrayValue
+      if (value != null && value !== '') {
+        let arrayValue = value.split(',')
+        return arrayValue
+      } else {
+        return value
+      }
     },
     // 加载数据字典
     loadDicTypeDatas1 () {
