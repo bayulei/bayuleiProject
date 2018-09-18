@@ -197,7 +197,25 @@ export default {
         },
         {
           title: '类型',
-          key: 'roleType'
+          key: 'userType',
+          render: (h, params) => {
+            // let _this = this
+            let texts = ''
+            switch (params.row.userType) {
+              case 'GQYJY' :
+                texts = '广汽研究院'
+                break
+              case 'GQJT' :
+                texts = '广汽集团'
+                break
+              case 'OTHER' :
+                texts = '其他'
+                break
+            }
+            return h('div', {
+              props: {}
+            }, texts)
+          }
         },
         {
           title: '用户名',
@@ -221,7 +239,19 @@ export default {
         },
         {
           title: '状态',
-          key: 'disableFlag'
+          key: 'disableFlag',
+          render: (h, params) => {
+            // let _this = this
+            let texts = ''
+            if (params.row.disableFlag === 0) {
+              texts = '启用'
+            } else {
+              texts = '禁用'
+            }
+            return h('div', {
+              props: {}
+            }, texts)
+          }
         }, {
           title: '操作',
           key: 'action',
@@ -441,22 +471,33 @@ export default {
     },
     // 批量删除
     batchUserDel () {
-      this.$confirm({
-        title: '删除用户',
-        tips: '是否删除用户?',
-        confirm: () => {
-          this.$http.delete('sys/user/', {},
-            { _this: this
-            }, res => {
-              if (res.ok) {
-                this.executeSuccess('删除成功')
-                this.searchUserPage()
-              } else {
-                this.executeError('删除失败! 失败原因:' + res.message)
-              }
-            })
-          this.$Modal.remove()
-        }})
+      // 此处获取选中的数据
+      if (this.clickUserList.length > 0) {
+        let userIds = []
+        for (let i = 0; i < this.clickUserList.length; i++) {
+          let userId = this.clickUserList[i].usid
+          userIds.push(userId)
+        }
+        let userIdsStr = userIds.join(',')
+        this.$confirm({
+          title: '删除用户',
+          tips: '是否删除用户?',
+          confirm: () => {
+            this.$http.delete('sys/user/' + userIdsStr, {},
+              { _this: this
+              }, res => {
+                if (res.ok) {
+                  this.executeSuccess('删除成功')
+                  this.searchUserPage()
+                } else {
+                  this.executeError('删除失败! 失败原因:' + res.message)
+                }
+              })
+            this.$Modal.remove()
+          }})
+      } else {
+        this.executeError('未选择用户，请选择')
+      }
     },
     // 用户查看
     showUser (index) {
@@ -471,7 +512,7 @@ export default {
      * @date: 2018-09-10 14:18:19
      */
     resetSearch () {
-      this.search.userType = 'OTHER'
+      this.search.userType = ''
       this.search.userName = ''
       this.search.roleId = ''
       this.search.disableFlag = ''
