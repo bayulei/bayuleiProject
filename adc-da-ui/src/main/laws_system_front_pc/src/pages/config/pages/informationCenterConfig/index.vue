@@ -237,7 +237,12 @@ export default {
     }
     .header{
       margin-bottom:0.7rem;
-
+    }
+    .content{
+      width: 100%;
+      height: calc(100% - 20px);
+      overflow-x: hidden;
+      overflow-y: auto;
     }
   }
   .hide-modal-footer{

@@ -1,6 +1,6 @@
 <!-- 标准类别 -->
 <template>
-  <div class="standard-classification">
+  <div class="standard-category">
       <table-tools-bar>
         <div slot="left">
             <label-input v-model="standardForm.standName" placeholder="请输入选项" label="选项"></label-input>
@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  name: 'standard-classification',
+  name: 'standard-category',
   data () {
     return {
       modalType: '',
@@ -180,14 +180,18 @@ export default {
       }
     },
     // 删除选择提示框
-    confirm (content, id, url) {
+    confirm (content, id, url, type) {
+      let paramId = {
+        dicTypeEOId: id
+      }
+      let paramIds = {
+        ids: id
+      }
       this.$Modal.confirm({
         title: '请选择',
         content: content,
         onOk: () => {
-          this.$http.delete('sys/dictype/deleteArr', {
-            ids: id
-          }, {
+          this.$http.delete(url, type === 1 ? paramId : paramIds, {
             _this: this
           }, res => {
             this.selectCategory()
@@ -230,8 +234,9 @@ export default {
     // 删除
     categoryDel (id) {
       this.handleSelectAll(false)
-      const url = 'sys/dictype/deleteArr'
-      this.confirm('确定删除这一条数据', id, url)
+      let url = 'sys/dictype/delete'
+      let type = 1
+      this.confirm('确定删除这一条数据', id, url, type)
     },
     // 批量删除
     categoryBatchDel () {
@@ -307,5 +312,5 @@ export default {
 </script>
 
 <style lang="less">
-  .standard-classification {}
+  .standard-category {}
 </style>

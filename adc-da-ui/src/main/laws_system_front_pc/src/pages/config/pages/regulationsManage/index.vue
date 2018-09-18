@@ -14,9 +14,12 @@
 import StandardClassification from './components/StandardClassification'
 import StandardCategory from './components/StandardCategory'
 import NationalArea from './components/NationalArea'
-import ApplicableAuthentication from './components/ApplicableAuthentication'
-import DriveType from './components/DriveType'
+import ProductCategory from './components/ProductCategory'
+import AuthenticationType from './components/AuthenticationType'
 import Category from './components/Category'
+import EnergyTypes from './components/EnergyTypes'
+import DegreeStandard from './components/DegreeStandard'
+import FileState from './components/FileState'
 export default {
   name: 'regulations-manage',
   data () {
@@ -32,14 +35,23 @@ export default {
         title: '国家/地区',
         name: 'NationalArea'
       }, {
-        title: '适用认证',
-        name: 'ApplicableAuthentication'
+        title: '产品类别',
+        name: 'ProductCategory'
       }, {
-        title: '驱动类型',
-        name: 'DriveType'
+        title: '认证类型',
+        name: 'AuthenticationType'
       }, {
         title: '所属类别',
         name: 'Category'
+      }, {
+        title: '能源种类',
+        name: 'EnergyTypes'
+      }, {
+        title: '采标程度',
+        name: 'DegreeStandard'
+      }, {
+        title: '标准/文件状态',
+        name: 'FileState'
       }]
     }
   },
@@ -57,9 +69,12 @@ export default {
     StandardClassification,
     StandardCategory,
     NationalArea,
-    ApplicableAuthentication,
-    DriveType,
-    Category
+    ProductCategory,
+    AuthenticationType,
+    Category,
+    EnergyTypes,
+    DegreeStandard,
+    FileState
   }
 }
 </script>
