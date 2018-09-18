@@ -4,7 +4,7 @@
       <div class="container">
         <div class="header">
           <Button type="info" @click="informationAdd">新增</Button>
-          <Button type="error" style="margin-left: 15px">删除</Button>
+          <!--<Button type="error" style="margin-left: 15px" @click="informationBatchDel">删除</Button>-->
           <!-- 显示模态框 -->
           <Modal v-model="informationModal" :title="informationTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"
                  @on-ok="saveInformation">
@@ -133,16 +133,70 @@ export default {
       this.informationModelAdd.moduleName = row.moduleName
       this.informationModelAdd.id = row.id
     },
+    // 批量删除
+    // informationBatchDel () {
+    //   if (this.selectNum === '' || this.selectNum.length === 0) {
+    //     this.instance('warning', '请选择一条数据进行删除')
+    //   } else {
+    //     let delIds = []
+    //     for (let i = 0; i < this.selectNum.length; i++) {
+    //       delIds.push(this.selectNum[i].id)
+    //     }
+    //     delIds = delIds.join(',')
+    //     const url = 'sys/dictype/deleteArr'
+    //     this.confirm('确认删除该这些数据', delIds, url)
+    //   }
+    // },
     // 删除
     remove (id) {
       this.handleSelectAll(false)
+      let url = '/lawss/msgModule/delete'
+      let type = 1
+      this.confirm('确定删除这一条数据', id, url, type)
+    },
+    // 对话框
+    instance (type, content) {
+      const title = '请选择'
+      switch (type) {
+        case 'info':
+          this.$Modal.info({
+            title: title,
+            content: content
+          })
+          break
+        case 'success':
+          this.$Modal.success({
+            title: title,
+            content: content
+          })
+          break
+        case 'warning':
+          this.$Modal.warning({
+            title: title,
+            content: content
+          })
+          break
+        case 'error':
+          this.$Modal.error({
+            title: title,
+            content: content
+          })
+          break
+      }
+    },
+    // 删除选择提示框
+    confirm (content, id, url, type) {
+      let paramId = {
+        dicTypeEOId: id
+      }
+      let paramIds = {
+        id: id
+      }
       this.$Modal.confirm({
-        title: '确认删除',
-        content: '<p>确认删除该条数据？</p>',
+        title: '请选择',
+        content: content,
         onOk: () => {
-          this.$http.delete('lawss/msgModule', {
-            ids: id
-          }, {
+          this.$http.delete(url, type !== 1 ? paramId : paramIds, {
             _this: this
           }, res => {
             this.selectInformation()
@@ -152,18 +206,6 @@ export default {
         onCancel: () => {
         }
       })
-    },
-    // 批量删除
-    instance (type, content) {
-      const title = '请选择'
-      switch (type) {
-        case 'warning':
-          this.$Modal.warning({
-            title: title,
-            content: content
-          })
-          break
-      }
     },
     //  全选
     handleSelectAll (status) {
@@ -252,5 +294,13 @@ export default {
   }
   .ivu-modal-confirm .ivu-modal-confirm-footer{
     display: block;
+  }
+   .content .ivu-table-wrapper .ivu-table-tip{
+    width: 100%;
+    height: calc(100% - 8px);
+    overflow: hidden;
+  }
+  .content .ivu-table-wrapper .ivu-table-tip table {
+    height: 100%;
   }
 </style>
