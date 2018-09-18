@@ -283,7 +283,7 @@ export default {
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
         issueTime: [
-          { required: true, message: '发布日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '发布日期不能为空', trigger: 'change' }
         ],
         putTime: [
           { required: true, message: '实施日期不能为空', trigger: 'blur' }

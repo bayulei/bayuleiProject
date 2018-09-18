@@ -1,46 +1,46 @@
-<!-- 标准/文件性质 -->
+<!-- 采标程度 -->
 <template>
-  <div class="standard-classification">
-    <table-tools-bar>
-      <div slot="left">
-        <label-input v-model="standardForm.standName" placeholder="请输入选项" label="选项"></label-input>
-        <label-input v-model="standardForm.standCode" placeholder="请输入选项" label="数据编码"></label-input>
-        <Button type="info" class="query-button" @click="selectClass">查询</Button>
-      </div>
-      <div slot="right">
-        <Button type="info" @click="classAdd">增加</Button>
-        <Button type="error"  @click="classBatchDel">删除</Button>
-        <!--显示模态框-->
-        <Modal v-model="classModal" :title="classTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"
-               @on-ok="saveClass">
-          <Form :model="classModelAdd" label-position="right" :label-width="80">
-            <input v-model="classModelAdd.id" v-show="false">
-            <FormItem label="选项">
-              <Input v-model="classModelAdd.parts" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
-            </FormItem>
-            <FormItem label="数据编码">
-              <Input v-model="classModelAdd.coding" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
-            </FormItem>
-          </Form>
-        </Modal>
-      </div>
-    </table-tools-bar>
-    <div class="content">
-      <loading :loading="loading">数据获取中</loading>
-      <Table border ref="selection" :columns="classTable" :data="classData" @on-selection-change=" handleSelectone">
-      </Table>
-      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-    </div>
-  </div>
+ <div id="degree-standard">
+   <table-tools-bar>
+     <div slot="left">
+       <label-input v-model="standardForm.standName" placeholder="请输入选项" label="选项"></label-input>
+       <label-input v-model="standardForm.standCode" placeholder="请输入选项" label="数据编码"></label-input>
+       <Button type="info" class="query-button" @click="selectCollection">查询</Button>
+     </div>
+     <div slot="right">
+       <Button type="info" @click="collectionAdd">增加</Button>
+       <Button type="error"  @click="collectionBatchDel">删除</Button>
+       <!--显示模态框-->
+       <Modal v-model="collectionModal" :title="collectionTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"
+              @on-ok="saveCollection">
+         <Form :model="collectionModelAdd" label-position="right" :label-width="80">
+           <input v-model="collectionModelAdd.id" v-show="false">
+           <FormItem label="选项">
+             <Input v-model="collectionModelAdd.parts" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
+           </FormItem>
+           <FormItem label="数据编码">
+             <Input v-model="collectionModelAdd.coding" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
+           </FormItem>
+         </Form>
+       </Modal>
+     </div>
+   </table-tools-bar>
+   <div class="content">
+     <loading :loading="loading">数据获取中</loading>
+     <Table border ref="selection" :columns="collectionTable" :data="collectionData" @on-selection-change=" handleSelectone">
+     </Table>
+     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
+   </div>
+ </div>
 </template>
 
 <script>
 export default {
-  name: 'standard-classification',
+  name: 'degree-standard',
   data () {
     return {
       modalType: '',
-      classTitle: '', // 模态框标题
+      collectionTitle: '', // 模态框标题
       selectNum: '', // 接收选中行数据
       standardForm: {
         standName: '', // 选项
@@ -51,13 +51,13 @@ export default {
       page: 1,
       rows: 10,
       loading: false,
-      classModelAdd: {
+      collectionModelAdd: {
         parts: '', // 模态框标准
         coding: ''// 数据编码
       },
-      classModal: false, // 模态框是否打开
+      collectionModal: false, // 模态框是否打开
       // 表格表头
-      classTable: [
+      collectionTable: [
         {
           type: 'selection',
           width: 60,
@@ -100,7 +100,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.classEdit(params.row)
+                    this.collectionEdit(params.row)
                   }
                 }
               }, '编辑'),
@@ -128,7 +128,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.classDel(params.row.id)
+                    this.collectionDel(params.row.id)
                   }
                 }
               }, '删除')
@@ -137,7 +137,7 @@ export default {
         }
       ],
       // 表格内容
-      classData: []
+      collectionData: []
     }
   },
   methods: {
@@ -162,36 +162,36 @@ export default {
       }
     },
     // 新增
-    classAdd () {
-      this.classModal = true
+    collectionAdd () {
+      this.collectionModal = true
       this.modalType = 1
       // 取消所有的选中效果
       this.handleSelectAll(false)
-      this.classTitle = '新增标准'
-      this.classModelAdd.parts = ''
-      this.classModelAdd.coding = ''
-      this.classModelAdd.id = ''
+      this.collectionTitle = '新增标准'
+      this.collectionModelAdd.parts = ''
+      this.collectionModelAdd.coding = ''
+      this.collectionModelAdd.id = ''
     },
     // 编辑
-    classEdit (item) {
-      this.classModal = true
+    collectionEdit (item) {
+      this.collectionModal = true
       this.modalType = 2
-      this.classTitle = '编辑标准'
-      this.classModelAdd.parts = item.dicTypeName
-      this.classModelAdd.coding = item.dicTypeCode
-      this.classModelAdd.id = item.id
+      this.collectionTitle = '编辑标准'
+      this.collectionModelAdd.parts = item.dicTypeName
+      this.collectionModelAdd.coding = item.dicTypeCode
+      this.collectionModelAdd.id = item.id
     },
     // 查看
     viewData (row) {
-      this.classModal = true
+      this.collectionModal = true
       this.modalType = 3
-      this.classTitle = '查看标准'
-      this.classModelAdd.parts = row.dicTypeName
-      this.classModelAdd.coding = row.dicTypeCode
-      this.classModelAdd.id = row.id
+      this.collectionTitle = '查看标准'
+      this.collectionModelAdd.parts = row.dicTypeName
+      this.collectionModelAdd.coding = row.dicTypeCode
+      this.collectionModelAdd.id = row.id
     },
     // 删除
-    classDel (id) {
+    collectionDel (id) {
       this.handleSelectAll(false)
       this.$Modal.confirm({
         title: '确认删除',
@@ -202,7 +202,7 @@ export default {
           }, {
             _this: this
           }, res => {
-            this.selectClass()
+            this.selectCollection()
           }, e => {
           })
         },
@@ -211,7 +211,7 @@ export default {
       })
     },
     // 批量删除
-    classBatchDel () {
+    collectionBatchDel () {
       if (this.selectNum === '' || this.selectNum.length === 0) {
         this.instance('warning', '请选择一条数据进行删除')
       } else {
@@ -229,7 +229,7 @@ export default {
             }, {
               _this: this
             }, res => {
-              this.selectClass()
+              this.selectCollection()
             }, e => {
             })
           },
@@ -240,53 +240,53 @@ export default {
     },
     pageChange (page) {
       this.page = page
-      this.selectClass()
+      this.selectCollection()
     },
     pageSizeChange (pageSize) {
       this.rows = pageSize
-      this.selectClass()
+      this.selectCollection()
     },
     // 加载表格
-    selectClass () {
+    selectCollection () {
       this.$http.get('sys/dictype/page', {
         pageNo: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
         dicTypeCode: this.standardForm.standCode,
-        dicId: 'FDFDFDVFTGR'
+        dicId: 'VBERTFDGGF'
       }, {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.classData = res.data.list
+        this.collectionData = res.data.list
         this.total = res.data.count
       }, e => {})
     },
     // 提交新增/修改
-    saveClass () {
+    saveCollection () {
       let data = {
-        dicTypeName: this.classModelAdd.parts,
-        dicTypeCode: this.classModelAdd.coding,
-        dicId: 'FDFDFDVFTGR'
+        dicTypeName: this.collectionModelAdd.parts,
+        dicTypeCode: this.collectionModelAdd.coding,
+        dicId: 'VBERTFDGGF'
       }
       if (this.modalType === 1) {
         this.$http.postData('sys/dictype/create', data, {
           _this: this
         }, res => {
-          this.selectClass()
+          this.selectCollection()
         }, e => {
 
         })
       } else if (this.modalType === 2) {
         this.$http.putData('sys/dictype', {
-          dicTypeName: this.classModelAdd.parts,
-          dicTypeCode: this.classModelAdd.coding,
-          dicId: 'FDFDFDVFTGR',
-          id: this.classModelAdd.id
+          dicTypeName: this.collectionModelAdd.parts,
+          dicTypeCode: this.collectionModelAdd.coding,
+          dicId: 'VBERTFDGGF',
+          id: this.collectionModelAdd.id
         }, {
           _this: this
         }, res => {
-          this.selectClass()
+          this.selectCollection()
         }, e => {
 
         })
@@ -294,20 +294,11 @@ export default {
     }
   },
   mounted () {
-    this.selectClass()
+    this.selectCollection()
   }
 }
 </script>
 
 <style lang="less">
-  .standard-classification {
-  }
-  .hide-modal-footer{
-    .ivu-modal-footer{
-      display: none;
-    }
-  }
-  .ivu-modal-confirm .ivu-modal-confirm-footer{
-    display: block;
-  }
+   #degree-standard{}
 </style>
