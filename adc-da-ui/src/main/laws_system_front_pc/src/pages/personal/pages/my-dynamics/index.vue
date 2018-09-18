@@ -4,7 +4,7 @@
     <table-tools-bar>
       <div slot="left">
         <label-input v-model="search.dynamicsName" placeholder="请输入动态信息" label="动态搜索"></label-input>
-        <Button type="info" @click="dynamicsSelect">查询</Button>
+        <Button type="info" @click="selectDynamics">查询</Button>
       </div>
       <div slot="right"></div>
     </table-tools-bar>
@@ -14,12 +14,14 @@
           <Row>
             <Col span="19"  offset="1">
               <Icon type="md-bookmark" />
-              <span >{{item.text}}</span>
+              <span >{{item.msgTitle}}</span>
             </Col>
             <Col span="4">{{item.creationTime}}</Col>
           </Row>
         </Card>
       </div>
+      <div v-if="total===0">暂无数据</div>
+      <loading :loading="loading">数据获取中</loading>
       <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
     </div>
   </div>
@@ -33,36 +35,27 @@ export default {
       search: {
         dynamicsName: ''
       },
+      loading: false,
       total: 0,
       page: 1,
       rows: 10,
-      dynamicsList: [{
-        text: 'XX标准已更新',
-        creationTime: '2018年/09/13  12：00'
-      }, {
-        text: 'XX标准已更新',
-        creationTime: '2018年/09/13  12：00'
-      }, {
-        text: 'XX标准已更新',
-        creationTime: '2018年/09/13  12：00'
-      }]
+      dynamicsList: []
     }
   },
   methods: {
     // 查找
-    dynamicsSelect () {
-    },
     selectDynamics () {
       this.$http.get('person/personMsg/page', {
-        page: this.page,
+        pageNo: this.page,
         pageSize: this.rows,
-        msgTitle: '',
-        msgContent: ''
+        msgTitle: this.search.dynamicsName
+        // msgContent: this.search.dynamicsName
       }, {
         _this: this,
         loading: 'loading'
       }, res => {
-        console.log(res)
+        this.dynamicsList = res.data.list
+        this.total = res.data.count
       }, e => {})
     },
     pageChange (page) {
@@ -85,7 +78,7 @@ export default {
     background: #FFF;
     padding: 0.2rem 0.3rem;
     .content .ivu-card-body{
-      padding: 12px;
+      padding: 1rem;
     }
   }
 </style>

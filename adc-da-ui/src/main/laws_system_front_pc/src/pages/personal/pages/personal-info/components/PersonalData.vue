@@ -89,7 +89,9 @@ export default {
       console.log(avator)
     },
     searchPersonal () {
-      this.$http.get('person/userInfo', {}, {
+      this.$http.get('/person/userInfo/userInfo', {
+        userId: 1
+      }, {
         _this: this,
         loading: 'loading'
       }, res => {
