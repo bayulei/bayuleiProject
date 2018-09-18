@@ -10,16 +10,16 @@
        <div slot="left">
          <label-select v-model="sarStandardsSearch.country" :options="countryOptions" label="国家/地区" placeholder="根据国家/地区查找"></label-select>
          <label-input v-model="sarStandardsSearch.standNumber" placeholder="根据标准号查找" clearable label="标准编号" class="my-input" />
-         <br><br>
-         <label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />
-         <label-select v-model="sarStandardsSearch.standState" :options="standStateOptions" label="标准状态" placeholder="根据标准状态查找"></label-select>
-         <label-select v-model="sarStandardsSearch.standNature" :options="standNatureOptions"  placeholder="根据标准性质查找" clearable label="标准性质"  />
-         <label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />
-         <label-select v-model="sarStandardsSearch.applyArctic" :options="applyArcticOptions" placeholder="根据适用车型查找" clearable label="适用车型" class="my-input" />
-         <label-input v-model="sarStandardsSearch.replaceStandNum" placeholder="根据代替标准查找" clearable label="代替标准" class="my-input" />
-         <label-input v-model="sarStandardsSearch.replacedStandNum" placeholder="根据代替标准查找" clearable label="被代替标准" class="my-input" />
+         <!--<br><br>-->
+         <!--<label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />-->
+         <!--<label-select v-model="sarStandardsSearch.standState" :options="standStateOptions" label="标准状态" placeholder="根据标准状态查找"></label-select>-->
+         <!--<label-select v-model="sarStandardsSearch.standNature" :options="standNatureOptions"  placeholder="根据标准性质查找" clearable label="标准性质"  />-->
+         <!--<label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />-->
+         <!--<label-select v-model="sarStandardsSearch.applyArctic" :options="applyArcticOptions" placeholder="根据适用车型查找" clearable label="适用车型" class="my-input" />-->
+         <!--<label-input v-model="sarStandardsSearch.replaceStandNum" placeholder="根据代替标准查找" clearable label="代替标准" class="my-input" />-->
+         <!--<label-input v-model="sarStandardsSearch.replacedStandNum" placeholder="根据代替标准查找" clearable label="被代替标准" class="my-input" />-->
          <Button type="primary" icon="ios-search" :loading="searching" @click="getDomesticStandardTable"></Button>
-         <Button type="primary"  @click="clearAllSearch">清空查询</Button>
+         <Button type="primary"  @click="clearAllSearch">重置</Button>
        </div>
        <div slot="right">
          <Button type="primary" @click="isAdvancedSearch = true">高级检索</Button>
@@ -78,7 +78,7 @@
      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
      <!-- 新增、编辑模态窗 -->
      <full-modal v-model="modalshowflag" v-if="modalshowflag" ref="modalshow" >
-       <!--    新增样式     -->
+       <!-- 新增样式 -->
        <div class="standards-info-form">
          <Form ref="sarStandardsInfoForm" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" class="label-input-form">
            <Row>
@@ -845,6 +845,68 @@ export default {
         this.total = res.data.count
       }, e => {
       })
+      // this.stahndinfoList = [
+      //   {
+      //     checked: false,
+      //     id: '1000',
+      //     standNumber: 'BZ10000',
+      //     standName: '驱动系统',
+      //     standState: '待发布',
+      //     standNature: '1',
+      //     putTime: '2018/09/18',
+      //     issueTime: '2018/10/01'
+      //   },
+      //   {
+      //     checked: false,
+      //     id: '1001',
+      //     standNumber: 'BZ10001',
+      //     standName: '排气系统',
+      //     standState: '待发布',
+      //     standNature: '1',
+      //     putTime: '2018/09/17',
+      //     issueTime: '2018/10/01'
+      //   },
+      //   {
+      //     checked: false,
+      //     id: '1002',
+      //     standNumber: 'BZ10002',
+      //     standName: '轮胎性能测试',
+      //     standState: '已发布',
+      //     standNature: '1',
+      //     putTime: '2018/08/01',
+      //     issueTime: '2018/09/01'
+      //   },
+      //   {
+      //     checked: false,
+      //     id: '1003',
+      //     standNumber: 'BZ10003',
+      //     standName: '燃油测试',
+      //     standState: '已发布',
+      //     standNature: '2',
+      //     putTime: '2018/08/15',
+      //     issueTime: '2018/10/01'
+      //   },
+      //   {
+      //     checked: false,
+      //     id: '1004',
+      //     standNumber: 'BZ10004',
+      //     standName: '安全气囊',
+      //     standState: '待发布',
+      //     standNature: '1',
+      //     putTime: '2018/07/15',
+      //     issueTime: '2018/09/20'
+      //   },
+      //   {
+      //     checked: false,
+      //     id: '1005',
+      //     standNumber: 'BZ10005',
+      //     standName: '发动机性能测试',
+      //     standState: '已发布',
+      //     standNature: '2',
+      //     putTime: '2018/06/26',
+      //     issueTime: '2018/09/01'
+      //   }
+      // ]
     },
     // 分页点击后方法
     pageChange (page) {
@@ -1357,7 +1419,7 @@ export default {
           card.addClass('domBtn_Disabled')
           card.removeClass('domBtn')
           let curDom = ''
-          curDom = $("<div class='dom_tmp'>" + card.html() + '</div>')
+          curDom = $("<div class='dom_tmp iconfont'>&#xe64b;</div>")
           curDom.appendTo('body')
 
           curDom.css({
@@ -1448,12 +1510,9 @@ export default {
     this.setting = setting
 
     let zNodes = [
-      {id: 1, pId: 0, name: '植物', isParent: true, open: true},
-      {id: 2, pId: 0, name: '动物', isParent: true, open: true},
-      {id: 20, pId: 2, name: '大象', isParent: true},
-      {id: 29, pId: 2, name: '鲨鱼', isParent: true},
-      {id: 10, pId: 1, name: '大白菜', isParent: true},
-      {id: 19, pId: 1, name: '西红柿', isParent: true}
+      {id: 1, pId: 0, name: '全部标准', isParent: true, open: true},
+      {id: 11, pId: 1, name: '强制性标准', isParent: true, open: true},
+      {id: 12, pId: 1, name: '推荐性标准', isParent: true, open: true}
     ]
     this.zNodes = zNodes
 
@@ -1516,22 +1575,13 @@ export default {
   .domBtn {border:1px gray solid;background-color:#FFE6B0}
   .domBtn_Disabled {border:1px gray solid;background-color:#DFDFDF;color:#999999}
   .dom_tmp {
+    width: 50px;
+    height: 50px;
     position:absolute;
-    padding: 15px;
-    background: #FFE6B0;
-    border: 1px solid gray;
-    width: 75%;
-    height: 100px;
-    .ivu-row{
-      height: 50%;
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      display: -ms-flex;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      align-items: center;
-    }
+    color: #FFE6B0;
+    font-size: 50px;
+    display: flex;
+    align-items: flex-start;
   }
   .active {background-color: #93C3CF}
 </style>

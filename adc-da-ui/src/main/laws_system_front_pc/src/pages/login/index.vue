@@ -5,7 +5,7 @@
       <img :src="logo" alt="logo">
     </div>
     <div class="login-content">
-      <div class="login-form">
+      <div class="login-form" @keyup.enter="signin">
         <div class="username">
           <div class="label">用户名</div>
           <div class="login-input">
@@ -59,8 +59,18 @@ export default {
      * @date: 2018-08-30 19:18:30
      */
     signin () {
-      this.setToken('isLogin')
-      this.$router.push('/')
+      if (this.username === '') {
+        this.$Message.warning('用户名不能为空')
+      } else if (this.password === '') {
+        this.$Message.warning('密码不能为空')
+      } else {
+        if (this.username === 'admin' && this.password === '123456') {
+          this.setToken('isLogin')
+          this.$router.push('/')
+        } else {
+          this.$Message.warning('用户名:admin 密码:123456')
+        }
+      }
     },
     /**
      * @description: vuex拓展方法
@@ -86,7 +96,7 @@ export default {
     background-size: 100%;
     background-repeat: no-repeat;
     position: relative;
-    background: url("~assets/images/login/login-bg.png");
+    background: url("../../assets/images/login/login-bg.png");
     .logo{
       width: 7.5rem;
       padding: 0.36rem 0 0 0.64rem;

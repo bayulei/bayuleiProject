@@ -47,6 +47,9 @@ const routes = [
     name: 'Personal',
     redirect: '/info',
     component: resolve => require(['pages/personal'], resolve),
+    meta: {
+      title: '个人'
+    },
     children: [
       {
         path: '/info',
@@ -109,6 +112,9 @@ const routes = [
     name: 'Config',
     redirect: '/regulationsManage',
     component: resolve => require(['pages/config'], resolve),
+    meta: {
+      title: '配置'
+    },
     children: [
       {
         path: '/regulationsManage',
@@ -116,7 +122,7 @@ const routes = [
         component: resolve => require(['pages/config/pages/regulationsManage'], resolve),
         meta: {
           requireAuth: true,
-          title: '标准法规属性管理'
+          title: '法规属性'
         }
       },
       {
@@ -125,7 +131,7 @@ const routes = [
         component: resolve => require(['pages/config/pages/informationCenterConfig'], resolve),
         meta: {
           requireAuth: true,
-          title: '资料中心模块配置'
+          title: '资料中心'
         }
       },
       {
@@ -161,7 +167,7 @@ const routes = [
         component: resolve => require(['pages/config/pages/dynamicInformationManage'], resolve),
         meta: {
           requireAuth: true,
-          title: '动态信息管理'
+          title: '动态信息'
         }
       },
       {
@@ -170,7 +176,7 @@ const routes = [
         component: resolve => require(['pages/config/pages/warningTimeSetting'], resolve),
         meta: {
           requireAuth: true,
-          title: '预警时间设置'
+          title: '预警时间'
         }
       }
     ]
@@ -181,6 +187,9 @@ const routes = [
     name: 'StatuteBank',
     redirect: '/domesticStandardDatabase',
     component: resolve => require(['pages/statuteBank'], resolve),
+    meta: {
+      title: '法规库'
+    },
     children: [
       {
         path: '/domesticStandardDatabase',
@@ -233,7 +242,7 @@ const routes = [
         component: resolve => require(['pages/statuteBank/pages/accessStandardsAndRegulations'], resolve),
         meta: {
           requireAuth: true,
-          title: '准入标准法规清单'
+          title: '法规清单'
         }
       },
       {
@@ -251,7 +260,7 @@ const routes = [
         component: resolve => require(['pages/statuteBank/pages/localProductDatabase'], resolve),
         meta: {
           requireAuth: true,
-          title: '本地产品/项目库'
+          title: '产品项目库'
         }
       }
     ]
@@ -305,7 +314,7 @@ const routes = [
 
 const router = new VueRouter({
   routes,
-  mode: 'history', // default: hash ,history
+  mode: 'hash', // default: hash ,history
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition

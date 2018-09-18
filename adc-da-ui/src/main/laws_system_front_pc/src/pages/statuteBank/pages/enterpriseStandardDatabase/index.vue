@@ -11,12 +11,12 @@
           <label-input v-model="sarStandardsSearch.classifyCode" placeholder="根据分类代号查找" clearable label="分类代号" class="my-input" />
           <label-input v-model="sarStandardsSearch.standCode" placeholder="根据标准编号查找" clearable label="标准编号" class="my-input" />
           <label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />
-          <br><br>
-          <label-input v-model="sarStandardsSearch.standGenera" placeholder="根据标准大类查找" clearable label="标准大类" class="my-input" />
-          <label-input v-model="sarStandardsSearch.standSubclass" placeholder="根据标准细类查找" clearable label="标准细类" class="my-input" />
-          <label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />
-          <label-select v-model="sarStandardsSearch.putTime" :options="putTimeOptions" placeholder="根据实施日期查找" clearable label="实施日期" class="my-input" />
-          <label-input v-model="sarStandardsSearch.responsibleUnit" placeholder="根据责任部门查找" clearable label="责任部门" class="my-input" />
+          <!--<br><br>-->
+          <!--<label-input v-model="sarStandardsSearch.standGenera" placeholder="根据标准大类查找" clearable label="标准大类" class="my-input" />-->
+          <!--<label-input v-model="sarStandardsSearch.standSubclass" placeholder="根据标准细类查找" clearable label="标准细类" class="my-input" />-->
+          <!--<label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />-->
+          <!--<label-select v-model="sarStandardsSearch.putTime" :options="putTimeOptions" placeholder="根据实施日期查找" clearable label="实施日期" class="my-input" />-->
+          <!--<label-input v-model="sarStandardsSearch.responsibleUnit" placeholder="根据责任部门查找" clearable label="责任部门" class="my-input" />-->
           <Button type="primary" icon="ios-search" :loading="searching" @click="getBussionStandTable"></Button>
           <Button type="primary"  @click="clearAllSearch">清空查询</Button>
         </div>

@@ -10,14 +10,14 @@
         <div slot="left">
           <label-select v-model="sarStandardsSearch.country" :options="countryOptions" label="国家/地区" placeholder="根据国家/地区查找"></label-select>
           <label-input v-model="sarStandardsSearch.standNumber" placeholder="根据标准号查找" clearable label="标准编号" class="my-input" />
-          <br><br>
-          <label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />
-          <label-select v-model="sarStandardsSearch.standState" :options="standStateOptions" label="标准状态" placeholder="根据标准状态查找"></label-select>
-          <label-select v-model="sarStandardsSearch.standNature" :options="standNatureOptions"  placeholder="根据标准性质查找" clearable label="标准性质"  />
-          <label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />
-          <label-select v-model="sarStandardsSearch.applyArctic" :options="applyArcticOptions" placeholder="根据适用车型查找" clearable label="适用车型" class="my-input" />
-          <label-input v-model="sarStandardsSearch.replaceStandNum" placeholder="根据代替标准查找" clearable label="代替标准" class="my-input" />
-          <label-input v-model="sarStandardsSearch.replacedStandNum" placeholder="根据代替标准查找" clearable label="被代替标准" class="my-input" />
+          <!--<br><br>-->
+          <!--<label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />-->
+          <!--<label-select v-model="sarStandardsSearch.standState" :options="standStateOptions" label="标准状态" placeholder="根据标准状态查找"></label-select>-->
+          <!--<label-select v-model="sarStandardsSearch.standNature" :options="standNatureOptions"  placeholder="根据标准性质查找" clearable label="标准性质"  />-->
+          <!--<label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />-->
+          <!--<label-select v-model="sarStandardsSearch.applyArctic" :options="applyArcticOptions" placeholder="根据适用车型查找" clearable label="适用车型" class="my-input" />-->
+          <!--<label-input v-model="sarStandardsSearch.replaceStandNum" placeholder="根据代替标准查找" clearable label="代替标准" class="my-input" />-->
+          <!--<label-input v-model="sarStandardsSearch.replacedStandNum" placeholder="根据代替标准查找" clearable label="被代替标准" class="my-input" />-->
           <Button type="primary" icon="ios-search" :loading="searching" @click="getDomesticStandardTable"></Button>
           <Button type="primary"  @click="clearAllSearch">清空查询</Button>
         </div>

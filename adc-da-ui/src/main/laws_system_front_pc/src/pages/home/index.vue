@@ -151,11 +151,11 @@ export default {
           path: '/',
           name: 'home'
         },
-        {
-          title: '云端资源库',
-          path: '/yunduanziyuanku',
-          name: 'yunduanziyuanku'
-        },
+        // {
+        //   title: '云端资源库',
+        //   path: '/yunduanziyuanku',
+        //   name: 'yunduanziyuanku'
+        // },
         {
           title: '本地资源库',
           path: '/bendiziyuanku',
@@ -419,7 +419,7 @@ export default {
   .home{
     width: 100%;
     height: 100%;
-    background: url("~assets/images/home/bg.png") no-repeat;
+    background: url("../../assets/images/home/bg.png") no-repeat;
     background-position: top center;
     background-attachment: fixed;
     background-size: cover;
@@ -432,7 +432,7 @@ export default {
       .logo{
         width: 22.7%;
         height: 58.75%;
-        background: url('~assets/images/home/logo.png') no-repeat;
+        background: url('../../assets/images/home/logo.png') no-repeat;
         background-position: left center;
         background-size: 85%;
       }
