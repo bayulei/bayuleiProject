@@ -5,6 +5,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.lawss.entity.SarProductStandEO;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,11 +95,29 @@ public class SarProductInfoEOController extends BaseController<SarProductInfoEO>
 
     @ApiOperation(value = "|SarProductInfoEO|删除")
     @DeleteMapping("/{id}")
-    @RequiresPermissions("lawss:sarProductInfo:delete")
+   // @RequiresPermissions("lawss:sarProductInfo:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         sarProductInfoEOService.deleteByPrimaryKey(id);
         logger.info("delete from SAR_PRODUCT_INFO where id = {}", id);
         return Result.success();
+    }
+
+    @ApiOperation(value = "|SarProductInfoEO|查询企业产品关联标准法规")
+    @PostMapping("/selectProductLawAndStand")
+    // @RequiresPermissions("lawss:sarProductInfo:delete")
+    public ResponseMessage<Map<String,List<SarProductStandEO>>> selectProductLawAndStand(SarProductInfoEOPage sarProductInfoEOPage) throws Exception {
+        Map<String,List<SarProductStandEO>> resutl = sarProductInfoEOService.selectProductLawAndStandByKey(sarProductInfoEOPage);
+        logger.info("delete from SAR_PRODUCT_INFO where id = {}");
+        return Result.success(resutl);
+    }
+
+    @ApiOperation(value = "|SarProductInfoEO|根据产品属性（产品种类，能源种类），匹配标准中的属性，筛选出符合属性的标准")
+    @PostMapping("/selectLawAndStandByPro")
+    // @RequiresPermissions("lawss:sarProductInfo:delete")
+    public ResponseMessage<List<SarProductStandEO>> selectLawAndStandByPro(SarProductInfoEOPage sarProductInfoEOPage) throws Exception {
+        List<SarProductStandEO> resutl = sarProductInfoEOService.selectLawAndStandByPro(sarProductInfoEOPage);
+        logger.info("delete from SAR_PRODUCT_INFO where id = {}");
+        return Result.success(resutl);
     }
 
 }
