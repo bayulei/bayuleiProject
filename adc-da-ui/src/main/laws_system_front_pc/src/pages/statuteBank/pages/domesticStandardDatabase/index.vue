@@ -1135,7 +1135,7 @@ export default {
      * @date: 2018-09-15 10:47:57
      */
     handleMousedown (event) {
-      alert(event.screenX + '，' + event.screenY)//   IE浏览器兼容
+      console.log(event.screenX + '，' + event.screenY)//   IE浏览器兼容
     },
     handleMouseup (item, event) {
       item.checked = !item.checked
