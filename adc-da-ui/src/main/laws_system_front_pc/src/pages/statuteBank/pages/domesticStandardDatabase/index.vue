@@ -25,7 +25,7 @@
          <Button type="error" size="small" @click="clickDropMenu('deleteMenu')">删除</Button>
        </div>
        <div class="content-detail" v-if="stahndinfoList.length > 0">
-         <div class="card domBtn" v-for="(item, index) in stahndinfoList" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
+         <div class="card domBtn" v-for="(item, index) in stahndinfoList" :key="index" :class="{ 'selected': item.checked }" @mousedown="handleMousedown($event)" @mouseup="handleMouseup(item, $event)">
              <Row>
                <Col span="5">
                  <Checkbox v-model="item.checked" size="large"></Checkbox>
@@ -804,7 +804,11 @@ export default {
       // tree setting
       setting: '',
       // tree zNodes
-      zNodes: []
+      zNodes: [],
+      // ztree 拖拽标志
+      dragFlag: false,
+      mousedown: '',
+      mouoseup: ''
     }
   },
   methods: {
@@ -1094,7 +1098,10 @@ export default {
      * @author: chenxiaoxi
      * @date: 2018-09-15 10:47:57
      */
-    handleCardClick (item, event) {
+    handleMousedown (event) {
+      alert(event.screenX + '，' + event.screenY)//   IE浏览器兼容
+    },
+    handleMouseup (item, event) {
       item.checked = !item.checked
     },
     renderContent (h, { root, node, data }) {
