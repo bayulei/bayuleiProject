@@ -3,6 +3,14 @@
  <div id="domesticStandardDatabase">
    <div class="tree">
      <ul id="treeDemo" class="ztree"></ul>
+     <Dropdown trigger="click" style="margin-left: 20px" @on-click="clickDropMenu">
+       <Button type="primary" icon="ios-arrow-down">设置</Button>
+       <DropdownMenu slot="list">
+         <DropdownItem name="newMenu">新建</DropdownItem>
+         <DropdownItem name="editMenu">编辑</DropdownItem>
+         <DropdownItem name="deleteMenu">删除</DropdownItem>
+       </DropdownMenu>
+     </Dropdown>
    </div>
    <div class="tree-right">
      <!-- 顶部工具栏 -->
@@ -31,14 +39,6 @@
          <Button type="info" size="small" @click="exportStandard">下载</Button>
          <Button type="primary" size="small" @click="addModal">新增</Button>
          <Button type="error" size="small" @click="clickDropMenu('deleteMenu')">删除</Button>
-         <Dropdown trigger="click" style="margin-left: 20px" @on-click="clickDropMenu">
-           <Button type="primary" icon="ios-arrow-down">设置</Button>
-           <DropdownMenu slot="list">
-             <DropdownItem name="newMenu">新建</DropdownItem>
-             <DropdownItem name="editMenu">编辑</DropdownItem>
-             <DropdownItem name="deleteMenu">删除</DropdownItem>
-           </DropdownMenu>
-         </Dropdown>
          <Button type="primary" icon="ios-add" :loading="searching" @click="addImportModal(1)">导入标准</Button>
          <Button type="primary" @click="configurationStandard">配置标准</Button>
        </div>
