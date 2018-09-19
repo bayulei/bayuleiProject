@@ -76,13 +76,18 @@
        <loading :loading="loading">数据获取中</loading>
      </div>
      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-     <!-- 新增、编辑模态窗 -->
-     <full-modal v-model="modalshowflag" v-if="modalshowflag" ref="modalshow" >
+     <Drawer
+       title="国内法规标准库"
+       v-model="modalshowflag"
+       width="850"
+       :styles="styles"
+       @on-close="resetForm"
+     >
        <!-- 新增样式 -->
        <div class="standards-info-form">
          <Form ref="sarStandardsInfoForm" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" class="label-input-form">
-           <Row>
-             <Col span="8">
+           <Row gutter="5">
+             <Col span="12">
                <FormItem label="国家/地区" prop="country" class="standards-info-item">
                  <!--<Input v-model="sarStandardsInfoEO.country" disabled="disabled"></Input>-->
                  <Select v-model="sarStandardsInfoEO.country" disabled>
@@ -90,220 +95,237 @@
                  </Select>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="标准类别" prop="standSort" class="standards-info-item">
                  <Select v-model="sarStandardsInfoEO.standSort" :disabled="formdisableflag">
                    <Option v-for="opt in standSortOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
                  </Select>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="适用车型" prop="applyArctic" class="standards-info-item">
                  <Select v-model="sarStandardsInfoEO.applyArctic" multiple :disabled="formdisableflag" >
                    <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                  </Select>
                </FormItem>
              </Col>
-           </Row>
-           <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="标准编号" prop="standNumber" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.standNumber" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="标准年份" prop="standYear" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.standYear" :disabled="formdisableflag" ></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="标准名称" prop="standName" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.standName" :disabled="formdisableflag" ></Input>
                </FormItem>
              </Col>
            </Row>
            <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="标准英文名称" prop="standEnName" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.standEnName" :disabled="formdisableflag" ></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="标准状态" prop="standState" class="standards-info-item">
                  <Select v-model="sarStandardsInfoEO.standState" :disabled="formdisableflag" >
                    <Option v-for="opt in standStateOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
                  </Select>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="标准性质" prop="standNature" class="standards-info-item">
                  <Select v-model="sarStandardsInfoEO.standNature" :disabled="formdisableflag">
                    <Option v-for="opt in standNatureOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
                  </Select>
                </FormItem>
              </Col>
-           </Row>
-           <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="代替标准号" prop="replaceStandNum" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.replaceStandNum" @on-blur="testReplaceStandNum" placeholder="输入多个标准号，以逗号隔开" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="被代替标准号" prop="replacedStandNum" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.replacedStandNum" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="采用国际标准号" prop="interStandNum" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.interStandNum" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
            </Row>
            <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="采标程度" prop="adoptExtent" class="standards-info-item">
                  <Select v-model="sarStandardsInfoEO.adoptExtent" :disabled="formdisableflag">
                    <Option v-for="opt in adoptExtentOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
                  </Select>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="能源种类" prop="emergyKind" class="standards-info-item">
                  <Select v-model="sarStandardsInfoEO.emergyKind" multiple :disabled="formdisableflag">
                    <Option v-for="opt in emergyKindOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
                  </Select>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="适用认证" prop="applyAuth" class="standards-info-item">
                  <Select v-model="sarStandardsInfoEO.applyAuth" multiple :disabled="formdisableflag">
                    <Option v-for="opt in applyAuthOptions" :value="opt.value" :key="opt.value">{{ opt.label }}</Option>
                  </Select>
                </FormItem>
              </Col>
-           </Row>
-           <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="发布日期" prop="issueTime" class="standards-info-item">
                  <DatePicker v-model="sarStandardsInfoEO.issueTime" :disabled="formdisableflag"></DatePicker>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="实施日期" prop="putTime" class="standards-info-item">
                  <DatePicker v-model="sarStandardsInfoEO.putTime" :disabled="formdisableflag"></DatePicker>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="新定型车实施日期" prop="newcarPutTime" class="standards-info-item">
                  <DatePicker v-model="sarStandardsInfoEO.newcarPutTime" :disabled="formdisableflag"></DatePicker>
                </FormItem>
              </Col>
            </Row>
            <Row>
-             <Col span="8">
-               <FormItem label="在产车实施日期" prop="productPutTime" class="standards-info-item">
+             <Col span="12">
+               <FormItem label="在产车实施日期" prop="productPutTime" class="standards-info-item" title="在产车实施日期">
                  <DatePicker v-model="sarStandardsInfoEO.productPutTime" :disabled="formdisableflag"></DatePicker>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="新生产车实施日期" prop="newproductPutTime" class="standards-info-item">
                  <DatePicker v-model="sarStandardsInfoEO.newproductPutTime" :disabled="formdisableflag"></DatePicker>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="起草单位" prop="draftingUnit" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.draftingUnit" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-           </Row>
-           <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="起草人" prop="draftUser" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.draftUser" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="标准文本" prop="standFile" class="standards-info-item">
-                 <!--<Input v-model="sarStandardsInfoEO.standFile"></Input>-->
-                 <input type="file" name="standFiles" />
+                 <input v-model="sarStandardsInfoEO.standFile" v-show="false">
+                 <Upload :show-upload-list="false"
+                         :action="uploadPath"
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'standFile','standFileName')">
+                   <Button icon="ios-cloud-upload-outline">{{ sarStandardsInfoEO.standFile === '' ? '点击上传' : standFileName }}</Button>
+                 </Upload>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="标准修改单" prop="standModifyFile" class="standards-info-item">
-                 <!--<Input v-model="sarStandardsInfoEO.standModifyFile"></Input>-->
-                 <input type="file" name="standModifyFiles" :disabled="formdisableflag"/>
+                 <input v-model="sarStandardsInfoEO.standModifyFile" v-show="false">
+                 <Upload :show-upload-list="false"
+                         :action="uploadPath"
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'standModifyFile', 'standModifyFileName')">
+                   <Button icon="ios-cloud-upload-outline">{{ sarStandardsInfoEO.standModifyFile === '' ? '点击上传' : standModifyFileName }}</Button>
+                 </Upload>
                </FormItem>
              </Col>
            </Row>
            <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="草案" prop="draftFile" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.draftFile" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="征求意见稿" prop="opinionFile" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.opinionFile" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="送审稿" prop="sentScreenFile" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.sentScreenFile" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-           </Row>
-           <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="报批稿" prop="approvalFile" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.approvalFile" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="关联文件" prop="relevanceFile" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.relevanceFile" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="关键词" prop="tags" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.tags" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
            </Row>
            <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="内容摘要" prop="synopsis" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.synopsis" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="责任部门" prop="responsibleUnit" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.responsibleUnit" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
+           </Row>
+           <Row>
+             <Col span="12">
                <FormItem label="所属类别" prop="category" class="standards-info-item">
                  <Select v-model="sarStandardsInfoEO.category" multiple :disabled="formdisableflag">
                    <Option v-for="item in categoryOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                  </Select>
                </FormItem>
              </Col>
-           </Row>
-           <Row>
-             <Col span="8">
+             <Col span="12">
                <FormItem label="备注" prop="remark" class="standards-info-item">
                  <Input v-model="sarStandardsInfoEO.remark" :disabled="formdisableflag"></Input>
                </FormItem>
              </Col>
-             <Col span="8">
-             </Col>
-             <Col span="8">
-             </Col>
            </Row>
          </Form>
-         <Button v-if="!formdisableflag" type="primary" @click="saveOrUpdateStands" >保存修改</Button>
        </div>
-     </full-modal>
+       <div class="demo-drawer-footer">
+         <Button style="margin-right: 8px" @click="modalshowflag = false">取消</Button>
+         <Button type="primary" v-if="!formdisableflag" @click="saveOrUpdateStands">保存修改</Button>
+       </div>
+     </Drawer>
      <!-- 导入模态窗 -->
      <Modal v-model="importModalshowflag" title="导入文件" >
        <Upload :action="importExcelUrl" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
