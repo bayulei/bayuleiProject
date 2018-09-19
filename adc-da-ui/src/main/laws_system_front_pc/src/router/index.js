@@ -11,6 +11,7 @@ import store from '../store'
 import Login from '@/pages/login'
 import Home from '@/pages/home'
 import Test from '@/pages/home/test'
+import Test2 from '@/pages/home/test2'
 Vue.use(iView)
 Vue.use(VueRouter)
 
@@ -28,6 +29,15 @@ const routes = [
     path: '/test',
     name: 'Test',
     component: Test,
+    meta: {
+      requireAuth: true,
+      title: '功能测试页'
+    }
+  },
+  {
+    path: '/test2',
+    name: 'Test2',
+    component: Test2,
     meta: {
       requireAuth: true,
       title: '功能测试页'
