@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.adc.da.lawss.entity.SarProductStandEO;
 import com.adc.da.lawss.entity.SarStandardsInfoEO;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +119,16 @@ public class SarProductInfoEOController extends BaseController<SarProductInfoEO>
         List<SarProductStandEO> resutl = sarProductInfoEOService.selectLawAndStandByPro(sarProductInfoEOPage);
         logger.info("delete from SAR_PRODUCT_INFO where id = {}");
         return Result.success(resutl);
+    }
+
+    @ApiOperation(value = "|SarProductInfoEO|保存匹配标准中的属性，筛选出符合属性的标准")
+    @PostMapping("/saveLawAndStandOfPro")
+    // @RequiresPermissions("lawss:sarProductInfo:delete")
+    public ResponseMessage<List<SarProductStandEO>> saveLawAndStandOfPro(String  sarProductStandListSt) throws Exception {
+        List<SarProductStandEO> sarProductStandList = JSON.parseArray(sarProductStandListSt, SarProductStandEO.class);
+         sarProductInfoEOService.saveLawAndStandOfPro(sarProductStandList);
+        logger.info("delete from SAR_PRODUCT_INFO where id = {}");
+        return Result.success(sarProductStandList);
     }
 
 }

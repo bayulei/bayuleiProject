@@ -347,7 +347,7 @@ export default {
     saveProData () {
       this.modalProDataAddflag = false
       this.modalProDataShowflag = true
-      this.$http.post('lawss/sarProductInfo/selectLawAndStandByPro', this.localProEO, {
+      this.$http.post('lawss/sarProductInfo/saveLawAndStandOfPro', {sarProductStandListSt: JSON.stringify(this.selectProDataList)}, {
         _this: this
       }, res => {
         console.log(res)

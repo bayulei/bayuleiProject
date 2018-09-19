@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * <b>功能：</b>SAR_PRODUCT_LAWS SarProductLawsEOEntity<br>
  * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2018-09-03 <br>
+ * <b>日期：</b> 2018-09-19 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public class SarProductLawsEO extends BaseEntity {
@@ -21,8 +21,7 @@ public class SarProductLawsEO extends BaseEntity {
     private String lawsId;
     private String lawsType;
     private String productId;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date id;
+    private String id;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -149,12 +148,12 @@ public class SarProductLawsEO extends BaseEntity {
     }
 
     /**  **/
-    public Date getId() {
+    public String getId() {
         return this.id;
     }
 
     /**  **/
-    public void setId(Date id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -1,6 +1,9 @@
 package com.adc.da.lawss.service;
 
 import com.adc.da.lawss.common.PropertyTypeEnum;
+import com.adc.da.lawss.common.SorDivideEnum;
+import com.adc.da.lawss.dao.SarProductLawsEODao;
+import com.adc.da.lawss.dao.SarProductStandEODao;
 import com.adc.da.lawss.dao.SarProductValEODao;
 import com.adc.da.lawss.entity.*;
 import com.adc.da.lawss.page.SarProductInfoEOPage;
@@ -47,6 +50,13 @@ public class SarProductInfoEOService extends BaseService<SarProductInfoEO, Strin
 
     @Autowired
     private DicTypeEODao dicTypeEODao;
+
+    @Autowired
+    private SarProductStandEODao sarProductStandEODao;
+
+    @Autowired
+    private SarProductLawsEODao sarProductLawsEODao;
+
 
     public SarProductInfoEODao getDao() {
         return sarProductInfoEODao;
@@ -131,5 +141,39 @@ public class SarProductInfoEOService extends BaseService<SarProductInfoEO, Strin
         sarProductInfoEOPage.setEnergyKindList(energy);
         List<SarProductStandEO> resultlist = sarProductInfoEODao.selectLawAndStandByPro(sarProductInfoEOPage);
         return resultlist;
+    }
+
+    public int saveLawAndStandOfPro(List<SarProductStandEO>  sarProductStandList){
+        for(SarProductStandEO sarProductStandEO:sarProductStandList) {
+            SarProductStandEO sarProductStand = new SarProductStandEO();
+            SarProductLawsEO sarProductLaws = new SarProductLawsEO();
+            switch (sarProductStandEO.getStandType()) {
+                case "INLAND_STAND":case "FOREIGN_STAND":case "BUSINESS_STAND":
+                    sarProductStand.setId(UUIDUtils.randomUUID20());
+                    sarProductStand.setCreationTime(new Date());
+                    sarProductStand.setModifyTime(new Date());
+                    sarProductStand.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
+                    sarProductStand.setCreationUser("gaoyan");
+                    sarProductStand.setStandId(sarProductStandEO.getStandId());
+                    sarProductStand.setProductId(sarProductStandEO.getProductId());
+                    sarProductStand.setStandType(sarProductStandEO.getStandType());
+                    sarProductStandEODao.insertSelective(sarProductStand);
+                    break;
+                case "INLAND_LAWS":case "FOREIGN_LAWS":
+                    sarProductLaws.setId(UUIDUtils.randomUUID20());
+                    sarProductLaws.setCreationTime(new Date());
+                    sarProductLaws.setModifyTime(new Date());
+                    sarProductLaws.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
+                    sarProductLaws.setCreationUser("gaoyan");
+                    sarProductLaws.setLawsId(sarProductStandEO.getStandId());
+                    sarProductLaws.setProductId(sarProductStandEO.getProductId());
+                    sarProductLaws.setLawsType(sarProductStandEO.getStandType());
+                    sarProductLawsEODao.insertSelective(sarProductLaws);
+                    break;
+
+            }
+
+        }
+        return 1;
     }
 }
