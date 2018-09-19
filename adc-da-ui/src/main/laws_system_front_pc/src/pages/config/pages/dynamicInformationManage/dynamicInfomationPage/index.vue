@@ -42,7 +42,7 @@
       <Row>
         <Col>
           <FormItem label="相关附件" prop="attInfo" class="laws-info-item">
-            <Upload multiple type="drag" action="">
+            <Upload multiple type="drag" :ref="attInfo" :action="uploadFileListPath" name="files" @on-success="uploadBackSuccess" @on-error="uploadBackError" >
               <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或拖拽文件到此处</p>
@@ -61,7 +61,7 @@
       <Row>
         <Col>
           <FormItem label="新闻图片" prop="picFile" class="laws-info-item">
-            <Upload type="drag" action="">
+            <Upload type="drag" :ref="picFile" :action="uploadFilePath">
               <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或拖拽文件到此处</p>
@@ -110,8 +110,9 @@ export default {
         value: 'RESOURCE'
       }],
       msgModeOptions: [],
-      showMsgMode: false
-
+      showMsgMode: false,
+      uploadFilePath: this.globalInterfaceUrl + 'att/attFile/upload',
+      uploadFileListPath: this.globalInterfaceUrl + 'att/attFile/uploadFiles'
     }
   },
   methods: {
@@ -144,6 +145,12 @@ export default {
             this.msgModeOptions = msgModdeObj
           }
         })
+    },
+    uploadBackSuccess (res, file, fileList) {
+      console.log(res)
+    },
+    uploadBackError (errorInfo, file, fileList) {
+      console.log(errorInfo)
     }
   },
   components: {},
