@@ -46,6 +46,10 @@ Vue.prototype.$http = $axios
 Vue.prototype.globalUrl = globalConfig.serverUrl
 // 后台接口路径
 Vue.prototype.globalInterfaceUrl = globalConfig.interfaceUrl
+// 单文件上传
+Vue.prototype.simpleUploadPath = globalConfig.simpleUploadPath
+// 多文件上传
+Vue.prototype.multipleUploadPath = globalConfig.multipleUploadPath
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

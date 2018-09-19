@@ -42,10 +42,11 @@ public class SarMenuEOController extends BaseController<SarMenuEO>{
     }
 
 	@ApiOperation(value = "|SarMenuEO|查询")
-    @GetMapping("")
+    @GetMapping("/selectmenu")
     /*@RequiresPermissions("lawss:sarMenu:list")*/
     public ResponseMessage<List<SarMenuEO>> list(SarMenuEOPage page) throws Exception {
-        return Result.success(sarMenuEOService.queryByList(page));
+        List<SarMenuEO> list = sarMenuEOService.queryByList(page);
+        return Result.success(list);
 	}
 
     @ApiOperation(value = "|SarMenuEO|详情")
@@ -58,14 +59,14 @@ public class SarMenuEOController extends BaseController<SarMenuEO>{
     @ApiOperation(value = "|SarMenuEO|新增")
     @PostMapping("/addSarMenu")
     /*@RequiresPermissions("lawss:sarMenu:save")*/
-    public ResponseMessage<SarMenuEO> create(SarMenuEO sarMenuEO) throws Exception {
+    public ResponseMessage<SarMenuEO> addSarMenu(SarMenuEO sarMenuEO) throws Exception {
         return sarMenuEOService.createSarMenu(sarMenuEO);
     }
 
     @ApiOperation(value = "|SarMenuEO|修改")
-    @PutMapping("/updateSarMenu")
+    @PostMapping("/updateSarMenu")
     /*@RequiresPermissions("lawss:sarMenu:update")*/
-    public ResponseMessage<SarMenuEO> update(@RequestBody SarMenuEO sarMenuEO) throws Exception {
+    public ResponseMessage<SarMenuEO> updateSarMenu(SarMenuEO sarMenuEO) throws Exception {
         sarMenuEO.setModifyTime(new Date());
         int countUpdate = sarMenuEOService.updateByPrimaryKeySelective(sarMenuEO);
         if(countUpdate > 0){

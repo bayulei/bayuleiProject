@@ -35,6 +35,7 @@ export default {
     padding: 0.1rem 0 0 0.8rem;
     box-sizing: border-box;
     border-bottom: 1px solid #CCCDCE;
+    background: #F0F0F0;
     .tabs{
       li{
         float: left;

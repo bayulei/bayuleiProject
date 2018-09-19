@@ -45,6 +45,37 @@
         <Button v-if="!formdisableflag" type="primary" @click="saveOrUpdateLocalPro" >保存修改</Button>
       </div>
     </full-modal>
+
+    <!--     新增本地企业     -->
+    <full-modal v-model="modalProDataShowflag" v-if="modalProDataShowflag" ref="" >
+      <Card style="width:100%">
+        <Row>
+          <Col span="5">产品/项目代号: {{ localProEO.prodectCode }}</Col>
+          <Col span="4" push="1"><b>产品系列:《{{ localProEO.productSet }}》</b></Col>
+          <Col span="4" push="2">产品名称:{{ localProEO.productName }}</Col>
+          <Col span="4" push="2">产品品牌:{{ localProEO.productBrand }}</Col>
+        </Row>
+        <Row style="margin-top: 20px">
+          <Col span="5">产品类别:{{ localProEO.productTypeShow }}</Col>
+          <Col span="4" push="1">能源种类: {{ localProEO.energyKindShow }}</Col>
+          <Col span="4" push="2">车型附件: {{ localProEO.carModeFile }}</Col>
+          <Col span="4" push="2"><Button @click = "selectStandLawsForProduct">新增</Button></Col>
+        </Row>
+      </Card>
+      <br/>
+      <Tabs type="card"  @on-click="tabsClick">
+        <TabPane  v-for="item in proveTypeOptions" :label="item.label"  :name="item.value" :key="item.value">
+          <Table border ref="" :columns="localProDataTableColumn" :data="localProDataTableList"></Table>
+        </TabPane>
+      </Tabs>
+    </full-modal>
+
+    <!--     新增本地企业     -->
+    <full-modal v-model="modalProDataAddflag" v-if="modalProDataAddflag" ref="" >
+      <Button @click = "saveProData">保存</Button>
+      <Table border ref="" :columns="selectProDataTableColumn" :data="selectProDataTableList" @on-select="selectOneStand" @on-select-all="selectAllStand" @on-select-cancel="cancleSelectStand"></Table>
+    </full-modal>
+
   </div>
 </template>
 

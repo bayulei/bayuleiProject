@@ -3,6 +3,7 @@ package com.adc.da.lawss.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -10,6 +11,9 @@ import com.adc.da.lawss.entity.MsgFileEO;
 import com.adc.da.lawss.service.MsgFileEOService;
 import com.adc.da.lawss.vo.MsgDynamicInfoVO;
 
+import com.adc.da.sys.constant.ValidFlagEnum;
+import com.adc.da.sys.entity.UserEO;
+import com.adc.da.sys.service.UserEOService;
 import com.adc.da.util.utils.BeanMapper;
 import com.adc.da.util.utils.StringUtils;
 
@@ -31,6 +35,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 
+import javax.validation.constraints.NotNull;
+
 @RestController
 @RequestMapping("/${restPath}/lawss/msgDynamicInfo")
 @Api(description = "|MsgDynamicInfoEO|")
@@ -40,6 +46,9 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
 
     @Autowired
     private MsgDynamicInfoEOService msgDynamicInfoEOService;
+
+    @Autowired
+    private UserEOService userEOService;
 
     @Autowired
     BeanMapper beanMapper;
@@ -56,7 +65,7 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
 	@ApiOperation(value = "|MsgDynamicInfoEO|分页查询")
     @GetMapping("/page")
 //    @RequiresPermissions("lawss:msgDynamicInfo:page")
-    public ResponseMessage<PageInfo<MsgDynamicInfoEO>> page(Integer pageNo,Integer pageSize) throws Exception {
+    public ResponseMessage<PageInfo<MsgDynamicInfoEO>> page(Integer pageNo,Integer pageSize,String msgType,String msgTitle) throws Exception {
         MsgDynamicInfoEOPage page = new MsgDynamicInfoEOPage();
         if (pageNo != null) {
             page.setPage(pageNo);
@@ -64,7 +73,24 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
         if (pageSize != null) {
             page.setPageSize(pageSize);
         }
+        if(StringUtils.isNotEmpty(msgType)){
+            page.setMsgType(msgType);
+        }
+        if(StringUtils.isNotEmpty(msgTitle)){
+            page.setTitle("%"+msgTitle+"%");
+            page.setTitleOperator("LIKE");
+        }
+        page.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue()+"");
+        // 此处增加查询创建人代码
         List<MsgDynamicInfoEO> rows = msgDynamicInfoEOService.queryByPage(page);
+        if(rows!=null && !rows.isEmpty()){
+            for(MsgDynamicInfoEO EO:rows){
+                if(StringUtils.isNotEmpty(EO.getPubUser())){
+                  UserEO pubUser= userEOService.selectByPrimaryKey(EO.getPubUser());
+                  EO.setPubUserName(pubUser!=null?pubUser.getUname():null);
+                }
+            }
+        }
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 /**
@@ -158,12 +184,23 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
  * @Param [id]
  * @return com.adc.da.util.http.ResponseMessage
  **/
-    @ApiOperation(value = "|MsgDynamicInfoEO|删除")
+/*    @ApiOperation(value = "|MsgDynamicInfoEO|删除")
     @DeleteMapping("/{id}")
 //    @RequiresPermissions("lawss:msgDynamicInfo:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         msgDynamicInfoEOService.deleteByPrimaryKey(id);
         logger.info("delete from MSG_DYNAMIC_INFO where id = {}", id);
+        return Result.success();
+    }*/
+
+
+    @ApiOperation(value = "|MsgDynamicInfoEO|删除")
+    @DeleteMapping("/{ids}")
+//    @RequiresPermissions("lawss:msgDynamicInfo:delete")
+    public ResponseMessage deleteMsgList(@NotNull @PathVariable("ids") String[] ids) throws Exception {
+        msgDynamicInfoEOService.deleteLogicInBatch(Arrays.asList(ids));
+//        msgDynamicInfoEOService.deleteByPrimaryKey(id);
+//        logger.info("delete from MSG_DYNAMIC_INFO where id = {}", id);
         return Result.success();
     }
 

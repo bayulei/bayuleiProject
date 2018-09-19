@@ -161,12 +161,7 @@
      <!--</div>-->
    <!--</full-modal>-->
 
-     <Drawer
-       title="Create"
-       v-model="showLawsInfoModal"
-       width="900"
-       :styles="styles"
-     >
+     <Drawer title="Create" v-model="showLawsInfoModal" width="900" :styles="styles">
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
          <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
          <Row>
@@ -260,6 +255,10 @@
            </Col>
          </Row>
        </Form>
+       <div class="demo-drawer-footer">
+         <Button style="margin-right: 8px" @click="cancelAdd">取消</Button>
+         <Button type="primary" @click="saveLawsInfo">提交</Button>
+       </div>
      </Drawer>
 
    <!--导入模态框-->
@@ -420,12 +419,13 @@
   .domBtn {border:1px gray solid;background-color:#FFE6B0}
   .domBtn_Disabled {border:1px gray solid;background-color:#DFDFDF;color:#999999}
   .dom_tmp {
+    width: 50px;
+    height: 50px;
     position:absolute;
-    padding: 15px;
-    background: #FFE6B0;
-    border: 1px solid gray;
-    width: 75%;
-    height: 100px;
+    color: #FFE6B0;
+    font-size: 50px;
+    display: flex;
+    align-items: flex-start;
     .ivu-row{
       height: 50%;
       display: -webkit-box;

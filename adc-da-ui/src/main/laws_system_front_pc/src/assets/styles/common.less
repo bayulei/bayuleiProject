@@ -30,10 +30,10 @@
   background: @containerColor;
   .sub-container{
     top: 1.6rem;
-    width: 82.3%;
+    width: calc(~'100% - 290px');
     float: right;
     height: calc(~'100% - 0.2rem');
-    margin: 0 0.7% 0 0.07%;
+    margin: 0 5px 0 10px;
     border: 1px solid #EDEDED;
     background: @subContainerHeaderColor;
     transition: all .3s linear;
@@ -46,7 +46,6 @@
       position: relative;
       overflow: hidden;
       background: #FFF;
-      padding: 0.2rem;
       &>.content{
         width: 100%;
         height: calc(~'100% - 120px');
@@ -216,11 +215,11 @@
 .ivu-input-group-prepend{
   background: #F4F8FB;
 }
-.ivu-modal-confirm{
+/*.ivu-modal-confirm{
   .ivu-modal-confirm-footer{
     display: none;
   }
-}
+}*/
 
 // 右边区域是树形结构和内容
 .tree{
@@ -282,6 +281,61 @@
         &.selected{
           border: 1px solid @baseColor;
         }
+      }
+    }
+  }
+}
+.side-close{
+  &.side-bar{
+    left: -230px !important;
+  }
+  &.sub-container{
+    width: calc(~'100% - 55px') !important;
+  }
+  .side-bar-position{
+    transition: all .3s linear;
+    &:hover{
+      box-shadow: 1px 1px 5px 0 #DDD;
+    }
+  }
+}
+.router-map-parent,
+.router-map-current{
+  width: calc(~'100% - 5px') !important;
+  text-align: center;
+  display: inline-block;
+  color: #999;
+}
+.demo-drawer-footer{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  background: #fff;
+}
+.ivu-drawer-body{
+  .ivu-form-item-label{
+    width: 120px;
+    .ellipsis()
+  }
+  .ivu-form-item-content{
+    width: calc(~'100% - 160px');
+    .ivu-date-picker{
+      width: 100%;
+    }
+    .ivu-date-picker-rel{
+      width: 100%;
+    }
+    .ivu-upload{
+      width: 100%;
+      .ivu-btn{
+        width: 100%;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        .ellipsis()
       }
     }
   }

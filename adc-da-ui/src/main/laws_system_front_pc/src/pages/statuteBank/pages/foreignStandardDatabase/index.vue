@@ -10,14 +10,14 @@
         <div slot="left">
           <label-select v-model="sarStandardsSearch.country" :options="countryOptions" label="国家/地区" placeholder="根据国家/地区查找"></label-select>
           <label-input v-model="sarStandardsSearch.standNumber" placeholder="根据标准号查找" clearable label="标准编号" class="my-input" />
-          <br><br>
-          <label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />
-          <label-select v-model="sarStandardsSearch.standState" :options="standStateOptions" label="标准状态" placeholder="根据标准状态查找"></label-select>
-          <label-select v-model="sarStandardsSearch.standNature" :options="standNatureOptions"  placeholder="根据标准性质查找" clearable label="标准性质"  />
-          <label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />
-          <label-select v-model="sarStandardsSearch.applyArctic" :options="applyArcticOptions" placeholder="根据适用车型查找" clearable label="适用车型" class="my-input" />
-          <label-input v-model="sarStandardsSearch.replaceStandNum" placeholder="根据代替标准查找" clearable label="代替标准" class="my-input" />
-          <label-input v-model="sarStandardsSearch.replacedStandNum" placeholder="根据代替标准查找" clearable label="被代替标准" class="my-input" />
+          <!--<br><br>-->
+          <!--<label-input v-model="sarStandardsSearch.standName" placeholder="根据标准名称查找" clearable label="标准名称" class="my-input" />-->
+          <!--<label-select v-model="sarStandardsSearch.standState" :options="standStateOptions" label="标准状态" placeholder="根据标准状态查找"></label-select>-->
+          <!--<label-select v-model="sarStandardsSearch.standNature" :options="standNatureOptions"  placeholder="根据标准性质查找" clearable label="标准性质"  />-->
+          <!--<label-select v-model="sarStandardsSearch.issueTime" :options="issueTimeOptions" placeholder="根据发布日期查找" clearable label="发布日期" class="my-input" />-->
+          <!--<label-select v-model="sarStandardsSearch.applyArctic" :options="applyArcticOptions" placeholder="根据适用车型查找" clearable label="适用车型" class="my-input" />-->
+          <!--<label-input v-model="sarStandardsSearch.replaceStandNum" placeholder="根据代替标准查找" clearable label="代替标准" class="my-input" />-->
+          <!--<label-input v-model="sarStandardsSearch.replacedStandNum" placeholder="根据代替标准查找" clearable label="被代替标准" class="my-input" />-->
           <Button type="primary" icon="ios-search" :loading="searching" @click="getDomesticStandardTable"></Button>
           <Button type="primary"  @click="clearAllSearch">清空查询</Button>
         </div>
@@ -52,8 +52,8 @@
               <Col span="4" push="1">
               <b>《{{ item.standName }}》</b>
               </Col>
-              <Col span="4" push="2">{{ item.standState }}</Col>
-              <Col span="4" push="2">{{ item.standNature }}</Col>
+              <Col span="4" push="2">{{ item.standStateShow }}</Col>
+              <Col span="4" push="2">{{ item.standNatureShow }}</Col>
               <Col span="3" push="4">
               <Icon type="md-star" size="26" style="margin-right:5px"></Icon>
               <Icon type="ios-redo" size="26"></Icon>
@@ -62,7 +62,7 @@
             <Row>
               <Col span="4">新车型实施时间: {{ item.putTime }}</Col>
               <Col span="4" push="2">在产车实施时间: {{ item.issueTime }}</Col>
-              <Col span="4" push="3">适用车型: -</Col>
+              <Col span="4" push="3">适用车型: {{item.applyArcticShow}} </Col>
               <Col span="6" push="6">
               <Button @click = "goProcess(item)">流程</Button>
               <Button @click = "selectStandardPro(item,'show')">查看</Button>
@@ -306,7 +306,7 @@
       </full-modal>
       <!-- 导入模态窗 -->
       <Modal v-model="importModalshowflag" title="导入文件" >
-        <Upload action="/api/lawss/sarStandardsInfo/importStandardsInfo?standType='FOREIGN'" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
+        <Upload :action="importExcelUrl"  ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
           <Button icon="ios-cloud-upload-outline">选择文件</Button>
         </Upload>
       </Modal>
@@ -987,7 +987,7 @@ export default {
       if (this.modalStandItemflag) {
         this.selectSarStandItems(this.standItemSearch.standId)
       } else {
-        this.getBussionStandTable()
+        this.getDomesticStandardTable()
       }
     },
     // 二级菜单新建，编辑，删除
