@@ -20,6 +20,6 @@ const interfacePORT =  process.env.NODE_ENV === 'production'?prodInterfacePORT:d
 module.exports = {
   serverUrl: 'http://'+serverIP, // 服务器IP地址
   interfaceUrl: 'http://'+serverIP+':'+interfacePORT+'/api/', // 服务器端接口访问地址,
-  simpleUploadPath: interfaceUrl + simpleFilePath, // 单文件上传地址
-  multipleUploadPath: interfaceUrl + multipleFilePath // 多文件上传地址
+  simpleUploadPath: 'http://'+serverIP+':'+interfacePORT+'/api/' + simpleFilePath, // 单文件上传地址
+  multipleUploadPath: 'http://'+serverIP+':'+interfacePORT+'/api/' + multipleFilePath // 多文件上传地址
 }
