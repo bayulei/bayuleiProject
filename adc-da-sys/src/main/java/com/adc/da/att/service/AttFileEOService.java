@@ -56,6 +56,7 @@ public class AttFileEOService extends BaseService<AttFileEO, String> {
      *
      * @param file
      */
+    @Transactional(rollbackFor = Exception.class)
     public String saveFileInfo(File file) {
         /**
          * 1、首先生成文件保存的主键ID
@@ -111,6 +112,7 @@ public class AttFileEOService extends BaseService<AttFileEO, String> {
      *
      * @param file
      */
+    @Transactional(rollbackFor = Exception.class)
     public AttFileVo saveFileInfo(MultipartFile file) {
         /**
          * 1、首先生成文件保存的主键ID
@@ -176,6 +178,7 @@ public class AttFileEOService extends BaseService<AttFileEO, String> {
      * @return:java.lang.String
      * date: 2018/9/19 9:48
      */
+    @Transactional(rollbackFor = Exception.class)
     public List<AttFileVo> saveFilesInfo(MultipartFile[] files) {
         /**
          * 1、首先生成文件保存的主键ID

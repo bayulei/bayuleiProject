@@ -55,7 +55,7 @@ public class UserEOService extends BaseService<UserEO, String> {
 		return dao;
 	}
 
-	@Transactional(readOnly = true, rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public UserEO save(UserEO userEO) {
 		userEO.setUsid(UUID.randomUUID10());
 		userEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
