@@ -58,19 +58,13 @@
       <if test="id != null" >
         and id ${idOperator} #{id}
       </if>
-      <if test="id1 != null" >
-        and id &gt;= #{id1}
-      </if>
-      <if test="id2 != null" >
-        and id &lt;= #{id2}
-      </if>
     </trim>
   </sql>
 
   <!-- 插入记录 -->
   <insert id="insert" parameterType="com.adc.da.lawss.entity.SarProductLawsEO" >
     insert into SAR_PRODUCT_LAWS(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{lawsId, jdbcType=VARCHAR}, #{lawsType, jdbcType=VARCHAR}, #{productId, jdbcType=VARCHAR}, #{id, jdbcType=TIMESTAMP})
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{creationUser, jdbcType=VARCHAR}, #{lawsId, jdbcType=VARCHAR}, #{lawsType, jdbcType=VARCHAR}, #{productId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -94,7 +88,7 @@
                 <if test="lawsId != null" >#{lawsId, jdbcType=VARCHAR},</if>
                 <if test="lawsType != null" >#{lawsType, jdbcType=VARCHAR},</if>
                 <if test="productId != null" >#{productId, jdbcType=VARCHAR},</if>
-                <if test="id != null" >#{id, jdbcType=TIMESTAMP},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
             </trim>
   </insert>
 

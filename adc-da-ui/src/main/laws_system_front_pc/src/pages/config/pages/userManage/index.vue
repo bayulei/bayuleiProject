@@ -363,10 +363,10 @@ export default {
         },
         {_this: this, loading: this.loading},
         res => {
-          // this.userList = res.data.list
           if (res.ok) {
-            // console.log(res.data.list)
             this.userList = res.data.list
+            this.pageNo = res.data.pageNo
+            this.total = res.data.count
           }
         })
     },

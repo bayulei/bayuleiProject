@@ -52,8 +52,8 @@
                <Col span="4" push="1">
                  <b>《{{ item.standName }}》</b>
                </Col>
-               <Col span="4" push="2">{{ item.standState }}</Col>
-               <Col span="4" push="2">{{ item.standNature }}</Col>
+               <Col span="4" push="2">{{ item.standStateShow }}</Col>
+               <Col span="4" push="2">{{ item.standNatureShow }}</Col>
                <Col span="3" push="4">
                  <Icon type="md-star" size="26" style="margin-right:5px"></Icon>
                  <Icon type="ios-redo" size="26"></Icon>
@@ -62,7 +62,7 @@
              <Row>
                <Col span="4">新车型实施时间: {{ item.putTime }}</Col>
                <Col span="4" push="2">在产车实施时间: {{ item.issueTime }}</Col>
-               <Col span="4" push="3">适用车型: -</Col>
+               <Col span="4" push="3">适用车型: {{ item.applyArcticShow }}</Col>
                <Col span="6" push="6">
                  <Button @click = "goProcess(item)">流程</Button>
                  <Button @click = "selectStandardPro(item,'show')">查看</Button>
@@ -306,7 +306,7 @@
      </full-modal>
      <!-- 导入模态窗 -->
      <Modal v-model="importModalshowflag" title="导入文件" >
-       <Upload action="/api/lawss/sarStandardsInfo/importStandardsInfo?standType='INLAND'" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
+       <Upload :action="importExcelUrl" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
          <Button icon="ios-cloud-upload-outline">选择文件</Button>
        </Upload>
      </Modal>
@@ -1040,9 +1040,14 @@ export default {
       this.$refs.menuRefModal.toggleClose()
     },
     // 点击导入标准
-    addImportModal () {
+    addImportModal (flag) {
       this.importModalshowflag = true
       this.$refs.importfile.clearFiles()
+      if (flag === 1) {
+        this.importExcelUrl = '/api/lawss/sarStandardsInfo/importStandardsInfo?standType=INLAND'
+      } else {
+        this.importExcelUrl = '/api/lawss/sarStandItems/importSarStandItemsList?standId=' + this.standItemSearch.standId
+      }
     },
     // 导入标准文件格式错误执行
     handleFormatError (file) {
@@ -1057,7 +1062,7 @@ export default {
       if (this.modalStandItemflag) {
         this.selectSarStandItems(this.standItemSearch.standId)
       } else {
-        this.getBussionStandTable()
+        this.getDomesticStandardTable()
       }
     },
     // 二级菜单新建，编辑，删除

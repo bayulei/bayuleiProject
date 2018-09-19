@@ -145,6 +145,16 @@
       </foreach>
   </update>
 
+
+    <update id="deleteLogicInBatch" parameterType="java.util.List">
+        update MSG_FILE
+        set valid_flag = 1
+        where msg_id in
+        <foreach item="msgId" collection="list" open="(" separator=","
+                 close=")" index="index">
+            #{msgId}
+        </foreach>
+    </update>
   <!-- 根据id查询 MSG_FILE -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List" /> 

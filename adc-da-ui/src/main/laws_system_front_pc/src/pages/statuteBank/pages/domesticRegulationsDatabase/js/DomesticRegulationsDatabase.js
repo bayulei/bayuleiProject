@@ -175,7 +175,7 @@ export default {
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
         issueTime: [
-          { required: true, type: 'date', message: 'Please select the date', trigger: 'change' }
+          { required: true, type: 'date', message: '发布日期不能为空', trigger: 'change' }
         ],
         putTime: [
           { required: true, type: 'date', message: '实施日期不能为空', trigger: 'change' }
@@ -201,6 +201,7 @@ export default {
       let SarLawsInfoEOPage = this.lawsInfo
       SarLawsInfoEOPage.page = this.page
       SarLawsInfoEOPage.pageSize = this.rows
+      SarLawsInfoEOPage.lawsType = '1'
       if (SarLawsInfoEOPage.issueTime != null && SarLawsInfoEOPage.issueTime !== '') {
         SarLawsInfoEOPage.issueTime = this.$dateFormat(SarLawsInfoEOPage.issueTime, 'yyyy-MM-dd')
       }
@@ -232,13 +233,13 @@ export default {
     },
     // 点击编辑按钮触发
     editLawsInfo (row, optType) {
+      console.log(optType)
       if (optType === 'edit') {
         this.saveInfoBtn = true
       } else {
         this.saveInfoBtn = false
       }
       this.showLawsInfoModal = true
-      this.saveInfoBtn = true
       this.SarLawsInfoEO = row
       this.SarLawsInfoEO.editLawsId = row.id
       this.SarLawsInfoEO.applyArctic = this.combineToArray(this.SarLawsInfoEO.applyArctic)
@@ -252,6 +253,7 @@ export default {
       this.SarLawsInfoEO.applyAuth = this.breakMultiSelect(this.SarLawsInfoEO.applyAuth)
       this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
       this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
+      this.SarLawsInfoEO.lawsType = '1'
       if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
         this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
           _this: this
@@ -271,7 +273,7 @@ export default {
       }
     },
     cancelAdd () {
-      this.$refs.showLawsInfoModal.toggleClose()
+      this.showLawsInfoModal = false
     },
     // 删除法规信息
     removeLawsInfo (id) {
@@ -295,8 +297,10 @@ export default {
     // 导入法规信息
     importLawsInfo () {
       let file = this.$refs.lawsInfoFile.files[0]
+      let pageType = '1'
       this.$http.post('lawss/sarLawsInfo/importLawsInfos', {
-        file: file
+        file: file,
+        pageType: pageType
       }, {
         _this: this
       }, res => {

@@ -29,6 +29,7 @@ public class MsgDynamicInfoVO extends BaseEntity {
     private String msgType;
     private String id;
 
+    private Integer isPicMsg;
 //新填字段
 //    文件ID
     private String attId;
@@ -40,7 +41,9 @@ public class MsgDynamicInfoVO extends BaseEntity {
     private String msgId;
 
 //
-    List<MsgFileEO> msgFileEOList = new ArrayList<MsgFileEO>();
+    private  List<MsgFileEO> msgFileEOList = new ArrayList<MsgFileEO>();
+
+    private MsgFileEO PicFileEO;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -73,6 +76,7 @@ public class MsgDynamicInfoVO extends BaseEntity {
             case "msgMode": return "msg_mode";
             case "msgType": return "msg_type";
             case "id": return "id";
+            case "isPicMsg": return "is_pic_msg";
             default: return null;
         }
     }
@@ -108,6 +112,7 @@ public class MsgDynamicInfoVO extends BaseEntity {
             case "msg_mode": return "msgMode";
             case "msg_type": return "msgType";
             case "id": return "id";
+            case "is_pic_msg": return "isPicMsg";
             default: return null;
         }
     }
@@ -246,5 +251,21 @@ public class MsgDynamicInfoVO extends BaseEntity {
 
     public void setMsgFileEOList(List<MsgFileEO> msgFileEOList) {
         this.msgFileEOList = msgFileEOList;
+    }
+
+    public void setIsPicMsg(Integer isPicMsg){
+        this.isPicMsg=isPicMsg;
+    }
+
+    public Integer getIsPicMsg(){
+        return this.isPicMsg;
+    }
+
+    public void setPicFileEO(MsgFileEO picFileEO){
+        this.PicFileEO=picFileEO;
+    }
+
+    public MsgFileEO getPicFileEO(){
+        return this.PicFileEO;
     }
 }

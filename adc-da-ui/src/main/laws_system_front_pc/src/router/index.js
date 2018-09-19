@@ -171,6 +171,15 @@ const routes = [
         }
       },
       {
+        path: '/dynamicInformationManage/dynamicInfomationPage',
+        name: 'dynamicInfo',
+        component: resolve => require(['pages/config/pages/dynamicInformationManage/dynamicInfomationPage'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '新增动态信息'
+        }
+      },
+      {
         path: '/warningTimeSetting',
         name: 'WarningTimeSetting',
         component: resolve => require(['pages/config/pages/warningTimeSetting'], resolve),

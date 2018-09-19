@@ -1,5 +1,6 @@
 package com.adc.da.lawss.service;
 
+import com.adc.da.lawss.dao.MsgFileEODao;
 import com.adc.da.lawss.entity.MsgFileEO;
 import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class MsgDynamicInfoEOService extends BaseService<MsgDynamicInfoEO, Strin
     @Autowired
     private MsgDynamicInfoEODao dao;
 
+    @Autowired
+    private MsgFileEODao msgFileEODao;
+
     public MsgDynamicInfoEODao getDao() {
         return dao;
     }
@@ -58,9 +62,13 @@ public class MsgDynamicInfoEOService extends BaseService<MsgDynamicInfoEO, Strin
 
 //  调用附件存入动态信息id
     public  Integer updateIdOfMsgFile(List<MsgFileEO> msgFileEOS){
+        return   dao.updateIdOfMsgFile(msgFileEOS);
+    }
 
+    public void deleteLogicInBatch(List<String> ids){
+        dao.deleteLogicInBatch(ids);
+        // 删除消息附件内容
+        msgFileEODao.deleteLogicInBatch(ids);
+    }
 
-     return   dao.updateIdOfMsgFile(msgFileEOS);
-
-}
 }

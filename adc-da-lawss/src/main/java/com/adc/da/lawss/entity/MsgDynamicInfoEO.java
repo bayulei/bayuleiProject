@@ -28,6 +28,11 @@ public class MsgDynamicInfoEO extends BaseEntity {
     private String msgType;
     private String id;
 
+    private String pubUserName;
+
+    private Integer isPicMsg;
+
+
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -59,6 +64,7 @@ public class MsgDynamicInfoEO extends BaseEntity {
             case "msgMode": return "msg_mode";
             case "msgType": return "msg_type";
             case "id": return "id";
+            case "isPicMsg": return "is_pic_msg";
             default: return null;
         }
     }
@@ -94,6 +100,7 @@ public class MsgDynamicInfoEO extends BaseEntity {
             case "msg_mode": return "msgMode";
             case "msg_type": return "msgType";
             case "id": return "id";
+            case "is_pic_msg": return "isPicMsg";
             default: return null;
         }
     }
@@ -214,6 +221,22 @@ public class MsgDynamicInfoEO extends BaseEntity {
     /**  **/
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setPubUserName(String pubUserName){
+        this.pubUserName=pubUserName;
+    }
+
+    public String getPubUserName(){
+        return this.pubUserName;
+    }
+
+    public void setIsPicMsg(Integer isPicMsg){
+        this.isPicMsg=isPicMsg;
+    }
+
+    public Integer getIsPicMsg(){
+        return this.isPicMsg;
     }
 
 }
