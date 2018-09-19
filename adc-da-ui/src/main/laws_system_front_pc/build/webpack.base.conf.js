@@ -40,7 +40,8 @@ module.exports = {
       'assets': resolve('src/assets'),
       'styles': resolve('src/assets/styles'),
       'pages': resolve('src/pages'),
-      'zTree': resolve('src/assets/zTree')
+      'zTree': resolve('src/assets/zTree'),
+      'static': resolve('static')
     }
   },
   module: {
@@ -89,7 +90,12 @@ module.exports = {
           limit: 80000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: [resolve('node_modules/webpack-dev-server/client')]
+      },
     ]
   },
   node: {

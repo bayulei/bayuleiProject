@@ -13,6 +13,7 @@ import Pagination from './pagination'
 import TableToolsBar from './tableToolsBar'
 import FullModal from './fullModal'
 import HasNoData from './hasNoData'
+import UEditor from './ueditor'
 
 const install = function (Vue) {
   Vue.component('PanelHeader', PanelHeader)
@@ -24,6 +25,7 @@ const install = function (Vue) {
   Vue.component('tableToolsBar', TableToolsBar)
   Vue.component('fullModal', FullModal)
   Vue.component('hasNoData', HasNoData)
+  Vue.component('UEditor', UEditor)
 }
 
 export default {
