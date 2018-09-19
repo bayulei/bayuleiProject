@@ -233,7 +233,6 @@ export default {
     },
     // 点击编辑按钮触发
     editLawsInfo (row, optType) {
-      console.log(optType)
       if (optType === 'edit') {
         this.saveInfoBtn = true
       } else {

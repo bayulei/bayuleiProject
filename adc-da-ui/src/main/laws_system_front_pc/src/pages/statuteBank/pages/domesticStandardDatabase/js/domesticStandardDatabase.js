@@ -208,6 +208,7 @@ export default {
       modalshowtitle: '新增标准',
       addOrUPdateFlag: 1, // 新增：1， 修改：2
       itemAddOrUPdateFlag: 1, // 新增：1， 修改：2
+      menuAddOrUpdateFlag: 1, // 新增：1， 修改：2
       sarStandardsInfoEO: {
         id: '',
         standType: 'INLAND', // 标准分类
@@ -244,8 +245,9 @@ export default {
         synopsis: '',
         responsibleUnit: '',
         category: '',
-        remark: ''
-      }, // 新增过程中用到的对象
+        remark: '',
+        menuId: ''
+      }, // 标准新增过程中用到的对象
       standItemEO: {
         id: '',
         standId: '',
@@ -351,7 +353,6 @@ export default {
       applyAuthOptions: [], // 适用认证下拉框
       categoryOptions: [], // 所属类别下拉框
       issueTimeOptions: [{ label: '本月', value: '1' }, { label: '近三个月', value: '2' }, { label: '近一年', value: '3' }, { label: '近三年', value: '4' }, { label: '三年以上', value: '5' }], // 高级搜索条件中的发布日期
-      // 二级菜单对象
       sarMenu: {
         id: '',
         parentId: '',
@@ -359,7 +360,8 @@ export default {
         sorDivide: 'INLAND_STAND',
         displaySeq: '',
         parentIds: ''
-      },
+      }, // 二级菜单对象，主要用于新增和修改
+      selectSarMenu: {}, // 用来记录当前选中的二级菜单对象
       importExcelUrl: '', // 导入EXCEL文档
       // 树形结构
       tree: [{
@@ -587,6 +589,9 @@ export default {
           this.sarStandardsInfoEO.productPutTime = this.$dateFormat(this.sarStandardsInfoEO.productPutTime, 'yyyy-MM-dd')
           this.sarStandardsInfoEO.newproductPutTime = this.$dateFormat(this.sarStandardsInfoEO.newproductPutTime, 'yyyy-MM-dd')
           // addOrUPdateFlag 1:新增 2:修改
+          if (this.addOrUPdateFlag === 1) {
+            this.sarStandardsInfoEO.menuId = this.selectSarMenu.id // 新建过程中标准所属目录是当前目录
+          }
           this.$http.post(this.addOrUPdateFlag === 1 ? 'lawss/sarStandardsInfo/addarStandardsInfo' : 'lawss/sarStandardsInfo/updateSarStandardsInfo', this.sarStandardsInfoEO, {
             _this: this
           }, res => {
@@ -710,15 +715,46 @@ export default {
     clickDropMenu (name) {
       if (name === 'newMenu') {
         this.menuModalFlag = true
+        this.menuAddOrUpdateFlag = 1
       } else if (name === 'editMenu') {
+        this.menuModalFlag = true
+        this.menuAddOrUpdateFlag = 2
       } else {
         // deleteMenu 删除二级菜单，先判断是否选中，选中项目，然后调用删除方法
       }
     },
+    // 点击二级菜单新增模态框中的保存
     newMenu () {
-      this.$http.post('lawss/sarMenu/addSarMenu', this.sarMenu, {
-        _this: this, loading: 'loading'
+      if (this.menuAddOrUpdateFlag === 1) {
+        this.sarMenu.parentId = this.selectSarMenu.id
+        if (this.selectSarMenu.parentIds != null) {
+          this.sarMenu.parentIds = this.selectSarMenu.parentIds + ',' + this.selectSarMenu.id
+        } else {
+          this.sarMenu.parentIds = this.selectSarMenu.id
+        }
+        this.$http.post('lawss/sarMenu/addSarMenu', this.sarMenu, {
+          _this: this, loading: 'loading'
+        }, res => {
+          this.selectMenu() // 新增成功后，更新二级菜单
+        }, e => {
+        })
+      } else {
+        this.sarMenu = this.selectSarMenu // 修改过程中直接将sarMenu对象置为当前选中的对象
+        this.$http.post('lawss/sarMenu/updateSarMenu', this.sarMenu, {
+          _this: this, loading: 'loading'
+        }, res => {
+          this.selectMenu() // 修改成功后，更新二级菜单
+          this.selectSarMenu = res.data
+        }, e => {
+        })
+      }
+    },
+    // 查询二级菜单
+    selectMenu () {
+      this.$http.get('lawss/sarMenu/selectmenu', {sorDivide: 'INLAND_STAND'}, {
+        _this: this
       }, res => {
+        this.zNodes = res.data
       }, e => {
       })
     },
@@ -728,7 +764,6 @@ export default {
       this.$http.post('lawss/sarStandardsInfo/selectReplaceStandNum', {'replaceStandNum': this.sarStandardsInfoEO.replaceStandNum, 'standType': this.sarStandardsInfoEO.standType}, {
         _this: this
       }, res => {
-        console.log(res)
       }, e => {
       })
     },
@@ -738,7 +773,6 @@ export default {
       this.$http.post('lawss/sarStandardsInfo/selectStandardsInfoByMenu', this.sarStandardsSearch, {
         _this: this
       }, res => {
-        console.log(res)
       }, e => {
       })
     },
@@ -759,7 +793,6 @@ export default {
       this.$http.get('lawss/sarStandardsInfo/exportStandardsInfoExcel', this.sarStandardsSearch, {
         _this: this
       }, res => {
-        console.log(res)
       }, e => {
       })
     },
@@ -804,11 +837,9 @@ export default {
     },
     // 导出标准条目
     exportStandardItem () {
-      console.log(this.standItemSearch)
       this.$http.get('lawss/sarStandItems/exportStandardItemExcel', this.standItemSearch, {
         _this: this
       }, res => {
-        console.log(res)
       }, e => {
       })
     },
@@ -957,11 +988,34 @@ export default {
         this.checkAll = false
         this.indeterminate = false
       }
+    },
+    zNodes: {
+      deep: true,
+      handler () {
+        let allthis = this
+        this.$nextTick(() => {
+          let _this = this
+          $(document).ready(function () {
+            $.fn.zTree.init($('#treeDemo'), _this.setting, _this.zNodes)
+            _this.MoveTest.updateType()
+            _this.MoveTest.bindDom()
+            var treeObj = $.fn.zTree.getZTreeObj('treeDemo')
+            // 获取节点
+            var nodes = treeObj.getNodes()
+            if (JSON.stringify(allthis.selectSarMenu) === '{}') {
+              treeObj.selectNode(nodes[0]) // 返回node对象，此处由于未用到，所以不接
+            } else {
+              treeObj.selectNode(allthis.selectSarMenu)
+            }
+          })
+        })
+      }
     }
   },
   mounted () {
+    let allthis = this
     this.getDomesticStandardTable()
-    // 查询各下拉框数据
+    // 从数据库中查询各下拉框数据
     this.$http.get('sys/dictype/getDicTypeListCode', '', {
       _this: this
     }, res => {
@@ -976,7 +1030,8 @@ export default {
       this.categoryOptions = res.data.CATEGORY
     }, e => {
     })
-
+    // 进入页面后查询树形结构目录
+    this.selectMenu()
     /**
      * @description: zTree初始化
      * @author: chenxiaoxi
@@ -1008,7 +1063,7 @@ export default {
         console.log(treeId)
         console.log(treeNodes)
         let p = null
-        let pId = 'dom_' + treeNodes[0].pId
+        let pId = 'dom_' + treeNodes[0].parentId
         if (e.target.id === pId) {
           p = $(e.target)
         } else {
@@ -1032,7 +1087,6 @@ export default {
       dom2Tree: function (e, treeId, treeNode) {
         console.log('点击')
         let pid = treeNode.id
-        console.log(pid)
         if (MoveTest.curTarget === null) return
         let id = MoveTest.curTarget.attr('domId')
         console.log(id)
@@ -1050,7 +1104,7 @@ export default {
         let nodes = zTree.getNodes()
         for (let i = 0, l = nodes.length; i < l; i++) {
           let num = nodes[i].children ? nodes[i].children.length : 0
-          nodes[i].name = nodes[i].name.replace(/ \(.*\)/gi, '') + ' (' + num + ')'
+          nodes[i].menuName = nodes[i].menuName.replace(/ \(.*\)/gi, '') + ' (' + num + ')'
           zTree.updateNode(nodes[i])
         }
       },
@@ -1129,10 +1183,14 @@ export default {
       },
       bindSelect: function () {
         return false
+      },
+      clickOneNode: function (event, treeId, treeNode) {
+        allthis.selectSarMenu = treeNode // 记录当前选中的二级菜单
+        allthis.sarStandardsSearch.menuId = treeNode.id // 将当前二级菜单的id传回后台做标准的条件查询
+        allthis.getDomesticStandardTable() // 根据选中的二级菜单查询对应的标准列表
       }
     }
     this.MoveTest = MoveTest
-
     let setting = {
       edit: {
         enable: true,
@@ -1149,36 +1207,32 @@ export default {
           parent: true,
           leaf: true
         },
+        key: {
+          name: 'menuName'
+        },
         simpleData: {
-          enable: true
+          enable: true,
+          idKey: 'id',
+          pIdKey: 'parentId'
         }
       },
       callback: {
         beforeDrag: MoveTest.dragTree2Dom,
         onDrop: MoveTest.dropTree2Dom,
         onDragMove: MoveTest.dragMove,
-        onMouseUp: MoveTest.dom2Tree
+        onMouseUp: MoveTest.dom2Tree,
+        onClick: MoveTest.clickOneNode
       },
       view: {
         selectedMulti: false
       }
     }
     this.setting = setting
-
-    let zNodes = [
-      {id: 1, pId: 0, name: '全部标准', isParent: true, open: true},
-      {id: 11, pId: 1, name: '强制性标准', isParent: true, open: true},
-      {id: 12, pId: 1, name: '推荐性标准', isParent: true, open: true}
+    /* let zNodes = [
+      {id: 1, parentId: 0, namee: '全部标准', isParent: true, open: true},
+      {id: 11, parentId: 1, namee: '强制性标准', isParent: true, open: true},
+      {id: 12, parentId: 1, namee: '推荐性标准', isParent: true, open: true}
     ]
-    this.zNodes = zNodes
-
-    this.$nextTick(() => {
-      let _this = this
-      $(document).ready(function () {
-        $.fn.zTree.init($('#treeDemo'), _this.setting, _this.zNodes)
-        MoveTest.updateType()
-        MoveTest.bindDom()
-      })
-    })
+    this.zNodes = zNodes */
   }
 }

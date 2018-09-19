@@ -12,17 +12,17 @@ import com.adc.da.base.page.BasePage;
 public class DicTypeEOPage extends BasePage {
 
     private String validFlag;
-    private String validFlagOperator = "=";
+    private String validFlagOperator = "like";
     private String parentId;
-    private String parentIdOperator = "=";
+    private String parentIdOperator = "like";
     private String dicTypeCode;
-    private String dicTypeCodeOperator = "=";
+    private String dicTypeCodeOperator = "like";
     private String dicTypeName;
-    private String dicTypeNameOperator = "=";
+    private String dicTypeNameOperator = "like";
     private String dicId;
-    private String dicIdOperator = "=";
+    private String dicIdOperator = "like";
     private String id;
-    private String idOperator = "=";
+    private String idOperator = "like";
 
     public String getValidFlag() {
         return this.validFlag;
