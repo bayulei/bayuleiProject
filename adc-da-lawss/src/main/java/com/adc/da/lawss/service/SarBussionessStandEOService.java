@@ -148,7 +148,7 @@ public class SarBussionessStandEOService extends BaseService<SarBussionessStandE
                 String message = (String) map.get("message");
                 return Result.error("fail", message);
             }*/
-            //将导入数据循环新增至相应表
+            //将导入数据循环新增至相应表getProductInfoPage
             for(SarBussionessStandExcelDto importDto : list){
                 SarBussionessStandEO sarBussionessStandEO = new SarBussionessStandEO();
                 BeanUtils.copyProperties(importDto,sarBussionessStandEO);

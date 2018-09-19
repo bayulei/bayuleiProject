@@ -419,12 +419,13 @@
   .domBtn {border:1px gray solid;background-color:#FFE6B0}
   .domBtn_Disabled {border:1px gray solid;background-color:#DFDFDF;color:#999999}
   .dom_tmp {
+    width: 50px;
+    height: 50px;
     position:absolute;
-    padding: 15px;
-    background: #FFE6B0;
-    border: 1px solid gray;
-    width: 75%;
-    height: 100px;
+    color: #FFE6B0;
+    font-size: 50px;
+    display: flex;
+    align-items: flex-start;
     .ivu-row{
       height: 50%;
       display: -webkit-box;

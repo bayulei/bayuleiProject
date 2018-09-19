@@ -2,6 +2,7 @@ package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarProductInfoEO;
+import com.adc.da.lawss.entity.SarProductStandEO;
 import com.adc.da.lawss.page.SarProductInfoEOPage;
 
 import java.util.List;
@@ -18,5 +19,9 @@ public interface SarProductInfoEODao extends BaseDao<SarProductInfoEO> {
     int getSarProductInfoCount(SarProductInfoEOPage page);
 
     List<SarProductInfoEO> getSarProductInfoPage(SarProductInfoEOPage page);
+
+    List<SarProductStandEO> selectStandLawsByKey(SarProductInfoEOPage sarProductInfoEOPage);
+
+    List<SarProductStandEO> selectLawAndStandByPro(SarProductInfoEOPage sarProductInfoEOPage);
 
 }

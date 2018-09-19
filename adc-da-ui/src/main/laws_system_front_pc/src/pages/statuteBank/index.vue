@@ -3,8 +3,8 @@
  <div class="statute-bank">
    <com-header></com-header>
    <div class="main">
-     <side-bar :navList="navList"></side-bar>
-     <div class="sub-container">
+     <side-bar :navList="navList" v-model="sideClose" @change="toggleSideBar" :class="{ 'side-close': sideClose }"></side-bar>
+     <div class="sub-container" :class="{ 'side-close': sideClose }">
        <router-view></router-view>
      </div>
    </div>
@@ -42,10 +42,20 @@ export default {
       }, {
         title: '本地产品/项目库',
         path: '/localProductDatabase'
-      }]
+      }],
+      sideClose: false // 边栏收展状态
     }
   },
-  methods: {},
+  methods: {
+    /**
+     * @description: 边栏收缩
+     * @author: chenxiaoxi
+     * @date: 2018-09-18 11:11:46
+     */
+    toggleSideBar (val) {
+      this.sideClose = !val
+    }
+  },
   components: {
     ComHeader,
     SideBar
