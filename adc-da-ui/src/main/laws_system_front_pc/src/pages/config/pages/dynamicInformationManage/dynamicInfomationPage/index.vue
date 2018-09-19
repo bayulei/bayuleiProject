@@ -111,8 +111,8 @@ export default {
       }],
       msgModeOptions: [],
       showMsgMode: false,
-      uploadFilePath: this.globalInterfaceUrl + 'att/attFile/upload',
-      uploadFileListPath: this.globalInterfaceUrl + 'att/attFile/uploadFiles'
+      uploadFilePath: this.simpleUploadPath,
+      uploadFileListPath: this.multipleUploadPath
     }
   },
   methods: {
