@@ -64,7 +64,7 @@
       </Card>
       <br/>
       <Tabs type="card"  @on-click="tabsClick">
-        <TabPane  v-for="item in proveTypeOptions" :label="item.label"  :name="item.value" >
+        <TabPane  v-for="item in proveTypeOptions" :label="item.label"  :name="item.value" :key="item.value">
           <Table border ref="" :columns="localProDataTableColumn" :data="localProDataTableList"></Table>
         </TabPane>
       </Tabs>

@@ -26,7 +26,6 @@ export default {
   },
   mounted () {
     // 初始化UE
-    const _this = this
     this.editor = UE.delEditor('editor')
     this.editor = UE.getEditor('editor', this.config)
   },

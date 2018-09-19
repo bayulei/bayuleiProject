@@ -42,7 +42,7 @@
       <Row>
         <Col>
           <FormItem label="相关附件" prop="attInfo" class="laws-info-item">
-            <Upload multiple type="drag" :ref="attInfo" :action="uploadFileListPath" name="files" @on-success="uploadBackSuccess" @on-error="uploadBackError" >
+            <Upload multiple type="drag" ref="attInfo" :action="uploadFileListPath" name="files" :on-success="uploadBackSuccess" :on-error="uploadBackError" >
               <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或拖拽文件到此处</p>
@@ -61,7 +61,7 @@
       <Row>
         <Col>
           <FormItem label="新闻图片" prop="picFile" class="laws-info-item">
-            <Upload type="drag" :ref="picFile" :action="uploadFilePath">
+            <Upload type="drag" ref="picFile" :action="uploadFilePath">
               <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或拖拽文件到此处</p>
@@ -148,8 +148,12 @@ export default {
     },
     uploadBackSuccess (res, file, fileList) {
       console.log(res)
+      console.log(file)
+      console.log(fileList)
+      console.log('上传完成')
     },
     uploadBackError (errorInfo, file, fileList) {
+      console.log('上传失败')
       console.log(errorInfo)
     }
   },
@@ -158,13 +162,13 @@ export default {
   computed: {},
   watch: {},
   mounted () {
-    this.getResourceMode()
+    // this.getResourceMode()
   }
 }
 </script>
 
 <style lang="less">
   #dynamicInfo{
-
+    padding: 10px;
   }
 </style>
