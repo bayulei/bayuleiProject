@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.adc.da.sys.util.UUIDUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 
 	@Autowired
 	private OrgEODao dao;
-	
+
 	@Override
 	public OrgEODao getDao() {
 		return dao;
@@ -52,16 +53,16 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 	}
 	
 	public ResponseMessage save(OrgEO orgEO) {
-		orgEO.setId(UUID.randomUUID10());
+		orgEO.setId(UUIDUtils.randomUUID20());
 		orgEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 		orgEO.setIsShow(0);
 		orgEO.setCreationTime(new Date());
 		orgEO.setModifyTime(new Date());
 		int line = dao.insert(orgEO);
 		if(line > 0) {
-			return Result.success();
+			return Result.success("true","新增成功");
 		} else {
-			return Result.error();
+			return Result.error("false","新增失败");
 		}
 	}
 	
@@ -77,13 +78,11 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 	 * 删除组织机构
 	 * @return 
 	 */
-	public ResponseMessage delete(String idMerge) {
-		String[] ids = idMerge.split(",");
-		String id = ids[0];
+	public ResponseMessage delete(String id) {
 		List<OrgEO> list = dao.getOrgEOByPid(id);
-		// 如果该组织机构下有子机构，则不允许删除
+// 如果该组织机构下有子机构，则不允许删除
 		if (list != null && !list.isEmpty()) {
-			return Result.error("r0031", "该组织机构下有子机构，不能删除");
+			return Result.error( "该组织机构下有子机构，不能删除");
 		}
 		int line = dao.deleteLogic(id);
 		if(line > 0) {
@@ -94,8 +93,8 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 	}
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public LinkedList<OrgEO> selectOrgAllNode(OrgEO orgEO) {
-		LinkedList<OrgEO> rootNodes = dao.selectOrgAllNode(orgEO);
+	public LinkedList<OrgEO> selectOrgAllNode() {
+		LinkedList<OrgEO> rootNodes = dao.selectOrgAllNode();
 		return rootNodes;
 	}
 
@@ -163,11 +162,11 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public List<OrgEO> findById(String id, String userCorpName) {
+	public List<OrgEO> findById(String id, String orgName) {
 		LinkedList<OrgEO> rootNodes = new LinkedList<OrgEO>();
 		OrgEO orgEO = new OrgEO();
 		orgEO.setId(id);
-		orgEO.setOrgName(userCorpName);
+		orgEO.setOrgName(orgName);
 		rootNodes.add(orgEO);
 		addNodes(rootNodes, 0);
 		return rootNodes;

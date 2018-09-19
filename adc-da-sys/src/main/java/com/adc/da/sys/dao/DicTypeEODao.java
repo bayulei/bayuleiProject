@@ -12,10 +12,10 @@ public interface DicTypeEODao extends BaseDao<DicTypeEO>{
 
 	public void deleteDicTypeByIdInBatch(List<String> ids);
 
-	List<DicTypeEO> getTypeIdByDicIdAndTypeName(@Param("dicId") String dicId, @Param("typeName") String typeName);
+	List<DicTypeEO> getTypeIdByDicIdAndTypeName(@Param("dicId") String dicId,@Param("id") String id, @Param("typeName") String typeName);
 
 
-	List<DicTypeEO> getDicTypeEOByDicTypeCode(String dicTypeCode);
+	List<DicTypeEO> getDicTypeEOByDicTypeCode( @Param("dicId") String dicId,@Param("id") String id,@Param("dicTypeCode")String dicTypeCode);
 
     void batchInsertTypeEo(List<DicTypeEO> ModelType);
 
