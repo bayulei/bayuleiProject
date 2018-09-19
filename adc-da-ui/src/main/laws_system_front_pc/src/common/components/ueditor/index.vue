@@ -6,6 +6,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import 'static/ueditor/ueditor.config.js'
 import 'static/ueditor/ueditor.all.js'
 import 'static/ueditor/lang/zh-cn/zh-cn.js'
