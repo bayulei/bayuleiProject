@@ -19,4 +19,6 @@ public interface MsgDynamicInfoEODao extends BaseDao<MsgDynamicInfoEO> {
    Integer updateIdOfMsgFile(List<MsgFileEO> msgFileEOS);
 
 
+   public void deleteLogicInBatch(List<String> ids);
+
 }

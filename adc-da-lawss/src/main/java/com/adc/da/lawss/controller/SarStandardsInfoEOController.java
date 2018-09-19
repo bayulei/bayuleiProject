@@ -1,6 +1,7 @@
 package com.adc.da.lawss.controller;
 
 import com.adc.da.att.service.AttFileEOService;
+import com.adc.da.att.vo.AttFileVo;
 import com.adc.da.base.web.BaseController;
 import com.adc.da.excel.poi.excel.ExcelExportUtil;
 import com.adc.da.excel.poi.excel.ExcelImportUtil;
@@ -141,7 +142,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
             for (MultipartFile file : standfiles) {
                 //* 3.1保存图片 *//*
                 // file = sarStandardsInfoEO.getStandFiles();
-                String fileid = attFileEOService.saveFileInfo(file);
+                AttFileVo fileInfo = attFileEOService.saveFileInfo(file);
                 //* 3.2 其他后续操作 *//*
                 //标准文件资源表存数据库
                 SarStandResEO sarStandResEO = new SarStandResEO();
@@ -155,7 +156,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
                 SarStandFileEO sarStandFileEO = new SarStandFileEO();
                 sarStandFileEO.setStandId(result.getData().getId());     //标准ID
                 sarStandFileEO.setResId(sarStandResEO.getId());       //资源ID
-                sarStandFileEO.setAttId(fileid);       //文件ID
+                sarStandFileEO.setAttId(fileInfo.getId());       //文件ID
                 sarStandFileEO.setUseModel("");  //文件使用模式
                 sarStandFileEOService.insertSarStandFileEO(sarStandFileEO);
             }
@@ -164,7 +165,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
             for (MultipartFile file : standModifyfiles) {
                 //* 3.1保存图片 *//*
                 // file = sarStandardsInfoEO.getStandModifyFiles();
-                 String fileid = attFileEOService.saveFileInfo(file);
+                 AttFileVo fileInfo = attFileEOService.saveFileInfo(file);
                 //* 3.2 其他后续操作 *//*
                 //标准文件资源表存数据库
                 SarStandResEO sarStandResEO = new SarStandResEO();
@@ -178,7 +179,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
                 SarStandFileEO sarStandFileEO = new SarStandFileEO();
                 sarStandFileEO.setStandId(result.getData().getId());     //标准ID
                 sarStandFileEO.setResId(sarStandResEO.getId());       //资源ID
-                sarStandFileEO.setAttId(fileid);       //文件ID
+                sarStandFileEO.setAttId(fileInfo.getId());       //文件ID
                 sarStandFileEO.setUseModel("");  //文件使用模式
                 sarStandFileEOService.insertSarStandFileEO(sarStandFileEO);
            }

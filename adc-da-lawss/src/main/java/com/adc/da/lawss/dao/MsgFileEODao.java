@@ -17,4 +17,14 @@ public interface MsgFileEODao extends BaseDao<MsgFileEO> {
 
 //修改动态信息附件表
     int updateByPrimaryKeySelective(List<MsgFileEO> msgFileEO);
+
+    /****
+     *  批量删除 根据消息ID
+     * @MethodName:deleteLogicInBatch
+     * @author: zhangyanduan
+     * @param:[ids]
+     * @return:void
+     * date: 2018/9/18 17:05
+     */
+    public void deleteLogicInBatch(List<String> ids );
 }

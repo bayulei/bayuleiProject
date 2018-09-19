@@ -161,12 +161,7 @@
      <!--</div>-->
    <!--</full-modal>-->
 
-     <Drawer
-       title="Create"
-       v-model="showLawsInfoModal"
-       width="900"
-       :styles="styles"
-     >
+     <Drawer title="Create" v-model="showLawsInfoModal" width="900" :styles="styles">
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
          <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
          <Row>
@@ -260,6 +255,10 @@
            </Col>
          </Row>
        </Form>
+       <div class="save-laws-btn">
+         <Button v-if="saveInfoBtn" type="primary" @click="saveLawsInfo">提交</Button>
+         <Button @click="cancelAdd">取消</Button>
+       </div>
      </Drawer>
 
    <!--导入模态框-->
