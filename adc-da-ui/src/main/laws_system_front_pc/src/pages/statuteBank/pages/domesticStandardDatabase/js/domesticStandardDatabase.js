@@ -320,7 +320,9 @@ export default {
         newproductPutTime: [],
         draftingUnit: [],
         draftUser: [],
-        standFile: [],
+        standFile: [
+          { required: true, message: '文件不能为空', trigger: 'change' }
+        ],
         standModifyFile: [],
         draftFile: [],
         opinionFile: [],
@@ -450,7 +452,16 @@ export default {
       // ztree 拖拽标志
       dragFlag: false,
       mousedown: '',
-      mouoseup: ''
+      mouoseup: '',
+      uploadPath: this.simpleUploadPath,
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
+      },
+      // 标准文本文件名
+      standFileName: ''
     }
   },
   methods: {
@@ -480,44 +491,43 @@ export default {
       this.getDomesticStandardTable()
       // 此处需要调用接口，修改个人配置
     },
+    // 表单清空
+    resetForm () {
+      this.$refs['sarStandardsInfoForm'].resetFields()
+    },
     // 点击新增按钮弹出新增模态框
     addModal () {
       this.modalshowflag = true
       this.formdisableflag = false
       this.modalshowtitle = '新增标准'
       this.addOrUPdateFlag = 1
-      this.sarStandardsInfoEO = {}
       this.sarStandardsInfoEO.standType = 'INLAND' // 标准分类
       this.sarStandardsInfoEO.country = 'CN'
     },
     // 保存或修改标准
     saveOrUpdateStands () {
-      // 时间格式修改
-      this.sarStandardsInfoEO.issueTime = this.$dateFormat(this.sarStandardsInfoEO.issueTime, 'yyyy-MM-dd')
-      this.sarStandardsInfoEO.putTime = this.$dateFormat(this.sarStandardsInfoEO.putTime, 'yyyy-MM-dd')
-      this.sarStandardsInfoEO.newcarPutTime = this.$dateFormat(this.sarStandardsInfoEO.newcarPutTime, 'yyyy-MM-dd')
-      this.sarStandardsInfoEO.productPutTime = this.$dateFormat(this.sarStandardsInfoEO.productPutTime, 'yyyy-MM-dd')
-      this.sarStandardsInfoEO.newproductPutTime = this.$dateFormat(this.sarStandardsInfoEO.newproductPutTime, 'yyyy-MM-dd')
-      // 新增
-      if (this.addOrUPdateFlag === 1) {
-        this.sarStandardsInfoEO.menuId = this.selectSarMenu.id // 新建过程中标准所属目录是当前目录
-        this.$http.post('lawss/sarStandardsInfo/addarStandardsInfo', this.sarStandardsInfoEO, {
-          _this: this
-        }, res => {
-          this.getDomesticStandardTable()
-          this.modalshowflag = false
-        }, e => {
-        })
-      } else {
-        // 修改
-        this.$http.post('lawss/sarStandardsInfo/updateSarStandardsInfo', this.sarStandardsInfoEO, {
-          _this: this
-        }, res => {
-          this.getDomesticStandardTable()
-          this.modalshowflag = false
-        }, e => {
-        })
-      }
+      this.$refs['sarStandardsInfoForm'].validate((valid) => {
+        if (valid) {
+          // 时间格式修改
+          this.sarStandardsInfoEO.issueTime = this.$dateFormat(this.sarStandardsInfoEO.issueTime, 'yyyy-MM-dd')
+          this.sarStandardsInfoEO.putTime = this.$dateFormat(this.sarStandardsInfoEO.putTime, 'yyyy-MM-dd')
+          this.sarStandardsInfoEO.newcarPutTime = this.$dateFormat(this.sarStandardsInfoEO.newcarPutTime, 'yyyy-MM-dd')
+          this.sarStandardsInfoEO.productPutTime = this.$dateFormat(this.sarStandardsInfoEO.productPutTime, 'yyyy-MM-dd')
+          this.sarStandardsInfoEO.newproductPutTime = this.$dateFormat(this.sarStandardsInfoEO.newproductPutTime, 'yyyy-MM-dd')
+          // addOrUPdateFlag 1:新增 2:修改
+          if (this.addOrUPdateFlag === 1) {
+            this.sarStandardsInfoEO.menuId = this.selectSarMenu.id // 新建过程中标准所属目录是当前目录
+          }
+          this.$http.post(this.addOrUPdateFlag === 1 ? 'lawss/sarStandardsInfo/addarStandardsInfo' : 'lawss/sarStandardsInfo/updateSarStandardsInfo', this.sarStandardsInfoEO, {
+            _this: this
+          }, res => {
+            this.getDomesticStandardTable()
+            this.modalshowflag = false
+          }, e => {})
+        } else {
+          this.$Message.error('请检查表单是否填写正确!')
+        }
+      })
     },
     // 删除标准
     deleteStand () {
@@ -855,6 +865,16 @@ export default {
       const parent = root.find(el => el.nodeKey === parentKey).node
       const index = parent.children.indexOf(data)
       parent.children.splice(index, 1)
+    },
+    /**
+     * @description: 上传成功回调
+     * @params: value: 绑定的FormItem
+     * @author: chenxiaoxi
+     * @date: 2018-09-19 14:15:01
+     */
+    handleUploadSucc (res, file, fileList, value, name) {
+      this.sarStandardsInfoEO[value] = res.data.id
+      this[name] = file.name
     }
   },
   components: {},

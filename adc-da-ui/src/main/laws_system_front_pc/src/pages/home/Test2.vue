@@ -1,11 +1,12 @@
-<!-- 准入标准法规清单 -->
 <template>
-  <div></div>
+  <div id="Test2">
+    Test2
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'accessStandardsAndRegulations',
+  name: 'Test2',
   data () {
     return {}
   },
@@ -19,6 +20,7 @@ export default {
 </script>
 
 <style lang="less">
-  #accessStandardsAndRegulations{
+  #Test2{
+
   }
 </style>

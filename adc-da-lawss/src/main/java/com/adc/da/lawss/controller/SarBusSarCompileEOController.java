@@ -52,6 +52,7 @@ public class SarBusSarCompileEOController extends BaseController<SarBusSarCompil
     @GetMapping("/page")
     /*@RequiresPermissions("lawss:sarBusSarCompile:page")*/
     public ResponseMessage<PageInfo<SarBusSarCompileEO>> page(SarBusSarCompileEOPage page) throws Exception {
+        page.setValidFlag("0");
         List<SarBusSarCompileEO> rows = sarBusSarCompileEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
@@ -80,7 +81,7 @@ public class SarBusSarCompileEOController extends BaseController<SarBusSarCompil
     @ApiOperation(value = "|SarBusSarCompileEO|新增")
     @PostMapping("/createSarBusSarCompile")
     /*@RequiresPermissions("lawss:sarBusSarCompile:save")*/
-    public ResponseMessage<SarBusSarCompileEO> create(@RequestBody SarBusSarCompileEO sarBusSarCompileEO) throws Exception {
+    public ResponseMessage<SarBusSarCompileEO> create(SarBusSarCompileEO sarBusSarCompileEO) throws Exception {
         return sarBusSarCompileEOService.insertSarBusSarCompile(sarBusSarCompileEO);
     }
 
@@ -94,7 +95,7 @@ public class SarBusSarCompileEOController extends BaseController<SarBusSarCompil
     @ApiOperation(value = "|SarBusSarCompileEO|修改")
     @PutMapping("/updateSarBusSarCompile")
     /*@RequiresPermissions("lawss:sarBusSarCompile:update")*/
-    public ResponseMessage<SarBusSarCompileEO> update(@RequestBody SarBusSarCompileEO sarBusSarCompileEO) throws Exception {
+    public ResponseMessage<SarBusSarCompileEO> update(SarBusSarCompileEO sarBusSarCompileEO) throws Exception {
         return sarBusSarCompileEOService.updateSarBusSarCompile(sarBusSarCompileEO);
     }
 
@@ -117,7 +118,7 @@ public class SarBusSarCompileEOController extends BaseController<SarBusSarCompil
     @ApiOperation(value = "|SarBusSarCompileEO|删除台账")
     @PutMapping("/deleteSarBusSarCompile")
     /*@RequiresPermissions("lawss:sarBusSarCompile:update")*/
-    public ResponseMessage<SarBusSarCompileEO> deleteSarBusSarCompile(@RequestBody SarBusSarCompileEO sarBusSarCompileEO) throws Exception {
+    public ResponseMessage<SarBusSarCompileEO> deleteSarBusSarCompile(SarBusSarCompileEO sarBusSarCompileEO) throws Exception {
         sarBusSarCompileEO.setValidFlag(1);
         int countDel = sarBusSarCompileEOService.updateByPrimaryKeySelective(sarBusSarCompileEO);
         if(countDel > 0){
