@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.adc.da.sys.constant.ValidFlagEnum;
 import com.adc.da.sys.util.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,5 +96,15 @@ public class MsgModuleEOController extends BaseController<MsgModuleEO>{
         logger.info("delete from MSG_MODULE where id = {}", id);
         return Result.success("","删除成功","");
     }
+    
+    @ApiOperation(value = "|MsgModuleEO|获取所有模块信息")
+    @GetMapping("/getAll")
+//   @RequiresPermissions("lawss:msgModule:list")
+    public ResponseMessage<List<MsgModuleEO>> getAllMode() throws Exception {
+        MsgModuleEOPage page=new MsgModuleEOPage();
+        page.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue()+"");
+        return Result.success(msgModuleEOService.queryByList(page));
+    }
+
 
 }

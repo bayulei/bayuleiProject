@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.adc.da.att.service.AttFileEOService;
+import com.adc.da.att.vo.AttFileVo;
 import com.adc.da.excel.poi.excel.ExcelExportUtil;
 import com.adc.da.excel.poi.excel.ExcelImportUtil;
 import com.adc.da.excel.poi.excel.entity.ExportParams;
@@ -139,7 +140,7 @@ public class SarBussionessStandEOController extends BaseController<SarBussioness
             for (MultipartFile file : standfiles) {
                 //* 3.1保存图片 *//*
                 // file = sarBussionessStandEO.getStandFiles();
-                String fileid = attFileEOService.saveFileInfo(file);
+                AttFileVo fileInfo = attFileEOService.saveFileInfo(file);
                 //* 3.2 其他后续操作 *//*
                 //标准文件资源表存数据库
                 SarBussStandResEO sarBussStandResEO = new SarBussStandResEO();
@@ -153,7 +154,7 @@ public class SarBussionessStandEOController extends BaseController<SarBussioness
                 SarBussStandFileEO sarStandFileEO = new SarBussStandFileEO();
                 sarStandFileEO.setStandId(result.getData().getId());     //标准ID
                 sarStandFileEO.setResId(sarBussStandResEO.getId());       //资源ID
-                sarStandFileEO.setAttId(fileid);       //文件ID
+                sarStandFileEO.setAttId(fileInfo.getId());       //文件ID
                 sarStandFileEO.setUseModule("");  //文件使用模式
                 sarBussStandFileEOService.insertSarBussStandFileEO(sarStandFileEO);
             }
