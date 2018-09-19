@@ -49,7 +49,7 @@ public class SarBusSarCompileEOService extends BaseService<SarBusSarCompileEO, S
      **/
     public ResponseMessage<SarBusSarCompileEO> insertSarBusSarCompile(SarBusSarCompileEO sarBusSarCompileEO) throws Exception {
         SarBusSarCompileEOPage sarBussPage = new SarBusSarCompileEOPage();
-        sarBussPage.setStandCode(sarBusSarCompileEO.getStandCode());
+        sarBussPage.setStandCode(sarBusSarCompileEO.getStandNumber());
         sarBussPage.setValidFlag("0");
         List<SarBusSarCompileEO> getList = dao.queryByStandCode(sarBussPage);
         if(getList != null){
@@ -93,7 +93,7 @@ public class SarBusSarCompileEOService extends BaseService<SarBusSarCompileEO, S
     public ResponseMessage<SarBusSarCompileEO> updateSarBusSarCompile(SarBusSarCompileEO sarBusSarCompileEO) throws Exception{
         SarBusSarCompileEOPage sarBussPage = new SarBusSarCompileEOPage();
         sarBussPage.setId(sarBusSarCompileEO.getId());
-        sarBussPage.setStandCode(sarBusSarCompileEO.getStandCode());
+        sarBussPage.setStandCode(sarBusSarCompileEO.getStandNumber());
         sarBussPage.setValidFlag("0");
         List<SarBusSarCompileEO> getList = dao.queryByStandCode(sarBussPage);
         if(getList != null){

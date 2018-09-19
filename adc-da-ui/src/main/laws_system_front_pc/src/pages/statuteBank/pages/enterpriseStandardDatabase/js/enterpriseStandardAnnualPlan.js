@@ -1,5 +1,5 @@
 export default {
-  name: 'testItemDatabase',
+  name: 'enterpriseStandardAnnualPlan',
   data () {
     return {
       showStandPlanModal: false,
@@ -8,6 +8,7 @@ export default {
       reviewMeetTime: false,
       reviewModifyTime: false,
       startFlowTime: false,
+      showStandPlanTitle: '',
       standPlan: {
         standName: '',
         makeRevisonType: '',
@@ -118,7 +119,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.openPlanModal(params.row,'editOpt')
+                    this.openPlanModal(params.row, 'editOpt')
                   }
                 }
               }, '编辑'),
@@ -180,11 +181,14 @@ export default {
     // 新增年度标准计划
     openPlanModal (row, optType) {
       if (optType === 'addOpt') {
+        this.$refs['submitStandPlan'].resetFields()
         this.reviewSubmitTime = false
         this.reviewMeetTime = false
         this.reviewModifyTime = false
         this.startFlowTime = false
+        this.showStandPlanTitle = '新增年度标准计划'
       } else {
+        this.showStandPlanTitle = '修改年度标准计划'
         this.reviewSubmitTime = true
         this.reviewMeetTime = true
         this.reviewModifyTime = true
@@ -231,13 +235,21 @@ export default {
     },
     // 删除年度标准计划
     deleteStandPlan (id) {
-      this.$http.put('lawss/sarBussStandPlan/deleteStandPlan', {
-        id: id
-      }, {
-        _this: this
-      }, res => {
-        this.searchStandPlan()
-      }, e => {
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.put('lawss/sarBussStandPlan/deleteStandPlan', {
+            id: id
+          }, {
+            _this: this
+          }, res => {
+            this.searchStandPlan()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
       })
     }
   },

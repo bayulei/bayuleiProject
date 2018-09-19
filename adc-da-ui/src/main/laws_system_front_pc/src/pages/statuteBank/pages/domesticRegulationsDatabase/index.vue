@@ -255,9 +255,9 @@
            </Col>
          </Row>
        </Form>
-       <div class="save-laws-btn">
-         <Button v-if="saveInfoBtn" type="primary" @click="saveLawsInfo">提交</Button>
-         <Button @click="cancelAdd">取消</Button>
+       <div class="demo-drawer-footer">
+         <Button style="margin-right: 8px" @click="cancelAdd">取消</Button>
+         <Button type="primary" @click="saveLawsInfo">提交</Button>
        </div>
      </Drawer>
 
