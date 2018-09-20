@@ -42,7 +42,7 @@
       <Row>
         <Col>
           <FormItem label="相关附件" prop="attInfo" class="laws-info-item">
-            <Upload multiple type="drag" ref="attInfo" :action="uploadFileListPath" name="files" :on-success="uploadBackSuccess" :on-error="uploadBackError" >
+            <Upload multiple type="drag" ref="attInfo" :action="uploadFileListPath" name="files" :on-remove="delFileInfo" :on-success="uploadBackSuccess" :on-error="uploadBackError" >
               <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或拖拽文件到此处</p>
@@ -112,7 +112,9 @@ export default {
       msgModeOptions: [],
       showMsgMode: false,
       uploadFilePath: this.simpleUploadPath,
-      uploadFileListPath: this.multipleUploadPath
+      uploadFileListPath: this.multipleUploadPath,
+      // 附件信息集合
+      fileInfoList: []
     }
   },
   methods: {
@@ -146,15 +148,34 @@ export default {
           }
         })
     },
+    // this.fileInfoList = res.data
     uploadBackSuccess (res, file, fileList) {
       console.log(res)
-      console.log(file)
+      console.log('获取文件列表信息')
       console.log(fileList)
-      console.log('上传完成')
+      if (res.ok) {
+        this.fileInfoList.push(res.data)
+      }
     },
     uploadBackError (errorInfo, file, fileList) {
-      console.log('上传失败')
-      console.log(errorInfo)
+      this.executeError('上传失败! 失败原因:' + errorInfo.message)
+    },
+    delFileInfo (file) {
+      let fileInfo = file.response.data[0]
+      let index = this.fileInfoList.findIndex((value, index, arr) => {
+        if (value[0].id === fileInfo.id) {
+          return index
+        }
+      })
+      this.fileInfoList.splice(index, 1)
+    },
+    // 成功弹框
+    executeSuccess (message) {
+      this.$Message.success(message)
+    },
+    // 失败弹框
+    executeError (message) {
+      this.$Message.error(message)
     }
   },
   components: {},

@@ -28,10 +28,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Api(description = "组织机构管理")
 public class OrgEORestController extends BaseController<OrgEO>{
 	private static final Logger logger = LoggerFactory.getLogger(OrgEORestController.class);
-	
+
 	@Autowired
 	private OrgEOService orgEOService;
-	
+
 	@Autowired
 	private BeanMapper beanMapper;
 
@@ -52,6 +52,7 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	/**
 	 * @Author liwenxuan
 	 * @Description 新增组织机构（入参：部门名称+部门简介+部门表述(不必须填写)）
+	 * 注：判斷條件在前台設置
 	 * 1.判断部门简称不能为空，不能已经存在
 	 * 2.先判断返回对象不为空，然后在进行判断shotname
 	 * @Date Administrator 2018/9/17
@@ -63,20 +64,13 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:org:save")
 	public ResponseMessage<OrgVO> create(@RequestBody OrgVO orgVO) throws Exception {
-		if (StringUtils.isBlank(orgVO.getOrgName())) {
-			return Result.error("r0014", "组织机构名称不能为空");
-		} else if (orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()) != null) {
-			return Result.error("r0015", "组织机构名称已存在");
-		}
-		if (StringUtils.isBlank(orgVO.getShotName())) {
-			return Result.error("r0014", "组织机构简称不能为空");
-		} else if (orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()) != null) {
-			if(orgEOService.getOrgEOByNameAndPid(orgVO.getOrgName(),orgVO.getParentId()).getShotName()!=null){
-				return Result.error("r0015", "组织机构简称已存在");
-			}
-		}
+
 		return orgEOService.save(beanMapper.map(orgVO, OrgEO.class));
+
+
 	}
+
+
 	/**
 	 * @Author liwenxuan
 	 * @Description   修改组织机构（前台需要传入id）
@@ -105,13 +99,14 @@ public class OrgEORestController extends BaseController<OrgEO>{
 		return Result.success(orgVO);
 	}
 
-/**
- * @Author liwenxuan
- * @Description 删除组织机构
- * @Date Administrator 2018/9/17
- * @Param [id]
- * @return com.adc.da.util.http.ResponseMessage
- **/
+	/**
+	 * @Author liwenxuan
+	 * @Description 删除组织机构
+	 * 1.当前组织结构下面有子节点不可以删除（逻辑在service里面）
+	 * @Date Administrator 2018/9/17
+	 * @Param [id]
+	 * @return com.adc.da.util.http.ResponseMessage
+	 **/
 	@ApiOperation(value = "|OrgEO|删除")
 	@DeleteMapping("/{id}")
 //	@RequiresPermissions("sys:org:delete")
@@ -120,21 +115,25 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	}
 
 
-	@ApiOperation(value = "|OrgEO|获取树结构")
+	@ApiOperation(value = "|OrgEO|获取所有树结构")
 	@GetMapping("/getTree")
 //	@RequiresPermissions("sys:org:getTree")
 	public ResponseMessage<List<OrgEO>> getTree(){
-		OrgEO orgEO = new OrgEO();
-		List<OrgEO> eos = orgEOService.selectOrgAllNode(orgEO);
+		List<OrgEO> eos = orgEOService.selectOrgAllNode();
 		return Result.success(eos);
 	}
 
-
-	@ApiOperation(value = "|OrgEO|删除组织机构下的一些用户")
+	/**
+	 * @Author liwenxuan
+	 * @Description 删除指定用户的单个组织机构关联
+	 * @Date Administrator 2018/9/18
+	 * @Param [userId, orgId]
+	 * @return com.adc.da.util.http.ResponseMessage<java.lang.Integer>
+	 **/
+	@ApiOperation(value = "|OrgEO|删除组织机构下的用户关联")
 	@DeleteMapping("/{userId}/{orgId}")
 //	@RequiresPermissions("sys:org:delOrgOfUser")
-	public ResponseMessage<Integer> delOrgRelatedUser(@NotNull @PathVariable("userId") String userId, 
-			@NotNull @PathVariable("orgId") String orgId){
+	public ResponseMessage<Integer> delOrgRelatedUser(@NotNull @PathVariable("userId") String userId, @NotNull @PathVariable("orgId") String orgId){
 		return orgEOService.delOrgRelatedUser(userId, orgId);
 	}
 
@@ -171,18 +170,25 @@ public class OrgEORestController extends BaseController<OrgEO>{
 			for(String id:idList){
 				orgEOService.delOrgRelatedUserByUserId(id);
 			}
+			return  Result.success("true","删除成功");
 		}
-		return Result.success();
+		return Result.error("false","删除失败");
 	}
-	
+	/**
+	 * @Author liwenxuan
+	 * @Description 传入的参数是根节点的id和orgName
+	 * @Date Administrator 2018/9/18
+	 * @Param [id, userCorpName]
+	 * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.sys.entity.OrgEO>>
+	 **/
 	@ApiOperation(value = "|OrgEO|获取树结构")
 	@GetMapping("/findById")
 //	@RequiresPermissions("sys:org:findById")
-	public ResponseMessage<List<OrgEO>> findById(String id, String userCorpName){
-		List<OrgEO> eos = orgEOService.findById(id, userCorpName);
+	public ResponseMessage<List<OrgEO>> findById(String id, String orgName){
+		List<OrgEO> eos = orgEOService.findById(id, orgName);
 		return Result.success(eos);
 	}
 
 
-	
+
 }

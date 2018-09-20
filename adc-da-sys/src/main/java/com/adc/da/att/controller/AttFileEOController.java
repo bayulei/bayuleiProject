@@ -31,7 +31,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 @RestController
 @RequestMapping("/${restPath}/att/attFile")
-@Api(description = "|AttFileEO|")
+@Api(description = "|AttFileEO|文件上传")
 public class AttFileEOController extends BaseController<AttFileEO>{
 
     private static final Logger logger = LoggerFactory.getLogger(AttFileEOController.class);

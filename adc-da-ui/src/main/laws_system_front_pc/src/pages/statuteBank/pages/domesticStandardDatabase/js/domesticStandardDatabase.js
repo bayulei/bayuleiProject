@@ -467,18 +467,92 @@ export default {
   methods: {
     // 分页查询国内标准
     getDomesticStandardTable () {
-      this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', this.sarStandardsSearch, {
-        _this: this, loading: 'loading'
-      }, res => {
-        for (let i = 0; i < res.data.list.length; i++) {
-          res.data.list[i]['collectIcontype'] = 'ios-star-outline'
-          res.data.list[i]['collectIconcolor'] = '#5c6b77'
-          res.data.list[i].checked = false
+      // this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', this.sarStandardsSearch, {
+      //   _this: this, loading: 'loading'
+      // }, res => {
+      //   for (let i = 0; i < res.data.list.length; i++) {
+      //     res.data.list[i]['collectIcontype'] = 'ios-star-outline'
+      //     res.data.list[i]['collectIconcolor'] = '#5c6b77'
+      //     res.data.list[i].checked = false
+      //   }
+      //   this.stahndinfoList = res.data.list
+      //   this.total = res.data.count
+      // }, e => {
+      // })
+      this.stahndinfoList = [
+        {
+          checked: false,
+          id: '1000',
+          standSortShow: 'ABS2018',
+          standNumber: 'BZ10000',
+          standYear: '2018',
+          standName: '驱动系统',
+          standStateShow: 0,
+          standNatureShow: '1',
+          putTime: '2018/09/18',
+          issueTime: '2018/10/01'
+        },
+        {
+          checked: false,
+          id: '1001',
+          standSortShow: 'ACS2018',
+          standNumber: 'BZ10001',
+          standYear: '2018',
+          standName: '排气系统',
+          standStateShow: 1,
+          standNatureShow: '1',
+          putTime: '2018/09/17',
+          issueTime: '2018/10/01'
+        },
+        {
+          checked: false,
+          id: '1002',
+          standSortShow: 'ABCS2018',
+          standNumber: 'BZ10002',
+          standYear: '2018',
+          standName: '轮胎性能测试',
+          standStateShow: 0,
+          standNatureShow: '1',
+          putTime: '2018/08/01',
+          issueTime: '2018/09/01'
+        },
+        {
+          checked: false,
+          id: '1003',
+          standSortShow: 'ACS2018',
+          standNumber: 'BZ10003',
+          standYear: '2018',
+          standName: '燃油测试',
+          standStateShow: 2,
+          standNatureShow: '2',
+          putTime: '2018/08/15',
+          issueTime: '2018/10/01'
+        },
+        {
+          checked: false,
+          id: '1004',
+          standSortShow: 'ADP2018',
+          standNumber: 'BZ10004',
+          standYear: '2018',
+          standName: '安全气囊',
+          standStateShow: 1,
+          standNatureShow: '1',
+          putTime: '2018/07/15',
+          issueTime: '2018/09/20'
+        },
+        {
+          checked: false,
+          id: '1005',
+          standSortShow: 'ABS2018',
+          standNumber: 'BZ10005',
+          standYear: '2018',
+          standName: '发动机性能测试',
+          standStateShow: 3,
+          standNatureShow: '2',
+          putTime: '2018/06/26',
+          issueTime: '2018/09/01'
         }
-        this.stahndinfoList = res.data.list
-        this.total = res.data.count
-      }, e => {
-      })
+      ]
     },
     // 分页点击后方法
     pageChange (page) {

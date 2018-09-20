@@ -47,27 +47,30 @@
              <Row>
                <Col span="5">
                  <Checkbox v-model="item.checked" size="large"></Checkbox>
-                 标准号: {{ item.standNumber }}
+                 标准号: {{ item.standSortShow }} {{ item.standNumber }} - {{ item.standYear }}
                </Col>
                <Col span="4" push="1">
                  <b>《{{ item.standName }}》</b>
                </Col>
-               <Col span="4" push="2">{{ item.standStateShow }}</Col>
-               <Col span="4" push="2">{{ item.standNatureShow }}</Col>
-               <Col span="3" push="4">
+               <Col span="4" push="2">标准性质: {{ item.standNatureShow }}</Col>
+               <Col span="3" push="6">
                  <Icon type="md-star" size="26" style="margin-right:5px"></Icon>
                  <Icon type="ios-redo" size="26"></Icon>
                </Col>
              </Row>
              <Row>
-               <Col span="4">新车型实施时间: {{ item.putTime }}</Col>
-               <Col span="4" push="2">在产车实施时间: {{ item.issueTime }}</Col>
-               <Col span="4" push="3">适用车型: {{ item.applyArcticShow }}</Col>
+               <Col span="4">新车型发布日期: {{ item.putTime }}</Col>
+               <Col span="4" push="2">在产车实施日期: {{ item.issueTime }}</Col>
+               <Col span="4" push="3">
+                 <Tag type="dot" :color="item.standStateShow === 0 ? '' : (item.standStateShow === 1 ? 'warning' : (item.standStateShow === 2 ? 'success' : 'error'))">
+                   {{ item.standStateShow === 0 ? '待发布' : (item.standStateShow === 1 ? '审核中' : (item.standStateShow === 2 ? '已发布' : '已驳回')) }}
+                 </Tag>
+               </Col>
                <Col span="6" push="6">
-                 <Button @click = "goProcess(item)">流程</Button>
-                 <Button @click = "selectStandardPro(item,'show')">查看</Button>
-                 <Button @click = "selectStandardPro(item,'edit')">编辑</Button>
-                 <Button @click = "selectSarStandItems(item.id)">查看表单</Button>
+                 <Button @click="goProcess(item)" class="card-btn">流程</Button>
+                 <Button @click="selectStandardPro(item,'show')" class="card-btn">查看</Button>
+                 <Button @click="selectStandardPro(item,'edit')" class="card-btn">编辑</Button>
+                 <Button @click="selectSarStandItems(item.id)" class="card-btn">查看表单</Button>
                </Col>
              </Row>
            </div>
@@ -86,7 +89,7 @@
        <!-- 新增样式 -->
        <div class="standards-info-form">
          <Form ref="sarStandardsInfoForm" :model="sarStandardsInfoEO" :rules="sarStandardsInfoRules" class="label-input-form">
-           <Row gutter="5">
+           <Row>
              <Col span="12">
                <FormItem label="国家/地区" prop="country" class="standards-info-item">
                  <!--<Input v-model="sarStandardsInfoEO.country" disabled="disabled"></Input>-->
