@@ -260,7 +260,6 @@ export default {
       }, res => {
         this.classificationData = res.data.list
         this.total = res.data.count
-
       }, e => {})
     },
     // 提交新增/修改
