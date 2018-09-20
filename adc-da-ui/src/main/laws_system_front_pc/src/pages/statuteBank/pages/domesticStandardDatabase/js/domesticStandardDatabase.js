@@ -798,11 +798,46 @@ export default {
       if (name === 'newMenu') {
         this.menuModalFlag = true
         this.menuAddOrUpdateFlag = 1
+        this.sarMenu = {
+          id: '',
+          parentId: '',
+          menuName: '',
+          sorDivide: 'INLAND_STAND',
+          displaySeq: '',
+          parentIds: ''
+        }
       } else if (name === 'editMenu') {
         this.menuModalFlag = true
         this.menuAddOrUpdateFlag = 2
+        this.sarMenu = this.selectSarMenu // 修改过程中直接将sarMenu对象置为当前选中的对象
       } else {
         // deleteMenu 删除二级菜单，先判断是否选中，选中项目，然后调用删除方法
+        // 先判断目录下是否有菜单
+        this.$http.get('lawss/sarMenu/judgequeryMenuByPid', this.selectSarMenu, {
+          _this: this, loading: 'loading'
+        }, res => {
+          let message = ''
+          if (res.data) {
+            message = '<p>该节点下有记录，是否删除?</p>'
+          } else {
+            message = '<p>是否删除?</p>'
+          }
+          this.$Modal.confirm({
+            title: '提示',
+            content: message,
+            onOk: () => {
+              this.$http.post('lawss/sarMenu/deleteMenuAndChildren', this.selectSarMenu, {
+                _this: this, loading: 'loading'
+              }, res => {
+                this.selectMenu() // 删除成功后，更新二级菜单
+              }, e => {
+              })
+            },
+            onCancel: () => {
+            }
+          })
+        }, e => {
+        })
       }
     },
     // 点击二级菜单新增模态框中的保存
@@ -821,7 +856,6 @@ export default {
         }, e => {
         })
       } else {
-        this.sarMenu = this.selectSarMenu // 修改过程中直接将sarMenu对象置为当前选中的对象
         this.$http.post('lawss/sarMenu/updateSarMenu', this.sarMenu, {
           _this: this, loading: 'loading'
         }, res => {
@@ -1105,6 +1139,7 @@ export default {
             if (JSON.stringify(allthis.selectSarMenu) === '{}') {
               treeObj.selectNode(nodes[0], true) // 返回node对象，此处由于未用到，所以没有接受返回参数
               allthis.sarStandardsSearch.menuId = nodes[0].id // 将当前二级菜单的id传回后台做标准的条件查询
+              allthis.selectSarMenu = nodes[0]  //设置当前选中的node
               // treeObj.expandNode(nodes[0], true, false) // 将指定ID节点展开
             } else {
               treeObj.selectNode(allthis.selectSarMenu, true)

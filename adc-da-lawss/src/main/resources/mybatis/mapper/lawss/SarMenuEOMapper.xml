@@ -192,9 +192,18 @@
     </if>
   </select>
 
-    <select id="queryMenuByPid" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <select id="queryMenuByPid" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.entity.SarMenuEO">
+        select SAR_MENU.* from SAR_MENU start with id=#{id} connect by prior id= parent_id
+    </select>
+
+    <!--    根据目录类型查询最外一层节点 -->
+    <select id="queryMenuByDis" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.entity.SarMenuEO">
         select <include refid="Base_Column_List"/> from SAR_MENU
-        where parent_id = #{parentId} and valid_flag = 0
+        where
+           parent_id is null
+        <if test="sorDivide != null" >
+            and sor_divide = #{sorDivide}
+        </if>
     </select>
 
 </mapper>

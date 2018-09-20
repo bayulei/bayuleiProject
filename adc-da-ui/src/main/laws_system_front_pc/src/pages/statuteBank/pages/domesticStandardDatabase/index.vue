@@ -363,7 +363,7 @@
        <div v-if="file !== null">Upload file: {{ file.name }} <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? 'Uploading' : 'Click to upload' }}</Button></div>
      </Modal>
      <!-- 新增二级菜单模态窗 -->
-     <Modal v-model="menuModalFlag" title="新增目录" @on-ok="newMenu" @on-cancel="closeModal" ref="menuRefModal">
+     <Modal v-model="menuModalFlag" title="新增目录" @on-ok="newMenu" >
        <Form  :model="sarMenu" :rules="sarMenuRules" class="label-input-form">
          <FormItem label="名称" prop="menuName" class="standards-info-item">
            <Input v-model="sarMenu.menuName"></Input>
