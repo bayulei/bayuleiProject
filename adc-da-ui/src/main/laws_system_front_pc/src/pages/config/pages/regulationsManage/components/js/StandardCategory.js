@@ -1,17 +1,15 @@
 export default {
-  name: 'standard-classification',
+  name: 'standard-category',
   data () {
     return {
       modalType: '',
-      // 模态框标题
-      classTitle: '',
-      selectNum: '',
-      // 接收选中行数据
+      categoryTitle: '', // 模态框标题
+      selectNum: '', // 接收选中行数据
+      deleteType: '',
       standardForm: {
-        // 选项
-        standName: '',
-        // 数据编码
-        standCode: ''
+        standName: '', // 选项
+        standCode: '', // 数据编码
+        id: '' // 数据id
       },
       total: 0,
       page: 1,
@@ -23,16 +21,13 @@ export default {
         paddingBottom: '53px',
         position: 'static'
       },
-      //  规范
-      classRules: {},
-      // 发送数据
-      classModelAdd: {
+      categoryModelAdd: {
         // 模态框标准
         dicTypeName: '',
         // 数据编码
         dicTypeCode: '',
         // 唯一辨识
-        dicId: 'FDFDFDVFTGR',
+        dicId: 'JKSADFH564S',
         // 数据id
         id: '',
         // 创建日期
@@ -40,9 +35,9 @@ export default {
         // 创建人
         founder: ''
       },
-      classModal: false, // 模态框是否打开
+      categoryModal: false, // 模态框是否打开
       // 表格表头
-      classTable: [
+      categoryTable: [
         {
           type: 'selection',
           width: 60,
@@ -85,7 +80,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.classEdit(params.row)
+                    this.categoryEdit(params.row)
                   }
                 }
               }, '编辑'),
@@ -113,7 +108,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.classDel(params.row.id)
+                    this.categoryDel(params.row.id)
                   }
                 }
               }, '删除')
@@ -122,7 +117,8 @@ export default {
         }
       ],
       // 表格内容
-      classData: []
+      categoryData: [],
+      categoryRules: []
     }
   },
   methods: {
@@ -179,7 +175,7 @@ export default {
           this.$http.delete(url, type === 1 ? paramId : paramIds, {
             _this: this
           }, res => {
-            this.selectClass()
+            this.selectCategory()
           }, e => {
           })
         },
@@ -187,40 +183,41 @@ export default {
         }
       })
     },
+    closeModal () {
+      this.classModal = false
+    },
     // 新增
-    classAdd () {
-      this.$refs['classModelAdd'].resetFields()
-      this.classModal = true
+    categoryAdd () {
+      this.categoryModal = true
       this.modalType = 1
       // 取消所有的选中效果
       this.handleSelectAll(false)
-      this.classTitle = '新增标准'
+      this.categoryTitle = '新增标准'
+      this.$refs['categoryModelAdd'].resetFields()
     },
     // 编辑
-    classEdit (row) {
-      console.log(row)
-      this.classModal = true
+    categoryEdit (row) {
+      this.categoryModal = true
       this.modalType = 2
-      this.classTitle = '编辑标准'
-      this.classModelAdd = JSON.parse(JSON.stringify(row))
-      // this.classModelAdd = row
+      this.categoryTitle = '编辑标准'
+      this.categoryModelAdd = JSON.parse(JSON.stringify(row))
     },
     // 查看
     viewData (row) {
-      this.classModal = true
+      this.categoryModal = true
       this.modalType = 3
-      this.classTitle = '查看标准'
-      this.classModelAdd = JSON.parse(JSON.stringify(row))
+      this.categoryTitle = '查看标准'
+      this.categoryModelAdd = JSON.parse(JSON.stringify(row))
     },
     // 删除
-    classDel (id) {
+    categoryDel (id) {
       this.handleSelectAll(false)
-      let url = 'sys/dictype/delete'
+      let url = 'lawss/msgModule'
       let type = 1
       this.confirm('确定删除这一条数据', id, url, type)
     },
     // 批量删除
-    classBatchDel () {
+    categoryBatchDel () {
       if (this.selectNum === '' || this.selectNum.length === 0) {
         this.instance('warning', '请选择一条数据进行删除')
       } else {
@@ -233,64 +230,51 @@ export default {
         this.confirm('确认删除该这些数据', delIds, url)
       }
     },
-    closeModal () {
-      this.classModal = false
-    },
     pageChange (page) {
       this.page = page
-      this.selectClass()
+      this.selectCategory()
     },
     pageSizeChange (pageSize) {
       this.rows = pageSize
-      this.selectClass()
+      this.selectCategory()
     },
     // 加载表格
-    selectClass () {
-      let DicTypeEOPage = this.classModelAdd
+    selectCategory () {
+      let DicTypeEOPage = this.categoryModelAdd
       DicTypeEOPage.page = this.page
       DicTypeEOPage.pageSize = this.rows
       DicTypeEOPage.dicTypeName = this.standardForm.standName
       DicTypeEOPage.dicTypeCode = this.standardForm.standCode
-      // let DicTypeEOPage = {
-      //   page: this.page,
-      //   pageSize: this.rows,
-      //   dicTypeName: this.standardForm.standName,
-      //   dicTypeCode: this.standardForm.standCode,
-      //   dicId: 'FDFDFDVFTGR'
-      // }
       this.$http.get('sys/dictype/page', DicTypeEOPage, {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.classData = res.data.list
+        this.categoryData = res.data.list
         this.total = res.data.count
-        this.page = 1
       }, e => {})
     },
     // 提交新增/修改
-    saveClass () {
-      let data = this.classModelAdd
+    saveCategory () {
       if (this.modalType === 1) {
-        this.$http.postData('sys/dictype/create', data, {
+        this.$http.postData('sys/dictype/create', this.categoryModelAdd, {
           _this: this
         }, res => {
-          this.selectClass()
-          this.classModal = false
+          this.selectCategory()
+          this.categoryModal = false
         }, e => {
         })
       } else if (this.modalType === 2) {
-        this.$http.putData('sys/dictype', data, {
+        this.$http.putData('sys/dictype', this.categoryModelAdd, {
           _this: this
         }, res => {
-          this.selectClass()
-          this.classModal = false
+          this.selectCategory()
+          this.categoryModal = false
         }, e => {
-
         })
       }
     }
   },
   mounted () {
-    this.selectClass()
+    this.selectCategory()
   }
 }
