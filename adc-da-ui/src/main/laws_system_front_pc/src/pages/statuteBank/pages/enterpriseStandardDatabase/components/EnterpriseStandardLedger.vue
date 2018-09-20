@@ -24,11 +24,11 @@
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table width="100%" border ref="selection" :columns="sarCompileTable" :data="sarCompileListDatas" @on-select="getSelectedDatas"></Table>
+      <Table width="100%" border ref="selection" :columns="sarCompileTable" :data="sarCompileListDatas"></Table>
     </div>
     <pagination :total="sarCompileTotal" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
-    <Drawer :title="showSarCompileTitle" v-model="showSarCompileModal" width="900">
+    <Drawer :title="showSarCompileTitle" v-model="showSarCompileModal" width="900" :styles="styles">
       <Form ref="submitSarCompile" :model="submitSarCompile" :rules="submitSarCompileFormRules" class="label-input-form">
         <input v-model="submitSarCompile.id" v-show="false">
         <Row>
