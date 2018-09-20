@@ -255,7 +255,6 @@ export default {
           this.selectClass()
           this.classModal = false
         }, e => {
-
         })
       } else if (this.modalType === 2) {
         this.$http.putData('sys/dictype', data, {
