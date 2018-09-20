@@ -241,12 +241,15 @@
            <Row>
              <Col span="12">
                <FormItem label="标准文本" prop="standFileList" class="standards-info-item">
+                 <Select v-model="sarStandardsInfoEO.standFileList" multiple v-show="false"></Select>
                  <!--<input v-model="sarStandardsInfoEO.standFileList" v-show="false">
                  <Upload :show-upload-list="false" :action="uploadPath"
                          :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'standFileList','standFileName')" multiple name="file">
                    <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.standFileList.length === 0 ? '点击上传' : standFileName }}</Button>
                  </Upload>-->
-                 <Button @click="importModalshowflagtemp=true" :disabled="formdisableflag">点击上传</Button>
+                 <Button @click="() => { currentFile = 'standFileList';importModalshowflagtemp = true}" icon="ios-cloud-upload-outline" :disabled="formdisableflag" class="form-upload-btn">
+                   {{ sarStandardsInfoEO.standFileList.length === 0 ? '点击上传' : '查看已上传的文件' }}
+                 </Button>
                </FormItem>
              </Col>
              <Col span="12">
@@ -365,6 +368,7 @@
          multiple
          type="drag"
          show-upload-list
+         :on-success="uploadSuccess"
          :action="uploadPath">
          <div style="padding: 20px 0">
            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
