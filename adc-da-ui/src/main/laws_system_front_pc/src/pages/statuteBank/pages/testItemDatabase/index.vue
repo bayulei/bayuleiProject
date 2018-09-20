@@ -7,19 +7,19 @@
 </template>
 
 <script>
-  export default {
-    name: 'testItemDatabase',
-    data () {
-      return {}
-    },
-    methods: {},
-    components: {},
-    props: {},
-    computed: {},
-    watch: {},
-    mounted () {}
-  }
-
+export default {
+  name: 'testItemDatabase',
+  data () {
+    return {}
+  },
+  methods: {},
+  components: {},
+  props: {},
+  computed: {},
+  watch: {},
+  mounted () {}
+}
+</script>
 <style lang="less">
   #testItemDatabase{
   }

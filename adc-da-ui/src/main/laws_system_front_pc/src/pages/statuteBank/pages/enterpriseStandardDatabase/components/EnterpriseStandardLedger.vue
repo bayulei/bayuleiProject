@@ -18,7 +18,7 @@
           </FormItem>
           <Button type="primary" icon="ios-search" @click="searchSarCompile"></Button>
           <Button type="primary" @click="openAddModal">新增</Button>
-          <Button type="primary" @click="">导出</Button>
+          <Button type="primary">导出</Button>
         </Form>
       </div>
     </table-tools-bar>
