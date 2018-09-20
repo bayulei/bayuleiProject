@@ -23,7 +23,12 @@
     <section class="home-section">
       <!-- 搜索框 -->
       <div class="search-box">
-        <div class="search-option">主题</div>
+        <div class="search-option">
+          <Select v-model="searchType">
+            <Option :value="1">标准编号</Option>
+            <Option :value="2">标准类别</Option>
+          </Select>
+        </div>
         <div class="search-input">
           <Input type="text" v-model="keywords" autofocus id="search-input" :placeholder="searchRecommend" clearable></Input>
         </div>
@@ -37,27 +42,36 @@
           <div class="nav-content-left">
             <!-- 国内外标准法规库 -->
             <router-link tag="div" class="nav-left-top nav-item" id="standardRegulationLibrary" to="/statuteBank">
-              <div class="nav-icon iconfont">&#xe656;</div>
-              <h5>国内外标准法规库</h5>
+              <dl>
+                <dt class="nav-icon iconfont">&#xe656;</dt>
+                <dd>国内外标准法规库</dd>
+              </dl>
             </router-link>
             <!-- 企业标准库 -->
             <div class="nav-left-top nav-item" id="enterpriseStandardLaw">
-              <div class="nav-icon iconfont">&#xe6ee;</div>
-              <h5>企业标准库</h5>
+              <dl>
+                <dt class="nav-icon iconfont">&#xe6ee;</dt>
+                <dd>企业标准库</dd>
+              </dl>
             </div>
             <!-- 流程中心 -->
             <router-link tag="div" class="nav-left-top nav-item" id="processCenter" to="/processCenter">
-              <div class="nav-icon iconfont">&#xe634;</div>
-              <h5>流程中心</h5>
+              <dl>
+                <dt class="nav-icon iconfont">&#xe634;</dt>
+                <dd>流程中心</dd>
+              </dl>
             </router-link>
             <!-- 标准团队 -->
             <div class="nav-left-top nav-item" id="standardTeam">
-              <div class="nav-icon iconfont">&#xe600;</div>
-              <h5>标准团队</h5>
+              <dl>
+                <dt class="nav-icon iconfont">&#xe600;</dt>
+                <dd>标准团队</dd>
+              </dl>
             </div>
             <!-- 待办任务 -->
             <div class="nav-left-bottom" id="pendingTask">
               <h5>待办任务</h5>
+              <div class="box-line"></div>
               <ul>
                 <li v-for="needTodo in todoList" :key="needTodo.id">{{ needTodo.content }}</li>
               </ul>
@@ -68,6 +82,7 @@
             <div class="nav-right-top" id="dynamicEarlyWarning">
               <h5>动态信息</h5>
               <span class="more">更多</span>
+              <div class="box-line"></div>
               <ul>
                 <li v-for="item in domesticDynamics" :key="item.id">
                   <i v-if="item.id === '1001'">new</i>
@@ -80,6 +95,7 @@
             <div class="nav-right-bottom" id="informationCenter">
               <h5>资料中心信息</h5>
               <span class="more">更多</span>
+              <div class="box-line"></div>
               <ul>
                 <li v-for="item in informationData" :key="item.id">
                   <span class="type">{{ item.type === 1 ? '新闻' : (item.type === 2 ? '通知' : (item.type === 3 ? '月报' : '资料')) }}</span>
@@ -121,6 +137,7 @@ export default {
     return {
       currentTime: '', // 当前时间
       userAvator: require('assets/images/user-avator.png'), // 用户头像
+      searchType: 1, // 搜索类型
       keywords: '',
       topNavList: [
         {
@@ -155,7 +172,7 @@ export default {
         }
       ],
       searchText: '标准高级检索',
-      searchRecommend: '中文文献、外文文献 (elsevier、Springer、wiley......)',
+      searchRecommend: '请输入关键词',
       todoList: [
         {
           id: '1001',
@@ -374,7 +391,7 @@ export default {
       .home-nav{
         flex: 1;
         .flex();
-        padding: 0 0.5rem;
+        padding: 0 10px;
         height: 86.6%;
         li{
           color: #FFF;
@@ -391,25 +408,6 @@ export default {
             cursor:pointer;
             color: #52b8db;
           }
-          /*&::before{*/
-            /*content: '';*/
-            /*width: 0;*/
-            /*height: 2px;*/
-            /*background: #FFF;*/
-            /*position: absolute;*/
-            /*bottom: -0.15rem;*/
-            /*left: 50%;*/
-            /*transform: translate(-50%);*/
-            /*transition: all .3s linear;*/
-          /*}*/
-          /*&:hover{*/
-            /*cursor: pointer;*/
-            /*transform: translateY(-5px);*/
-            /*&::before{*/
-              /*width: 50%;*/
-              /*bottom: -0.25rem;*/
-            /*}*/
-          /*}*/
         }
       }
       @media screen and (max-width: 1366px) {
@@ -456,10 +454,27 @@ export default {
         .search-option{
           flex: 0 0 13.63%;
           color: #515151;
-          font-size: .32rem;
+          font-size: 16px;
           background: rgba(255,255,255,.8);
           border: 1px solid #B3C3C7;
           .flex-center;
+          .ivu-select{
+            height: 100%;
+            background: transparent;
+            border: none;
+            .ivu-select-selection{
+              height: 100%;
+              border: none;
+              border-radius: 0;
+              box-shadow: none;
+              & > div{
+                height: 100%;
+                .flex();
+                align-items: center;
+                justify-content: center;
+              }
+            }
+          }
         }
         .search-input{
           flex: 0 0 55%;
@@ -475,25 +490,28 @@ export default {
               background: transparent;
               border: none !important;
               box-shadow: none;
-              padding: 0 .4rem;
-              font-size: .32rem;
+              padding: 0 20px;
+              font-size: 16px;
             }
           }
         }
         .search-btn{
           flex: 0 0 13.63%;
-          background: @bgColor;
+          background: @homeHeaderBgColor;
           cursor: pointer;
           &:hover{
             opacity: .8;
           }
           .flex-center;
+          .ivu-icon{
+            color: #FFF !important;
+          }
         }
         .search-text{
           .flex-center;
           color: #2A639B;
           font-weight: bold;
-          font-size: .32rem;
+          font-size: 16px;
           flex: 0 0 calc(~'100% - 82.26%');
           position: relative;
           top: 5px;
@@ -503,6 +521,7 @@ export default {
           width: 90%;
           height: 87%;
           margin: 0 auto;
+          max-width: 1600px;
           .nav-content{
             width: 100%;
             height: 100%;
@@ -519,7 +538,17 @@ export default {
                   width: 48.9%;
                   height: 23%;
                   position: absolute;
-                  padding-top: 3.5%;
+                  .flex();
+                  justify-content: center;
+                  align-items: center;
+                  @media screen and (max-width: 1366px) {
+                    .nav-icon{font-size: 40px !important;}
+                  }
+                  .nav-icon{
+                    font-size: 50px;
+                    text-align: center;
+                  }
+                  dd{font-size:14px;}
                   &:nth-child(1){
                     top: 0;
                     left: 0;
@@ -537,7 +566,7 @@ export default {
                     top: 24.9%;
                   }
                   h5{
-                    font-size: 17px;
+                    font-size: 16px;
                     text-align: center;
                   }
                 }
@@ -549,9 +578,9 @@ export default {
                 bottom: 0;
                 left: 0;
                 color: #666;
-                padding: 0.25rem;
                 h5{
                   font-size: 18px;
+                  line-height: 30px;
                   -webkit-user-select: none;
                   -moz-user-select: none;
                   -ms-user-select: none;
@@ -559,18 +588,15 @@ export default {
                   font-weight: 600;
                 }
                 ul{
-                  margin-top: 0.1rem;
+                  margin-top: 5px;
                   height: 85%;
                   overflow-y: auto;
                   li{
-                    padding: .1rem;
+                    padding: 5px;
                     .ellipsis;
+                    font-size: 14px;
                   }
                 }
-              }
-              .nav-icon{
-                font-size: 40px;
-                text-align: center;
               }
             }
             .nav-content-right{
@@ -586,133 +612,54 @@ export default {
                 position: absolute;
                 top: 0;
                 left: 0;
-                padding: 0.25rem;
-                .more{
-                  cursor: pointer;
-                  color: #FFF;
-                  position: absolute;
-                  top: 2px;
-                  right: 2px;
-                  z-index: 100;
-                  padding: 0.1rem 0.2rem;
-                  &:hover{
-                    color: #12508E;
-                    background: #FFF;
-                    transition: all .2s linear;
-                  }
-                }
-                .ivu-tabs{
-                  height: 100%;
-                  .ivu-tabs-nav .ivu-tabs-tab-active{ color: #FFF; }
-                  .ivu-tabs-mini .ivu-tabs-tab{
-                    color: #CCC;
-                    &:hover{
-                      color: #FFF;
-                    }
-                  }
-                  .ivu-tabs-bar{
-                    margin-bottom: 0;
-                  }
-                  .ivu-tabs-content{
-                    height: calc(~'100% - 0.66rem');
-                    ul{
-                      width: 100%;
-                      height: 100%;
-                      padding: 0.15rem;
-                      overflow-y: auto;
-                      li{
-                        padding: 0 0.1rem;
-                        margin-bottom: 0.1rem;
-                        position: relative;
-                        cursor: pointer;
-                        display: flex;
-                        display: -ms-flex;
-                        align-items: center;
-                        &:last-child{
-                          margin-bottom: 0;
-                        }
-                        a{
-                          display: inline-block;
-                          max-width: 70%;
-                          .ellipsis;
-                        }
-                        &:hover{
-                          a{
-                            color: @baseColor;
-                          }
-                          span{
-                            color: @baseColor;
-                          }
-                        }
-                        i{
-                          font-style: italic;
-                          color: #E4393C;
-                          font-weight: bold;
-                          margin-right: 0.1rem;
-                        }
-                        a{
-                          color: #FFF;
-                        }
-                        span{
-                          position: absolute;
-                          top: 0;
-                          right: 0.15rem;
-                        }
-                      }
-                    }
-                  }
-                }
                 h5{
                   font-size: 18px;
-                  height: 0.8rem;
-                  line-height: 0.8rem;
+                  line-height: 30px;
                   -webkit-user-select: none;
                   -moz-user-select: none;
                   -ms-user-select: none;
                   user-select: none;
-                  margin-bottom: 5px;
                   font-weight: 600;
                 }
                 ul{
                   height: 85%;
                   overflow-y: auto;
                   li{
-                    padding: 0 0.1rem;
-                    margin-bottom: 0.1rem;
+                    padding: 0 5px;
+                    margin-bottom: 5px;
                     position: relative;
                     cursor: pointer;
                     display: flex;
                     display: -ms-flex;
                     align-items: center;
+                    font-size: 14px;
                     &:last-child{
                       margin-bottom: 0;
                     }
                     a{
                       display: inline-block;
                       max-width: 80%;
+                      color: #333;
                       .ellipsis;
                     }
                     &:hover{
                       a{
-                        color: #FFF;
+                        color: #12508E;
                       }
                       span{
-                        color: #FFF;
+                        color: #12508E;
                       }
                     }
                     i{
                       font-style: italic;
                       color: #E4393C;
                       font-weight: bold;
-                      margin-right: 0.1rem;
-                    }
-                    a{
-                      color: rgba(255,255,255,.9);
+                      margin-right: 5px;
                     }
                     span{
                       position: absolute;
                       top: 0;
-                      right: 0.15rem;
+                      right: 7.5px;
                     }
                   }
                 }
@@ -723,35 +670,18 @@ export default {
                 position: absolute;
                 bottom: 0;
                 left: 0;
-                padding: 0 0.2rem;
-                .more{
-                  cursor: pointer;
-                  color: #FFF;
-                  position: absolute;
-                  top: 2px;
-                  right: 2px;
-                  z-index: 100;
-                  padding: 0.1rem 0.2rem;
-                  &:hover{
-                    color: #12508E;
-                    background: #FFF;
-                    transition: all .2s linear;
-                  }
-                }
                 h5{
                   font-size: 18px;
-                  height: 0.8rem;
-                  line-height: 0.8rem;
+                  line-height: 30px;
                   -webkit-user-select: none;
                   -moz-user-select: none;
                   -ms-user-select: none;
                   user-select: none;
-                  margin-bottom: 10px;
                   font-weight: 600;
                 }
                 ul{
                   width: 100%;
-                  height: calc(~'100% - 1rem - 10px');
+                  height: 85%;
                   overflow-y: auto;
                   li{
                     padding: 0 0.1rem;
@@ -761,6 +691,7 @@ export default {
                     display: flex;
                     display: -ms-flex;
                     align-items: center;
+                    font-size: 14px;
                     &:last-child{
                       margin-bottom: 0;
                     }
@@ -776,7 +707,7 @@ export default {
                         position: absolute;
                         top: 7.5%;
                         right: 0;
-                        background: #FFF;
+                        background: #AAA;
                       }
                     }
                     .time{
@@ -786,54 +717,56 @@ export default {
                     }
                     a{
                       padding-left: 0.1rem;
-                      color: rgba(255,255,255,.9);
+                      color: #333;
                       display: inline-block;
                       max-width: 80%;
                       .ellipsis;
                     }
                     &:hover{
                       a{
-                        color: #FFF;
+                        color: #12508E;
                       }
                       .time{
-                        color: #FFF;
+                        color: #12508E;
                       }
                     }
                   }
                 }
               }
+              .more{
+                cursor: pointer;
+                color: #12508E;
+                position: absolute;
+                top: 0;
+                right: 0;
+                z-index: 100;
+                padding: 5px 10px;
+                &:hover{
+                  color: #FFF;
+                  background: #12508E;
+                  transition: all .2s linear;
+                }
+              }
             }
             #standardRegulationLibrary{
-              background: @boxBgColor;
+              background: @homeHeaderBgColor;
               color: #FFF;
-              &:hover{
-                color: #12508E;
-              }
             }
             #enterpriseStandardLaw{
               background: @boxBgColor;
               color: #FFF;
-              &:hover{
-                color: #12508E;
-              }
             }
             #processCenter{
               background: @boxBgColor;
               color: #FFF;
-              &:hover{
-                color: #12508E;
-              }
             }
             #standardTeam{
-              background: @boxBgColor;
+              background: @homeHeaderBgColor;
               color: #FFF;
-              &:hover{
-                color: #12508E;
-              }
             }
-            #pendingTask{background: @boxBgColor; color: #FFF;}
-            #dynamicEarlyWarning{background: @boxBgColor;}
-            #informationCenter{background: @boxBgColor;}
+            #pendingTask{color: #333;}
+            #dynamicEarlyWarning{color: #333;}
+            #informationCenter{color: #333;}
           }
           .nav-item{
             cursor: pointer;
@@ -853,7 +786,7 @@ export default {
         position: relative;
         top: 10px;
         span{
-          color: #888;
+          color: #333;
           display: inline-flex;
           display: -ms-inline-flexbox;
           align-items: center;
@@ -873,7 +806,7 @@ export default {
             display: -ms-flex;
             align-items: center;
             a{
-              color: #888;
+              color: #333;
               font-size: 14px;
               &:hover{
                 color: @baseColor;
@@ -886,7 +819,7 @@ export default {
       .footer{
         width: 90%;
         margin: 0.3rem auto 0 auto;
-        color: #888;
+        color: #333;
         font-size: 14px;
         font-weight: bold;
         span{
@@ -902,7 +835,7 @@ export default {
               position: absolute;
               top: 12.5%;
               right: 0;
-              background: #888;
+              background: #333;
             }
           }
         }
