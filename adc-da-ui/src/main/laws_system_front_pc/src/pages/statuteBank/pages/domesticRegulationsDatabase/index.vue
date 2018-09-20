@@ -59,142 +59,42 @@
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
    <!--新增修改查看法规模态框-->
-   <!--<full-modal v-model="showLawsInfoModal" v-if="showLawsInfoModal" ref="showLawsInfoModal">-->
-     <!--<div>-->
-       <!--<Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">-->
-         <!--<input v-model="SarLawsInfoEO.editLawsId" v-show="false">-->
-         <!--<Row>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="国家/地区" prop="country" class="laws-info-item">-->
-               <!--<Input v-model="SarLawsInfoEO.country" disabled="disabled"></Input>-->
-             <!--</FormItem>-->
-          <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="文件性质" prop="lawsProperty" class="laws-info-item">-->
-               <!--<Select v-model="SarLawsInfoEO.lawsProperty">-->
-                 <!--<Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>-->
-               <!--</Select>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="文件号" prop="lawsNumber" class="laws-info-item">-->
-               <!--<Input v-model="SarLawsInfoEO.lawsNumber"></Input>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-         <!--</Row>-->
-         <!--<Row>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="文件名称" prop="lawsName" class="laws-info-item">-->
-               <!--<Input v-model="SarLawsInfoEO.lawsName"></Input>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="发布单位" prop="issueUnit" class="laws-info-item">-->
-               <!--<Input v-model="SarLawsInfoEO.issueUnit"></Input>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="文件状态" prop="lawsState" class="laws-info-item">-->
-               <!--<Select v-model="SarLawsInfoEO.lawsState">-->
-                 <!--<Option v-for="opt in lawsStatusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>-->
-               <!--</Select>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-         <!--</Row>-->
-         <!--<Row>-->
-           <!--<Col span="8">-->
-             <!--&lt;!&ndash;<FormItem label="发布日期" prop="issueTime" class="laws-info-item">&ndash;&gt;-->
-               <!--&lt;!&ndash;<DatePicker type="date" v-model="SarLawsInfoEO.issueTime" format="yyyy-MM-dd"></DatePicker>&ndash;&gt;-->
-             <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
-           <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--&lt;!&ndash;<FormItem label="实施日期" prop="putTime" class="laws-info-item">&ndash;&gt;-->
-               <!--&lt;!&ndash;<DatePicker v-model="SarLawsInfoEO.putTime"></DatePicker>&ndash;&gt;-->
-             <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
-           <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="代替文件号" prop="replaceLawsNum" class="laws-info-item">-->
-               <!--<Input v-model="SarLawsInfoEO.replaceLawsNum"></Input>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-         <!--</Row>-->
-         <!--<Row>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="适用车型" prop="applyArctic" class="laws-info-item">-->
-               <!--<Select v-model="SarLawsInfoEO.applyArctic" multiple style="width:200px">-->
-                 <!--<Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-               <!--</Select>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="能源种类" prop="energyKind" class="laws-info-item">-->
-               <!--<Select v-model="SarLawsInfoEO.energyKind" multiple style="width:200px">-->
-                 <!--<Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-               <!--</Select>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="适用认证" prop="applyAuth" class="laws-info-item">-->
-               <!--<Select v-model="SarLawsInfoEO.applyAuth" multiple style="width:200px">-->
-                 <!--<Option v-for="item in applyAuthOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-               <!--</Select>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-         <!--</Row>-->
-         <!--<Row>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="责任部门" prop="responsibleUnit" class="laws-info-item">-->
-               <!--<Input v-model="SarLawsInfoEO.responsibleUnit"></Input>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-           <!--<Col span="8">-->
-             <!--<FormItem label="链接" prop="linkUri" class="laws-info-item">-->
-               <!--<Input v-model="SarLawsInfoEO.linkUri"></Input>-->
-             <!--</FormItem>-->
-           <!--</Col>-->
-         <!--</Row>-->
-       <!--</Form>-->
-     <!--</div>-->
-     <!--<div class="save-laws-btn">-->
-       <!--<Button v-if="saveInfoBtn" type="primary" @click="saveLawsInfo">提交</Button>-->
-       <!--<Button @click="cancelAdd">取消</Button>-->
-     <!--</div>-->
-   <!--</full-modal>-->
-
-     <Drawer title="Create" v-model="showLawsInfoModal" width="900" :styles="styles">
+     <Drawer :title="showLawsInfoTitle" v-model="showLawsInfoModal" width="900">
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">
          <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
          <Row>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="国家/地区" prop="country" class="laws-info-item">
                <Input v-model="SarLawsInfoEO.country" disabled="disabled"></Input>
              </FormItem>
            </Col>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="文件性质" prop="lawsProperty" class="laws-info-item">
                <Select v-model="SarLawsInfoEO.lawsProperty">
                  <Option v-for="opt in lawsPropertyOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
                </Select>
              </FormItem>
            </Col>
-           <Col span="8">
-             <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.lawsNumber"></Input>
-             </FormItem>
-           </Col>
          </Row>
          <Row>
-           <Col span="8">
+           <Col span="12">
+           <FormItem label="文件号" prop="lawsNumber" class="laws-info-item">
+             <Input v-model="SarLawsInfoEO.lawsNumber"></Input>
+           </FormItem>
+           </Col>
+           <Col span="12">
              <FormItem label="文件名称" prop="lawsName" class="laws-info-item">
                <Input v-model="SarLawsInfoEO.lawsName"></Input>
              </FormItem>
            </Col>
-           <Col span="8">
+         </Row>
+         <Row>
+           <Col span="12">
              <FormItem label="发布单位" prop="issueUnit" class="laws-info-item">
                <Input v-model="SarLawsInfoEO.issueUnit"></Input>
              </FormItem>
            </Col>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="文件状态" prop="lawsState" class="laws-info-item">
                <Select v-model="SarLawsInfoEO.lawsState">
                  <Option v-for="opt in lawsStatusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
@@ -203,38 +103,40 @@
            </Col>
          </Row>
          <Row>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="发布日期" prop="issueTime" class="laws-info-item">
                <DatePicker type="date" v-model="SarLawsInfoEO.issueTime" format="yyyy-MM-dd"></DatePicker>
              </FormItem>
            </Col>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="实施日期" prop="putTime" class="laws-info-item">
                <DatePicker v-model="SarLawsInfoEO.putTime"></DatePicker>
              </FormItem>
            </Col>
-           <Col span="8">
-             <FormItem label="代替文件号" prop="replaceLawsNum" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.replaceLawsNum"></Input>
-             </FormItem>
-           </Col>
          </Row>
          <Row>
-           <Col span="8">
+           <Col span="12">
+           <FormItem label="代替文件号" prop="replaceLawsNum" class="laws-info-item">
+             <Input v-model="SarLawsInfoEO.replaceLawsNum"></Input>
+           </FormItem>
+           </Col>
+           <Col span="12">
              <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
                <Select v-model="SarLawsInfoEO.applyArctic" multiple style="width:200px">
                  <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                </Select>
              </FormItem>
            </Col>
-           <Col span="8">
+         </Row>
+         <Row>
+           <Col span="12">
              <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
                <Select v-model="SarLawsInfoEO.energyKind" multiple style="width:200px">
                  <Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                </Select>
              </FormItem>
            </Col>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="适用认证" prop="applyAuth" class="laws-info-item">
                <Select v-model="SarLawsInfoEO.applyAuth" multiple style="width:200px">
                  <Option v-for="item in applyAuthOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -243,12 +145,12 @@
            </Col>
          </Row>
          <Row>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="责任部门" prop="responsibleUnit" class="laws-info-item">
                <Input v-model="SarLawsInfoEO.responsibleUnit"></Input>
              </FormItem>
            </Col>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="链接" prop="linkUri" class="laws-info-item">
                <Input v-model="SarLawsInfoEO.linkUri"></Input>
              </FormItem>
@@ -257,7 +159,7 @@
        </Form>
        <div class="demo-drawer-footer">
          <Button style="margin-right: 8px" @click="cancelAdd">取消</Button>
-         <Button type="primary" @click="saveLawsInfo">提交</Button>
+         <Button type="primary" v-if="saveInfoBtn" @click="saveLawsInfo">提交</Button>
        </div>
      </Drawer>
 
@@ -271,7 +173,7 @@
    </Modal>
 
    <!--查看分解单模态框-->
-   <full-modal v-model="showLawsItemsModal" v-if="showLawsItemsModal" ref="showLawsItemsModal">
+   <Drawer title="查看分解单" v-model="showLawsItemsModal" width="900">
      <Form ref="lawsItemsSearch" :model="lawsItemsSearch" class="label-input-form">
        <Row>
          <Col span="8">
@@ -291,45 +193,46 @@
        <Table border ref="selection" :columns="itemsTableColumn" :data="itemsData"></Table>
      </div>
      <pagination :total="itemsTotal" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-   </full-modal>
+   </Drawer>
 
    <!--新增修改查看法规条目模态框-->
-   <full-modal v-model="addLawsItemsModal" v-if="addLawsItemsModal" ref="addLawsItemsModal">
-     <div>
+     <Drawer :title="addLawsItemsTitle" v-model="addLawsItemsModal" width="800">
        <Form ref="SarLawsItemsEO" :model="SarLawsItemsEO" :rules="addLawsItemsFormRules" class="label-input-form">
          <input v-model="SarLawsItemsEO.id" v-show="false">
          <input v-model="SarLawsItemsEO.lawsId" v-show="false">
          <Row>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="条目号" prop="itemsNum" class="laws-info-item">
                <Input v-model="SarLawsItemsEO.itemsNum"></Input>
              </FormItem>
            </Col>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="条目名称" prop="itemsName" class="laws-info-item">
                <Input v-model="SarLawsItemsEO.itemsName"></Input>
              </FormItem>
            </Col>
-           <Col span="8">
-             <FormItem label="涉及零部件" prop="parts" class="laws-info-item">
-               <Input v-model="SarLawsItemsEO.parts"></Input>
-             </FormItem>
-           </Col>
          </Row>
          <Row>
-           <Col span="8">
+           <Col span="12">
+           <FormItem label="涉及零部件" prop="parts" class="laws-info-item">
+             <Input v-model="SarLawsItemsEO.parts"></Input>
+           </FormItem>
+           </Col>
+           <Col span="12">
              <FormItem label="特殊生效日期" prop="tackTime" class="laws-info-item">
                <DatePicker type="date" v-model="SarLawsItemsEO.tackTime" format="yyyy-MM-dd"></DatePicker>
              </FormItem>
            </Col>
-           <Col span="8">
+         </Row>
+         <Row>
+           <Col span="12">
              <FormItem label="适用车型" prop="applyArctic" class="laws-info-item">
                <Select v-model="SarLawsItemsEO.applyArctic" multiple style="width:200px">
                  <Option v-for="item in applyArcticOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                </Select>
              </FormItem>
            </Col>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="能源种类" prop="energyKind" class="laws-info-item">
                <Select v-model="SarLawsItemsEO.energyKind" multiple style="width:200px">
                  <Option v-for="item in energyKindOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -338,25 +241,23 @@
            </Col>
          </Row>
          <Row>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="责任部门" prop="responsibleUnit" class="laws-info-item">
                <Input v-model="SarLawsItemsEO.responsibleUnit"></Input>
              </FormItem>
            </Col>
-           <Col span="8">
+           <Col span="12">
              <FormItem label="备注" prop="remarks" class="laws-info-item">
                <Input v-model="SarLawsItemsEO.remarks"></Input>
              </FormItem>
            </Col>
          </Row>
        </Form>
-
-     </div>
-     <div class="save-laws-btn">
-       <Button v-if="saveLawsItemsBtn" type="primary" @click="saveLawsItems">提交</Button>
-       <Button @click="cancelAddItems">取消</Button>
-     </div>
-   </full-modal>
+       <div class="demo-drawer-footer">
+         <Button @click="cancelAddItems">取消</Button>
+         <Button v-if="saveLawsItemsBtn" type="primary" @click="saveLawsItems">提交</Button>
+       </div>
+     </Drawer>
 
    <!--导入模态框-->
    <Modal v-model="importItemsModal" title="导入法规条目" @on-ok="importLawsItems" @on-cancel="cancelAdd">

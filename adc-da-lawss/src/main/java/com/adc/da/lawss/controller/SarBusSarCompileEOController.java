@@ -1,21 +1,18 @@
 package com.adc.da.lawss.controller;
 
 import static com.adc.da.lawss.common.ReadExcel.encodeFileName;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.adc.da.excel.poi.excel.ExcelExportUtil;
 import com.adc.da.excel.poi.excel.entity.ExportParams;
 import com.adc.da.excel.poi.excel.entity.enums.ExcelType;
-import com.adc.da.lawss.dto.LawsInfoExportDto;
 import com.adc.da.lawss.dto.SarCompileExportDto;
-import com.adc.da.lawss.entity.SarLawsInfoEO;
 import com.adc.da.util.exception.AdcDaBaseException;
 import com.adc.da.util.utils.IOUtils;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +30,6 @@ import com.adc.da.util.http.Result;
 import com.adc.da.util.http.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -138,7 +134,8 @@ public class SarBusSarCompileEOController extends BaseController<SarBusSarCompil
      **/
     @ApiOperation(value = "|SarLawsInfoEO|导出标准台账")
     @GetMapping("/exportSarBusSarCompile")
-    public void exportSarBusSarCompile(HttpServletResponse response, HttpServletRequest request) throws Exception{
+    public void exportSarBusSarCompile(String jsonData, HttpServletResponse response, HttpServletRequest request) throws Exception{
+        List<SarBusSarCompileEO> exportList = JSONObject.parseArray(jsonData,SarBusSarCompileEO.class);
         OutputStream os = null;
         Workbook workbook = null;
         try{
@@ -149,14 +146,19 @@ public class SarBusSarCompileEOController extends BaseController<SarBusSarCompil
             exportParams.setType(ExcelType.XSSF);
 
             //存放需要导出的数据
-            SarBusSarCompileEO sarBusSarCompileEO = new SarBusSarCompileEO();
-            sarBusSarCompileEO.setStandCode("111");
-            //将导出对象与dto对应
-            List<SarCompileExportDto> dto = new ArrayList<>();
-            BeanUtils.copyProperties(sarBusSarCompileEO, dto);
-
+            List<SarCompileExportDto> dtoDatas = new ArrayList<>();
+            if(exportList != null){
+                if(!exportList.isEmpty()){
+                    for(int i=0;i<exportList.size();i++){
+                        //将导出对象与dto对应
+                        SarCompileExportDto dto = new SarCompileExportDto();
+                        BeanUtils.copyProperties(exportList.get(i), dto);
+                        dtoDatas.add(dto);
+                    }
+                }
+            }
             //导出数据到Excel
-            workbook = ExcelExportUtil.exportExcel(exportParams, SarCompileExportDto.class, dto);
+            workbook = ExcelExportUtil.exportExcel(exportParams, SarCompileExportDto.class, dtoDatas);
             os = response.getOutputStream();
             workbook.write(os);
             os.flush();

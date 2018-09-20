@@ -30,16 +30,16 @@
           :styles="styles"
           @on-close="cleanValue"
         >
-          <Form :model="classModelAdd" ref="classModelAdd" :rules="classRules">
+          <Form :model="classModelAdd" ref="classModelAdd" :rules="classRules"  class="label-input-form">
             <input v-model="classModelAdd.id" v-show="false">
             <Row :gutter="32">
               <Col span="12">
-                <FormItem label="选项" prop="dicTypeName"  label-position="top">
+                <FormItem label="选项" prop="dicTypeName"  label-position="top" class="standards-info-item">
                   <Input v-model="classModelAdd.dicTypeName" :disabled='modalType === 3'></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem label="数据编码" prop="dicTypeCode" label-position="top">
+                <FormItem label="数据编码" prop="dicTypeCode" label-position="top" class="standards-info-item">
                   <Input v-model="classModelAdd.dicTypeCode" :disabled='modalType === 3'></Input>
                   </FormItem>
               </Col>

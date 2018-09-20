@@ -280,13 +280,13 @@ export default {
       },
       sarStandardsInfoRules: {
         standSort: [
-          { required: true, message: '标准类别不能为空', trigger: 'blur' }
+          { required: true, message: '标准类别不能为空', trigger: 'change' }
         ],
-        applyArctic: [
-          { required: true, message: '适用车型不能为空', trigger: 'blur' }
-        ],
+       /* applyArctic: [
+          { required: true, message: '适用车型不能为空', trigger: 'change' }
+        ],*/
         standNumber: [
-          { required: true, message: '标准编号不能为空', trigger: 'blur' }
+          { required: true, message: '标准编号不能为空', trigger: 'change' }
         ],
         standYear: [
           { required: true, message: '标准年份不能为空', trigger: 'blur' }
@@ -300,29 +300,29 @@ export default {
           { required: true, message: '标准状态不能为空', trigger: 'blur' }
         ],
         standNature: [
-          { required: true, message: '标准性质不能为空', trigger: 'blur' }
+          { required: true, message: '标准性质不能为空', trigger: 'change' }
         ],
         replaceStandNum: [],
         replacedStandNum: [],
         interStandNum: [],
         adoptExtent: [],
-        emergyKind: [
-          { required: true, message: '能源种类不能为空', trigger: 'blur' }],
+        /*emergyKind: [
+          { required: true, message: '能源种类不能为空', trigger: 'change' }],*/
         applyAuth: [],
         issueTime: [
-          { required: true, message: '发布日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '发布日期不能为空', trigger: 'change' }
         ],
         putTime: [
-          { required: true, message: '实施日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '实施日期不能为空', trigger: 'change' }
         ],
         newcarPutTime: [],
         productPutTime: [],
         newproductPutTime: [],
         draftingUnit: [],
         draftUser: [],
-        standFile: [
+        /*standFile: [
           { required: true, message: '文件不能为空', trigger: 'change' }
-        ],
+        ],*/
         standModifyFile: [],
         draftFile: [],
         opinionFile: [],
@@ -467,19 +467,19 @@ export default {
   methods: {
     // 分页查询国内标准
     getDomesticStandardTable () {
-      // this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', this.sarStandardsSearch, {
-      //   _this: this, loading: 'loading'
-      // }, res => {
-      //   for (let i = 0; i < res.data.list.length; i++) {
-      //     res.data.list[i]['collectIcontype'] = 'ios-star-outline'
-      //     res.data.list[i]['collectIconcolor'] = '#5c6b77'
-      //     res.data.list[i].checked = false
-      //   }
-      //   this.stahndinfoList = res.data.list
-      //   this.total = res.data.count
-      // }, e => {
-      // })
-      this.stahndinfoList = [
+      this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', this.sarStandardsSearch, {
+        _this: this, loading: 'loading'
+      }, res => {
+       /* for (let i = 0; i < res.data.list.length; i++) {
+          res.data.list[i]['collectIcontype'] = 'ios-star-outline'
+          res.data.list[i]['collectIconcolor'] = '#5c6b77'
+          res.data.list[i].checked = false
+        }*/
+        this.stahndinfoList = res.data.list
+        this.total = res.data.count
+      }, e => {
+      })
+     /* this.stahndinfoList = [
         {
           checked: false,
           id: '1000',
@@ -552,7 +552,7 @@ export default {
           putTime: '2018/06/26',
           issueTime: '2018/09/01'
         }
-      ]
+      ]*/
     },
     // 分页点击后方法
     pageChange (page) {
@@ -575,6 +575,7 @@ export default {
       this.formdisableflag = false
       this.modalshowtitle = '新增标准'
       this.addOrUPdateFlag = 1
+      this.sarStandardsInfoEO ={}
       this.sarStandardsInfoEO.standType = 'INLAND' // 标准分类
       this.sarStandardsInfoEO.country = 'CN'
     },
@@ -972,11 +973,11 @@ export default {
           this.checkAll = false
           this.indeterminate = false
         }
-        this.$nextTick(() => {
+        /*this.$nextTick(() => {
           $.fn.zTree.init($('#treeDemo'), this.setting, this.zNodes)
           this.MoveTest.updateType()
           this.MoveTest.bindDom()
-        })
+        })*/
       }
     },
     // 已选择的列表
@@ -1002,10 +1003,13 @@ export default {
             var treeObj = $.fn.zTree.getZTreeObj('treeDemo')
             // 获取节点
             var nodes = treeObj.getNodes()
+            // treeObj.cancelSelectedNode() // 先取消所有的选中状态
             if (JSON.stringify(allthis.selectSarMenu) === '{}') {
-              treeObj.selectNode(nodes[0]) // 返回node对象，此处由于未用到，所以不接
+              treeObj.selectNode(nodes[0], true) // 返回node对象，此处由于未用到，所以没有接受返回参数
+            // treeObj.expandNode(nodes[0], true, false) // 将指定ID节点展开
             } else {
-              treeObj.selectNode(allthis.selectSarMenu)
+              treeObj.selectNode(allthis.selectSarMenu, true)
+            // treeObj.expandNode(allthis.selectSarMenu, true, false) // 将指定ID节点展开
             }
           })
         })
