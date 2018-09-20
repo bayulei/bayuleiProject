@@ -377,7 +377,7 @@ export default {
       padding: 0 0.95%;
       .un-select();
       .flex();
-      align-items: flex-end;
+      align-items: center;
       color: #FFF;
       font-size: 15px;
       font-weight: bold;
@@ -385,13 +385,13 @@ export default {
         height: 86.6%;
         flex: 0 0 23.71%;
         background: #DDE;
-        background: url("~assets/images/home/logo.png") no-repeat center;
-        background-size: contain;
+        background: url("~assets/images/home/logo.png") no-repeat left center;
+        background-size: 85%;
       }
       .home-nav{
         flex: 1;
         .flex();
-        padding: 0 10px;
+        padding: 0 5%;
         height: 86.6%;
         li{
           color: #FFF;
