@@ -4,11 +4,15 @@ export default {
     return {
       showSarCompileModal: false,
       saveStandPlanBtn: true,
+      saveSelectedDatas: '',
       sarCompile: {
         busStandSubclass: ''
       },
       submitSarCompile: {
         id: ''
+      },
+      exportDataObj: {
+        jsonData: ''
       },
       sarCompileListDatas: [],
       sarCompileTotal: 0,
@@ -203,6 +207,18 @@ export default {
         onCancel: () => {
         }
       })
+    },
+    // 导出标准台账
+    getSelectedDatas (selection, row) {
+      this.saveSelectedDatas = selection
+    },
+    exportSarCompile () {
+      if (this.saveSelectedDatas != null && this.saveSelectedDatas !== '') {
+        let jsonData = JSON.stringify(this.saveSelectedDatas)
+        window.location.href = '/api/lawss/sarBusSarCompile/exportSarBusSarCompile?jsonData=' + jsonData
+      } else {
+        this.$Message.error('请选择要导出的数据')
+      }
     }
   },
   components: {},

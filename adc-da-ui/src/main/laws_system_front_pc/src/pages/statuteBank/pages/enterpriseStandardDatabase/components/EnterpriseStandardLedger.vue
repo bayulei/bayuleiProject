@@ -18,17 +18,17 @@
           </FormItem>
           <Button type="primary" icon="ios-search" @click="searchSarCompile"></Button>
           <Button type="primary" @click="openAddModal">新增</Button>
-          <Button type="primary" @click="">导出</Button>
+          <Button type="primary" @click="exportSarCompile">导出</Button>
         </Form>
       </div>
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table width="100%" border ref="selection" :columns="sarCompileTable" :data="sarCompileListDatas"></Table>
+      <Table width="100%" border ref="selection" :columns="sarCompileTable" :data="sarCompileListDatas" @on-select="getSelectedDatas"></Table>
     </div>
     <pagination :total="sarCompileTotal" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
-    <Drawer :title="showSarCompileTitle" v-model="showSarCompileModal" width="900" :styles="styles">
+    <Drawer :title="showSarCompileTitle" v-model="showSarCompileModal" width="900">
       <Form ref="submitSarCompile" :model="submitSarCompile" :rules="submitSarCompileFormRules" class="label-input-form">
         <input v-model="submitSarCompile.id" v-show="false">
         <Row>
