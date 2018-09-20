@@ -240,22 +240,21 @@
            </Row>
            <Row>
              <Col span="12">
-               <FormItem label="标准文本" prop="standFile" class="standards-info-item">
-                 <input v-model="sarStandardsInfoEO.standFile" v-show="false">
-                 <Upload :show-upload-list="false"
-                         :action="uploadPath"
-                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'standFile','standFileName')">
-                   <Button icon="ios-cloud-upload-outline">{{ sarStandardsInfoEO.standFile === '' ? '点击上传' : standFileName }}</Button>
-                 </Upload>
+               <FormItem label="标准文本" prop="standFileList" class="standards-info-item">
+                 <!--<input v-model="sarStandardsInfoEO.standFileList" v-show="false">
+                 <Upload :show-upload-list="false" :action="uploadPath"
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'standFileList','standFileName')" multiple name="file">
+                   <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.standFileList.length === 0 ? '点击上传' : standFileName }}</Button>
+                 </Upload>-->
+                 <Button @click="importModalshowflagtemp=true" :disabled="formdisableflag">点击上传</Button>
                </FormItem>
              </Col>
              <Col span="12">
                <FormItem label="标准修改单" prop="standModifyFile" class="standards-info-item">
-                 <input v-model="sarStandardsInfoEO.standModifyFile" v-show="false">
                  <Upload :show-upload-list="false"
                          :action="uploadPath"
-                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'standModifyFile', 'standModifyFileName')">
-                   <Button icon="ios-cloud-upload-outline">{{ sarStandardsInfoEO.standModifyFile === '' ? '点击上传' : standModifyFileName }}</Button>
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'standModifyFileList', 'standModifyFileName')" multiple name="file">
+                   <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.standModifyFile === '' ? '点击上传' : standModifyFileName }}</Button>
                  </Upload>
                </FormItem>
              </Col>
@@ -263,31 +262,51 @@
            <Row>
              <Col span="12">
                <FormItem label="草案" prop="draftFile" class="standards-info-item">
-                 <Input v-model="sarStandardsInfoEO.draftFile" :disabled="formdisableflag"></Input>
+                 <Upload :show-upload-list="false"
+                         :action="uploadPath"
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'draftFileList', 'draftFileName')" multiple name="file" >
+                   <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.draftFile === '' ? '点击上传' : draftFileName }}</Button>
+                 </Upload>
                </FormItem>
              </Col>
              <Col span="12">
                <FormItem label="征求意见稿" prop="opinionFile" class="standards-info-item">
-                 <Input v-model="sarStandardsInfoEO.opinionFile" :disabled="formdisableflag"></Input>
+                 <Upload :show-upload-list="false"
+                         :action="uploadPath"
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'opinionFileList', 'opinionFileName')" multiple name="file" >
+                   <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.opinionFile === '' ? '点击上传' : opinionFileName }}</Button>
+                 </Upload>
                </FormItem>
              </Col>
            </Row>
            <Row>
              <Col span="12">
                <FormItem label="送审稿" prop="sentScreenFile" class="standards-info-item">
-                 <Input v-model="sarStandardsInfoEO.sentScreenFile" :disabled="formdisableflag"></Input>
+                 <Upload :show-upload-list="false"
+                         :action="uploadPath"
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'sentScreenFileList', 'sentScreenFileName')" multiple name="file">
+                   <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.sentScreenFile === '' ? '点击上传' : sentScreenFileName }}</Button>
+                 </Upload>
                </FormItem>
              </Col>
              <Col span="12">
                <FormItem label="报批稿" prop="approvalFile" class="standards-info-item">
-                 <Input v-model="sarStandardsInfoEO.approvalFile" :disabled="formdisableflag"></Input>
+                 <Upload :show-upload-list="false"
+                         :action="uploadPath"
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'approvalFileList', 'approvalFileName')" multiple name="file" >
+                   <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.approvalFile === '' ? '点击上传' : approvalFileName }}</Button>
+                 </Upload>
                </FormItem>
              </Col>
            </Row>
            <Row>
              <Col span="12">
                <FormItem label="关联文件" prop="relevanceFile" class="standards-info-item">
-                 <Input v-model="sarStandardsInfoEO.relevanceFile" :disabled="formdisableflag"></Input>
+                 <Upload :show-upload-list="false"
+                         :action="uploadPath"
+                         :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'relevanceFileList', 'relevanceFileName')" multiple name="file" >
+                   <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.relevanceFile === '' ? '点击上传' : relevanceFileName }}</Button>
+                 </Upload>
                </FormItem>
              </Col>
              <Col span="12">
@@ -334,6 +353,14 @@
        <Upload :action="importExcelUrl" ref="importfile" name="file" :format="['xlsx']" :on-format-error="handleFormatError" :on-success="importFileSuccess">
          <Button icon="ios-cloud-upload-outline">选择文件</Button>
        </Upload>
+     </Modal>
+     <Modal v-model="importModalshowflagtemp" title="导入文件1" >
+       <Upload :action="uploadPath"
+               :before-upload="handleUpload"
+               :on-success="(response, file, fileList) => handleUploadSucc(response, file, fileList, 'standFileList','standFileName')" multiple name="file">
+         <Button icon="ios-cloud-upload-outline" :disabled="formdisableflag">{{ sarStandardsInfoEO.standFileList.length === 0 ? '点击上传' : standFileName }}</Button>
+       </Upload>
+       <div v-if="file !== null">Upload file: {{ file.name }} <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? 'Uploading' : 'Click to upload' }}</Button></div>
      </Modal>
      <!-- 新增二级菜单模态窗 -->
      <Modal v-model="menuModalFlag" title="新增目录" @on-ok="newMenu" @on-cancel="closeModal" ref="menuRefModal">
