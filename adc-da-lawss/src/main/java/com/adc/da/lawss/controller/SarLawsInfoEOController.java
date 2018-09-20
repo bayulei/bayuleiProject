@@ -175,7 +175,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
     @ApiOperation(value = "|SarLawsInfoEO|导入法规信息")
     @PostMapping("/importLawsInfos")
     /*@RequiresPermissions("lawss:sarLawsInfo:importLawsInfos")*/
-    public ResponseMessage importLawsInfos(@RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseMessage importLawsInfos(@RequestParam("file") MultipartFile file,String pageType) throws Exception {
         //验证文件名是否合格
         ReadExcel readExcel = new ReadExcel();
         if (!readExcel.validateExcel(file.getOriginalFilename())) {
@@ -198,7 +198,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
         List<LawsInfoImportDto> datas = result.getList();
         if(datas!=null &&!datas.isEmpty()){
             try {
-                return sarLawsInfoEOService.importLawsInfoDatas(datas);
+                return sarLawsInfoEOService.importLawsInfoDatas(datas,pageType);
             } catch (Exception e) {
                 return Result.error("fail", e.getMessage());
             }

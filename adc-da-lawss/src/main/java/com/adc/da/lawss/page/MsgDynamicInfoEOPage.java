@@ -43,6 +43,10 @@ public class MsgDynamicInfoEOPage extends BasePage {
     private String id;
     private String idOperator = "=";
 
+    private String isPicMsg;
+    private String isPicMsgOperator = "=";
+
+
     public String getModifyTime() {
         return this.modifyTime;
     }
@@ -281,6 +285,22 @@ public class MsgDynamicInfoEOPage extends BasePage {
 
     public void setIdOperator(String idOperator) {
         this.idOperator = idOperator;
+    }
+
+    public void setIsPicMsg(String isPicMsg){
+        this.isPicMsg=isPicMsg;
+    }
+
+    public String getIsPicMsg(){
+        return this.isPicMsg;
+    }
+
+    public void setIsPicMsgOperator(String isPicMsgOperator){
+        this.isPicMsgOperator=isPicMsgOperator;
+    }
+
+    public String getIsPicMsgOperator(){
+        return this.isPicMsgOperator;
     }
 
 }

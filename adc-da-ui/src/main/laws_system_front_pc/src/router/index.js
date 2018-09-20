@@ -11,6 +11,7 @@ import store from '../store'
 import Login from '@/pages/login'
 import Home from '@/pages/home'
 import Test from '@/pages/home/test'
+import Test2 from '@/pages/home/test2'
 Vue.use(iView)
 Vue.use(VueRouter)
 
@@ -28,6 +29,15 @@ const routes = [
     path: '/test',
     name: 'Test',
     component: Test,
+    meta: {
+      requireAuth: true,
+      title: '功能测试页'
+    }
+  },
+  {
+    path: '/test2',
+    name: 'Test2',
+    component: Test2,
     meta: {
       requireAuth: true,
       title: '功能测试页'
@@ -168,6 +178,15 @@ const routes = [
         meta: {
           requireAuth: true,
           title: '动态信息'
+        }
+      },
+      {
+        path: '/dynamicInformationManage/dynamicInfomationPage',
+        name: 'dynamicInfo',
+        component: resolve => require(['pages/config/pages/dynamicInformationManage/dynamicInfomationPage'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '新增动态信息'
         }
       },
       {

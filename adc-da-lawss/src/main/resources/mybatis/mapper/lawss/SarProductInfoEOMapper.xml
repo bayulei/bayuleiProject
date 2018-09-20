@@ -448,19 +448,19 @@ WHERE
         <if test="id !=null ">
             AND stand_id not in (
             SELECT
-            sps.id
+            sps.stand_id
             FROM
             SAR_PRODUCT_STAND sps
             WHERE
             sps.product_id =#{id} UNION
             SELECT
-            spl.id
+            spl.laws_id
             FROM
             SAR_PRODUCT_LAWS spl
             WHERE
             spl.product_id = #{id} UNION
             SELECT
-            sps.id
+            sps.stand_id
             FROM
             SAR_PRODUCT_STAND sps
             WHERE

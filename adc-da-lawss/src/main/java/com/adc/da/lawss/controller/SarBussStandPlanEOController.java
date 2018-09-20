@@ -52,6 +52,8 @@ public class SarBussStandPlanEOController extends BaseController<SarBussStandPla
     @GetMapping("/page")
     /*@RequiresPermissions("lawss:sarBussStandPlan:page")*/
     public ResponseMessage<PageInfo<SarBussStandPlanEO>> page(SarBussStandPlanEOPage page) throws Exception {
+        page.setValidFlag("0");
+        page.setOrderBy("modify_time desc");
         List<SarBussStandPlanEO> rows = sarBussStandPlanEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
@@ -80,7 +82,7 @@ public class SarBussStandPlanEOController extends BaseController<SarBussStandPla
     @ApiOperation(value = "|SarBussStandPlanEO|新增")
     @PostMapping("/createStandPlan")
     /*@RequiresPermissions("lawss:sarBussStandPlan:save")*/
-    public ResponseMessage<SarBussStandPlanEO> create(@RequestBody SarBussStandPlanEO sarBussStandPlanEO) throws Exception {
+    public ResponseMessage<SarBussStandPlanEO> create(SarBussStandPlanEO sarBussStandPlanEO) throws Exception {
         return sarBussStandPlanEOService.insertStandPlan(sarBussStandPlanEO);
     }
 
@@ -94,7 +96,7 @@ public class SarBussStandPlanEOController extends BaseController<SarBussStandPla
     @ApiOperation(value = "|SarBussStandPlanEO|修改")
     @PutMapping("/updateStandPlan")
     /*@RequiresPermissions("lawss:sarBussStandPlan:update")*/
-    public ResponseMessage<SarBussStandPlanEO> update(@RequestBody SarBussStandPlanEO sarBussStandPlanEO) throws Exception {
+    public ResponseMessage<SarBussStandPlanEO> update(SarBussStandPlanEO sarBussStandPlanEO) throws Exception {
         return sarBussStandPlanEOService.updateStandPlan(sarBussStandPlanEO);
     }
 
@@ -117,7 +119,7 @@ public class SarBussStandPlanEOController extends BaseController<SarBussStandPla
     @ApiOperation(value = "|SarBussStandPlanEO|删除标准计划")
     @PutMapping("/deleteStandPlan")
     /*@RequiresPermissions("lawss:sarBussStandPlan:update")*/
-    public ResponseMessage<SarBussStandPlanEO> deleteStandPlan(@RequestBody SarBussStandPlanEO sarBussStandPlanEO) throws Exception {
+    public ResponseMessage<SarBussStandPlanEO> deleteStandPlan(SarBussStandPlanEO sarBussStandPlanEO) throws Exception {
         sarBussStandPlanEO.setValidFlag(1);
         int countDel = sarBussStandPlanEOService.updateByPrimaryKeySelective(sarBussStandPlanEO);
         if(countDel > 0){

@@ -1,8 +1,6 @@
 <!-- 准入标准法规清单 -->
 <template>
-  <div id="accessStandardsAndRegulations">
-    准入标准法规清单
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -22,6 +20,5 @@ export default {
 
 <style lang="less">
   #accessStandardsAndRegulations{
-
   }
 </style>

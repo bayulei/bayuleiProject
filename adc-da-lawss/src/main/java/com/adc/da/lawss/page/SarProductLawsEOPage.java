@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * <b>功能：</b>SAR_PRODUCT_LAWS SarProductLawsEOPage<br>
  * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2018-09-03 <br>
+ * <b>日期：</b> 2018-09-19 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public class SarProductLawsEOPage extends BasePage {
@@ -31,8 +31,6 @@ public class SarProductLawsEOPage extends BasePage {
     private String productId;
     private String productIdOperator = "=";
     private String id;
-    private String id1;
-    private String id2;
     private String idOperator = "=";
 
     public String getModifyTime() {
@@ -185,22 +183,6 @@ public class SarProductLawsEOPage extends BasePage {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getId1() {
-        return this.id1;
-    }
-
-    public void setId1(String id1) {
-        this.id1 = id1;
-    }
-
-    public String getId2() {
-        return this.id2;
-    }
-
-    public void setId2(String id2) {
-        this.id2 = id2;
     }
 
     public String getIdOperator() {

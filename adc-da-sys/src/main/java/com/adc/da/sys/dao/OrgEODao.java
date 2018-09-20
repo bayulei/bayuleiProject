@@ -23,7 +23,7 @@ public interface OrgEODao extends BaseDao<OrgEO>{
 	public int deleteLogic(String id);
 
 	//获取根节点， pid 和 CORP_ID 为 null
-	public LinkedList<OrgEO> selectOrgAllNode(OrgEO orgEO);
+	public LinkedList<OrgEO> selectOrgAllNode();
 
 	public LinkedList<OrgEO> selectRootNode();
 

@@ -46,7 +46,6 @@
       position: relative;
       overflow: hidden;
       background: #FFF;
-      padding: 0.2rem;
       &>.content{
         width: 100%;
         height: calc(~'100% - 120px');
@@ -216,11 +215,11 @@
 .ivu-input-group-prepend{
   background: #F4F8FB;
 }
-.ivu-modal-confirm{
+/*.ivu-modal-confirm{
   .ivu-modal-confirm-footer{
     display: none;
   }
-}
+}*/
 
 // 右边区域是树形结构和内容
 .tree{
@@ -282,6 +281,20 @@
         &.selected{
           border: 1px solid @baseColor;
         }
+        .card-btn{
+          margin-right: 2px;
+          &:last-child{
+            margin-right: 0;
+          }
+        }
+        .ivu-tag-dot{
+          height: 24px;
+          line-height: 24px;
+          border: 1px solid #e8eaec !important;
+          color: #515a6e !important;
+          background: #fff !important;
+          padding: 0 5px;
+        }
       }
     }
   }
@@ -306,6 +319,40 @@
   text-align: center;
   display: inline-block;
   color: #999;
+}
+.demo-drawer-footer{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  background: #fff;
+}
+.ivu-drawer-body{
+  .ivu-form-item-label{
+    width: 120px;
+    .ellipsis()
+  }
+  .ivu-form-item-content{
+    width: calc(~'100% - 160px');
+    .ivu-date-picker{
+      width: 100%;
+    }
+    .ivu-date-picker-rel{
+      width: 100%;
+    }
+    .ivu-upload{
+      width: 100%;
+      .ivu-btn{
+        width: 100%;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        .ellipsis()
+      }
+    }
+  }
 }
 
 //滚动条美化

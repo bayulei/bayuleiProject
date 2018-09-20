@@ -257,7 +257,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
      * @Param [datas]
      * @return com.adc.da.util.http.ResponseMessage
      **/
-    public ResponseMessage importLawsInfoDatas(List<LawsInfoImportDto> datas) throws Exception{
+    public ResponseMessage importLawsInfoDatas(List<LawsInfoImportDto> datas,String pageType) throws Exception{
         try{
             //验证导入数据是否符合规则
             Map map = validateImportDatas(datas);
@@ -271,6 +271,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             for(LawsInfoImportDto importDto : datas){
                 SarLawsInfoEO sarLawsInfoEO = new SarLawsInfoEO();
                 BeanUtils.copyProperties(importDto,sarLawsInfoEO);
+                sarLawsInfoEO.setLawsType(pageType);
                 createLawsInfo(sarLawsInfoEO);
             }
             return new ResponseMessage("0","导入成功",true);

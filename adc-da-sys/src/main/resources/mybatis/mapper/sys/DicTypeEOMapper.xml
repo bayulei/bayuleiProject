@@ -121,7 +121,10 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_DICTYPE
-		where dic_type_code = #{dicTypeCode}  AND valid_flag = 0
+		where dic_type_code = #{dicTypeCode} AND DIC_ID = #{dicId} AND valid_flag = 0
+        <if test="id !=null">
+            AND    id != #{id}
+		</if>
 	</select>
 
 
@@ -189,6 +192,9 @@
 		<include refid="Base_Column_List" />
 		from TS_DICTYPE
 		where DIC_TYPE_NAME = #{typeName} AND DIC_ID = #{dicId} AND valid_flag = 0
+		<if test="id">
+			AND id != #{id}
+		</if>
 	</select>
 
 	<insert id="batchInsertTypeEo" >
