@@ -16,6 +16,7 @@ import com.adc.da.lawss.dto.StandPlanExportDto;
 import com.adc.da.lawss.entity.SarBusSarCompileEO;
 import com.adc.da.util.exception.AdcDaBaseException;
 import com.adc.da.util.utils.IOUtils;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,7 +139,8 @@ public class SarBussStandPlanEOController extends BaseController<SarBussStandPla
      **/
     @ApiOperation(value = "|SarLawsInfoEO|导出标准年度计划")
     @GetMapping("/exportStandPlan")
-    public void exportStandPlan(HttpServletResponse response, HttpServletRequest request) throws Exception{
+    public void exportStandPlan(String exportPlanDatas,HttpServletResponse response, HttpServletRequest request) throws Exception{
+        List<SarBussStandPlanEO> exportList = JSONObject.parseArray(exportPlanDatas,SarBussStandPlanEO.class);
         OutputStream os = null;
         Workbook workbook = null;
         try{
@@ -149,14 +151,19 @@ public class SarBussStandPlanEOController extends BaseController<SarBussStandPla
             exportParams.setType(ExcelType.XSSF);
 
             //存放需要导出的数据
-            SarBussStandPlanEO sarBussStandPlanEO = new SarBussStandPlanEO();
-            sarBussStandPlanEO.setStandName("1111");
-            //将导出对象与dto对应
-            List<StandPlanExportDto> dto = new ArrayList<>();
-            BeanUtils.copyProperties(sarBussStandPlanEO, dto);
-
+            List<StandPlanExportDto> dtoDatas = new ArrayList<>();
+            if(exportList != null){
+                if(!exportList.isEmpty()){
+                    for(int i=0;i<exportList.size();i++){
+                        //将导出对象与dto对应
+                        StandPlanExportDto dto = new StandPlanExportDto();
+                        BeanUtils.copyProperties(exportList.get(i), dto);
+                        dtoDatas.add(dto);
+                    }
+                }
+            }
             //导出数据到Excel
-            workbook = ExcelExportUtil.exportExcel(exportParams, StandPlanExportDto.class, dto);
+            workbook = ExcelExportUtil.exportExcel(exportParams, StandPlanExportDto.class, dtoDatas);
             os = response.getOutputStream();
             workbook.write(os);
             os.flush();

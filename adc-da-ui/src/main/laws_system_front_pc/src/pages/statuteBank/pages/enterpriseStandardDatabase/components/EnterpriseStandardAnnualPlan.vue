@@ -18,17 +18,16 @@
           </FormItem>-->
           <Button type="primary" icon="ios-search" @click="searchStandPlan"></Button>
           <Button type="primary" @click="openPlanModal(null,'addOpt')">新增</Button>
-          <Button type="primary" @click="searchStandPlan">导出</Button>
+          <Button type="primary" @click="exportStandPlan">导出</Button>
         </Form>
       </div>
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table width="100%" border ref="selection" :columns="standPlanTable" :data="standPlanListDatas"></Table>
+      <Table width="100%" border ref="selection" :columns="standPlanTable" :data="standPlanListDatas" @on-select="getSelectedDatas"></Table>
     </div>
     <pagination :total="standPlanTotal" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-
-    <Drawer :title="showStandPlanTitle" v-model="showStandPlanModal" width="900" :styles="styles">
+    <Drawer :title="showStandPlanTitle" v-model="showStandPlanModal" width="900">
       <Form ref="submitStandPlan" :model="submitStandPlan" :rules="submitStandPlanFormRules" class="label-input-form">
         <input v-model="submitStandPlan.id" v-show="false">
         <Row>
