@@ -241,6 +241,13 @@ export default {
         sentScreenFile: '',
         approvalFile: '',
         relevanceFile: '',
+        standFileList: [],
+        standModifyFileList: [],
+        draftFileList: [],
+        opinionFileList: [],
+        sentScreenFileList: [],
+        approvalFileList: [],
+        relevanceFileList: [],
         tags: '',
         synopsis: '',
         responsibleUnit: '',
@@ -280,13 +287,13 @@ export default {
       },
       sarStandardsInfoRules: {
         standSort: [
-          { required: true, message: '标准类别不能为空', trigger: 'blur' }
+          { required: true, message: '标准类别不能为空', trigger: 'change' }
         ],
         applyArctic: [
-          { required: true, message: '适用车型不能为空', trigger: 'blur' }
+          { required: true, type: 'array', message: '适用车型不能为空', trigger: 'change' }
         ],
         standNumber: [
-          { required: true, message: '标准编号不能为空', trigger: 'blur' }
+          { required: true, message: '标准编号不能为空', trigger: 'change' }
         ],
         standYear: [
           { required: true, message: '标准年份不能为空', trigger: 'blur' }
@@ -300,28 +307,28 @@ export default {
           { required: true, message: '标准状态不能为空', trigger: 'blur' }
         ],
         standNature: [
-          { required: true, message: '标准性质不能为空', trigger: 'blur' }
+          { required: true, message: '标准性质不能为空', trigger: 'change' }
         ],
         replaceStandNum: [],
         replacedStandNum: [],
         interStandNum: [],
         adoptExtent: [],
         emergyKind: [
-          { required: true, message: '能源种类不能为空', trigger: 'blur' }],
+          { required: true, type: 'array', message: '能源种类不能为空', trigger: 'change' }],
         applyAuth: [],
         issueTime: [
-          { required: true, message: '发布日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '发布日期不能为空', trigger: 'change' }
         ],
         putTime: [
-          { required: true, message: '实施日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '实施日期不能为空', trigger: 'change' }
         ],
         newcarPutTime: [],
         productPutTime: [],
         newproductPutTime: [],
         draftingUnit: [],
         draftUser: [],
-        standFile: [
-          { required: true, message: '文件不能为空', trigger: 'change' }
+        standFileList: [
+          { required: true, type: 'array', message: '文件不能为空', trigger: 'change' }
         ],
         standModifyFile: [],
         draftFile: [],
@@ -453,7 +460,7 @@ export default {
       dragFlag: false,
       mousedown: '',
       mouoseup: '',
-      uploadPath: this.simpleUploadPath,
+      uploadPath: '/api/att/attFile/upload',
       styles: {
         height: 'calc(100% - 55px)',
         overflow: 'auto',
@@ -461,7 +468,17 @@ export default {
         position: 'static'
       },
       // 标准文本文件名
-      standFileName: ''
+      standFileName: '',
+      standModifyFileName: '',
+      draftFileName: '',
+      opinionFileName: '',
+      sentScreenFileName: '',
+      approvalFileName: '',
+      relevanceFileName: '',
+      importModalshowflagtemp: false,
+      file: null,
+      loadingStatus: false,
+      currentFile: '' // 当前操作的是哪个FormItem的上传
     }
   },
   methods: {
@@ -470,15 +487,93 @@ export default {
       this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', this.sarStandardsSearch, {
         _this: this, loading: 'loading'
       }, res => {
-        for (let i = 0; i < res.data.list.length; i++) {
+       /*
+       for (let i = 0; i < res.data.list.length; i++) {
           res.data.list[i]['collectIcontype'] = 'ios-star-outline'
           res.data.list[i]['collectIconcolor'] = '#5c6b77'
           res.data.list[i].checked = false
         }
+        */
         this.stahndinfoList = res.data.list
         this.total = res.data.count
       }, e => {
       })
+     /*
+     this.stahndinfoList = [
+        {
+          checked: false,
+          id: '1000',
+          standSortShow: 'ABS2018',
+          standNumber: 'BZ10000',
+          standYear: '2018',
+          standName: '驱动系统',
+          standStateShow: 0,
+          standNatureShow: '1',
+          putTime: '2018/09/18',
+          issueTime: '2018/10/01'
+        },
+        {
+          checked: false,
+          id: '1001',
+          standSortShow: 'ACS2018',
+          standNumber: 'BZ10001',
+          standYear: '2018',
+          standName: '排气系统',
+          standStateShow: 1,
+          standNatureShow: '1',
+          putTime: '2018/09/17',
+          issueTime: '2018/10/01'
+        },
+        {
+          checked: false,
+          id: '1002',
+          standSortShow: 'ABCS2018',
+          standNumber: 'BZ10002',
+          standYear: '2018',
+          standName: '轮胎性能测试',
+          standStateShow: 0,
+          standNatureShow: '1',
+          putTime: '2018/08/01',
+          issueTime: '2018/09/01'
+        },
+        {
+          checked: false,
+          id: '1003',
+          standSortShow: 'ACS2018',
+          standNumber: 'BZ10003',
+          standYear: '2018',
+          standName: '燃油测试',
+          standStateShow: 2,
+          standNatureShow: '2',
+          putTime: '2018/08/15',
+          issueTime: '2018/10/01'
+        },
+        {
+          checked: false,
+          id: '1004',
+          standSortShow: 'ADP2018',
+          standNumber: 'BZ10004',
+          standYear: '2018',
+          standName: '安全气囊',
+          standStateShow: 1,
+          standNatureShow: '1',
+          putTime: '2018/07/15',
+          issueTime: '2018/09/20'
+        },
+        {
+          checked: false,
+          id: '1005',
+          standSortShow: 'ABS2018',
+          standNumber: 'BZ10005',
+          standYear: '2018',
+          standName: '发动机性能测试',
+          standStateShow: 3,
+          standNatureShow: '2',
+          putTime: '2018/06/26',
+          issueTime: '2018/09/01'
+        }
+      ]
+      */
     },
     // 分页点击后方法
     pageChange (page) {
@@ -501,24 +596,86 @@ export default {
       this.formdisableflag = false
       this.modalshowtitle = '新增标准'
       this.addOrUPdateFlag = 1
-      this.sarStandardsInfoEO.standType = 'INLAND' // 标准分类
-      this.sarStandardsInfoEO.country = 'CN'
+      this.sarStandardsInfoEO = {
+        id: '',
+        standType: 'INLAND', // 标准分类
+        country: 'CN',
+        standSort: '',
+        applyArctic: '',
+        standNumber: '',
+        standYear: '',
+        standName: '',
+        standEnName: '',
+        standState: '',
+        standNature: '',
+        replaceStandNum: '',
+        replacedStandNum: '',
+        interStandNum: '',
+        adoptExtent: '',
+        emergyKind: '',
+        applyAuth: '',
+        issueTime: '',
+        putTime: '',
+        newcarPutTime: '',
+        productPutTime: '',
+        newproductPutTime: '',
+        draftingUnit: '',
+        draftUser: '',
+        standFile: '',
+        standModifyFile: '',
+        draftFile: '',
+        opinionFile: '',
+        sentScreenFile: '',
+        approvalFile: '',
+        relevanceFile: '',
+        standFileList: [],
+        standModifyFileList: [],
+        draftFileList: [],
+        opinionFileList: [],
+        sentScreenFileList: [],
+        approvalFileList: [],
+        relevanceFileList: [],
+        tags: '',
+        synopsis: '',
+        responsibleUnit: '',
+        category: '',
+        remark: '',
+        menuId: ''
+      } // 标准新增过程中用到的对象
     },
     // 保存或修改标准
     saveOrUpdateStands () {
       this.$refs['sarStandardsInfoForm'].validate((valid) => {
         if (valid) {
           // 时间格式修改
-          this.sarStandardsInfoEO.issueTime = this.$dateFormat(this.sarStandardsInfoEO.issueTime, 'yyyy-MM-dd')
-          this.sarStandardsInfoEO.putTime = this.$dateFormat(this.sarStandardsInfoEO.putTime, 'yyyy-MM-dd')
-          this.sarStandardsInfoEO.newcarPutTime = this.$dateFormat(this.sarStandardsInfoEO.newcarPutTime, 'yyyy-MM-dd')
-          this.sarStandardsInfoEO.productPutTime = this.$dateFormat(this.sarStandardsInfoEO.productPutTime, 'yyyy-MM-dd')
-          this.sarStandardsInfoEO.newproductPutTime = this.$dateFormat(this.sarStandardsInfoEO.newproductPutTime, 'yyyy-MM-dd')
+          this.sarStandardsInfoEO.issueTime = this.$dateFormat(this.sarStandardsInfoEO.issueTime, 'yyyy-MM-dd hh:mm:ss')
+          this.sarStandardsInfoEO.putTime = this.$dateFormat(this.sarStandardsInfoEO.putTime, 'yyyy-MM-dd hh:mm:ss')
+          this.sarStandardsInfoEO.newcarPutTime = this.$dateFormat(this.sarStandardsInfoEO.newcarPutTime, 'yyyy-MM-dd hh:mm:ss')
+          this.sarStandardsInfoEO.productPutTime = this.$dateFormat(this.sarStandardsInfoEO.productPutTime, 'yyyy-MM-dd hh:mm:ss')
+          this.sarStandardsInfoEO.newproductPutTime = this.$dateFormat(this.sarStandardsInfoEO.newproductPutTime, 'yyyy-MM-dd hh:mm:ss')
+          let a = ''
+          if (this.sarStandardsInfoEO.applyArctic != null && this.sarStandardsInfoEO.applyArctic instanceof Array) {
+            a = this.sarStandardsInfoEO.applyArctic.join(',')
+            this.sarStandardsInfoEO.applyArctic = a // 适用车型
+          }
+          if (this.sarStandardsInfoEO.emergyKind != null && (this.sarStandardsInfoEO.emergyKind instanceof Array)) {
+            a = this.sarStandardsInfoEO.emergyKind.join(',')
+            this.sarStandardsInfoEO.emergyKind = a // 能源种类
+          }
+          if (this.sarStandardsInfoEO.applyAuth != null && (this.sarStandardsInfoEO.applyAuth instanceof Array)) {
+            a = this.sarStandardsInfoEO.applyAuth.join(',')
+            this.sarStandardsInfoEO.applyAuth = a // 适用认证
+          }
+          if (this.sarStandardsInfoEO.category != null && (this.sarStandardsInfoEO.category instanceof Array)) {
+            a = this.sarStandardsInfoEO.category.join(',')
+            this.sarStandardsInfoEO.category = a // 所属类别
+          }
           // addOrUPdateFlag 1:新增 2:修改
           if (this.addOrUPdateFlag === 1) {
             this.sarStandardsInfoEO.menuId = this.selectSarMenu.id // 新建过程中标准所属目录是当前目录
           }
-          this.$http.post(this.addOrUPdateFlag === 1 ? 'lawss/sarStandardsInfo/addarStandardsInfo' : 'lawss/sarStandardsInfo/updateSarStandardsInfo', this.sarStandardsInfoEO, {
+          console.log(this.sarStandardsInfoEO)
+          this.$http.postData(this.addOrUPdateFlag === 1 ? 'lawss/sarStandardsInfo/addarStandardsInfo' : 'lawss/sarStandardsInfo/updateSarStandardsInfo', this.sarStandardsInfoEO, {
             _this: this
           }, res => {
             this.getDomesticStandardTable()
@@ -642,11 +799,46 @@ export default {
       if (name === 'newMenu') {
         this.menuModalFlag = true
         this.menuAddOrUpdateFlag = 1
+        this.sarMenu = {
+          id: '',
+          parentId: '',
+          menuName: '',
+          sorDivide: 'INLAND_STAND',
+          displaySeq: '',
+          parentIds: ''
+        }
       } else if (name === 'editMenu') {
         this.menuModalFlag = true
         this.menuAddOrUpdateFlag = 2
+        this.sarMenu = this.selectSarMenu // 修改过程中直接将sarMenu对象置为当前选中的对象
       } else {
         // deleteMenu 删除二级菜单，先判断是否选中，选中项目，然后调用删除方法
+        // 先判断目录下是否有菜单
+        this.$http.get('lawss/sarMenu/judgequeryMenuByPid', this.selectSarMenu, {
+          _this: this, loading: 'loading'
+        }, res => {
+          let message = ''
+          if (res.data) {
+            message = '<p>该节点下有记录，是否删除?</p>'
+          } else {
+            message = '<p>是否删除?</p>'
+          }
+          this.$Modal.confirm({
+            title: '提示',
+            content: message,
+            onOk: () => {
+              this.$http.post('lawss/sarMenu/deleteMenuAndChildren', this.selectSarMenu, {
+                _this: this, loading: 'loading'
+              }, res => {
+                this.selectMenu() // 删除成功后，更新二级菜单
+              }, e => {
+              })
+            },
+            onCancel: () => {
+            }
+          })
+        }, e => {
+        })
       }
     },
     // 点击二级菜单新增模态框中的保存
@@ -665,7 +857,6 @@ export default {
         }, e => {
         })
       } else {
-        this.sarMenu = this.selectSarMenu // 修改过程中直接将sarMenu对象置为当前选中的对象
         this.$http.post('lawss/sarMenu/updateSarMenu', this.sarMenu, {
           _this: this, loading: 'loading'
         }, res => {
@@ -873,8 +1064,28 @@ export default {
      * @date: 2018-09-19 14:15:01
      */
     handleUploadSucc (res, file, fileList, value, name) {
-      this.sarStandardsInfoEO[value] = res.data.id
-      this[name] = file.name
+      this[name] = ''
+      for (let i = 0; i < fileList.length; i++) {
+        this[name] = this[name] + ',' + fileList[i].name
+      }
+      if (res.ok) {
+        let temp = []
+        temp = this.sarStandardsInfoEO[value]
+        temp.push(res.data)
+        this.sarStandardsInfoEO[value] = temp
+      } else {
+        console.log('文件上传出错')
+      }
+    },
+    handleUpload (file) {
+      this.file = file
+      //this.sarStandardsInfoEO[value] = []
+      return false
+    },
+    uploadSuccess (res, file, fileList) {
+      if (res.ok) {
+        this.sarStandardsInfoEO[this.currentFile].push(res.data)
+      }
     }
   },
   components: {},
@@ -898,11 +1109,13 @@ export default {
           this.checkAll = false
           this.indeterminate = false
         }
+        /****
         this.$nextTick(() => {
           $.fn.zTree.init($('#treeDemo'), this.setting, this.zNodes)
           this.MoveTest.updateType()
           this.MoveTest.bindDom()
         })
+        */
       }
     },
     // 已选择的列表
@@ -928,10 +1141,15 @@ export default {
             var treeObj = $.fn.zTree.getZTreeObj('treeDemo')
             // 获取节点
             var nodes = treeObj.getNodes()
+            // treeObj.cancelSelectedNode() // 先取消所有的选中状态
             if (JSON.stringify(allthis.selectSarMenu) === '{}') {
-              treeObj.selectNode(nodes[0]) // 返回node对象，此处由于未用到，所以不接
+              treeObj.selectNode(nodes[0], true) // 返回node对象，此处由于未用到，所以没有接受返回参数
+              allthis.sarStandardsSearch.menuId = nodes[0].id // 将当前二级菜单的id传回后台做标准的条件查询
+              allthis.selectSarMenu = nodes[0]  //设置当前选中的node
+              // treeObj.expandNode(nodes[0], true, false) // 将指定ID节点展开
             } else {
-              treeObj.selectNode(allthis.selectSarMenu)
+              treeObj.selectNode(allthis.selectSarMenu, true)
+            // treeObj.expandNode(allthis.selectSarMenu, true, false) // 将指定ID节点展开
             }
           })
         })
@@ -940,6 +1158,8 @@ export default {
   },
   mounted () {
     let allthis = this
+    // 进入页面后查询树形结构目录
+    this.selectMenu()
     this.getDomesticStandardTable()
     // 从数据库中查询各下拉框数据
     this.$http.get('sys/dictype/getDicTypeListCode', '', {
@@ -956,8 +1176,7 @@ export default {
       this.categoryOptions = res.data.CATEGORY
     }, e => {
     })
-    // 进入页面后查询树形结构目录
-    this.selectMenu()
+
     /**
      * @description: zTree初始化
      * @author: chenxiaoxi
@@ -1012,7 +1231,10 @@ export default {
       // 拖拽对象id,拖拽目标对象
       dom2Tree: function (e, treeId, treeNode) {
         console.log('点击')
-        let pid = treeNode.id
+        let pid = ''
+        if (treeNode == null) {
+          pid = treeNode.id
+        }
         if (MoveTest.curTarget === null) return
         let id = MoveTest.curTarget.attr('domId')
         console.log(id)

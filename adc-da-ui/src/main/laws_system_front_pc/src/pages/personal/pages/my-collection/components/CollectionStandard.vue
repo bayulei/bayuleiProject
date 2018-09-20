@@ -9,7 +9,7 @@
      <div slot="right"></div>
    </table-tools-bar>
    <div class="content">
-     <Collapse v-model="collapseValue" accordion simple>
+     <Collapse v-model="collapseValue" accordion>
        <Panel :name="item.id" v-for="(item,index) in collectionList" :key="index" hide-arrow :dispaly="isDis">
          <div>
          <Row>
@@ -28,15 +28,31 @@
          </Row>
          </div>
          <div slot="content">
-           <Input v-model="textarea" type="textarea" :autosize="{minRows: 5,maxRows: 7}"  placeholder="笔记内容..." :maxlength="200"  @input="descInput" style="width: 90%; margin: 0.5rem 1.5rem"></Input>
-           <div class="btn-group">
-             <span>{{remnant}}/200</span>
-             <Button type="info" ghost size="small" style="margin-left: 0.5rem">保存</Button>
-             <Button type="info" ghost size="small" style="margin-left: 0.5rem">删除</Button>
-           </div>
+           <Form ref="formDynamic" :model="formDynamic" :label-width="200">
+             <FormItem>
+               <Button type="dashed" class="btn" @click="handleAdd" icon="md-add">添加笔记</Button>
+             </FormItem>
+             <FormItem
+               v-for="(num, index) in formDynamic.items"
+               :key="index"
+               :label="'笔记 ' + num.index + ':'"
+               :prop="'items.' + index + '.value'">
+               <Row>
+                 <Col span="12">
+                   <span>{{formDynamic.items[index].value}}</span>
+                 </Col>
+                 <Col span="6" offset="1">
+                   <Button type="info" size="small" @click="handleRender(num)">书写笔记</Button>
+                   <Button type="info"  size="small" @click="handleSubmit('formDynamic')">保存笔记</Button>
+                   <Button type="info"  size="small" @click="handleReset('formDynamic')" >删除笔记</Button>
+                 </Col>
+               </Row>
+             </FormItem>
+           </Form>
          </div>
        </Panel>
      </Collapse>
+     <div v-if="total===0">暂无数据</div>
      <loading :loading="loading">数据获取中</loading>
      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
    </div>
@@ -46,10 +62,10 @@
 <script>
 export default {
   name: 'collectionStandard',
-  isDis: false,
   data () {
     return {
       collapseValue: '0',
+      // 字数统计
       remnant: 200,
       isDis: false,
       total: 0,
@@ -57,11 +73,19 @@ export default {
       rows: 10,
       loading: false,
       search: {
-        collectType: ''
+        collectType: '' // 输入框内容
       },
-      textarea: '',
-      inputType: false,
-      collectionList: []
+      index: 1,
+      formDynamic: {
+        items: [
+          {
+            input: '',
+            value: '',
+            index: 1
+          }
+        ]
+      },
+      collectionList: [] // 内容
     }
   },
   methods: {
@@ -81,7 +105,7 @@ export default {
     },
     // 检索
     standardSelect () {
-      this.$http.get('/person/personCollect/page', {
+      this.$http.get('person/personCollect/page', {
         pageNo: this.page,
         pageSize: this.rows,
         collectTitle: this.search.collectType
@@ -94,9 +118,52 @@ export default {
       }, e => {})
     },
     cancelCollection () {
-
+      this.$http.get('', {
+      }, {
+        _this: this
+      }, res => {
+        this.standardSelect()
+      }, e => {})
     },
     writeNotes (item) {
+    },
+    handleSubmit (name) {
+      alert('已提交')
+    },
+    handleReset (name) {
+      alert('已取消')
+    },
+    handleAdd () {
+      this.index++
+      this.formDynamic.items.push({
+        value: '',
+        index: this.index
+      })
+    },
+    handleRender (num) {
+      this.$Modal.confirm({
+        render: (h) => {
+          return h('Input', {
+            props: {
+              type: 'textarea',
+              maxlength: 200,
+              value: num.value,
+              placeholder: '请书写笔记……'
+            },
+            on: {
+              input: (val) => {
+                num.input = val
+              }
+            }
+          })
+        },
+        onOk: () => {
+          num.value = num.input
+        },
+        onCancel: () => {
+          num.input = ''
+        }
+      })
     }
   },
   mounted () {
@@ -105,17 +172,17 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
    #CollectionStandard{
-     .btn-group{
-       position: relative;
-       top:-1.3rem;
-       left: 23rem;
-     }
+   }
+   .btn-group{
+     position: relative;
+     top:-1.3rem;
+     left: 23rem;
    }
    .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header{
-     height: 93px;
-     line-height: 87px;
+     height: 38px;
+     line-height: 36px;
      padding-left: 16px;
      color: #666;
      cursor: pointer;
@@ -124,5 +191,20 @@ export default {
      -webkit-transition: all 0.2s ease-in-out;
      transition: all 0.2s ease-in-out;
    }
-
+   .ivu-collapse {
+     background-color: #FFFFFF;
+     border-radius: 3px;
+     border: none;
+   }
+   .ivu-form-item {
+     margin-bottom: 0.3rem;
+     vertical-align: top;
+     zoom: 1;
+   }
+   .ivu-form-item-content {
+     position: relative;
+     line-height: 32px;
+     font-size: 12px;
+     margin-left: 0 !important;
+   }
 </style>

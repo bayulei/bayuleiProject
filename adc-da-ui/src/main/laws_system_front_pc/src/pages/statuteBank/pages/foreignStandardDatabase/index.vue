@@ -657,7 +657,7 @@ export default {
           { required: true, message: '标准类别不能为空', trigger: 'blur' }
         ],
         applyArctic: [
-          { required: true, message: '适用车型不能为空', trigger: 'blur' }
+          { required: true, message: '适用车型不能为空', trigger: 'change' }
         ],
         standNumber: [
           { required: true, message: '标准编号不能为空', trigger: 'blur' }
@@ -681,7 +681,7 @@ export default {
         interStandNum: [],
         adoptExtent: [],
         emergyKind: [
-          { required: true, message: '能源种类不能为空', trigger: 'blur' }],
+          { required: true, message: '能源种类不能为空', trigger: 'change' }],
         applyAuth: [],
         issueTime: [
           { required: true, message: '发布日期不能为空', trigger: 'blur' }

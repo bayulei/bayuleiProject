@@ -1,20 +1,46 @@
 <!-- 已收藏的动态 -->
 <template>
  <div id="CollectionDynamics">
-   <Collapse v-model="value2" acc>
-     <Panel name="1">
-       史蒂夫·乔布斯
-       <p slot="content">史蒂夫·乔布斯（Steve Jobs），1955年2月24日生于美国加利福尼亚州旧金山，美国发明家、企业家、美国苹果公司联合创办人。</p>
-     </Panel>
-     <Panel name="2">
-       斯蒂夫·盖瑞·沃兹尼亚克
-       <p slot="content">斯蒂夫·盖瑞·沃兹尼亚克（Stephen Gary Wozniak），美国电脑工程师，曾与史蒂夫·乔布斯合伙创立苹果电脑（今之苹果公司）。斯蒂夫·盖瑞·沃兹尼亚克曾就读于美国科罗拉多大学，后转学入美国著名高等学府加州大学伯克利分校（UC Berkeley）并获得电机工程及计算机（EECS）本科学位（1987年）。</p>
-     </Panel>
-     <Panel name="3">
-       乔纳森·伊夫
-       <p slot="content">乔纳森·伊夫是一位工业设计师，现任Apple公司设计师兼资深副总裁，英国爵士。他曾参与设计了iPod，iMac，iPhone，iPad等众多苹果产品。除了乔布斯，他是对苹果那些著名的产品最有影响力的人。</p>
-     </Panel>
-   </Collapse>
+   <table-tools-bar>
+     <div slot="left">
+       <label-input v-model="search.collectType" placeholder="请输入动态信息" label="标准搜索"></label-input>
+       <Button type="info" @click="standardSelect">查询</Button>
+     </div>
+     <div slot="right"></div>
+   </table-tools-bar>
+   <div class="content">
+     <Collapse v-model="collapseValue" accordion>
+       <Panel :name="item.id" v-for="(item,index) in collectionList" :key="index" hide-arrow :dispaly="isDis">
+         <div>
+           <Row>
+             <Col span="3"  offset="1">
+               <Icon type="md-bookmark" />
+               <span >{{item.collectResId}}</span>
+             </Col>
+             <Col span="6">
+               <strong>{{item.collectTitle}}</strong>
+             </Col>
+             <Col span="4">{{item.creationTime}}</Col>
+             <Col span="4" offset="6">
+               <Button type="dashed"  @click="cancelCollection">取消收藏</Button>
+               <Button type="dashed" @click="writeNotes(item)">书写笔记</Button>
+             </Col>
+           </Row>
+         </div>
+         <div slot="content">
+           <Input v-model="textarea" type="textarea" :autosize="{minRows: 5,maxRows: 7}"  placeholder="笔记内容..." :maxlength="200"  @input="descInput" style="width: 90%; margin: 0.5rem 1.5rem"></Input>
+           <div class="btn-group">
+             <span>{{remnant}}/200</span>
+             <Button type="info" ghost size="small" style="margin-left: 0.5rem">保存</Button>
+             <Button type="info" ghost size="small" style="margin-left: 0.5rem">删除</Button>
+           </div>
+         </div>
+       </Panel>
+     </Collapse>
+     <div v-if="total===0">暂无数据</div>
+     <loading :loading="loading">数据获取中</loading>
+     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
+   </div>
  </div>
 </template>
 
@@ -23,18 +49,62 @@ export default {
   name: 'CollectionDynamics',
   data () {
     return {
-      value2: '0'
+      collapseValue: '0',
+      // 字数统计
+      remnant: 200,
+      isDis: false,
+      total: 0,
+      page: 1,
+      rows: 10,
+      loading: false,
+      search: {
+        collectType: '' // 输入框内容
+      },
+      textarea: '',
+      collectionList: [] // 内容
     }
   },
-  methods: {},
-  components: {},
-  props: {},
-  computed: {},
-  watch: {},
-  mounted () {}
+  methods: {
+    // 分页
+    pageChange (page) {
+      this.page = page
+      this.selectClass()
+    },
+    pageSizeChange (pageSize) {
+      this.rows = pageSize
+      this.selectClass()
+    },
+    // 计算数字
+    descInput () {
+      let txtVal = this.textarea.length
+      this.remnant = 200 - txtVal
+    },
+    // 检索
+    standardSelect () {
+      this.$http.get('person/personCollect/page', {
+        pageNo: this.page,
+        pageSize: this.rows,
+        collectTitle: this.search.collectType
+      }, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        this.collectionList = res.data.list
+        this.total = res.data.count
+      }, e => {})
+    },
+    cancelCollection () {
+
+    },
+    writeNotes (item) {
+    }
+  },
+  mounted () {
+    this.standardSelect()
+  }
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
    #CollectionDynamics{}
 </style>

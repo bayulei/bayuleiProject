@@ -10,6 +10,8 @@ export default {
       showLawsItemsModal: false,
       addLawsItemsModal: false,
       importItemsModal: false,
+      showLawsInfoTitle: '',
+      addLawsItemsTitle: '',
       saveInfoBtn: true,
       saveLawsItemsBtn: true,
       lawsInfo: {
@@ -119,6 +121,7 @@ export default {
                 },
                 on: {
                   click: () => {
+                    this.addLawsItemsTitle = '查看法规条目'
                     this.editLawsItems(params.row)
                     this.saveLawsItemsBtn = false
                   }
@@ -134,6 +137,7 @@ export default {
                 },
                 on: {
                   click: () => {
+                    this.addLawsItemsTitle = '修改法规条目'
                     this.editLawsItems(params.row)
                   }
                 }
@@ -166,11 +170,16 @@ export default {
       lawsInfoFormRules: {
         country: [],
         lawsProperty: [],
-        lawsNumber: [],
-        lawsName: [
-          { required: true, message: '文件名称不能为空', trigger: 'blur' }
+        lawsNumber: [
+          { type: 'string', max: 100, message: '文件号长度不能超过100个字符', trigger: 'blur' }
         ],
-        issueUnit: [],
+        lawsName: [
+          { required: true, message: '文件名称不能为空', trigger: 'blur' },
+          { type: 'string', max: 500, message: '文件名称长度不能超过500个字符', trigger: 'blur' }
+        ],
+        issueUnit: [
+          { type: 'string', max: 500, message: '发布部门长度不能超过500个字符', trigger: 'blur' }
+        ],
         lawsState: [
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
@@ -180,12 +189,16 @@ export default {
         putTime: [
           { required: true, type: 'date', message: '实施日期不能为空', trigger: 'change' }
         ],
-        replaceLawsNum: [],
+        replaceLawsNum: [
+          { type: 'string', max: 100, message: '代替文件号长度不能超过100个字符', trigger: 'blur' }
+        ],
         applyArctic: [],
         energyKind: [],
         applyAuth: [],
         responsibleUnit: [],
-        linkUri: []
+        linkUri: [
+          { type: 'string', max: 1000, message: '链接长度不能超过1000个字符', trigger: 'blur' }
+        ]
       },
       addLawsItemsFormRules: {
         // itemsNum: [
@@ -228,14 +241,17 @@ export default {
       this.$nextTick(() => {
         this.$refs['SarLawsInfoEO'].resetFields()
       })
+      this.showLawsInfoTitle = '新增法规'
       this.showLawsInfoModal = true
       this.saveInfoBtn = true
     },
     // 点击编辑按钮触发
     editLawsInfo (row, optType) {
       if (optType === 'edit') {
+        this.showLawsInfoTitle = '修改法规'
         this.saveInfoBtn = true
       } else {
+        this.showLawsInfoTitle = '查看法规'
         this.saveInfoBtn = false
       }
       this.showLawsInfoModal = true
@@ -247,29 +263,35 @@ export default {
     },
     // 提交新增/修改法规信息
     saveLawsInfo () {
-      this.SarLawsInfoEO.applyArctic = this.breakMultiSelect(this.SarLawsInfoEO.applyArctic)
-      this.SarLawsInfoEO.energyKind = this.breakMultiSelect(this.SarLawsInfoEO.energyKind)
-      this.SarLawsInfoEO.applyAuth = this.breakMultiSelect(this.SarLawsInfoEO.applyAuth)
-      this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
-      this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
-      this.SarLawsInfoEO.lawsType = '1'
-      if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
-        this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
-          _this: this
-        }, res => {
-          this.showLawsInfoModal = false
-          this.searchLawsInfo()
-        }, e => {
+      this.$refs['SarLawsInfoEO'].validate((valid) => {
+        if (valid) {
+          this.SarLawsInfoEO.applyArctic = this.breakMultiSelect(this.SarLawsInfoEO.applyArctic)
+          this.SarLawsInfoEO.energyKind = this.breakMultiSelect(this.SarLawsInfoEO.energyKind)
+          this.SarLawsInfoEO.applyAuth = this.breakMultiSelect(this.SarLawsInfoEO.applyAuth)
+          this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
+          this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
+          this.SarLawsInfoEO.lawsType = '1'
+          if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
+            this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
+              _this: this
+            }, res => {
+              this.showLawsInfoModal = false
+              this.searchLawsInfo()
+            }, e => {
 
-        })
-      } else {
-        this.$http.put('lawss/sarLawsInfo/updateLawsInfo', this.SarLawsInfoEO, {
-          _this: this
-        }, res => {
-          this.showLawsInfoModal = false
-          this.searchLawsInfo()
-        }, e => {})
-      }
+            })
+          } else {
+            this.$http.put('lawss/sarLawsInfo/updateLawsInfo', this.SarLawsInfoEO, {
+              _this: this
+            }, res => {
+              this.showLawsInfoModal = false
+              this.searchLawsInfo()
+            }, e => {})
+          }
+        } else {
+          this.$Message.error('请检查表单是否填写正确')
+        }
+      })
     },
     cancelAdd () {
       this.showLawsInfoModal = false
@@ -310,7 +332,7 @@ export default {
     },
     // 导出法规信息
     exportLawsInfo () {
-      console.log(this.selectedList)
+      console.log(this.saveSelectedDatas)
     },
     // 法规条目相关方法
     // 分页查询条目
@@ -340,13 +362,17 @@ export default {
     openAddItemsModal () {
       this.SarLawsItemsEO = ''
       this.addLawsItemsModal = true
+      this.addLawsItemsTitle = '新增法规条目'
       this.saveLawsItemsBtn = true
+      this.SarLawsItemsEO.lawsId = this.saveLawsId
+      console.log(this.saveLawsId)
     },
     // 打开编辑条目模态框
     editLawsItems (row) {
       this.addLawsItemsModal = true
       this.saveLawsItemsBtn = true
       this.SarLawsItemsEO = row
+      this.SarLawsItemsEO.lawsId = this.saveLawsId
       this.SarLawsItemsEO.applyArctic = this.combineToArray(this.SarLawsItemsEO.applyArctic)
       this.SarLawsItemsEO.energyKind = this.combineToArray(this.SarLawsItemsEO.energyKind)
     },
@@ -355,9 +381,12 @@ export default {
     },
     // 保存条目数据
     saveLawsItems () {
-      this.SarLawsItemsEO.applyArctic = this.breakMultiSelect(this.SarLawsItemsEO.applyArctic)
-      this.SarLawsItemsEO.energyKind = this.breakMultiSelect(this.SarLawsItemsEO.energyKind)
-      this.SarLawsItemsEO.lawsId = this.saveLawsId
+      if (this.SarLawsItemsEO.applyArctic != null && this.SarLawsItemsEO.applyArctic !== '' && this.SarLawsItemsEO.applyArctic !== undefined) {
+        this.SarLawsItemsEO.applyArctic = this.breakMultiSelect(this.SarLawsItemsEO.applyArctic)
+      }
+      if (this.SarLawsItemsEO.energyKind != null && this.SarLawsItemsEO.energyKind !== '' && this.SarLawsItemsEO.energyKind !== undefined) {
+        this.SarLawsItemsEO.energyKind = this.breakMultiSelect(this.SarLawsItemsEO.energyKind)
+      }
       if (this.SarLawsItemsEO.tackTime != null) {
         this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
       }
@@ -405,7 +434,7 @@ export default {
     },
     // 分解多选下拉
     breakMultiSelect (value) {
-      if (value != null && value !== '') {
+      if (value != null && value !== '' && value !== undefined) {
         let stringValue = ''
         for (let i = 0; i < value.length; i++) {
           stringValue += value[i] + ','
@@ -417,7 +446,7 @@ export default {
     },
     // 多选合并为数组显示
     combineToArray (value) {
-      if (value != null && value !== '') {
+      if (value != null && value !== '' && value !== undefined) {
         let arrayValue = value.split(',')
         return arrayValue
       } else {

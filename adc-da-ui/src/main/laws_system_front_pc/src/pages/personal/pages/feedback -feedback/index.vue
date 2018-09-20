@@ -1,14 +1,10 @@
-<!-- 试验项目库 -->
 <template>
-  <div id="testItemDatabase">
-    试验项目库
-  </div>
-
+ <div id="index"></div>
 </template>
 
 <script>
 export default {
-  name: 'testItemDatabase',
+  name: 'index',
   data () {
     return {}
   },
@@ -20,7 +16,7 @@ export default {
   mounted () {}
 }
 </script>
+
 <style lang="less">
-  #testItemDatabase{
-  }
+   #index{}
 </style>

@@ -89,18 +89,13 @@ export default {
       console.log(avator)
     },
     searchPersonal () {
-      this.$http.get('/person/userInfo/userInfo', {
-        userId: 1
+      this.$http.post('person/userInfo/getByUserInfoCode', {
+        userId: 'QJX2Z8E678'
       }, {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.userInfo.username = res.data[0].userId
-        this.userInfo.department = res.data[0].duty
-        this.userInfo.phone = res.data[0].officePhone
-        this.userInfo.mobile = res.data[0].mobilePhone
-        this.userInfo.fax = res.data[0].faxAddress
-        this.userInfo.autograph = res.data[0].signature
+        this.userInfo = res.data
       }, e => {})
     }
   },

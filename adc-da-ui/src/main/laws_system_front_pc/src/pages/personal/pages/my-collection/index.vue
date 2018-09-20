@@ -10,6 +10,7 @@
 
 <script>
 import CollectionDynamics from './components/CollectionDynamics'
+import CollectionLaws from './components/CollectionLaws'
 import CollectionStandard from './components/CollectionStandard'
 export default {
   name: 'my-collection',
@@ -19,6 +20,9 @@ export default {
       tabsList: [{
         title: '已收藏的标准',
         name: 'CollectionStandard'
+      }, {
+        title: '已收藏的法规',
+        name: 'CollectionLaws'
       }, {
         title: '已收藏的动态',
         name: 'CollectionDynamics'}]
@@ -31,6 +35,7 @@ export default {
   },
   components: {
     CollectionDynamics,
+    CollectionLaws,
     CollectionStandard
   }
 }

@@ -19,16 +19,16 @@
     where 1=1
     <trim suffixOverrides="," >
       <if test="validFlag != null" >
-        and valid_flag ${validFlagOperator} #{validFlag}
+        and valid_flag = #{validFlag}
       </if>
       <if test="menuId != null" >
-        and menu_id ${menuIdOperator} #{menuId}
+        and menu_id = #{menuId}
       </if>
       <if test="standId != null" >
-        and stand_id ${standIdOperator} #{standId}
+        and stand_id = #{standId}
       </if>
       <if test="id != null" >
-        and id ${idOperator} #{id}
+        and id = #{id}
       </if>
     </trim>
   </sql>
@@ -69,6 +69,12 @@
             menu_id = #{menuId},
             stand_id = #{standId}
      where  id = #{id}
+  </update>
+
+  <update id="updateMenuidByMenuid" parameterType="com.adc.da.lawss.vo.NewmenuOldmenuVO" >
+    update SAR_STAND_MENU
+       set  menu_id = #{newMenuid}
+     where  menu_id = #{oldMenuid}
   </update>
 
   <!-- 修改记录，只修改只不为空的字段 -->
@@ -128,6 +134,11 @@
     <if test="pager.orderCondition != null and pager.orderCondition != ''" >
        ${pager.orderCondition}
     </if>
+  </select>
+
+  <select id="selectByMenuId" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.entity.SarStandMenuEO">
+        select <include refid="Base_Column_List"/> from SAR_STAND_MENU
+        <include refid="Base_Where_Clause"/>
   </select>
 
 </mapper>

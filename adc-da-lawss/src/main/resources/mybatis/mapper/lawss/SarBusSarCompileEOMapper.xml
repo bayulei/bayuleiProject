@@ -296,7 +296,7 @@
 
     <select id="queryByStandCode" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
         select <include refid="Base_Column_List"/> from SAR_BUS_SAR_COMPILE
-        where stand_code = #{standCode} and valid_flag = #{validFlag}
+        where stand_number = #{standNumber} and valid_flag = #{validFlag}
         <if test="id != null" >
             and id != #{id}
         </if>

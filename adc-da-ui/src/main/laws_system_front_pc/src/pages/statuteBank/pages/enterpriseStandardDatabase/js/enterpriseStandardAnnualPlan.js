@@ -9,6 +9,7 @@ export default {
       reviewModifyTime: false,
       startFlowTime: false,
       showStandPlanTitle: '',
+      saveSelectedDatas: '',
       standPlan: {
         standName: '',
         makeRevisonType: '',
@@ -75,11 +76,6 @@ export default {
           title: '开始流程日期',
           width: 120,
           key: 'startFlowTime'
-        },
-        {
-          title: '报批稿完成时间',
-          width: 120,
-          key: 'approvalDraftTime'
         },
         {
           title: '距评审稿提交天数',
@@ -251,6 +247,18 @@ export default {
         onCancel: () => {
         }
       })
+    },
+    // 导出年度标准计划
+    getSelectedDatas (selection, row) {
+      this.saveSelectedDatas = selection
+    },
+    exportStandPlan () {
+      if (this.saveSelectedDatas != null && this.saveSelectedDatas !== '') {
+        let jsonData = JSON.stringify(this.saveSelectedDatas)
+        window.location.href = '/api/lawss/sarBussStandPlan/exportStandPlan?exportPlanDatas=' + jsonData
+      } else {
+        this.$Message.error('请选择要导出的数据')
+      }
     }
   },
   components: {},

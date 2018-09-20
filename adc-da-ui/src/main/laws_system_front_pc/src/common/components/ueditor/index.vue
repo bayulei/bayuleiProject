@@ -39,6 +39,9 @@ export default {
     },
     getContentTxt: function () {
       return this.editor.getContentTxt()
+    },
+    setContent (content) {
+      return this.editor.setContent(content)
     }
   }
 }
