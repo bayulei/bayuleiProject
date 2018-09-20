@@ -387,6 +387,10 @@ export default {
           .flex();
           justify-content: center;
           align-items: center;
+          &:hover{
+            cursor:pointer;
+            color: #52b8db;
+          }
           /*&::before{*/
             /*content: '';*/
             /*width: 0;*/
