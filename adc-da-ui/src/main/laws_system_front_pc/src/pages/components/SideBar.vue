@@ -111,7 +111,7 @@ export default {
 <style lang="less" scoped>
   @import '~styles/style';
   .side-bar{
-    height: calc(~'100% - 2rem');
+    height: calc(~'100% - 7.8% - 10px');
     float: left;
     -webkit-user-select: none;
     -moz-user-select: none;

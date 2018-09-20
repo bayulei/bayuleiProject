@@ -327,9 +327,9 @@ export default {
         newproductPutTime: [],
         draftingUnit: [],
         draftUser: [],
-        /*standFileList: [
-          { required: true, message: '文件不能为空', trigger: 'change' }
-        ],*/
+        standFileList: [
+          { required: true, type: 'array', message: '文件不能为空', trigger: 'change' }
+        ],
         standModifyFile: [],
         draftFile: [],
         opinionFile: [],
@@ -477,7 +477,8 @@ export default {
       relevanceFileName: '',
       importModalshowflagtemp: false,
       file: null,
-      loadingStatus: false
+      loadingStatus: false,
+      currentFile: '' // 当前操作的是哪个FormItem的上传
     }
   },
   methods: {
@@ -1080,6 +1081,11 @@ export default {
       this.file = file
       //this.sarStandardsInfoEO[value] = []
       return false
+    },
+    uploadSuccess (res, file, fileList) {
+      if (res.ok) {
+        this.sarStandardsInfoEO[this.currentFile].push(res.data)
+      }
     }
   },
   components: {},
