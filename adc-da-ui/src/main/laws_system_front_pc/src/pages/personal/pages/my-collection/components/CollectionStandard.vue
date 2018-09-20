@@ -9,7 +9,7 @@
      <div slot="right"></div>
    </table-tools-bar>
    <div class="content">
-     <Collapse v-model="collapseValue" accordion simple>
+     <Collapse v-model="collapseValue" accordion>
        <Panel :name="item.id" v-for="(item,index) in collectionList" :key="index" hide-arrow :dispaly="isDis">
          <div>
          <Row>
@@ -37,6 +37,7 @@
          </div>
        </Panel>
      </Collapse>
+     <div v-if="total===0">暂无数据</div>
      <loading :loading="loading">数据获取中</loading>
      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
    </div>
@@ -46,10 +47,10 @@
 <script>
 export default {
   name: 'collectionStandard',
-  isDis: false,
   data () {
     return {
       collapseValue: '0',
+      // 字数统计
       remnant: 200,
       isDis: false,
       total: 0,
@@ -57,11 +58,10 @@ export default {
       rows: 10,
       loading: false,
       search: {
-        collectType: ''
+        collectType: '' // 输入框内容
       },
       textarea: '',
-      inputType: false,
-      collectionList: []
+      collectionList: [] // 内容
     }
   },
   methods: {
@@ -81,7 +81,7 @@ export default {
     },
     // 检索
     standardSelect () {
-      this.$http.get('/person/personCollect/page', {
+      this.$http.get('person/personCollect/page', {
         pageNo: this.page,
         pageSize: this.rows,
         collectTitle: this.search.collectType
@@ -94,7 +94,12 @@ export default {
       }, e => {})
     },
     cancelCollection () {
-
+      this.$http.get('', {
+      }, {
+        _this: this
+      }, res => {
+        this.standardSelect()
+      }, e => {})
     },
     writeNotes (item) {
     }
@@ -105,17 +110,17 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
    #CollectionStandard{
-     .btn-group{
-       position: relative;
-       top:-1.3rem;
-       left: 23rem;
-     }
+   }
+   .btn-group{
+     position: relative;
+     top:-1.3rem;
+     left: 23rem;
    }
    .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header{
-     height: 93px;
-     line-height: 87px;
+     height: 38px;
+     line-height: 36px;
      padding-left: 16px;
      color: #666;
      cursor: pointer;
@@ -123,6 +128,11 @@ export default {
      border-bottom: 1px solid transparent;
      -webkit-transition: all 0.2s ease-in-out;
      transition: all 0.2s ease-in-out;
+   }
+   .ivu-collapse {
+     background-color: #FFFFFF;
+     border-radius: 3px;
+     border: none;
    }
 
 </style>

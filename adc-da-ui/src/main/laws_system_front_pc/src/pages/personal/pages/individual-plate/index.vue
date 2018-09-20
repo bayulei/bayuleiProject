@@ -67,7 +67,7 @@ export default {
       margin: 1rem 7rem;
       .btn-group{
         float: right;
-        margin:1rem 4rem;
+        margin:1rem 5rem;
       }
       .btn-group Button{
          width: 2.5rem;
