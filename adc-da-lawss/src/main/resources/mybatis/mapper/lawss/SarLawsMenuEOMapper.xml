@@ -88,6 +88,12 @@
      where id = #{id}
   </update>
 
+    <update id="updateMenuidByMenuid" parameterType="com.adc.da.lawss.vo.NewmenuOldmenuVO" >
+    update SAR_LAWS_MENU
+       set  menu_id = #{newMenuid}
+     where  menu_id = #{oldMenuid}
+  </update>
+
   <!-- 根据id查询 SAR_LAWS_MENU -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List" /> 

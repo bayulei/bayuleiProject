@@ -127,63 +127,9 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
     @ApiOperation(value = "|SarStandardsInfoEO|新增")
     @PostMapping("/addarStandardsInfo")
     //@RequiresPermissions("lawss:sarStandardsInfo:save")
-    public ResponseMessage<SarStandardsInfoEO> create(SarStandardsInfoEO sarStandardsInfoEO,HttpServletRequest request) throws Exception {
+    public ResponseMessage<SarStandardsInfoEO> create(@RequestBody SarStandardsInfoEO sarStandardsInfoEO,HttpServletRequest request) throws Exception {
+
         ResponseMessage<SarStandardsInfoEO> result = sarStandardsInfoEOService.createSarStandardsInfo(sarStandardsInfoEO);
-        //标准文件资源表，标准文件详情表中插入数据，需要下载文件，并保存数据
-        List<MultipartFile> standfiles = null;
-        List<MultipartFile> standModifyfiles = null;
-        //* 2.如果是上传文件请求，获取文件列表*//*
-        if (request instanceof MultipartHttpServletRequest) {
-            standfiles = ((MultipartHttpServletRequest) request).getFiles("standFile");
-            standModifyfiles = ((MultipartHttpServletRequest) request).getFiles("standModifyFile");
-        }
-        //* 3.如果文件列表不为空，循环文件列表，保存文件 *//*
-        if (standfiles != null) {
-            for (MultipartFile file : standfiles) {
-                //* 3.1保存图片 *//*
-                // file = sarStandardsInfoEO.getStandFiles();
-                AttFileVo fileInfo = attFileEOService.saveFileInfo(file);
-                //* 3.2 其他后续操作 *//*
-                //标准文件资源表存数据库
-                SarStandResEO sarStandResEO = new SarStandResEO();
-                sarStandResEO.setStandId(result.getData().getId());            //标准ID
-                sarStandResEO.setStandFileClassify(StandFileClassifyEnum.STAND_FILE.getValue());  //文件分类
-                sarStandResEO.setFileName(file.getName());           //文件名称
-                String fileTyle=file.getName().substring(file.getName().lastIndexOf("."),file.getName().length());
-                sarStandResEO.setFileSuffix(fileTyle);         //文件类型
-                sarStandResEO = sarStandResEOService.insertSarStandResEO(sarStandResEO);
-                //标准文件详情表存数据库
-                SarStandFileEO sarStandFileEO = new SarStandFileEO();
-                sarStandFileEO.setStandId(result.getData().getId());     //标准ID
-                sarStandFileEO.setResId(sarStandResEO.getId());       //资源ID
-                sarStandFileEO.setAttId(fileInfo.getId());       //文件ID
-                sarStandFileEO.setUseModel("");  //文件使用模式
-                sarStandFileEOService.insertSarStandFileEO(sarStandFileEO);
-            }
-        }
-        if (standModifyfiles != null) {
-            for (MultipartFile file : standModifyfiles) {
-                //* 3.1保存图片 *//*
-                // file = sarStandardsInfoEO.getStandModifyFiles();
-                 AttFileVo fileInfo = attFileEOService.saveFileInfo(file);
-                //* 3.2 其他后续操作 *//*
-                //标准文件资源表存数据库
-                SarStandResEO sarStandResEO = new SarStandResEO();
-                sarStandResEO.setStandId(result.getData().getId());            //标准ID
-                sarStandResEO.setStandFileClassify(StandFileClassifyEnum.STAND_MODIFY_FILE.getValue());  //文件分类
-                sarStandResEO.setFileName(file.getName());           //文件名称
-                String fileTyle=file.getName().substring(file.getName().lastIndexOf("."),file.getName().length());
-                sarStandResEO.setFileSuffix(fileTyle);         //文件类型
-                sarStandResEO = sarStandResEOService.insertSarStandResEO(sarStandResEO);
-                //标准文件详情表存数据库
-                SarStandFileEO sarStandFileEO = new SarStandFileEO();
-                sarStandFileEO.setStandId(result.getData().getId());     //标准ID
-                sarStandFileEO.setResId(sarStandResEO.getId());       //资源ID
-                sarStandFileEO.setAttId(fileInfo.getId());       //文件ID
-                sarStandFileEO.setUseModel("");  //文件使用模式
-                sarStandFileEOService.insertSarStandFileEO(sarStandFileEO);
-           }
-        }
         return Result.success("","添加成功",sarStandardsInfoEO);
     }
 

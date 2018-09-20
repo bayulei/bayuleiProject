@@ -866,9 +866,11 @@ public class SarStandardsInfoEOPage extends BasePage {
     private String  menuId;
     private List<String> applyArctics;
     private List<String> replaceStandNums;
+
     public String getMenuId() {
         return menuId;
     }
+
     public void setMenuId(String menuId) {
         this.menuId = menuId;
     }
