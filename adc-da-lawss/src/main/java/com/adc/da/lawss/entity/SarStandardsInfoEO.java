@@ -1,9 +1,12 @@
 package com.adc.da.lawss.entity;
 
+import com.adc.da.att.vo.AttFileVo;
 import com.adc.da.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <b>功能：</b>SAR_STANDARDS_INFO SarStandardsInfoEOEntity<br>
@@ -116,6 +119,13 @@ public class SarStandardsInfoEO extends BaseEntity {
     private String applyAuthShow; // 适用认证下拉框    --多选
     private String categoryShow; // 所属类别下拉框     --多选
 
+    private List<AttFileVo> standFileList = new ArrayList<AttFileVo>();
+    private List<AttFileVo> relevanceFileList = new ArrayList<AttFileVo>();
+    private List<AttFileVo> approvalFileList = new ArrayList<AttFileVo>();
+    private List<AttFileVo> sentScreenFileList = new ArrayList<AttFileVo>();
+    private List<AttFileVo> opinionFileList = new ArrayList<AttFileVo>();
+    private List<AttFileVo> draftFileList = new ArrayList<AttFileVo>();
+    private List<AttFileVo> standModifyFileList = new ArrayList<AttFileVo>();
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -777,5 +787,61 @@ public class SarStandardsInfoEO extends BaseEntity {
 
     public void setCategoryShow(String categoryShow) {
         this.categoryShow = categoryShow;
+    }
+
+    public List<AttFileVo> getStandFileList() {
+        return standFileList;
+    }
+
+    public void setStandFileList(List<AttFileVo> standFileList) {
+        this.standFileList = standFileList;
+    }
+
+    public List<AttFileVo> getRelevanceFileList() {
+        return relevanceFileList;
+    }
+
+    public void setRelevanceFileList(List<AttFileVo> relevanceFileList) {
+        this.relevanceFileList = relevanceFileList;
+    }
+
+    public List<AttFileVo> getApprovalFileList() {
+        return approvalFileList;
+    }
+
+    public void setApprovalFileList(List<AttFileVo> approvalFileList) {
+        this.approvalFileList = approvalFileList;
+    }
+
+    public List<AttFileVo> getSentScreenFileList() {
+        return sentScreenFileList;
+    }
+
+    public void setSentScreenFileList(List<AttFileVo> sentScreenFileList) {
+        this.sentScreenFileList = sentScreenFileList;
+    }
+
+    public List<AttFileVo> getOpinionFileList() {
+        return opinionFileList;
+    }
+
+    public void setOpinionFileList(List<AttFileVo> opinionFileList) {
+        this.opinionFileList = opinionFileList;
+    }
+
+    public List<AttFileVo> getDraftFileList() {
+        return draftFileList;
+    }
+
+    public void setDraftFileList(List<AttFileVo> draftFileList) {
+        this.draftFileList = draftFileList;
+    }
+
+    public List<AttFileVo> getStandModifyFileList() {
+        return standModifyFileList;
+    }
+
+    public void setStandModifyFileList(List<AttFileVo> standModifyFileList) {
+        this.standModifyFileList = standModifyFileList;
     }
 }

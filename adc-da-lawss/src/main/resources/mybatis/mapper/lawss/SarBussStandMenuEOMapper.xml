@@ -19,16 +19,16 @@
     where 1=1
     <trim suffixOverrides="," >
       <if test="menuId != null" >
-        and menu_id ${menuIdOperator} #{menuId}
+        and menu_id = #{menuId}
       </if>
       <if test="bussStandId != null" >
-        and buss_stand_id ${bussStandIdOperator} #{bussStandId}
+        and buss_stand_id = #{bussStandId}
       </if>
       <if test="id != null" >
-        and id ${idOperator} #{id}
+        and id = #{id}
       </if>
       <if test="validFlag != null" >
-        and valid_flag ${validFlagOperator} #{validFlag}
+        and valid_flag = #{validFlag}
       </if>
     </trim>
   </sql>
@@ -88,6 +88,12 @@
      where id = #{id}
   </update>
 
+    <update id="updateMenuidByMenuid" parameterType="com.adc.da.lawss.vo.NewmenuOldmenuVO" >
+    update SAR_BUSS_STAND_MENU
+       set  menu_id = #{newMenuid}
+     where  menu_id = #{oldMenuid}
+  </update>
+
   <!-- 根据id查询 SAR_BUSS_STAND_MENU -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List" /> 
@@ -129,5 +135,10 @@
        ${pager.orderCondition}
     </if>
   </select>
+
+    <select id="selectByMenuId" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.entity.SarBussStandMenuEO">
+        select <include refid="Base_Column_List"/> from SAR_BUSS_STAND_MENU
+        <include refid="Base_Where_Clause"/>
+    </select>
 
 </mapper>

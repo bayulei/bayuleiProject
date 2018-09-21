@@ -14,6 +14,7 @@ import TableToolsBar from './tableToolsBar'
 import FullModal from './fullModal'
 import HasNoData from './hasNoData'
 import UEditor from './ueditor'
+import ModalUpload from './modalUpload'
 
 const install = function (Vue) {
   Vue.component('PanelHeader', PanelHeader)
@@ -26,6 +27,7 @@ const install = function (Vue) {
   Vue.component('fullModal', FullModal)
   Vue.component('hasNoData', HasNoData)
   Vue.component('UEditor', UEditor)
+  Vue.component('ModalUpload', ModalUpload)
 }
 
 export default {

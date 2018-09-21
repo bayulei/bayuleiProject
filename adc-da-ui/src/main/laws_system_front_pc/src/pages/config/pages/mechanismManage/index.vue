@@ -2,7 +2,7 @@
 <template>
   <div id="mechanism-manage">
     <div class="mechanism-manage-left">
-      <Tree :data="deptTree" :render="renderContent"></Tree>
+      <ul id="treeDemo" class="ztree"></ul>
     </div>
     <div class="mechanism-manage-right">
       <table-tools-bar>
@@ -25,255 +25,201 @@
         </div>
       </div>
     </div>
-    <!-- tree弹窗 -->
-    <Modal
-      v-model="isShow.tree"
-      :title="treeTitle"
-      class="mechanism-tree-modal"
-      @on-visible-change="resetTree"
-      @on-ok="treeOk"
-      @on-cancel="treeCancel">
-      <Form ref="treeForm" :model="treeForm" :rules="treeRules">
-        <FormItem label=" " prop="treeNodeTitle">
-          <Input v-model="treeForm.treeNodeTitle" placeholder="请输入节点名称" clearable />
-        </FormItem>
-      </Form>
-    </Modal>
   </div>
 </template>
 
 <script>
+import 'zTree/js/jquery.ztree.core.js'
+import 'zTree/js/jquery.ztree.excheck.js'
+import 'zTree/js/jquery.ztree.exedit.js'
 export default {
   name: 'mechanism-manage',
   data () {
     return {
+      // 搜索组
       mechanismSearch: {
         type: '',
         userName: '',
         roleName: '',
         state: '',
-        typeOptions: [{
-          label: '类型1',
-          value: 1
-        }, {
-          label: '类型2',
-          value: 2
-        }],
-        roleOptions: [{
-          label: '管理员',
-          value: 1
-        }, {
-          label: '普通用户',
-          value: 2
-        }],
-        stateOptions: [{
-          label: '已启用',
-          value: 1
-        }, {
-          label: '已停用',
-          value: 2
-        }]
-      },
-      deptTree: [{
-        expand: true,
-        render: (h, { root, node, data }) => {
-          return h('span', {
-            style: {
-              display: 'inline-block',
-              width: '100%'
-            }
-          }, [
-            h('span', [
-              h('span', '广汽研究院')
-            ]),
-            h('span', {
-              style: {
-                display: 'inline-block',
-                marginLeft: '32px'
-              }
-            }, [
-              h('Button', {
-                props: Object.assign({}, this.buttonProps, {
-                  icon: 'ios-add',
-                  type: 'primary'
-                }),
-                style: {
-                  width: '64px'
-                },
-                on: {
-                  click: () => {
-                    // this.append(data)
-                    this.treeFlag = 1 // 1为新增 2为编辑
-                    this.isShow.tree = true // 显示条件 默认为false
-                    this.treeForm.treeNodeTitle = '' // 弹出对话框表单名称
-                    this.treeNode = data // 当前节点
-                  }
-                }
-              })
-            ])
-          ])
-        },
-        children: [
+        typeOptions: [
           {
-            title: '技术部',
-            expand: true,
-            children: [
-              {
-                title: 'leaf 1-1-1',
-                expand: true
-              },
-              {
-                title: 'leaf 1-1-2',
-                expand: true
-              }
-            ]
+            label: '类型1',
+            value: 1
+          }, {
+            label: '类型2',
+            value: 2
+          }
+        ],
+        roleOptions: [
+          {
+            label: '管理员',
+            value: 1
           },
           {
-            title: '认证科',
-            expand: true,
-            children: [
-              {
-                title: 'leaf 1-2-1',
-                expand: true
-              },
-              {
-                title: 'leaf 1-2-1',
-                expand: true
-              }
-            ]
+            label: '普通用户',
+            value: 2
+          }
+        ],
+        stateOptions: [
+          {
+            label: '已启用',
+            value: 1
+          },
+          {
+            label: '已停用',
+            value: 2
           }
         ]
-      }],
-      treeFlag: 1, // 1为新增 2为编辑
-      buttonProps: {
-        type: 'default',
-        size: 'small'
-      },
-      // 显示条件
-      isShow: {
-        tree: false
-      },
-      // 树弹窗表单
-      treeForm: {
-        treeNodeTitle: '' // 树节点名称
-      },
-      // 树弹窗表单验证
-      treeRules: {
-        treeNodeTitle: [{
-          required: true, message: '节点名称不能为空', trigger: 'blur'
-        }]
-      },
-      // 当前节点
-      treeNode: ''
+      }
     }
   },
-  methods: {
-    renderContent (h, { root, node, data }) {
-      return h('span', {
-        style: {
-          display: 'inline-block',
-          width: '100%'
+  methods: {},
+  computed: {},
+  mounted () {
+    var setting = {
+      view: {
+        addHoverDom: addHoverDom,
+        removeHoverDom: removeHoverDom,
+        selectedMulti: false
+      },
+      edit: {
+        enable: true,
+        editNameSelectAll: true,
+        showRemoveBtn: showRemoveBtn,
+        showRenameBtn: showRenameBtn
+      },
+      data: {
+        simpleData: {
+          enable: true
         }
-      }, [
-        h('span', [
-          h('span', data.title)
-        ]),
-        h('span', {
-          style: {
-            display: 'inline-block',
-            marginLeft: '32px'
-          }
-        }, [
-          h('Button', {
-            props: Object.assign({}, this.buttonProps, {
-              icon: 'ios-create-outline'
-            }),
-            style: {
-              marginRight: '8px'
-            },
-            on: {
-              click: () => {
-                this.treeFlag = 2
-                this.isShow.tree = true
-                this.treeForm.treeNodeTitle = data.title
-                this.treeNode = data
-              }
-            }
-          }),
-          h('Button', {
-            props: Object.assign({}, this.buttonProps, {
-              icon: 'ios-add'
-            }),
-            style: {
-              marginRight: '8px'
-            },
-            on: {
-              click: () => {
-                this.treeFlag = 1
-                this.isShow.tree = true
-                this.treeForm.treeNodeTitle = ''
-                this.treeNode = data
-              }
-            }
-          }),
-          h('Button', {
-            props: Object.assign({}, this.buttonProps, {
-              icon: 'ios-remove'
-            }),
-            on: {
-              click: () => { this.treeRemove(root, node, data) }
-            }
-          })
-        ])
-      ])
-    },
-    // 添加节点
-    treeAppend () {
-      console.log(this.treeFlag)
-      if (this.treeFlag !== 1) {
+      },
+      callback: {
+        beforeDrag: beforeDrag,
+        beforeEditName: beforeEditName,
+        beforeRemove: beforeRemove,
+        beforeRename: beforeRename,
+        onRemove: onRemove,
+        onRename: onRename
+      }
+    }
+
+    var zNodes = [
+      {id: 1, pId: 0, name: '父节点 1', open: true},
+      {id: 11, pId: 1, name: '叶子节点 1-1'},
+      {id: 12, pId: 1, name: '叶子节点 1-2'},
+      {id: 13, pId: 1, name: '叶子节点 1-3'},
+      {id: 2, pId: 0, name: '父节点 2', open: true},
+      {id: 21, pId: 2, name: '叶子节点 2-1'},
+      {id: 22, pId: 2, name: '叶子节点 2-2'},
+      {id: 23, pId: 2, name: '叶子节点 2-3'},
+      {id: 3, pId: 0, name: '父节点 3', open: true},
+      {id: 31, pId: 3, name: '叶子节点 3-1'},
+      {id: 32, pId: 3, name: '叶子节点 3-2'},
+      {id: 33, pId: 3, name: '叶子节点 3-3'}
+    ]
+    let log = ''
+    let className = 'dark'
+    function beforeDrag (treeId, treeNodes) {
+      return false
+    }
+    function beforeEditName (treeId, treeNode) {
+      className = (className === 'dark' ? '' : 'dark')
+      showLog('[ ' + getTime() + ' beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name)
+      var zTree = $.fn.zTree.getZTreeObj('treeDemo')
+      zTree.selectNode(treeNode)
+      setTimeout(function () {
+        if (confirm('进入节点 -- ' + treeNode.name + ' 的编辑状态吗？')) {
+          setTimeout(function () {
+            zTree.editName(treeNode)
+          }, 0)
+        }
+      }, 0)
+      return false
+    }
+    function beforeRemove (treeId, treeNode) {
+      className = (className === 'dark' ? '' : 'dark')
+      showLog('[ ' + getTime() + ' beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name)
+      var zTree = $.fn.zTree.getZTreeObj('treeDemo')
+      zTree.selectNode(treeNode)
+      return confirm('确认删除 节点 -- ' + treeNode.name + ' 吗？')
+    }
+    function onRemove (e, treeId, treeNode) {
+      showLog('[ ' + getTime() + ' onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name)
+    }
+    function beforeRename (treeId, treeNode, newName, isCancel) {
+      className = (className === 'dark' ? '' : 'dark')
+      showLog((isCancel ? "<span style='color:red'>" : '') + '[ ' + getTime() + ' beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name + (isCancel ? '</span>' : ''))
+      if (newName.length == 0) {
+        setTimeout(function () {
+          var zTree = $.fn.zTree.getZTreeObj('treeDemo')
+          zTree.cancelEditName()
+          alert('节点名称不能为空.')
+        }, 0)
         return false
       }
-      const children = this.treeNode.children || []
-      children.push({
-        title: this.treeForm.treeNodeTitle,
-        expand: true
-      })
-      this.$set(this.treeNode, 'children', children)
-    },
-    // 修改节点
-    treeEditSave () {
-      this.treeNode.title = this.treeForm.treeNodeTitle
-    },
-    // 移除节点
-    treeRemove (root, node, data) {
-      const parentKey = root.find(el => el === node).parent
-      const parent = root.find(el => el.nodeKey === parentKey).node
-      const index = parent.children.indexOf(data)
-      parent.children.splice(index, 1)
-    },
-    // 树弹窗确认
-    treeOk () {
-      this.treeFlag === 1 ? this.treeAppend() : this.treeEditSave()
-    },
-    // 树弹窗取消
-    treeCancel () {},
-    // 重置树结构表单
-    resetTree (show) {
-      if (!show) {
-        this.$refs.treeForm.resetFields()
+      return true
+    }
+    function onRename (e, treeId, treeNode, isCancel) {
+      showLog((isCancel ? "<span style='color:red'>" : '') + '[ ' + getTime() + ' onRename ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name + (isCancel ? '</span>' : ''))
+    }
+    function showRemoveBtn (treeId, treeNode) {
+      return !treeNode.isFirstNode
+    }
+    function showRenameBtn (treeId, treeNode) {
+      return !treeNode.isLastNode
+    }
+    function showLog (str) {
+      if (!log) log = $('#log')
+      log.append("<li class='" + className + "'>" + str + '</li>')
+      if (log.children('li').length > 8) {
+        log.get(0).removeChild(log.children('li')[0])
       }
     }
-  },
-  computed: {
-    // modal弹窗标题
-    treeTitle () {
-      return this.treeFlag === 1 ? '节点新增' : '节点维护'
+    function getTime () {
+      let now = new Date(),
+        h = now.getHours(),
+        m = now.getMinutes(),
+        s = now.getSeconds(),
+        ms = now.getMilliseconds()
+      return (h + ':' + m + ':' + s + ' ' + ms)
     }
+
+    var newCount = 1
+    function addHoverDom (treeId, treeNode) {
+      var sObj = $('#' + treeNode.tId + '_span')
+      if (treeNode.editNameFlag || $('#addBtn_' + treeNode.tId).length > 0) return
+      var addStr = "<span class='button add' id='addBtn_" + treeNode.tId +
+        "' title='add node' onfocus='this.blur();'></span>"
+      sObj.after(addStr)
+      var btn = $('#addBtn_' + treeNode.tId)
+      if (btn) {
+        btn.bind('click', function () {
+          var zTree = $.fn.zTree.getZTreeObj('treeDemo')
+          zTree.addNodes(treeNode, {id: (100 + newCount), pId: treeNode.id, name: 'new node' + (newCount++)})
+          return false
+        })
+      }
+    };
+    function removeHoverDom (treeId, treeNode) {
+      $('#addBtn_' + treeNode.tId).unbind().remove()
+    };
+    function selectAll () {
+      var zTree = $.fn.zTree.getZTreeObj('treeDemo')
+      zTree.setting.edit.editNameSelectAll = $('#selectAll').attr('checked')
+    }
+    this.$nextTick(() => {
+      $(document).ready(function () {
+        $.fn.zTree.init($('#treeDemo'), setting, zNodes)
+        $('#selectAll').bind('click', selectAll)
+      })
+    })
   }
 }
 </script>
 
 <style lang="less">
+  @import '../../../../assets/zTree/css/zTreeStyle/zTreeStyle.css';
   #mechanism-manage{
     display: flex;
     background: #FFF;
@@ -303,6 +249,7 @@ export default {
     .content .btn-group{
       margin-bottom: 0.5rem;
     }
+    .ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
   }
   .mechanism-tree-modal{
     .ivu-input-wrapper{

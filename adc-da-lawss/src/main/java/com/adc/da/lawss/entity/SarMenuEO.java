@@ -1,6 +1,7 @@
 package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
@@ -16,9 +17,9 @@ public class SarMenuEO extends BaseEntity {
     private String menuName;
     private String sorDivide;
     private String id;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private Integer validFlag;
     private Integer displaySeq;

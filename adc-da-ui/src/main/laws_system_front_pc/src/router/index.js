@@ -114,6 +114,15 @@ const routes = [
           requireAuth: true,
           title: '我的浏览'
         }
+      },
+      {
+        path: '/feedback',
+        name: 'FeedbackFeedback',
+        component: resolve => require(['pages/personal/pages/feedback -feedback'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '意见反馈'
+        }
       }]
   },
   // **************************   配置管理   ******************************* //
@@ -181,12 +190,12 @@ const routes = [
         }
       },
       {
-        path: '/dynamicInformationManage/dynamicInfomationPage',
+        path: '/dynamicInformationManage/dynamicInfomationPage/:id?',
         name: 'dynamicInfo',
         component: resolve => require(['pages/config/pages/dynamicInformationManage/dynamicInfomationPage'], resolve),
         meta: {
           requireAuth: true,
-          title: '新增动态信息'
+          title: '动态信息维护'
         }
       },
       {
