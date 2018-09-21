@@ -210,7 +210,7 @@ export default {
     },
     // 编辑消息
     editMsg (index) {
-
+      this.$router.push('/dynamicInformationManage/dynamicInfomationPage/' + this.msgList[index].id)
     },
     // 删除消息
     delMsgInfo (index) {

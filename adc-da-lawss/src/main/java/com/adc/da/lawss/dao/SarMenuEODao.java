@@ -17,6 +17,8 @@ public interface SarMenuEODao extends BaseDao<SarMenuEO> {
 
     List<SarMenuEO> queryMenuByPid(SarMenuEO sarMenuEO);
 
+    List<SarMenuEO> queryByPidExcpetSelf(SarMenuEO sarMenuEO);
+
     List<SarMenuEO> queryMenuByDis(SarMenuEO sarMenuEO);
 
 }
