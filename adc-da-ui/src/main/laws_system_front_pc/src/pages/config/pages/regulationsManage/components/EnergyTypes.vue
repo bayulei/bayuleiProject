@@ -249,7 +249,7 @@ export default {
     // 加载表格
     selectEnergy () {
       this.$http.get('sys/dictype/page', {
-        pageNo: this.page,
+        page: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
         dicTypeCode: this.standardForm.standCode,

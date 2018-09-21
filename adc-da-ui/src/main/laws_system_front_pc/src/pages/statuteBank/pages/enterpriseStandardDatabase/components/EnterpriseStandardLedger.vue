@@ -24,7 +24,7 @@
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table width="100%" border ref="selection" :columns="sarCompileTable" :data="sarCompileListDatas"></Table>
+      <Table width="100%" border ref="selection" :columns="sarCompileTable" :data="sarCompileListDatas" @on-select="getSelectedDatas"></Table>
     </div>
     <pagination :total="sarCompileTotal" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 

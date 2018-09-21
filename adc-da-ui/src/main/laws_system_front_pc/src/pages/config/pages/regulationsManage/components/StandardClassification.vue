@@ -28,11 +28,10 @@
           v-model="classModal"
           width="900"
           :styles="styles"
-          @on-close="cleanValue"
         >
-          <Form :model="classModelAdd" ref="classModelAdd" :rules="classRules"  class="label-input-form">
+          <Form :model="classModelAdd" ref="classModelAdd" :rules="classRules"  class="label-input-form" >
             <input v-model="classModelAdd.id" v-show="false">
-            <Row :gutter="32">
+            <Row>
               <Col span="12">
                 <FormItem label="选项" prop="dicTypeName"  label-position="top" class="standards-info-item">
                   <Input v-model="classModelAdd.dicTypeName" :disabled='modalType === 3'></Input>
@@ -44,8 +43,20 @@
                   </FormItem>
               </Col>
             </Row>
+            <Row>
+              <Col span="12">
+                <FormItem label="创建日期" prop="creationDate"  label-position="top" class="standards-info-item">
+                  <Input v-model="classModelAdd.creationDate" :disabled='modalType === 3'></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="创建人" prop="founder"  label-position="top" class="standards-info-item">
+                  <Input v-model="classModelAdd.founder" :disabled='modalType === 3'></Input>
+                </FormItem>
+              </Col>
+            </Row>
           </Form>
-          <div class="demo-drawer-footer">
+          <div class="demo-drawer-footer" :class="{ 'disappear': modalType === 3 }">
             <Button style="margin-right: 8px" @click="closeModal">取消</Button>
             <Button type="primary" @click="saveClass">提交</Button>
           </div>
@@ -66,10 +77,8 @@
 <style lang="less">
   .standard-classification {
   }
-  .hide-modal-footer{
-    .ivu-modal-footer{
-      display: none;
-    }
+  .disappear{
+    display: none;
   }
   .ivu-modal-confirm .ivu-modal-confirm-footer{
     display: block;

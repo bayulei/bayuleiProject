@@ -3,17 +3,22 @@ package com.adc.da.lawss.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
 import com.adc.da.lawss.entity.MsgFileEO;
+import com.adc.da.lawss.page.MsgFileEOPage;
 import com.adc.da.lawss.service.MsgFileEOService;
 import com.adc.da.lawss.vo.MsgDynamicInfoVO;
 
 import com.adc.da.sys.constant.ValidFlagEnum;
 import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.service.UserEOService;
+import com.adc.da.sys.util.UUIDUtils;
+import com.adc.da.util.http.ResponseMessageCodeEnum;
 import com.adc.da.util.utils.BeanMapper;
 import com.adc.da.util.utils.StringUtils;
 
@@ -110,8 +115,28 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
     @ApiOperation(value = "|MsgDynamicInfoEO|详情")
     @GetMapping("/{id}")
 //    @RequiresPermissions("lawss:msgDynamicInfo:get")
-    public ResponseMessage<MsgDynamicInfoEO> find(@PathVariable String id) throws Exception {
-        return Result.success(msgDynamicInfoEOService.selectByPrimaryKey(id));
+    public ResponseMessage<MsgDynamicInfoVO> find(@PathVariable String id) throws Exception {
+	    // 此处需要增加查询相关参数信息
+        MsgDynamicInfoEO msgDynamicInfoEO= msgDynamicInfoEOService.selectByPrimaryKey(id);
+        MsgDynamicInfoVO  msgDynamicInfoVO=   beanMapper.map(msgDynamicInfoEO, MsgDynamicInfoVO.class);
+        MsgFileEOPage fileEOPage=new MsgFileEOPage();
+        fileEOPage.setMsgId(id);
+        fileEOPage.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue()+"");
+        List<MsgFileEO> fileList= msgFileEOService.queryByList(fileEOPage);
+        if(fileList!=null && !fileList.isEmpty()){
+            List<MsgFileEO> fileEOS=new ArrayList<MsgFileEO>();
+            for(MsgFileEO f:fileList){
+                if(f.getFileType().equals("PIC")){
+                    msgDynamicInfoVO.setPicFileEO(f);
+                }else{
+                    fileEOS.add(f);
+                }
+            }
+            if(!fileEOS.isEmpty()){
+                msgDynamicInfoVO.setMsgFileEOList(fileEOS);
+            }
+        }
+        return Result.success(msgDynamicInfoVO);
     }
 /**
  * @Author liwenxuan
@@ -126,8 +151,8 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
     @ApiOperation(value = "|MsgDynamicInfoEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //    @RequiresPermissions("lawss:msgDynamicInfo:save")
-    public ResponseMessage<MsgDynamicInfoEO> create(@RequestBody MsgDynamicInfoVO msgDynamicInfoVO) throws Exception {
-
+    public ResponseMessage create(@RequestBody MsgDynamicInfoVO msgDynamicInfoVO) throws Exception {
+        Date nowDate=new Date();
         if(StringUtils.isBlank(msgDynamicInfoVO.getTitle())){
             return Result.error("r0014", "动态标题不能为空");
         }
@@ -139,21 +164,14 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
             return  Result.error("r0016","消息类型不能为空");
         }
 
-        if(StringUtils.isBlank(msgDynamicInfoVO.getMsgMode())){
-            return  Result.error("r0016", "消息消息所属模块不能为空");
-        }
         if(StringUtils.isBlank(msgDynamicInfoVO.getContent())){
             return  Result.error("r0016", "动态内容不能为空");
         }
-
-        MsgDynamicInfoEO  msgDynamicInfoEO=   beanMapper.map(msgDynamicInfoVO, MsgDynamicInfoEO.class);
-        msgDynamicInfoEOService.insertSelective( msgDynamicInfoEO);
-        List<MsgFileEO> msgFileEOList = msgDynamicInfoVO.getMsgFileEOList();
-        for( MsgFileEO  msgFileEO :   msgFileEOList){
-            msgFileEO.setId(UUID.randomUUID10());
-            msgFileEOService.insert(msgFileEO);
-        }
-        return Result.success(msgDynamicInfoEO);
+        //TODO 此处获取用户的登录ID   进行数据记录
+        msgDynamicInfoVO.setPubUser("");
+//      MsgDynamicInfoEO  msgDynamicInfoEO=   beanMapper.map(msgDynamicInfoVO, MsgDynamicInfoEO.class);
+        String msgId=msgDynamicInfoEOService.saveMsgInfo( msgDynamicInfoVO);
+        return Result.success(ResponseMessageCodeEnum.SUCCESS.getCode(),"发布成功",msgId);
     }
     /**
      * @Author liwenxuan
@@ -169,13 +187,8 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //    @RequiresPermissions("lawss:msgDynamicInfo:update")
     public ResponseMessage<MsgDynamicInfoEO> update(@RequestBody MsgDynamicInfoVO msgDynamicInfoVO) throws Exception {
-        MsgDynamicInfoEO msgDynamicInfoEO = beanMapper.map(msgDynamicInfoVO, MsgDynamicInfoEO.class);
-        msgDynamicInfoEOService.updateByPrimaryKeySelective(msgDynamicInfoEO);
-       List<MsgFileEO> msgFileEOList = msgDynamicInfoVO.getMsgFileEOList();
-        for( MsgFileEO  msgFileEO :   msgFileEOList){
-            msgFileEOService.updateByPrimaryKey(msgFileEO);
-        }
-        return Result.success(msgDynamicInfoEO);
+        msgDynamicInfoEOService.updateMsgInfo(msgDynamicInfoVO);
+        return Result.success(ResponseMessageCodeEnum.SUCCESS.getCode(),"编辑成功！",null);
     }
 /**
  * @Author liwenxuan

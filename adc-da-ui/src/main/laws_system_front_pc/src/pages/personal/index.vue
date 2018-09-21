@@ -36,6 +36,9 @@ export default {
       }, {
         title: '我的浏览',
         path: '/browsing'
+      }, {
+        title: '意见反馈',
+        path: '/feedback'
       }]
     }
   },

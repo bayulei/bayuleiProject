@@ -2,6 +2,10 @@ package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarBussStandMenuEO;
+import com.adc.da.lawss.vo.NewmenuOldmenuVO;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -11,5 +15,9 @@ import com.adc.da.lawss.entity.SarBussStandMenuEO;
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public interface SarBussStandMenuEODao extends BaseDao<SarBussStandMenuEO> {
+
+    List<SarBussStandMenuEO> selectByMenuId(SarBussStandMenuEO sarStandMenuEO);
+
+    int updateMenuidByMenuid(NewmenuOldmenuVO var1);
 
 }

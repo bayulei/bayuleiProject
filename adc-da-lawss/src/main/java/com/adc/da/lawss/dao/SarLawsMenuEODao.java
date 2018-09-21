@@ -3,6 +3,7 @@ package com.adc.da.lawss.dao;
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarLawsMenuEO;
 import com.adc.da.lawss.page.SarLawsMenuEOPage;
+import com.adc.da.lawss.vo.NewmenuOldmenuVO;
 
 import java.util.List;
 
@@ -24,5 +25,7 @@ public interface SarLawsMenuEODao extends BaseDao<SarLawsMenuEO> {
      * @return java.util.List<com.adc.da.lawss.entity.SarLawsMenuEO>
      **/
     List<SarLawsMenuEO> selectByLawsInfo(SarLawsMenuEOPage sarLawsMenuEO);
+
+    int updateMenuidByMenuid(NewmenuOldmenuVO var1);
 
 }

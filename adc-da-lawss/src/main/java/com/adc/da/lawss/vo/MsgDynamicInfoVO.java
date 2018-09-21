@@ -2,6 +2,7 @@ package com.adc.da.lawss.vo;
 
 import com.adc.da.base.entity.BaseEntity;
 import com.adc.da.lawss.entity.MsgFileEO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,14 +14,14 @@ import java.util.List;
 public class MsgDynamicInfoVO extends BaseEntity {
 
 
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private Integer validFlag;
     private String pubOrg;
     private String pubUser;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date pubTime;
     private String linkUri;
     private String content;
@@ -41,9 +42,9 @@ public class MsgDynamicInfoVO extends BaseEntity {
     private String msgId;
 
 //
-    private  List<MsgFileEO> msgFileEOList = new ArrayList<MsgFileEO>();
+    private  List<MsgFileEO> msgFileEOList;
 
-    private MsgFileEO PicFileEO;
+    private MsgFileEO picFileEO;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -262,10 +263,10 @@ public class MsgDynamicInfoVO extends BaseEntity {
     }
 
     public void setPicFileEO(MsgFileEO picFileEO){
-        this.PicFileEO=picFileEO;
+        this.picFileEO=picFileEO;
     }
 
     public MsgFileEO getPicFileEO(){
-        return this.PicFileEO;
+        return this.picFileEO;
     }
 }

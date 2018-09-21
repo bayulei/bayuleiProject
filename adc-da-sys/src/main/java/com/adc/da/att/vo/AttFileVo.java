@@ -8,6 +8,8 @@ public class AttFileVo {
     private String fileSuffix;
     private String filePath;
 
+    private String name;
+
     public String getId() {
         return id;
     }
@@ -46,5 +48,13 @@ public class AttFileVo {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public String getName() {
+        return this.oldFileName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

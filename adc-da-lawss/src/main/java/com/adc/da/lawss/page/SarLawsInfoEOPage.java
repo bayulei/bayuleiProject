@@ -74,6 +74,7 @@ public class SarLawsInfoEOPage extends BasePage {
     private String lawsTypeOperator = "=";
     private String id;
     private String idOperator = "=";
+    private String menuId;
 
     public Date getModifyTime() {
         return modifyTime;
@@ -505,5 +506,13 @@ public class SarLawsInfoEOPage extends BasePage {
 
     public void setIdOperator(String idOperator) {
         this.idOperator = idOperator;
+    }
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
     }
 }
