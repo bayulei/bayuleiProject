@@ -43,16 +43,41 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 	}
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public OrgEO getOrgEOByNameAndPid(String orgName,String parentId) {
-		return dao.getOrgEOByNameAndPid(orgName,parentId);
+	public OrgEO getOrgEOByNameAndPid(String orgName,String pId) {
+		return dao.getOrgEOByNameAndPid(orgName,pId);
 	}
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public List<OrgEO> getOrgEOByPid(String parentId) {
-		return dao.getOrgEOByPid(parentId);
+	public List<OrgEO> getOrgEOByPid(String pId) {
+		return dao.getOrgEOByPid(pId);
 	}
-	
+	/**
+	 * @Author liwenxuan
+	 * @Description
+	 * @Date Administrator 2018/9/21
+	 * @Param [orgEO]
+	 * @return com.adc.da.util.http.ResponseMessage
+	 **/
 	public ResponseMessage save(OrgEO orgEO) {
+
+		String orgName = orgEO.getOrgName();
+		String shotName = orgEO.getShotName();
+		String getpId = orgEO.getpId();
+		String id = orgEO.getId();//id在这里为空，只是为了使用getOrgEOByShotNameAndPidAndId方法填进去的
+
+		if(StringUtils.isEmpty(orgName)){
+			return Result.error("组织机构名不能为空");
+		}else if(dao.getOrgEOByNameAndPid("orgName", "getpId")!=null){
+			return  Result.error("组织机构名称不能重复");
+		}
+
+		if(StringUtils.isEmpty(shotName)){
+			return Result.error("组织机构简称不能为空");
+		}else if(dao.getOrgEOByShotNameAndPidAndId(shotName,getpId,id)!=null){
+			return Result.error("组织机构简称不能重复");
+		}
+
+
 		orgEO.setId(UUIDUtils.randomUUID20());
 		orgEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 		orgEO.setIsShow(0);
@@ -122,19 +147,30 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 	}
 /**
  * @Author liwenxuan
- * @Description 修改组织机构简称和名称不能为空
+ * @Description 修改组织机构简称和名称不能为空也不可以重复
  * @Date Administrator 2018/9/18
  * @Param [orgEO]
  * @return com.adc.da.util.http.ResponseMessage
  **/
 	public ResponseMessage updateById(OrgEO orgEO) {
-		orgEO.setModifyTime(new Date());
-		if(StringUtils.isBlank(orgEO.getShotName())){
+
+		String orgName = orgEO.getOrgName();
+		String shotName = orgEO.getShotName();
+		String getpId = orgEO.getpId();
+		String id = orgEO.getId();
+
+		if(StringUtils.isEmpty(orgName)){
+			return Result.error("组织机构名不能为空");
+		}else if(dao.getOrgEOByorgNameAndPidAndId(orgName, getpId,id)!=null){
+			return  Result.error("组织机构名称不能重复");
+		}
+
+		if(StringUtils.isEmpty(shotName)){
 			return Result.error("组织机构简称不能为空");
+		}else if(dao.getOrgEOByShotNameAndPidAndId(shotName,getpId,id)!=null){
+			return Result.error("组织机构简称不能重复");
 		}
-		if(StringUtils.isBlank(orgEO.getOrgName())){
-			return Result.error("组织机构名称不能为空");
-		}
+		orgEO.setModifyTime(new Date());
 		int line = dao.updateByPrimaryKeySelective(orgEO);
 		if(line > 0) {
 			return Result.success();
