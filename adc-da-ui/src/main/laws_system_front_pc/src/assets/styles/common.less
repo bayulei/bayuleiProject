@@ -365,6 +365,37 @@
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+.tree-modal{
+  .ivu-form-item-label{
+    width: 100px;
+  }
+  .ivu-form-item-content{
+    width: calc(~'80% - 100px');
+  }
+}
+.ivu-table-tip{
+  width: 100%;
+  height: 100%;
+  table{
+    width: 100%;
+    height: 100%;
+  }
+}
+.show-md{display: none;}
+.show-lg{display:none;}
+.lt{float:left;}
+.rt{float:right;}
+@media screen and (max-width: 1679px) {
+  .show-md{
+    display: inline-block !important;
+  }
+}
+@media screen and (min-width: 1680px) {
+  .show-lg{
+    display: inline-block !important;
+  }
+}
+
 
 //滚动条美化
 ::-webkit-scrollbar {

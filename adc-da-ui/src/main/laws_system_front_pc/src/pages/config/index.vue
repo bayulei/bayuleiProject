@@ -3,10 +3,8 @@
   <div class="config">
     <com-header></com-header>
     <div class="main">
-      <!-- 侧边栏区域 -->
-      <side-bar :navList="navList"></side-bar>
-      <!-- view-router视图窗口 -->
-      <div class="sub-container">
+      <side-bar :navList="navList" v-model="sideClose" @change="toggleSideBar" :class="{ 'side-close': sideClose }"></side-bar>
+      <div class="sub-container" :class="{ 'side-close': sideClose }">
         <router-view></router-view>
       </div>
     </div>
@@ -41,7 +39,18 @@ export default {
       }, {
         title: '预警时间设置',
         path: '/warningTimeSetting'
-      }]
+      }],
+      sideClose: false // 边栏收展状态
+    }
+  },
+  methods: {
+    /**
+     * @description: 边栏收缩
+     * @author: chenxiaoxi
+     * @date: 2018-09-18 11:11:46
+     */
+    toggleSideBar (val) {
+      this.sideClose = !val
     }
   },
   components: {
