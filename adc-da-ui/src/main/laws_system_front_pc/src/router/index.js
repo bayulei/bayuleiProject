@@ -114,6 +114,15 @@ const routes = [
           requireAuth: true,
           title: '我的浏览'
         }
+      },
+      {
+        path: '/feedback',
+        name: 'FeedbackFeedback',
+        component: resolve => require(['pages/personal/pages/feedback -feedback'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '意见反馈'
+        }
       }]
   },
   // **************************   配置管理   ******************************* //

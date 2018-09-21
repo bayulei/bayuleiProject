@@ -249,7 +249,7 @@ export default {
     // 加载表格
     selectFile () {
       this.$http.get('sys/dictype/page', {
-        pageNo: this.page,
+        page: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
         dicTypeCode: this.standardForm.standCode,
@@ -260,6 +260,7 @@ export default {
       }, res => {
         this.fileData = res.data.list
         this.total = res.data.count
+        this.page = 1
       }, e => {})
     },
     // 提交新增/修改
