@@ -196,6 +196,12 @@
         select SAR_MENU.* from SAR_MENU start with id=#{id} connect by prior id= parent_id
     </select>
 
+    <select id="queryByPidExcpetSelf" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.entity.SarMenuEO">
+        select SAR_MENU.* from SAR_MENU
+          where id != #{id}
+         start with id=#{id} connect by prior id= parent_id
+    </select>
+
     <!--    根据目录类型查询最外一层节点 -->
     <select id="queryMenuByDis" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.entity.SarMenuEO">
         select <include refid="Base_Column_List"/> from SAR_MENU

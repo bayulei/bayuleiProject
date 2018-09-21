@@ -79,6 +79,9 @@
          </FormItem>
        </Form>
      </Modal>
+     <Modal title="确认删除" width="300px" v-model="deleteMenuModal" @on-ok="sureDeleteSarMenu" @on-cancel="deleteMenuModal = false">
+       <p>该节点下有记录，是否删除？</p>
+     </Modal>
    <!--新增修改查看法规模态框-->
      <Drawer :title="showLawsInfoTitle" v-model="showLawsInfoModal" width="900">
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">

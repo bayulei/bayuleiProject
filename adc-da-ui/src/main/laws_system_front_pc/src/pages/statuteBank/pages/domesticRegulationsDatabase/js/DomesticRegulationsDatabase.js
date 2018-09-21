@@ -14,6 +14,7 @@ export default {
       indeterminate: false, // 是否半选
       modal2: false,
       showMenuModal: false,
+      deleteMenuModal: false,
       showLawsInfoModal: false,
       showLawsItemsModal: false,
       addLawsItemsModal: false,
@@ -268,7 +269,7 @@ export default {
         this.SarMenuEO = this.saveSelectedNodes
         this.SarMenuEO.menuName = this.saveSelectedNodes.name
       } else {
-        // deleteMenu 删除二级菜单，先判断是否选中，选中项目，然后调用删除方法
+        this.tipDeleteSarMenu(this.saveSelectedNodes)
       }
     },
     cancelAddMenu () {
@@ -289,6 +290,33 @@ export default {
           this.loadInfoTree()
         }, e => {})
       }
+    },
+    tipDeleteSarMenu (sarMenu) {
+      this.$http.get('lawss/sarMenu/judgequeryMenuByPid', sarMenu, {
+        _this: this
+      }, res => {
+        if (res.data === true) {
+          this.deleteMenuModal = true
+        } else {
+          this.sureDeleteSarMenu()
+        }
+      }, e => {})
+    },
+    sureDeleteSarMenu () {
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.post('lawss/sarMenu/deleteMenuAndChildren', this.saveSelectedNodes, {
+            _this: this
+          }, res => {
+            this.loadInfoTree()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
+      })
     },
     // 分页查询法规信息
     searchLawsInfo (menuId) {
