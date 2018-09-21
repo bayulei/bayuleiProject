@@ -25,6 +25,10 @@ public class MsgFileEO extends BaseEntity {
     private String msgId;
     private String id;
 
+    private String name;
+    private String status="finished";
+
+    private String fileType;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -49,6 +53,7 @@ public class MsgFileEO extends BaseEntity {
             case "fileName": return "file_name";
             case "msgId": return "msg_id";
             case "id": return "id";
+            case "fileType": return "file_type";
             default: return null;
         }
     }
@@ -76,6 +81,7 @@ public class MsgFileEO extends BaseEntity {
             case "file_name": return "fileName";
             case "msg_id": return "msgId";
             case "id": return "id";
+            case "file_type": return "fileType";
             default: return null;
         }
     }
@@ -160,5 +166,30 @@ public class MsgFileEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getFileType() {
+        return fileType;
+    }
 
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getName() {
+
+        return this.fileName;
+    }
+
+    public void setName(String name) {
+        this.fileName = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
+
+
