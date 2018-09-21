@@ -271,6 +271,9 @@ export default {
         // deleteMenu 删除二级菜单，先判断是否选中，选中项目，然后调用删除方法
       }
     },
+    cancelAddMenu () {
+      this.showMenuModal = false
+    },
     saveMenu () {
       if (this.SarMenuEO.id == null || this.SarMenuEO.id === '') {
         this.$http.post('lawss/sarMenu/addSarMenu', this.SarMenuEO, {
@@ -444,7 +447,6 @@ export default {
       this.addLawsItemsTitle = '新增法规条目'
       this.saveLawsItemsBtn = true
       this.SarLawsItemsEO.lawsId = this.saveLawsId
-      console.log(this.saveLawsId)
     },
     // 打开编辑条目模态框
     editLawsItems (row) {

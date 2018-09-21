@@ -67,7 +67,7 @@
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
      <!--新增修改文件夹模态框-->
-     <Modal :title="showMenuTitle" v-model="showMenuModal" @on-ok="saveMenu" @on-cancel="saveMenu">
+     <Modal :title="showMenuTitle" width="300px" v-model="showMenuModal" @on-ok="saveMenu" @on-cancel="cancelAddMenu">
        <Form ref="SarMenuEO" :model="SarMenuEO" :rules="SarMenuEOFormRules" class="label-input-form">
          <input v-model="SarMenuEO.id" v-show="false">
          <input v-model="SarMenuEO.parentId" v-show="false">
