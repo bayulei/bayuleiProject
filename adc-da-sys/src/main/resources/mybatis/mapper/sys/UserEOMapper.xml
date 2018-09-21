@@ -450,4 +450,28 @@
 			  LEFT JOIN  SYS_CORP  ON  SYS_CORP.ID = TS_ORG.CORP_ID
 		where TS_USER.valid_flag = 0 and account = #{account}
 	</select>
+
+	<!--查找未分配组织结构的用户的行数-->
+	<select id="findBySetOrgCount" resultType="java.lang.Integer"
+			parameterType="com.adc.da.base.page.BasePage">
+		SELECT count(1)
+		FROM TS_USER tu
+		LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
+		WHERE tu.valid_FLAG = '0' AND tuo.user_id is null
+	</select>
+
+	<!--查询所有未分配组织结构的用户-->
+	<select id="findBySetOrg"  resultMap="UserRoleMap"
+			parameterType="com.adc.da.base.page.BasePage">
+		SELECT * FROM
+		(SELECT  tmp_tb.* , rownum rn FROM
+		(SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email,
+		tu.modify_time AS modifyTime
+		FROM TS_USER tu
+		LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
+		WHERE tu.VALID_FLAG = 0 AND tuo.user_id is null
+		order by tu.modify_time desc
+		) tmp_tb WHERE rownum &lt;= ${pager.endIndex}
+		) WHERE rn &gt;= ${pager.startIndex}
+	</select>
 </mapper>

@@ -230,4 +230,22 @@ public class UserEOService extends BaseService<UserEO, String> {
 	public List<UserEO> queryOrgByAccount(String account){
 		return dao.queryOrgByAccount(account);
 	}
+
+
+/**
+ * @Author liwenxuan
+ * @Description 组织机构查询未配置人员信息
+ * @Date Administrator 2018/9/21
+ * @Param [basePage]
+ * @return java.util.List<com.adc.da.sys.entity.UserEO>
+ **/
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
+	public List<UserEO> findUserInfoByPage(BasePage basePage){
+		//liwenxuan:查找未分配组织结构的用户的行数
+		int rowCount = dao.findBySetOrgCount(basePage);
+		basePage.getPager().setRowCount(rowCount);
+		//liwenxuan：查询未分配组织机构人员信息
+		return dao.findBySetOrg(basePage);
+	}
+
 }
