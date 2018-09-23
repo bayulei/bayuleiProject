@@ -20,6 +20,7 @@ public class DicTypeEO extends BaseEntity {
     private String dicId;
     private String id;
 //    private List<dicTypeEO> dicTypeEOList;
+    private DictionaryEO dictionaryEO = new DictionaryEO();
 
 
     /**
@@ -128,4 +129,12 @@ public class DicTypeEO extends BaseEntity {
         this.id = id;
     }
 
+
+    public DictionaryEO getDictionaryEO() {
+        return dictionaryEO;
+    }
+
+    public void setDictionaryEO(DictionaryEO dictionaryEO) {
+        this.dictionaryEO = dictionaryEO;
+    }
 }
