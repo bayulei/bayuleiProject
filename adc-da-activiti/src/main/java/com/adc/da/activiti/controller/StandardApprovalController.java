@@ -108,30 +108,14 @@ public class StandardApprovalController {
     }
 
     /**
-     *  获取流程变量的信息，填充表单
-     * @MethodName:getVariables
-     * @author: yuzhong
-     * @param:[processInstanceId]
-     * @return:Map
-     * date: 2018年9月4日 14:37:19
-     */
-    @ApiOperation(value = "获取流程变量的信息，填充表单")
-    @PostMapping ("/getVariables")
-    public ResponseMessage<Map<String,Object>> getVariables(String processInstanceId) {
-        Map<String,Object> map = runtimeService.getVariables(processInstanceId);
-        //List list = taskService.getTaskComments("1");
-        return Result.success(map);
-    }
-
-    /**
-     * 查看审批历史
+     * 各个任务页面展示所需数据
      * @MethodName:getTaskInfo
      * @author:yuzhong
      * @param:[nowUserId,processInstanceId]
      * @return:Map
      * date: 2018年9月6日 19:07:04
      */
-    @ApiOperation(value = "查看审批历史")
+    @ApiOperation(value = "各个任务页面展示所需数据")
     @PostMapping ("/getTaskInfo")
     public ResponseMessage<Map<String,Object>> getTaskInfo(String nowUserId,String processInstanceId) {
         Map<String,Object> map = standardApprovalService.getTaskInfo(nowUserId,processInstanceId);
