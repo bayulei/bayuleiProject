@@ -158,11 +158,17 @@ public class RoleEOController extends BaseController<RoleEO> {
 		roleEOService.delete(id);
 		return Result.success();
 	}
-	
+	/**
+	 * @Author liwenxuan
+	 * @Description  入参格式修改了，TODO 暂时注掉了中间那段代码
+	 * @Date Administrator 2018/9/24
+	 * @Param [ids]
+	 * @return com.adc.da.util.http.ResponseMessage
+	 **/
 	@ApiOperation(value = "|RoleEO|批量删除")
-	@DeleteMapping("/deleteList/{idList}")
+	@DeleteMapping("/deleteList")
 //	@RequiresPermissions("sys:role:deleteList")
-	public ResponseMessage deleteList(@NotNull @PathVariable("idList") String ids) throws Exception {
+	public ResponseMessage deleteList( String ids) throws Exception {
 		String[] idList=ids.split(",");
 		if(idList!=null && idList.length>0){
 			for(String id:idList){
@@ -171,10 +177,10 @@ public class RoleEOController extends BaseController<RoleEO> {
 				if (list != null && list.size() > 0) {
 					return Result.error("r0031", "该角色有对应用户，不能删除");
 				}
-				String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
+			/*	String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 				if(loginUserId != null || loginUserId != ""){
 					UserEO getUser = userService.selectRoleMessageByPrimaryKey(loginUserId);
-					/*if(getUser != null && ! ("3").equals(getUser.getRoleExtInfo())){
+					*//*if(getUser != null && ! ("3").equals(getUser.getRoleExtInfo())){
 						RoleEO getRole = roleEOService.selectByPrimaryKey(id);
 						if(!("").equals(getRole.getExtInfo()) && getRole.getExtInfo() != null){
 							if(! getRole.getExtInfo().equals(getUser.getRoleExtInfo())){
@@ -182,8 +188,8 @@ public class RoleEOController extends BaseController<RoleEO> {
 							}
 						}
 
-					}*/
-				}
+					}*//*
+				}*/
 				roleEOService.delete(id);
 			}
 		}
