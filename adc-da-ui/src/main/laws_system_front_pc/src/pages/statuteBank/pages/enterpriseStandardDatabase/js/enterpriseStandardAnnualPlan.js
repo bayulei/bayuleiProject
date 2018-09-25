@@ -68,6 +68,11 @@ export default {
           key: 'finishReviewTime'
         },
         {
+          title: '报批稿完成时间',
+          width: 120,
+          key: 'approvalDraftTime'
+        },
+        {
           title: '评审稿提交日期',
           width: 120,
           key: 'reviewSubmitTime'
@@ -173,6 +178,9 @@ export default {
         ],
         finishReviewTime: [
           { required: true, type: 'date', message: '完成部门评审提交时间不能为空', trigger: 'change' }
+        ],
+        approvalDraftTime: [
+          { required: true, type: 'date', message: '报批稿完成时间不能为空', trigger: 'change' }
         ]
       }
     }
@@ -236,6 +244,9 @@ export default {
           }
           if (this.submitStandPlan.startFlowTime != null) {
             this.submitStandPlan.startFlowTime = this.$dateFormat(this.submitStandPlan.startFlowTime, 'yyyy-MM-dd')
+          }
+          if (this.submitStandPlan.approvalDraftTime != null) {
+            this.submitStandPlan.approvalDraftTime = this.$dateFormat(this.submitStandPlan.approvalDraftTime, 'yyyy-MM-dd')
           }
           if (this.submitStandPlan.id == null || this.submitStandPlan.id === '') {
             this.$http.post('lawss/sarBussStandPlan/createStandPlan', this.submitStandPlan, {

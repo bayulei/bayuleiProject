@@ -269,7 +269,7 @@ export default {
     },
     // 点击节点
     clickOneNode (event, treeId, treeNode) {
-      this.searchLawsInfo(treeNode.id)
+      this.searchLawsInfo()
       this.saveSelectedNodes = treeNode
       this.SarMenuEO.parentId = treeNode.id
     },
@@ -338,7 +338,8 @@ export default {
       })
     },
     // 分页查询法规信息
-    searchLawsInfo (menuId) {
+    searchLawsInfo () {
+      let menuId = this.saveSelectedNodes.id
       let SarLawsInfoEOPage = this.lawsInfo
       SarLawsInfoEOPage.page = this.page
       SarLawsInfoEOPage.pageSize = this.rows
