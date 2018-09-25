@@ -1,11 +1,8 @@
 package com.adc.da.search.service;
 
-import com.adc.da.search.config.EsPage;
+import com.adc.da.search.entity.EsPage;
 import com.alibaba.fastjson.JSONObject;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregator;
 
 import java.util.List;
 import java.util.Map;

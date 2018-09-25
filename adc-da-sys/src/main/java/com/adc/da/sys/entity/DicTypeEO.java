@@ -2,6 +2,7 @@ package com.adc.da.sys.entity;
 
 import com.adc.da.base.entity.BaseEntity;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -19,7 +20,10 @@ public class DicTypeEO extends BaseEntity {
     private String dicTypeName;
     private String dicId;
     private String id;
+
 //    private List<dicTypeEO> dicTypeEOList;
+    private DictionaryEO dictionaryEO = new DictionaryEO();
+
 
 
     /**
@@ -128,4 +132,12 @@ public class DicTypeEO extends BaseEntity {
         this.id = id;
     }
 
+
+    public DictionaryEO getDictionaryEO() {
+        return dictionaryEO;
+    }
+
+    public void setDictionaryEO(DictionaryEO dictionaryEO) {
+        this.dictionaryEO = dictionaryEO;
+    }
 }

@@ -67,7 +67,7 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 
 		if(StringUtils.isEmpty(orgName)){
 			return Result.error("组织机构名不能为空");
-		}else if(dao.getOrgEOByNameAndPid("orgName", "getpId")!=null){
+		}else if(dao.getOrgEOByorgNameAndPidAndId(orgName, getpId,id)!=null){
 			return  Result.error("组织机构名称不能重复");
 		}
 
@@ -85,7 +85,7 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 		orgEO.setModifyTime(new Date());
 		int line = dao.insert(orgEO);
 		if(line > 0) {
-			return Result.success("true","新增成功");
+			return Result.success("true","新增成功","");
 		} else {
 			return Result.error("false","新增失败");
 		}
@@ -111,9 +111,9 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 		}
 		int line = dao.deleteLogic(id);
 		if(line > 0) {
-			return Result.success();
+			return Result.success("true","操作成功","");
 		} else {
-			return Result.error();
+			return Result.error("操作失败");
 		}
 	}
 	
@@ -173,9 +173,9 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 		orgEO.setModifyTime(new Date());
 		int line = dao.updateByPrimaryKeySelective(orgEO);
 		if(line > 0) {
-			return Result.success();
+			return Result.success("true","操作成功","");
 		} else {
-			return Result.error();
+			return Result.error("操作失败");
 		}
 	}
 
@@ -183,14 +183,21 @@ public class OrgEOService extends BaseService<OrgEO, String> {
 		UserOrgEO userOrgEO = new UserOrgEO();
 		userOrgEO.setUserId(userId);
 		userOrgEO.setOrgId(orgId);
-		dao.delOrgRelatedUser(userOrgEO);
-		return Result.success();
+		int i = dao.delOrgRelatedUser(userOrgEO);
+		if(i>0){
+			return Result.success("","操作成功",1);
+		}
+			return Result.error("操作失败");
 	}
 
 	public ResponseMessage<Integer> addOrgRelatedUser(String userOrgs) {
 		List<UserOrgEO> userOrgEOs = JSON.parseArray(userOrgs, UserOrgEO.class);
-		dao.addOrgRelatedUsers(userOrgEOs);
-		return Result.success();
+
+		int i = dao.addOrgRelatedUsers(userOrgEOs);
+		if(i>0){
+			return Result.success("","操作成功",1);
+		}
+		return Result.error("操作失败");
 	}
 
 	public int delOrgRelatedUserByUserId(String usId) {

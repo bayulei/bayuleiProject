@@ -26,7 +26,18 @@
         <div class="search-option">
           <Select v-model="searchType">
             <Option :value="1">标准编号</Option>
-            <Option :value="2">标准类别</Option>
+            <Option :value="2">标准名称</Option>
+            <Option :value="3">标准状态</Option>
+            <Option :value="4">标准正文内容</Option>
+            <Option :value="5">适用车型</Option>
+            <Option :value="6">发布日期</Option>
+            <Option :value="7">实施日期</Option>
+            <Option :value="2">起草人</Option>
+            <Option :value="2">起草部门</Option>
+            <Option :value="2">代替标准</Option>
+            <Option :value="2">被代替标准</Option>
+            <Option :value="2">文件名称</Option>
+            <Option :value="2">动态标题</Option>
           </Select>
         </div>
         <div class="search-input">

@@ -166,6 +166,7 @@
 		    AND parent_id = #{pId}
 		</if>
 			and valid_flag = 0
+
 	</select>
 	<!--liwenxuan:添加了入参-->
 	<select id="getOrgEOByPid" resultMap="BaseResultMap">
@@ -232,7 +233,7 @@
 <!--liwenuxan:获取所有节点-->
 	<select id="selectOrgAllNode" resultMap="BaseResultMap" >
 		SELECT id, org_name, parent_id,shot_name, org_desc,
-		org_code, org_type, is_show  FROM TS_ORG WHERE valid_flag = 0
+		org_code, org_type, is_show,remarks  FROM TS_ORG WHERE valid_flag = 0
 	</select>
 
 	<select id="selectRootNode" resultMap="BaseResultMap" parameterType="java.util.LinkedList">
