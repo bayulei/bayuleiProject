@@ -564,10 +564,11 @@ export default {
     },
     // 导入标准文件格式错误执行
     handleFormatError (file) {
-      this.$Notice.warning({
-        title: 'The file format is incorrect',
-        desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
-      })
+      this.$Message.error('文件' + file.name + '格式不正确，请上传PDF、doc、docx文件')
+    },
+    // 导入文件大小超出范围
+    handleSizeError (file) {
+      this.$Message.error('文件' + file.name + '大小不超过200M')
     },
     // 导入标准数据成功后执行
     importFileSuccess (response, file) {

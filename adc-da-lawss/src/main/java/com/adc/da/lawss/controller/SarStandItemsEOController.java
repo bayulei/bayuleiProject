@@ -92,7 +92,7 @@ public class SarStandItemsEOController extends BaseController<SarStandItemsEO>{
     //@RequiresPermissions("lawss:sarStandItems:save")
     public ResponseMessage<SarStandItemsEO> addSarStandItems(SarStandItemsEO sarStandItemsEO) throws Exception {
         sarStandItemsEOService.addSarStandItems(sarStandItemsEO);
-        return Result.success(sarStandItemsEO);
+        return Result.success("","新增标准条目成功",sarStandItemsEO);
     }
 
     /**
