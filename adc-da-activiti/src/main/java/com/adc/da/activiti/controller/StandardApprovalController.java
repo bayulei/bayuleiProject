@@ -60,7 +60,7 @@ public class StandardApprovalController {
             processInstanceId = standardApprovalService.startProcess(standardApprovalVO,userId,processDefinitionKey,processInstanceId);
             return Result.success(processInstanceId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("保存失败");
         }
     }
@@ -82,7 +82,7 @@ public class StandardApprovalController {
             standardApprovalService.completeFirstApproval(standardApprovalVO,processInstanceId,userId,comment);
             return Result.success(processInstanceId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("审批失败");
         }
     }
@@ -102,7 +102,7 @@ public class StandardApprovalController {
             standardApprovalService.completeProcess(processInstanceId,nowUserId,comment);
             return Result.success(processInstanceId);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("审批失败");
         }
     }
