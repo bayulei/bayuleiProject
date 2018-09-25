@@ -1,24 +1,34 @@
 <!-- 机构管理 -->
 <template>
   <div id="mechanism-manage">
+    <loading :loading="treeModalLoading">正在保存...</loading>
     <div class="mechanism-manage-left">
       <!-- 组织机构图 -->
-      <ul id="treeDemo" class="ztree"></ul>
+      <ul id="treeDemo" class="ztree" v-show="zNodes.length > 0"></ul>
+      <loading :loading="treeLoading">{{ treeLoadingTips }}</loading>
       <Modal
         class="tree-modal"
         v-model="view.treeView"
         :title="treeTitle"
+        :loading="treeLoading"
         @on-ok="treeOk"
         @on-cancel="treeCancel">
         <Form ref="treeForm" :model="treeForm" :rules="treeFormRules" class="label-input-form">
-          <FormItem label="父节点" prop="pNode">
-            <Input v-model="treeForm.pNode" disabled />
+          <FormItem label="所属上级" prop="pNodeName">
+            <Input v-model="treeForm.pNodeName" disabled />
           </FormItem>
-          <FormItem label="节点名称" prop="nodeName">
-            <Input v-model="treeForm.nodeName" placeholder="请输入节点名称" clearable></Input>
+          <FormItem label="部门名称" prop="orgName">
+            <Input v-model="treeForm.orgName" placeholder="请输入部门名称" clearable></Input>
+          </FormItem>
+          <FormItem label="部门简称" prop="shotName">
+            <Input v-model="treeForm.shotName" placeholder="请输入部门简称" clearable />
+          </FormItem>
+          <FormItem label="部门简介" prop="remarks">
+            <Input v-model="treeForm.remarks" type="textarea" placeholder="请输入部门描述" clearable />
           </FormItem>
         </Form>
       </Modal>
+      <hasNoData v-show="zNodes.length === 0" pClass="mechanism-manage-left" tips="组织获取失败"></hasNoData>
     </div>
     <div class="mechanism-manage-right">
       <Form ref="mechanismSearch" :model="mechanismSearch" inline class="label-input-form mechanism-manage-right-search" :label-width="60">
@@ -56,8 +66,9 @@
       </Form>
       <Divider></Divider>
       <div class="content">
-        <loading :loading="loading">数据加载中</loading>
-        <Table border ref="selection" :columns="deptEmpColumns" :data="deptEmpData"></Table>
+        <loading :loading="loading">正在获取用户列表</loading>
+        <Table border ref="selection" :columns="deptEmpColumns" :data="deptEmpData" v-if="deptEmpData.length > 0"></Table>
+        <hasNoData pClass="content" tips="未获取到组织机构" v-else></hasNoData>
       </div>
       <pagination :total="total"></pagination>
     </div>
@@ -111,13 +122,15 @@ export default {
       // 显示条件
       view: {
         treeView: false,
-        treeFlag: 1 // 1新增 2编辑
+        treeFlag: 1, // 1新增 2编辑
+        treeLoadingFlag: 1 // 获取为1 操作为2
       },
       zTree: '',
       zNodes: [],
       setting: '',
       // 组织机构表单
       treeForm: {
+        id: '',
         orgName: '',
         pNodeName: '',
         pId: '',
@@ -125,8 +138,17 @@ export default {
         shotName: ''
       },
       // 组织机构表单规则
-      treeFormRules: {},
-      total: 0,
+      treeFormRules: {
+        pNodeName: [
+          { required: true, message: '上级部门不能为空', trigger: 'blur' }
+        ],
+        orgName: [
+          { required: true, message: '部门名称不能为空', trigger: 'blur' }
+        ],
+        shotName: [
+          { required: true, message: '部门简称不能为空', trigger: 'blur' }
+        ]
+      },
       deptEmpColumns: [
         {
           type: 'selection',
@@ -134,20 +156,83 @@ export default {
           align: 'center'
         },
         {
-          title: 'Name',
-          key: 'name'
+          title: '组织机构类型',
+          key: 'orgName',
+          width: 150,
+          align: 'center'
         },
         {
-          title: 'Age',
-          key: 'age'
+          title: '用户名称',
+          key: 'uname',
+          width: 100,
+          align: 'center'
         },
         {
-          title: 'Address',
-          key: 'address'
+          title: '账号',
+          key: 'account',
+          width: 120,
+          align: 'center'
+        },
+        {
+          title: '工号',
+          key: 'workNum',
+          align: 'center',
+          width: 80
+        },
+        {
+          title: '角色名称',
+          key: 'roleName',
+          width: 100
+        },
+        {
+          title: '部门',
+          key: 'orgName',
+          width: 140
+        },
+        {
+          title: '邮箱',
+          key: 'email',
+          width: 130
+        },
+        {
+          title: '电话',
+          key: 'officePhone',
+          width: 100
+        },
+        {
+          title: '手机',
+          key: 'mobilePhone',
+          width: 100
+        },
+        {
+          title: '传真',
+          key: 'fax-address',
+          width: 100
+        },
+        {
+          title: '通讯地址',
+          key: 'address',
+          width: 100
+        },
+        {
+          title: '用户状态',
+          key: 'disableFlag',
+          width: 100
+        },
+        {
+          title: '修改时间',
+          key: 'modifyTime',
+          width: 150
         }
       ],
-      deptEmpData: [],
-      loading: false
+      deptEmpData: [], // 组织下的员工列表
+      loading: false,
+      treeModalLoading: false, // 新增、删除弹窗loading
+      treeLoading: false,
+      orgId: '', // 组织机构id
+      page: 1,
+      rows: 10,
+      total: 0
     }
   },
   methods: {
@@ -158,9 +243,11 @@ export default {
      */
     getTree () {
       this.$http.get('sys/org/getTree', {}, {
-        _this: this
+        _this: this,
+        loading: 'treeLoading'
       }, res => {
         if (res.ok) {
+          this.orgId = ''
           let zNodes = []
           for (let i = 0; i < res.data.length; i++) {
             let zObj = {}
@@ -169,10 +256,14 @@ export default {
             zObj.name = res.data[i].orgName
             zObj.shotName = res.data[i].shotName
             zObj.remarks = res.data[i].remarks
-            if (res.data[i].pId == null) {
-              zObj.isParent = true
+            zObj.isParent = true
+            if (res.data[i].pId === null && this.orgId === '') {
+              this.orgId = res.data[i].id
+              zObj.open = true
+              zNodes[i] = zObj
+            } else {
+              zNodes[i] = zObj
             }
-            zNodes[i] = zObj
           }
           this.zNodes = zNodes
         }
@@ -183,7 +274,22 @@ export default {
      * @author: chenxiaoxi
      * @date: 2018-09-21 09:17:04
      */
-    treeOk () {},
+    treeOk () {
+      this.$refs['treeForm'].validate((valid) => {
+        if (valid) {
+          this.$http.ajax(this.view.treeFlag === 1 ? 'post' : 'put', 'sys/org', this.treeForm, {
+            _this: this,
+            loading: 'treeModalLoading'
+          }, res => {
+            this.getTree()
+            this.treeFormReset()
+            this.view.treeFlag = 1
+          }, e => {})
+        } else {
+          this.$Message.error('Fail!')
+        }
+      })
+    },
     /**
      * @description: 组织结构树取消
      * @author: chenxiaoxi
@@ -201,15 +307,30 @@ export default {
       this.$refs.treeForm.resetFields()
     },
     /**
-     * @description: zTree方法
+     * @description: 根据组织机构id查看员工列表
      * @author: chenxiaoxi
-     * @date: 2018-09-21 15:37:30
+     * @date: 2018-09-25 15:59:40
      */
-    selectAll () {}
+    findByOrg () {
+      this.$http.get('sys/user/findByOrg', {
+        id: this.orgId,
+        page: this.page,
+        rows: this.rows
+      }, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        this.deptEmpData = res.data.list
+        this.total = res.data.count
+      }, e => {})
+    }
   },
   computed: {
     treeTitle () {
       return this.view.treeFlag === 1 ? '组织机构节点新增' : '组织机构节点维护'
+    },
+    treeLoadingTips () {
+      return this.view.treeLoadingFlag === 1 ? '组织机构获取中...' : '节点保存中...'
     }
   },
   watch: {
@@ -218,8 +339,13 @@ export default {
       handler () {
         this.$nextTick(() => {
           $.fn.zTree.init($('#treeDemo'), this.setting, this.zNodes)
-          $('#selectAll').bind('click', this.selectAll)
         })
+      }
+    },
+    // orgId发生变化查询部门下的用户信息
+    orgId (val) {
+      if (val !== '') {
+        this.findByOrg()
       }
     }
   },
@@ -237,7 +363,9 @@ export default {
         enable: true,
         editNameSelectAll: true,
         showRemoveBtn: showRemoveBtn,
-        showRenameBtn: showRenameBtn
+        showRenameBtn: showRenameBtn,
+        renameTitle: '节点名称维护',
+        removeTitle: '节点删除'
       },
       data: {
         simpleData: {
@@ -248,13 +376,10 @@ export default {
         beforeDrag: beforeDrag,
         beforeEditName: beforeEditName,
         beforeRemove: beforeRemove,
-        beforeRename: beforeRename,
-        onRemove: onRemove,
-        onRename: onRename
+        onClick: handleClick
       }
     }
     this.setting = setting
-    let log = ''
     let className = 'dark'
     function beforeDrag (treeId, treeNodes) {
       return false
@@ -266,72 +391,67 @@ export default {
       zTree.selectNode(treeNode)
       _this.view.treeView = true
       _this.view.treeFlag = 2
-      _this.treeForm.pNode = pNode.name
+      _this.treeForm.pNodeName = pNode.name
       _this.treeForm.pId = treeNode.pId
       _this.treeForm.orgName = treeNode.name
       _this.treeForm.shotName = treeNode.shotName
       _this.treeForm.remarks = treeNode.remarks
+      _this.treeForm.id = treeNode.id
       return false
     }
+
+    /**
+     * @description: 树节点点击
+     * @author: chenxiaoxi
+     * @date: 2018-09-25 16:13:25
+     */
+    function handleClick (event, treeId, treeNode) {
+      _this.orgId = treeNode.id
+    }
+    /**
+     * @description: 树节点删除
+     * @author: chenxiaoxi
+     * @date: 2018-09-25 14:05:25
+     */
     function beforeRemove (treeId, treeNode) {
       className = (className === 'dark' ? '' : 'dark')
-      showLog('[ ' + getTime() + ' beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name)
       var zTree = $.fn.zTree.getZTreeObj('treeDemo')
       zTree.selectNode(treeNode)
-      return confirm('确认删除 节点 -- ' + treeNode.name + ' 吗？')
+      _this.$Modal.confirm({
+        title: '提示',
+        content: '您是否要删除' + ' <span>' + treeNode.name + '</span> ?',
+        onOk: () => {
+          _this.treeFlag = 2
+          _this.$http.delete('sys/org', {
+            id: treeNode.id
+          }, {
+            _this: _this,
+            loading: 'treeLoading'
+          }, res => {
+            _this.treeFlag = 1
+            _this.getTree()
+          }, e => {})
+        },
+        onCancel: () => {}
+      })
+      return false
     }
-    function onRemove (e, treeId, treeNode) {
-      showLog('[ ' + getTime() + ' onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name)
-    }
-    function beforeRename (treeId, treeNode, newName, isCancel) {
-      className = (className === 'dark' ? '' : 'dark')
-      showLog((isCancel ? "<span style='color:red'>" : '') + '[ ' + getTime() + ' beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name + (isCancel ? '</span>' : ''))
-      if (newName.length === 0) {
-        setTimeout(function () {
-          var zTree = $.fn.zTree.getZTreeObj('treeDemo')
-          zTree.cancelEditName()
-          alert('节点名称不能为空.')
-        }, 0)
-        return false
-      }
-      return true
-    }
-    function onRename (e, treeId, treeNode, isCancel) {
-      showLog((isCancel ? "<span style='color:red'>" : '') + '[ ' + getTime() + ' onRename ]&nbsp;&nbsp;&nbsp;&nbsp; ' + treeNode.name + (isCancel ? '</span>' : ''))
-    }
+    // 是否显示移除按钮
     function showRemoveBtn (treeId, treeNode) {
       return treeNode.pId !== null
     }
     function showRenameBtn (treeId, treeNode) {
       return treeNode.pId !== null
     }
-    function showLog (str) {
-      if (!log) log = $('#log')
-      log.append("<li class='" + className + "'>" + str + '</li>')
-      if (log.children('li').length > 8) {
-        log.get(0).removeChild(log.children('li')[0])
-      }
-    }
-    function getTime () {
-      let now = new Date()
-      let h = now.getHours()
-      let m = now.getMinutes()
-      let s = now.getSeconds()
-      let ms = now.getMilliseconds()
-      return (h + ':' + m + ':' + s + ' ' + ms)
-    }
-
-    // var newCount = 1
     function addHoverDom (treeId, treeNode) {
       var sObj = $('#' + treeNode.tId + '_span')
       if (treeNode.editNameFlag || $('#addBtn_' + treeNode.tId).length > 0) return
       var addStr = "<span class='button add' id='addBtn_" + treeNode.tId +
-        "' title='add node' onfocus='this.blur();'></span>"
+        "' title='节点新增' onfocus='this.blur();'></span>"
       sObj.after(addStr)
       var btn = $('#addBtn_' + treeNode.tId)
       if (btn) {
         btn.bind('click', function () {
-          console.log(treeNode)
           className = (className === 'dark' ? '' : 'dark')
           var zTree = $.fn.zTree.getZTreeObj('treeDemo')
           this.zTree = zTree
@@ -339,6 +459,7 @@ export default {
           _this.view.treeView = true
           _this.view.treeFlag = 1
           _this.treeForm.pId = treeNode.id
+          _this.treeForm.pNodeName = treeNode.name
           _this.treeForm.orgName = treeNode.orgName
           return false
         })
@@ -346,13 +467,7 @@ export default {
     };
     function removeHoverDom (treeId, treeNode) {
       $('#addBtn_' + treeNode.tId).unbind().remove()
-    };
-    function selectAll () {
-      var zTree = $.fn.zTree.getZTreeObj('treeDemo')
-      this.zTree = zTree
-      zTree.setting.edit.editNameSelectAll = $('#selectAll').attr('checked')
     }
-    this.selectAll = selectAll
   }
 }
 </script>
@@ -386,6 +501,17 @@ export default {
       .content{
         height: calc(~'100% - 110px');
         background: #CCC;
+        .hasNoData{
+          background: #FFF;
+          width: 100%;
+          height: 100%;
+          .no-data-icon{
+            width: 150px;
+          }
+        }
+      }
+      .ivu-table-overflowX{
+        overflow-x: auto;
       }
       .pagination{
         .ivu-divider{
@@ -433,6 +559,35 @@ export default {
     }
     .ivu-divider-horizontal{
       margin: 8px 0;
+    }
+    .ivu-table-body{
+      overflow-x: auto;
+    }
+    .ivu-table-tip{
+      width: 100%;
+      height: calc(~'100% - 41px');
+      table{
+        display: block;
+        tbody,tr,td{
+          display: block;
+          width: 100% !important;
+          height: 100%;
+        }
+        td{
+          .flex();
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+    .text-overflow-hidden{
+      .ellipsis()
+    }
+    .hasNoData{
+      background: #FFF;
+      .no-data-icon{
+        width: 85px;
+      }
     }
   }
   .mechanism-tree-modal{

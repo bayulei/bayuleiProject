@@ -110,6 +110,7 @@ export default {
 
 <style lang="less" scoped>
   @import '~styles/style';
+  @import '~styles/mixins';
   .side-bar{
     height: calc(~'100% - 7.8% - 10px');
     float: left;
