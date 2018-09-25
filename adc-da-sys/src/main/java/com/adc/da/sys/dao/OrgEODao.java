@@ -40,11 +40,11 @@ public interface OrgEODao extends BaseDao<OrgEO>{
 
 	public int delOrgRelatedUser(UserOrgEO userOrgEO);
 
-	public void addOrgRelatedUsers(List<UserOrgEO> userOrgEOs);
+	public int addOrgRelatedUsers(List<UserOrgEO> userOrgEOs);
 
 	public int delOrgRelatedUserByUserId(String usId);
 
-	public void addOrgRelatedUser(UserOrgEO userOrgEO);
+	public int addOrgRelatedUser(UserOrgEO userOrgEO);
 
 	public int updateUserOrg(UserOrgEO userOrgEO);
 	
