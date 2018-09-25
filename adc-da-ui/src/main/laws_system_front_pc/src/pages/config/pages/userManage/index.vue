@@ -35,7 +35,7 @@
                   </Col>
                   <Col>
                     <FormItem  label="用户账号" prop="account" class="laws-info-item">
-                      <Input :disabled="accountState" v-model="userVO.account" />
+                      <Input :disabled="createType" v-model="userVO.account" />
                     </FormItem>
                   </Col>
                   <Col>
@@ -182,6 +182,7 @@ export default {
         position: 'static'
       },
       usersType: false,
+      createType: true,
       // 总数
       total: 0,
       // 当前页数
@@ -384,7 +385,7 @@ export default {
           roleId: this.search.roleId,
           disableFlag: this.search.disableFlag
         },
-        {_this: this, loading: this.loading},
+        {_this: this, loading: 'loading'},
         res => {
           if (res.ok) {
             this.userList = res.data.list
@@ -413,6 +414,7 @@ export default {
       this.userTitle = '新增用户'
       this.showPWD = true
       this.accountState = false
+      this.createType = false
       this.getOrgTreeSource()
       this.cleanUserValue()
       this.showUserModal = true
@@ -466,6 +468,8 @@ export default {
     // 用户编辑
     userEdit (row) {
       this.userTitle = '编辑用户'
+      this.usersType = false
+      this.createType = true
       this.showPWD = false
       this.accountState = true
       this.userVO = JSON.parse(JSON.stringify(row))
@@ -526,6 +530,7 @@ export default {
     showUser (index) {
       this.userTitle = '查看用户信息'
       this.showPWD = false
+      this.createType = true
       this.userVO = this.userList[index]
       // this.userInfoModel = true
       this.showUserModal = true

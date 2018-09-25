@@ -24,7 +24,14 @@ export default {
         position: 'static'
       },
       //  规范
-      classRules: {},
+      classRules: {
+        dicTypeName: [
+          { required: true, message: '选项不能为空', trigger: 'blur' }
+        ],
+        dicTypeCode: [
+          { required: true, message: '数据编码不能为空', trigger: 'blur' }
+        ]
+      },
       // 发送数据
       classModelAdd: {
         // 数据标准
@@ -36,7 +43,7 @@ export default {
         // 数据id
         id: '',
         // 创建日期
-        creationDate: '',
+        creationDate: new Date(),
         // 创建人
         founder: ''
       },
@@ -180,6 +187,7 @@ export default {
             _this: this
           }, res => {
             this.selectClass()
+            this.page = 1
           }, e => {
           })
         },
@@ -246,18 +254,18 @@ export default {
     },
     // 加载表格
     selectClass () {
-      let DicTypeEOPage = this.classModelAdd
-      DicTypeEOPage.page = this.page
-      DicTypeEOPage.pageSize = this.rows
-      DicTypeEOPage.dicTypeName = this.standardForm.standName
-      DicTypeEOPage.dicTypeCode = this.standardForm.standCode
-      // let DicTypeEOPage = {
-      //   page: this.page,
-      //   pageSize: this.rows,
-      //   dicTypeName: this.standardForm.standName,
-      //   dicTypeCode: this.standardForm.standCode,
-      //   dicId: 'FDFDFDVFTGR'
-      // }
+      // let DicTypeEOPage = this.classModelAdd
+      // DicTypeEOPage.page = this.page
+      // DicTypeEOPage.pageSize = this.rows
+      // DicTypeEOPage.dicTypeName = this.standardForm.standName
+      // DicTypeEOPage.dicTypeCode = this.standardForm.standCode
+      let DicTypeEOPage = {
+        page: this.page,
+        pageSize: this.rows,
+        dicTypeName: this.standardForm.standName,
+        dicTypeCode: this.standardForm.standCode,
+        dicId: 'FDFDFDVFTGR'
+      }
       this.$http.get('sys/dictype/page', DicTypeEOPage, {
         _this: this,
         loading: 'loading'

@@ -1,4 +1,5 @@
 <!-- 所属类别 -->
+
 <template>
   <div class="classification">
     <table-tools-bar>
@@ -11,18 +12,56 @@
         <Button type="info" @click="classificationAdd">增加</Button>
         <Button type="error"  @click="classificationBatchDel">删除</Button>
         <!--显示模态框-->
-        <Modal v-model="classificationModal" :title="classificationTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"
-               @on-ok="saveClassification">
-          <Form :model="classificationModelAdd" label-position="right" :label-width="80">
+        <!--<Modal v-model="classificationModal" :title="classificationTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"-->
+               <!--@on-ok="saveClassification">-->
+          <!--<Form :model="classificationModelAdd" label-position="right" :label-width="80">-->
+            <!--<input v-model="classificationModelAdd.id" v-show="false">-->
+            <!--<FormItem label="选项">-->
+              <!--<Input v-model="classificationModelAdd.parts" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>-->
+            <!--</FormItem>-->
+            <!--<FormItem label="数据编码">-->
+              <!--<Input v-model="classificationModelAdd.coding" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>-->
+            <!--</FormItem>-->
+          <!--</Form>-->
+        <!--</Modal>-->
+        <Drawer
+          :title="classificationTitle"
+          v-model="classificationModal"
+          width="900"
+          :styles="styles"
+        >
+          <Form :model="classificationModelAdd" ref="classificationModelAdd" :rules="classificationRules"  class="label-input-form" >
             <input v-model="classificationModelAdd.id" v-show="false">
-            <FormItem label="选项">
-              <Input v-model="classificationModelAdd.parts" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
-            </FormItem>
-            <FormItem label="数据编码">
-              <Input v-model="classificationModelAdd.coding" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>
-            </FormItem>
+            <Row>
+              <Col span="12">
+                <FormItem label="选项" prop="dicTypeName"  label-position="top" class="standards-info-item">
+                  <Input v-model="classificationModelAdd.dicTypeName" :disabled='modalType === 3'></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="数据编码" prop="dicTypeCode" label-position="top" class="standards-info-item">
+                  <Input v-model="classificationModelAdd.dicTypeCode" :disabled='modalType === 3'></Input>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="12">
+                <FormItem label="创建日期" prop="creationDate"  label-position="top" class="standards-info-item">
+                  <Input v-model="classificationModelAdd.creationDate" :disabled='modalType === 3'></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="创建人" prop="founder"  label-position="top" class="standards-info-item">
+                  <Input v-model="classificationModelAdd.founder" :disabled='modalType === 3'></Input>
+                </FormItem>
+              </Col>
+            </Row>
           </Form>
-        </Modal>
+          <div class="demo-drawer-footer" :class="{ 'disappear': modalType === 3 }">
+            <Button style="margin-right: 8px" @click="closeModal">取消</Button>
+            <Button type="primary" @click="saveClassification">提交</Button>
+          </div>
+        </Drawer>
       </div>
     </table-tools-bar>
     <div class="content">
@@ -34,270 +73,7 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'classification',
-  data () {
-    return {
-      modalType: '',
-      classificationTitle: '', // 模态框标题
-      selectNum: '', // 接收选中行数据
-      standardForm: {
-        standName: '', // 选项
-        standCode: '', // 数据编码
-        id: '' // 数据id
-      },
-      total: 0,
-      page: 1,
-      rows: 10,
-      loading: false,
-      classificationModelAdd: {
-        parts: '', // 模态框标准
-        coding: ''// 数据编码
-      },
-      classificationModal: false, // 模态框是否打开
-      // 表格表头
-      classificationTable: [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center'
-        },
-        {
-          title: '选项',
-          key: 'dicTypeName',
-          align: 'center'
-        },
-        {
-          title: '数据编码',
-          key: 'dicTypeCode',
-          width: 300,
-          align: 'center'
-        },
-        {
-          title: '创建日期',
-          key: 'creationDate',
-          align: 'center'
-        },
-        {
-          title: '创建人',
-          key: 'founder',
-          align: 'center'
-        },
-        {
-          title: '操作',
-          key: 'action',
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.classificationEdit(params.row)
-                  }
-                }
-              }, '编辑'),
-              h('Button', {
-                props: {
-                  type: 'warning',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.viewData(params.row)
-                  }
-                }
-              }, '查看'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.classificationDel(params.row.id)
-                  }
-                }
-              }, '删除')
-            ])
-          }
-        }
-      ],
-      // 表格内容
-      classificationData: []
-    }
-  },
-  methods: {
-    //  全选
-    handleSelectAll (status) {
-      this.$refs.selection.selectAll(status)
-    },
-    // 非全选
-    handleSelectone (row) {
-      this.selectNum = row
-    },
-    // 选择提示框
-    instance (type, content) {
-      const title = '请选择'
-      switch (type) {
-        case 'warning':
-          this.$Modal.warning({
-            title: title,
-            content: content
-          })
-          break
-      }
-    },
-    // 新增
-    classificationAdd () {
-      this.classificationModal = true
-      this.modalType = 1
-      // 取消所有的选中效果
-      this.handleSelectAll(false)
-      this.classificationTitle = '新增标准'
-      this.classificationModelAdd.parts = ''
-      this.classificationModelAdd.coding = ''
-      this.classificationModelAdd.id = ''
-    },
-    // 编辑
-    classificationEdit (item) {
-      this.classificationModal = true
-      this.modalType = 2
-      this.classificationTitle = '编辑标准'
-      this.classificationModelAdd.parts = item.dicTypeName
-      this.classificationModelAdd.coding = item.dicTypeCode
-      this.classificationModelAdd.id = item.id
-    },
-    // 查看
-    viewData (row) {
-      this.classificationModal = true
-      this.modalType = 3
-      this.classificationTitle = '查看标准'
-      this.classificationModelAdd.parts = row.dicTypeName
-      this.classificationModelAdd.coding = row.dicTypeCode
-      this.classificationModelAdd.id = row.id
-    },
-    // 删除
-    classificationDel (id) {
-      this.handleSelectAll(false)
-      this.$Modal.confirm({
-        title: '确认删除',
-        content: '<p>确认删除该条数据？</p>',
-        onOk: () => {
-          this.$http.delete('sys/dictype/deleteArr', {
-            ids: id
-          }, {
-            _this: this
-          }, res => {
-            this.selectClassification()
-          }, e => {
-          })
-        },
-        onCancel: () => {
-        }
-      })
-    },
-    // 批量删除
-    classificationBatchDel () {
-      if (this.selectNum === '' || this.selectNum.length === 0) {
-        this.instance('warning', '请选择一条数据进行删除')
-      } else {
-        let delIds = []
-        for (let i = 0; i < this.selectNum.length; i++) {
-          delIds.push(this.selectNum[i].id)
-        }
-        delIds = delIds.join(',')
-        this.$Modal.confirm({
-          title: '确认删除',
-          content: '<p>确认删除该这些数据？</p>',
-          onOk: () => {
-            this.$http.delete('sys/dictype/deleteArr', {
-              ids: delIds
-            }, {
-              _this: this
-            }, res => {
-              this.selectClassification()
-            }, e => {
-            })
-          },
-          onCancel: () => {
-          }
-        })
-      }
-    },
-    pageChange (page) {
-      this.page = page
-      this.selectClassification()
-    },
-    pageSizeChange (pageSize) {
-      this.rows = pageSize
-      this.selectClassification()
-    },
-    // 加载表格
-    selectClassification () {
-      this.$http.get('sys/dictype/page', {
-        pageNo: this.page,
-        pageSize: this.rows,
-        dicTypeName: this.standardForm.standName,
-        dicTypeCode: this.standardForm.standCode,
-        dicId: 'VBMNHTGHG'
-      }, {
-        _this: this,
-        loading: 'loading'
-      }, res => {
-        this.classificationData = res.data.list
-        this.total = res.data.count
-      }, e => {})
-    },
-    // 提交新增/修改
-    saveClassification () {
-      let data = {
-        dicTypeName: this.classificationModelAdd.parts,
-        dicTypeCode: this.classificationModelAdd.coding,
-        dicId: 'VBMNHTGHG'
-      }
-      if (this.modalType === 1) {
-        this.$http.postData('sys/dictype/create', data, {
-          _this: this
-        }, res => {
-          this.selectClassification()
-        }, e => {
-
-        })
-      } else if (this.modalType === 2) {
-        this.$http.putData('sys/dictype', {
-          dicTypeName: this.classificationModelAdd.parts,
-          dicTypeCode: this.classificationModelAdd.coding,
-          dicId: 'VBMNHTGHG',
-          id: this.classificationModelAdd.id
-        }, {
-          _this: this
-        }, res => {
-          this.selectClassification()
-        }, e => {
-
-        })
-      }
-    }
-  },
-  mounted () {
-    this.selectClassification()
-  }
-}
-</script>
+<script src="./js/Category.js"></script>
 
 <style lang="less" scoped>
   .classification{
