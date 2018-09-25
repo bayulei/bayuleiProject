@@ -5,6 +5,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -137,7 +138,7 @@ public class SarBussStandPlanEOController extends BaseController<SarBussStandPla
      * @Param [response, request]
      * @return void
      **/
-    @ApiOperation(value = "|SarLawsInfoEO|导出标准年度计划")
+    @ApiOperation(value = "|SarBussStandPlanEO|导出标准年度计划")
     @GetMapping("/exportStandPlan")
     public void exportStandPlan(String exportPlanDatas,HttpServletResponse response, HttpServletRequest request) throws Exception{
         List<SarBussStandPlanEO> exportList = JSONObject.parseArray(exportPlanDatas,SarBussStandPlanEO.class);
@@ -172,6 +173,84 @@ public class SarBussStandPlanEOController extends BaseController<SarBussStandPla
         } finally {
             IOUtils.closeQuietly(os);
         }
+    }
+
+
+    /**
+     * @Author yangxuenan
+     * @Description 标准计划进度
+     * Date 2018/9/25 14:38
+     * @Param [page]
+     * @return java.util.Map<java.lang.String,java.util.List<java.lang.Integer>>
+     **/
+    @ApiOperation(value = "|SarBussStandPlanEO|标准计划进度")
+    @GetMapping("/countPlanSchedule")
+    public Map<String,List<Integer>> countPlanSchedule(SarBussStandPlanEOPage page) throws Exception{
+        page.setValidFlag("0");
+        List<SarBussStandPlanEO> rows = sarBussStandPlanEOService.queryByPage(page);
+        Map<String,List<Integer>> countMap = new HashMap<>();
+        int powerPlanSubmit = 0;
+        int carPlanSubmit = 0;
+        int powerRealSubmit = 0;
+        int carRealSubmit = 0;
+        int powerPlanRelease = 0;
+        int carPlanRelease = 0;
+        int powerRealRelease = 0;
+        int carRealRelease = 0;
+        List<Integer> listPower = new ArrayList<>();
+        List<Integer> listCar = new ArrayList<>();
+        if(rows != null){
+            for(int i=0;i<rows.size();i++){
+                SarBussStandPlanEO getPlan = rows.get(i);
+                int reviewSubmitDays = Integer.parseInt(getPlan.getReviewSubmitDays());
+                int submitDelayDays = Integer.parseInt(getPlan.getSubmitDelayDays());
+                int planReleaseDays = Integer.parseInt(getPlan.getPlanReleaseDays());
+                int releaseDelayDays = Integer.parseInt(getPlan.getReleaseDelayDays());
+                switch(getPlan.getCompileUnit()){
+                    case "动力":
+                        if(reviewSubmitDays >= -365 && reviewSubmitDays <= 0){
+                            powerPlanSubmit++;
+                        }
+                        if (submitDelayDays >= -365 && submitDelayDays < 365){
+                            powerRealSubmit++;
+                        }
+                        if(planReleaseDays >= -365 && planReleaseDays <= 0){
+                            powerPlanRelease++;
+                        }
+                        if(releaseDelayDays >= -365 && releaseDelayDays < 365){
+                            powerRealRelease++;
+                        }
+                        break;
+                    case "整车":
+                        if(reviewSubmitDays >= -365 && reviewSubmitDays <= 0){
+                            carPlanSubmit++;
+                        }
+                        if (submitDelayDays >= -365 && submitDelayDays < 365){
+                            carRealSubmit++;
+                        }
+                        if(planReleaseDays >= -365 && planReleaseDays <= 0){
+                            carPlanRelease++;
+                        }
+                        if(releaseDelayDays >= -365 && releaseDelayDays < 365){
+                            carRealRelease++;
+                        }
+                        break;
+                }
+
+            }
+            listPower.add(powerPlanSubmit);
+            listCar.add(carPlanSubmit);
+            listPower.add(powerRealSubmit);
+            listCar.add(carRealSubmit);
+            listPower.add(powerPlanRelease);
+            listCar.add(carPlanRelease);
+            listPower.add(powerRealRelease);
+            listCar.add(carRealRelease);
+            countMap.put("power",listPower);
+            countMap.put("car",listCar);
+        }
+
+        return countMap;
     }
 
 }

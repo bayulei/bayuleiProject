@@ -61,7 +61,7 @@ public class CorrigendaApprovalController {
             processInstanceId = corrigendaApprovalService.startProcess(corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId);
             return Result.success(processInstanceId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("保存失败");
         }
     }
@@ -82,7 +82,7 @@ public class CorrigendaApprovalController {
             corrigendaApprovalService.completeApproval(processInstanceId,userId,comment);
             return Result.success(processInstanceId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("审批失败");
         }
     }
@@ -102,7 +102,7 @@ public class CorrigendaApprovalController {
             corrigendaApprovalService.completeApproval(processInstanceId,nowUserId,comment);
             return Result.success(processInstanceId);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("审批失败");
         }
     }
