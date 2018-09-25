@@ -269,9 +269,9 @@ export default {
     },
     // 点击节点
     clickOneNode (event, treeId, treeNode) {
-      this.searchLawsInfo()
       this.saveSelectedNodes = treeNode
       this.SarMenuEO.parentId = treeNode.id
+      this.searchLawsInfo()
     },
     clickDropMenu (name) {
       if (name === 'addMenu') {
