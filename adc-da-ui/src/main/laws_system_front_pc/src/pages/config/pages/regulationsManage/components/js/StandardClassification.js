@@ -27,7 +27,7 @@ export default {
       classRules: {},
       // 发送数据
       classModelAdd: {
-        // 模态框标准
+        // 数据标准
         dicTypeName: '',
         // 数据编码
         dicTypeCode: '',
@@ -262,10 +262,12 @@ export default {
         _this: this,
         loading: 'loading'
       }, res => {
+        console.log(res)
         this.classData = res.data.list
         this.total = res.data.count
         this.page = 1
-      }, e => {})
+      }, e => {
+      })
     },
     // 提交新增/修改
     saveClass () {

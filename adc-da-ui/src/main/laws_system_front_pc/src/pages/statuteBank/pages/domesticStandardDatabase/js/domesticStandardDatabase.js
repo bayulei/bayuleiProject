@@ -341,7 +341,33 @@ export default {
         responsibleUnit: [],
         category: [],
         remark: []
-      },
+      }, // 标准添加过程中表单验证
+      sarStandardItemRules: {
+        itemsNum: [
+          { required: true, message: '条目号不能为空', trigger: 'blur' },
+          { type: 'string', max: 100, message: '1到100个任意字母、数字、汉字、小数点的组合', trigger: 'blur' }
+        ],
+        itemsName: [
+          { type: 'string', max: 500, message: '条目名称不能超过500个字符', trigger: 'blur' }
+        ],
+        parts: [
+          { required: true, message: '涉及零部件不能为空', trigger: 'blur' },
+          { type: 'string', max: 500, message: '涉及零部件不能超过500个字符', trigger: 'blur' }
+        ],
+        tackTime: [
+          { required: true, message: '标准年份不能为空', trigger: 'blur' }
+        ],
+        applyArctic: [
+          { required: true, type: 'array', message: '能源种类不能为空', trigger: 'change' }],
+        energyKind: [
+          { required: true, type: 'array', message: '能源种类不能为空', trigger: 'change' }],
+        responsibleUnit: [
+          { required: true, message: '责任部门不能为空', trigger: 'blur' }
+        ],
+        remarks: [
+          { type: 'string', max: 5000, message: '备注不能超过5000个字符', trigger: 'blur' }
+        ]
+      }, // 标准条目添加过程中表单验证
       sarMenuRules: {
         menuName: [
           { required: true, message: '二级菜单不能为空', trigger: 'blur' }
@@ -460,7 +486,6 @@ export default {
       dragFlag: false,
       mousedown: '',
       mouoseup: '',
-      uploadPath: '/api/att/attFile/upload',
       styles: {
         height: 'calc(100% - 55px)',
         overflow: 'auto',
@@ -476,9 +501,10 @@ export default {
       approvalFileName: '',
       relevanceFileName: '',
       importModalshowflagtemp: false,
-      file: null,
+      file: [],
       loadingStatus: false,
-      currentFile: '' // 当前操作的是哪个FormItem的上传
+      currentFile: '', // 当前操作的是哪个FormItem的上传
+      defaultFileList: [] // 默认显示
     }
   },
   methods: {
@@ -487,93 +513,13 @@ export default {
       this.$http.get('lawss/sarStandardsInfo/getSarStandardsInfoPage', this.sarStandardsSearch, {
         _this: this, loading: 'loading'
       }, res => {
-       /*
-       for (let i = 0; i < res.data.list.length; i++) {
-          res.data.list[i]['collectIcontype'] = 'ios-star-outline'
-          res.data.list[i]['collectIconcolor'] = '#5c6b77'
+        for (let i = 0; i < res.data.list.length; i++) {
           res.data.list[i].checked = false
         }
-        */
         this.stahndinfoList = res.data.list
         this.total = res.data.count
       }, e => {
       })
-     /*
-     this.stahndinfoList = [
-        {
-          checked: false,
-          id: '1000',
-          standSortShow: 'ABS2018',
-          standNumber: 'BZ10000',
-          standYear: '2018',
-          standName: '驱动系统',
-          standStateShow: 0,
-          standNatureShow: '1',
-          putTime: '2018/09/18',
-          issueTime: '2018/10/01'
-        },
-        {
-          checked: false,
-          id: '1001',
-          standSortShow: 'ACS2018',
-          standNumber: 'BZ10001',
-          standYear: '2018',
-          standName: '排气系统',
-          standStateShow: 1,
-          standNatureShow: '1',
-          putTime: '2018/09/17',
-          issueTime: '2018/10/01'
-        },
-        {
-          checked: false,
-          id: '1002',
-          standSortShow: 'ABCS2018',
-          standNumber: 'BZ10002',
-          standYear: '2018',
-          standName: '轮胎性能测试',
-          standStateShow: 0,
-          standNatureShow: '1',
-          putTime: '2018/08/01',
-          issueTime: '2018/09/01'
-        },
-        {
-          checked: false,
-          id: '1003',
-          standSortShow: 'ACS2018',
-          standNumber: 'BZ10003',
-          standYear: '2018',
-          standName: '燃油测试',
-          standStateShow: 2,
-          standNatureShow: '2',
-          putTime: '2018/08/15',
-          issueTime: '2018/10/01'
-        },
-        {
-          checked: false,
-          id: '1004',
-          standSortShow: 'ADP2018',
-          standNumber: 'BZ10004',
-          standYear: '2018',
-          standName: '安全气囊',
-          standStateShow: 1,
-          standNatureShow: '1',
-          putTime: '2018/07/15',
-          issueTime: '2018/09/20'
-        },
-        {
-          checked: false,
-          id: '1005',
-          standSortShow: 'ABS2018',
-          standNumber: 'BZ10005',
-          standYear: '2018',
-          standName: '发动机性能测试',
-          standStateShow: 3,
-          standNatureShow: '2',
-          putTime: '2018/06/26',
-          issueTime: '2018/09/01'
-        }
-      ]
-      */
     },
     // 分页点击后方法
     pageChange (page) {
@@ -642,6 +588,7 @@ export default {
         remark: '',
         menuId: ''
       } // 标准新增过程中用到的对象
+      this.$refs.importFileAboutStand.clearFiles()
     },
     // 保存或修改标准
     saveOrUpdateStands () {
@@ -907,15 +854,17 @@ export default {
     },
     // 导出选中的标准  此处因为复选框没有设置好，所以先设置导出所有数据
     exportStandard () {
-      this.$http.get('lawss/sarStandardsInfo/exportStandardsInfoExcel', this.sarStandardsSearch, {
-        _this: this
-      }, res => {
-      }, e => {
-      })
+      if (this.selectedList.length > 0) {
+        window.open(this.globalInterfaceUrl + 'lawss/sarStandardsInfo/exportStandardsInfoExcel?idList=' + this.selectedList.join(','))
+      } else {
+        this.$Message.info('请先选择要下载的数据')
+      }
     },
+    // 点击条目表格上面的操作按钮新增
     addItemModal () {
       this.modalItemaddShowflag = true
       this.itemAddOrUPdateFlag = 1
+      this.standItemEO = {}
     },
     // 标准条目新增
     saveOrUpdateStandItem () {
@@ -1077,14 +1026,44 @@ export default {
         console.log('文件上传出错')
       }
     },
-    handleUpload (file) {
-      this.file = file
-      //this.sarStandardsInfoEO[value] = []
-      return false
-    },
     uploadSuccess (res, file, fileList) {
       if (res.ok) {
         this.sarStandardsInfoEO[this.currentFile].push(res.data)
+      }
+    },
+    removeOneFile (file, fileList) {
+      this.sarStandardsInfoEO[this.currentFile] = this.removeAaary(this.sarStandardsInfoEO[this.currentFile], file.response.data)
+    },
+    // 删除数组中的某个对象
+    removeAaary (_arr, _obj) {
+      var length = _arr.length
+      for (var i = 0; i < length; i++) {
+        if (_arr[i] === _obj) {
+          if (i === 0) {
+            _arr.shift() // 删除并返回数组的第一个元素
+            return _arr
+          } else if (i === length - 1) {
+            _arr.pop() // 删除并返回数组的最后一个元素
+            return _arr
+          } else {
+            _arr.splice(i, 1) // 删除下标为i的元素
+            return _arr
+          }
+        }
+      }
+    },
+    clickButtonToUpload (current) {
+      this.currentFile = current
+      this.importModalshowflagtemp = true
+      this.$refs.importFileAboutStand.clearFiles()
+      this.defaultFileList = []
+      for (let i = 0; i < this.sarStandardsInfoEO[current].length; i++) {
+        let obj = {name: '', response: {}}
+        obj.name = this.sarStandardsInfoEO[current][i].oldFileName
+        let objres = {}
+        objres = this.sarStandardsInfoEO[current][i]
+        obj.response.data = objres
+        this.defaultFileList.push(obj)
       }
     }
   },
@@ -1145,7 +1124,7 @@ export default {
             if (JSON.stringify(allthis.selectSarMenu) === '{}') {
               treeObj.selectNode(nodes[0], true) // 返回node对象，此处由于未用到，所以没有接受返回参数
               allthis.sarStandardsSearch.menuId = nodes[0].id // 将当前二级菜单的id传回后台做标准的条件查询
-              allthis.selectSarMenu = nodes[0]  //设置当前选中的node
+              allthis.selectSarMenu = nodes[0]  // 设置当前选中的node
               // treeObj.expandNode(nodes[0], true, false) // 将指定ID节点展开
             } else {
               treeObj.selectNode(allthis.selectSarMenu, true)

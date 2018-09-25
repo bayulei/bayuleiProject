@@ -118,7 +118,7 @@ export default {
       ],
       // 表格内容
       categoryData: [],
-      categoryRules: []
+      categoryRules: {}
     }
   },
   methods: {

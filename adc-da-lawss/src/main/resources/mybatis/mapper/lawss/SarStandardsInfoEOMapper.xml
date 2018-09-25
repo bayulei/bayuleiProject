@@ -633,6 +633,15 @@
             <if test="menuId != null and menuId =='nomenu'" >
                 and SAR_STAND_MENU.MENU_ID = (select SAR_MENU.id from SAR_MENU WHERE parent_id is null)
             </if>
+            <!-- 导出数据过程中，选择的id -->
+            <if test="idlist != null" >
+                and SAR_STANDARDS_INFO.id in
+                <foreach collection="idlist" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+
             <!--
              < 标准种类 >
              <if test="standSort != null" >

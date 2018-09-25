@@ -161,6 +161,7 @@ module.exports = {
           thenFun.call(this, res.data)
         }
       }
+      thenFun.call(this, res.data)
     }).catch(err => {
       if (_this && loading) {
         _this[loading] = false
