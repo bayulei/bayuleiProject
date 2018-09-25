@@ -148,7 +148,33 @@ export default {
         { label: '院级', value: '3' }
       ],
       standPlanRules: {},
-      submitStandPlanFormRules: {}
+      submitStandPlanFormRules: {
+        standName: [
+          { required: true, message: '标准名称不能为空', trigger: 'blur' },
+          { type: 'string', max: 100, message: '标准名称长度不能超过100个字符', trigger: 'blur' }
+        ],
+        makeRevisonType: [
+          { required: true, message: '制修订类别不能为空', trigger: 'blur' }
+        ],
+        replaceStandNum: [
+          { required: true, message: '代替标准代号不能为空', trigger: 'blur' },
+          { type: 'string', max: 100, message: '代替标准代号长度不能超过100个字符', trigger: 'blur' }
+        ],
+        compileUnit: [
+          { required: true, message: '编制部门不能为空', trigger: 'blur' },
+          { type: 'string', max: 100, message: '编制部门长度不能超过100个字符', trigger: 'blur' }
+        ],
+        reviewLevel: [
+          { required: true, message: '评审级别不能为空', trigger: 'blur' }
+        ],
+        compilersUser: [
+          { required: true, message: '主要编制者不能为空', trigger: 'blur' },
+          { type: 'string', max: 100, message: '主要编制者长度不能超过100个字符', trigger: 'blur' }
+        ],
+        finishReviewTime: [
+          { required: true, type: 'date', message: '完成部门评审提交时间不能为空', trigger: 'change' }
+        ]
+      }
     }
   },
   methods: {
@@ -194,37 +220,43 @@ export default {
       this.showStandPlanModal = true
     },
     saveStandPlan () {
-      if (this.submitStandPlan.finishReviewTime != null) {
-        this.submitStandPlan.finishReviewTime = this.$dateFormat(this.submitStandPlan.finishReviewTime, 'yyyy-MM-dd')
-      }
-      if (this.submitStandPlan.reviewSubmitTime != null) {
-        this.submitStandPlan.reviewSubmitTime = this.$dateFormat(this.submitStandPlan.reviewSubmitTime, 'yyyy-MM-dd')
-      }
-      if (this.submitStandPlan.reviewMeetTime != null) {
-        this.submitStandPlan.reviewMeetTime = this.$dateFormat(this.submitStandPlan.reviewMeetTime, 'yyyy-MM-dd')
-      }
-      if (this.submitStandPlan.reviewModifyTime != null) {
-        this.submitStandPlan.reviewModifyTime = this.$dateFormat(this.submitStandPlan.reviewModifyTime, 'yyyy-MM-dd')
-      }
-      if (this.submitStandPlan.startFlowTime != null) {
-        this.submitStandPlan.startFlowTime = this.$dateFormat(this.submitStandPlan.startFlowTime, 'yyyy-MM-dd')
-      }
-      if (this.submitStandPlan.id == null || this.submitStandPlan.id === '') {
-        this.$http.post('lawss/sarBussStandPlan/createStandPlan', this.submitStandPlan, {
-          _this: this
-        }, res => {
-          this.showStandPlanModal = false
-          this.searchStandPlan()
-        }, e => {
-        })
-      } else {
-        this.$http.put('lawss/sarBussStandPlan/updateStandPlan', this.submitStandPlan, {
-          _this: this
-        }, res => {
-          this.showStandPlanModal = false
-          this.searchStandPlan()
-        }, e => {})
-      }
+      this.$refs['submitStandPlan'].validate((valid) => {
+        if (valid) {
+          if (this.submitStandPlan.finishReviewTime != null) {
+            this.submitStandPlan.finishReviewTime = this.$dateFormat(this.submitStandPlan.finishReviewTime, 'yyyy-MM-dd')
+          }
+          if (this.submitStandPlan.reviewSubmitTime != null) {
+            this.submitStandPlan.reviewSubmitTime = this.$dateFormat(this.submitStandPlan.reviewSubmitTime, 'yyyy-MM-dd')
+          }
+          if (this.submitStandPlan.reviewMeetTime != null) {
+            this.submitStandPlan.reviewMeetTime = this.$dateFormat(this.submitStandPlan.reviewMeetTime, 'yyyy-MM-dd')
+          }
+          if (this.submitStandPlan.reviewModifyTime != null) {
+            this.submitStandPlan.reviewModifyTime = this.$dateFormat(this.submitStandPlan.reviewModifyTime, 'yyyy-MM-dd')
+          }
+          if (this.submitStandPlan.startFlowTime != null) {
+            this.submitStandPlan.startFlowTime = this.$dateFormat(this.submitStandPlan.startFlowTime, 'yyyy-MM-dd')
+          }
+          if (this.submitStandPlan.id == null || this.submitStandPlan.id === '') {
+            this.$http.post('lawss/sarBussStandPlan/createStandPlan', this.submitStandPlan, {
+              _this: this
+            }, res => {
+              this.showStandPlanModal = false
+              this.searchStandPlan()
+            }, e => {
+            })
+          } else {
+            this.$http.put('lawss/sarBussStandPlan/updateStandPlan', this.submitStandPlan, {
+              _this: this
+            }, res => {
+              this.showStandPlanModal = false
+              this.searchStandPlan()
+            }, e => {})
+          }
+        } else {
+          this.$Message.error('请检查表单是否填写正确')
+        }
+      })
     },
     cancelSubmit () {
       this.showStandPlanModal = false
