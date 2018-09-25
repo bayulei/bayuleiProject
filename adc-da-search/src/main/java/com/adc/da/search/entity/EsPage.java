@@ -1,4 +1,4 @@
-package com.adc.da.search.config;
+package com.adc.da.search.entity;
 
 import java.util.List;
 import java.util.Map;

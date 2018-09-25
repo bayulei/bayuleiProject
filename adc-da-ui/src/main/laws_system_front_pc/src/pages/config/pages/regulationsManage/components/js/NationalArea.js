@@ -1,11 +1,10 @@
 export default {
-  name: 'standard-category',
+  name: 'national-area',
   data () {
     return {
       modalType: '',
-      categoryTitle: '', // 模态框标题
+      regionTitle: '', // 模态框标题
       selectNum: '', // 接收选中行数据
-      deleteType: '',
       standardForm: {
         standName: '', // 选项
         standCode: '', // 数据编码
@@ -21,13 +20,14 @@ export default {
         paddingBottom: '53px',
         position: 'static'
       },
-      categoryModelAdd: {
+      regionRules: {},
+      regionModelAdd: {
         // 模态框标准
         dicTypeName: '',
         // 数据编码
         dicTypeCode: '',
         // 唯一辨识
-        dicId: 'JKSADFH564S',
+        dicId: 'RFRFRFSCXVB',
         // 数据id
         id: '',
         // 创建日期
@@ -35,9 +35,9 @@ export default {
         // 创建人
         founder: ''
       },
-      categoryModal: false, // 模态框是否打开
+      regionModal: false, // 模态框是否打开
       // 表格表头
-      categoryTable: [
+      regionTable: [
         {
           type: 'selection',
           width: 60,
@@ -80,7 +80,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.categoryEdit(params.row)
+                    this.regionEdit(params.row)
                   }
                 }
               }, '编辑'),
@@ -108,7 +108,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.categoryDel(params.row.id)
+                    this.regionDel(params.row.id)
                   }
                 }
               }, '删除')
@@ -117,15 +117,7 @@ export default {
         }
       ],
       // 表格内容
-      categoryData: [],
-      categoryRules: {
-        dicTypeName: [
-          { required: true, message: '选项不能为空', trigger: 'blur' }
-        ],
-        dicTypeCode: [
-          { required: true, message: '数据编码不能为空', trigger: 'blur' }
-        ]
-      }
+      regionData: []
     }
   },
   methods: {
@@ -137,7 +129,6 @@ export default {
     handleSelectone (row) {
       this.selectNum = row
     },
-    // 对话框
     instance (type, content) {
       const title = '请选择'
       switch (type) {
@@ -182,7 +173,7 @@ export default {
           this.$http.delete(url, type === 1 ? paramId : paramIds, {
             _this: this
           }, res => {
-            this.selectCategory()
+            this.selectRegion()
             this.page = 1
           }, e => {
           })
@@ -192,40 +183,40 @@ export default {
       })
     },
     closeModal () {
-      this.classModal = false
+      this.regionModal = false
     },
     // 新增
-    categoryAdd () {
-      this.categoryModal = true
+    regionAdd () {
+      this.regionModal = true
       this.modalType = 1
       // 取消所有的选中效果
       this.handleSelectAll(false)
-      this.categoryTitle = '新增标准'
-      this.$refs['categoryModelAdd'].resetFields()
+      this.regionTitle = '新增标准'
+      this.$refs['regionModelAdd'].resetFields()
     },
     // 编辑
-    categoryEdit (row) {
-      this.categoryModal = true
+    regionEdit (item) {
+      this.regionModal = true
       this.modalType = 2
-      this.categoryTitle = '编辑标准'
-      this.categoryModelAdd = JSON.parse(JSON.stringify(row))
+      this.regionTitle = '编辑标准'
+      this.regionModelAdd = JSON.parse(JSON.stringify(item))
     },
     // 查看
     viewData (row) {
-      this.categoryModal = true
+      this.regionModal = true
       this.modalType = 3
-      this.categoryTitle = '查看标准'
-      this.categoryModelAdd = JSON.parse(JSON.stringify(row))
+      this.regionTitle = '查看标准'
+      this.regionModelAdd = JSON.parse(JSON.stringify(row))
     },
     // 删除
-    categoryDel (id) {
+    regionDel (id) {
       this.handleSelectAll(false)
       let url = 'sys/dictype/delete'
       let type = 1
       this.confirm('确定删除这一条数据', id, url, type)
     },
     // 批量删除
-    categoryBatchDel () {
+    regionBatchDel () {
       if (this.selectNum === '' || this.selectNum.length === 0) {
         this.instance('warning', '请选择一条数据进行删除')
       } else {
@@ -240,57 +231,52 @@ export default {
     },
     pageChange (page) {
       this.page = page
-      this.selectCategory()
+      this.selectRegion()
     },
     pageSizeChange (pageSize) {
       this.rows = pageSize
-      this.selectCategory()
+      this.selectRegion()
     },
     // 加载表格
-    selectCategory () {
-      // let DicTypeEOPage = this.categoryModelAdd
-      // DicTypeEOPage.page = this.page
-      // DicTypeEOPage.pageSize = this.rows
-      // DicTypeEOPage.dicTypeName = this.standardForm.standName
-      // DicTypeEOPage.dicTypeCode = this.standardForm.standCode
+    selectRegion () {
       let DicTypeEOPage = {
         page: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
         dicTypeCode: this.standardForm.standCode,
-        dicId: 'JKSADFH564S'
+        dicId: 'RFRFRFSCXVB'
       }
       this.$http.get('sys/dictype/page', DicTypeEOPage, {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.categoryData = res.data.list
+        this.regionData = res.data.list
         this.total = res.data.count
         this.page = 1
       }, e => {})
     },
     // 提交新增/修改
-    saveCategory () {
+    saveRegion () {
       if (this.modalType === 1) {
-        this.$http.postData('sys/dictype/create', this.categoryModelAdd, {
+        this.$http.postData('sys/dictype/create', this.regionModelAdd, {
           _this: this
         }, res => {
-          this.selectCategory()
-          this.categoryModal = false
+          this.selectRegion()
+          this.regionModal = false
         }, e => {
         })
       } else if (this.modalType === 2) {
-        this.$http.putData('sys/dictype', this.categoryModelAdd, {
+        this.$http.putData('sys/dictype', this.regionModelAdd, {
           _this: this
         }, res => {
-          this.selectCategory()
-          this.categoryModal = false
+          this.selectRegion()
+          this.regionModal = false
         }, e => {
         })
       }
     }
   },
   mounted () {
-    this.selectCategory()
+    this.selectRegion()
   }
 }

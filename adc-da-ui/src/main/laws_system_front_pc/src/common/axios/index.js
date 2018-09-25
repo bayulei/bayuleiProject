@@ -157,11 +157,8 @@ module.exports = {
         }
       } else {
         // 返回data数组
-        if (res.data.data.length > 0) {
-          thenFun.call(this, res.data)
-        }
+        thenFun.call(this, res.data)
       }
-      thenFun.call(this, res.data)
     }).catch(err => {
       if (_this && loading) {
         _this[loading] = false
@@ -258,6 +255,40 @@ module.exports = {
     axios.delete('/api/' + url, {
       params: param
     }).then(res => {
+      if (_this && loading) { _this[loading] = false }
+      if (res.data.ok !== undefined) {
+        let type = res.data.ok ? 'success' : 'warning'
+        if (_this) { _this.$Message[type](res.data.message) }
+        if (res.data.ok) {
+          thenFun.call(this, res.data)
+        }
+      }
+    }).catch(err => {
+      if (_this && loading) {
+        _this[loading] = false
+        _this.$Notice.error({
+          title: '错误',
+          desc: '网络连接错误'
+        })
+      }
+      exeFun.call(this, err)
+    })
+  },
+  /**
+   * @description: 自定义请求类型
+   * @params: type为请求类型
+   * @author: chenxiaoxi
+   * @date: 2018-09-25 14:51:19
+   */
+  ajax (type, url, param, config, thenFun, exeFun) {
+    // 参数包含this
+    let _this = config._this || false
+    // 参数包含loading
+    let loading = config.loading || false
+    if (_this) {
+      _this[loading] = true
+    }
+    axios[type]('/api/' + url, param).then(res => {
       if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'

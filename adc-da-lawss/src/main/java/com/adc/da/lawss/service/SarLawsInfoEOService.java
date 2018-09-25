@@ -378,4 +378,15 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
         return map;
     }
 
+    /**
+     * @Author yangxuenan
+     * @Description 通过id查询详细信息
+     * Date 2018/9/21 16:43
+     * @Param [id]
+     * @return com.adc.da.lawss.entity.SarLawsInfoEO
+     **/
+    public SarLawsInfoEO selectInfoById(String id){
+        return dao.selectInfoById(id);
+    }
+
 }

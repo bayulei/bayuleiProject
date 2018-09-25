@@ -1,33 +1,40 @@
 export default {
-  name: 'standard-category',
+  name: 'file-state',
   data () {
     return {
       modalType: '',
-      categoryTitle: '', // 模态框标题
+      fileTitle: '', // 模态框标题
       selectNum: '', // 接收选中行数据
-      deleteType: '',
       standardForm: {
         standName: '', // 选项
         standCode: '', // 数据编码
         id: '' // 数据id
       },
-      total: 0,
-      page: 1,
-      rows: 10,
-      loading: false,
       styles: {
         height: 'calc(100% - 55px)',
         overflow: 'auto',
         paddingBottom: '53px',
         position: 'static'
       },
-      categoryModelAdd: {
+      total: 0,
+      page: 1,
+      rows: 10,
+      loading: false,
+      fileRules: {
+        dicTypeName: [
+          {required: true, message: '选项不能为空', trigger: 'blur'}
+        ],
+        dicTypeCode: [
+          {required: true, message: '数据编码不能为空', trigger: 'blur'}
+        ]
+      },
+      fileModelAdd: {
         // 模态框标准
         dicTypeName: '',
         // 数据编码
         dicTypeCode: '',
         // 唯一辨识
-        dicId: 'JKSADFH564S',
+        dicId: 'ERDFGHGGJJ',
         // 数据id
         id: '',
         // 创建日期
@@ -35,9 +42,9 @@ export default {
         // 创建人
         founder: ''
       },
-      categoryModal: false, // 模态框是否打开
+      fileModal: false, // 模态框是否打开
       // 表格表头
-      categoryTable: [
+      fileTable: [
         {
           type: 'selection',
           width: 60,
@@ -80,7 +87,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.categoryEdit(params.row)
+                    this.fileEdit(params.row)
                   }
                 }
               }, '编辑'),
@@ -108,7 +115,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.categoryDel(params.row.id)
+                    this.fileDel(params.row.id)
                   }
                 }
               }, '删除')
@@ -117,15 +124,7 @@ export default {
         }
       ],
       // 表格内容
-      categoryData: [],
-      categoryRules: {
-        dicTypeName: [
-          { required: true, message: '选项不能为空', trigger: 'blur' }
-        ],
-        dicTypeCode: [
-          { required: true, message: '数据编码不能为空', trigger: 'blur' }
-        ]
-      }
+      fileData: []
     }
   },
   methods: {
@@ -182,7 +181,7 @@ export default {
           this.$http.delete(url, type === 1 ? paramId : paramIds, {
             _this: this
           }, res => {
-            this.selectCategory()
+            this.selectFile()
             this.page = 1
           }, e => {
           })
@@ -192,40 +191,40 @@ export default {
       })
     },
     closeModal () {
-      this.classModal = false
+      this.fileModal = false
     },
     // 新增
-    categoryAdd () {
-      this.categoryModal = true
+    fileAdd () {
+      this.fileModal = true
       this.modalType = 1
       // 取消所有的选中效果
       this.handleSelectAll(false)
-      this.categoryTitle = '新增标准'
-      this.$refs['categoryModelAdd'].resetFields()
+      this.fileTitle = '新增标准'
+      this.$refs['fileModelAdd'].resetFields()
     },
     // 编辑
-    categoryEdit (row) {
-      this.categoryModal = true
+    fileEdit (item) {
+      this.fileModal = true
       this.modalType = 2
-      this.categoryTitle = '编辑标准'
-      this.categoryModelAdd = JSON.parse(JSON.stringify(row))
+      this.fileTitle = '编辑标准'
+      this.fileModelAdd = JSON.parse(JSON.stringify(item))
     },
     // 查看
     viewData (row) {
-      this.categoryModal = true
+      this.fileModal = true
       this.modalType = 3
-      this.categoryTitle = '查看标准'
-      this.categoryModelAdd = JSON.parse(JSON.stringify(row))
+      this.fileTitle = '查看标准'
+      this.fileModelAdd = JSON.parse(JSON.stringify(row))
     },
     // 删除
-    categoryDel (id) {
+    fileDel (id) {
       this.handleSelectAll(false)
       let url = 'sys/dictype/delete'
       let type = 1
       this.confirm('确定删除这一条数据', id, url, type)
     },
     // 批量删除
-    categoryBatchDel () {
+    fileBatchDel () {
       if (this.selectNum === '' || this.selectNum.length === 0) {
         this.instance('warning', '请选择一条数据进行删除')
       } else {
@@ -240,57 +239,53 @@ export default {
     },
     pageChange (page) {
       this.page = page
-      this.selectCategory()
+      this.selectFile()
     },
     pageSizeChange (pageSize) {
       this.rows = pageSize
-      this.selectCategory()
+      this.selectFile()
     },
     // 加载表格
-    selectCategory () {
-      // let DicTypeEOPage = this.categoryModelAdd
-      // DicTypeEOPage.page = this.page
-      // DicTypeEOPage.pageSize = this.rows
-      // DicTypeEOPage.dicTypeName = this.standardForm.standName
-      // DicTypeEOPage.dicTypeCode = this.standardForm.standCode
+    selectFile () {
       let DicTypeEOPage = {
         page: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
         dicTypeCode: this.standardForm.standCode,
-        dicId: 'JKSADFH564S'
+        dicId: 'ERDFGHGGJJ'
       }
       this.$http.get('sys/dictype/page', DicTypeEOPage, {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.categoryData = res.data.list
+        this.fileData = res.data.list
         this.total = res.data.count
         this.page = 1
-      }, e => {})
+      }, e => {
+      })
     },
     // 提交新增/修改
-    saveCategory () {
+    saveFile () {
       if (this.modalType === 1) {
-        this.$http.postData('sys/dictype/create', this.categoryModelAdd, {
+        this.$http.postData('sys/dictype/create', this.fileModelAdd, {
           _this: this
         }, res => {
-          this.selectCategory()
-          this.categoryModal = false
+          this.selectFile()
+          this.fileModal = false
         }, e => {
         })
       } else if (this.modalType === 2) {
-        this.$http.putData('sys/dictype', this.categoryModelAdd, {
+        this.$http.putData('sys/dictype', this.fileModelAdd, {
           _this: this
         }, res => {
-          this.selectCategory()
-          this.categoryModal = false
+          this.selectFile()
+          this.fileModal = false
         }, e => {
         })
       }
     }
   },
   mounted () {
-    this.selectCategory()
+    this.selectFile()
   }
 }

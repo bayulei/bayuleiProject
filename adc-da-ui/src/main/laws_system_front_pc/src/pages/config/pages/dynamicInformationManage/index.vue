@@ -22,7 +22,6 @@
       <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
   </div>
 </template>
-
 <script>
 export default {
   name: 'dynamic-information-manage',
@@ -41,6 +40,15 @@ export default {
           label: '资料中心',
           value: 'RESOURCE'
         }]
+      },
+      // 查看对话框标题
+      dynamicTitle: '查看信息',
+      dynamicModal: false,
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
       },
       loading: false,
       // 总数
@@ -161,7 +169,7 @@ export default {
           msgType: this.search.msgType,
           msgTitle: this.search.msgTitle
         },
-        {_this: this, loading: this.loading},
+        {_this: this, loading: 'loading'},
         res => {
           console.log(res)
           if (res.ok) {

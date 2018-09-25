@@ -293,25 +293,34 @@ export default {
           { required: true, type: 'array', message: '适用车型不能为空', trigger: 'change' }
         ],
         standNumber: [
-          { required: true, message: '标准编号不能为空', trigger: 'change' }
+          { required: true, validator: this.verify.validateStandardNum, trigger: 'blur' }
         ],
         standYear: [
-          { required: true, message: '标准年份不能为空', trigger: 'blur' }
+          { required: true, message: '标准年份不能为空', trigger: 'blur' },
+          { type: 'string', max: 100, message: '标准年份不能超过100个字符', trigger: 'blur' }
         ],
         standName: [
-          { required: true, message: '标准名称不能为空', trigger: 'blur' }
+          { required: true, message: '标准名称不能为空', trigger: 'blur' },
+          { type: 'string', max: 500, message: '标准名称不能超过500个字符', trigger: 'blur' }
         ],
         standEnName: [
+          { type: 'string', max: 500, message: '标准英文名称不能超过500个字符', trigger: 'blur' }
         ],
         standState: [
-          { required: true, message: '标准状态不能为空', trigger: 'blur' }
+          { required: true, message: '标准状态不能为空', trigger: 'change' }
         ],
         standNature: [
           { required: true, message: '标准性质不能为空', trigger: 'change' }
         ],
-        replaceStandNum: [],
-        replacedStandNum: [],
-        interStandNum: [],
+        replaceStandNum: [
+          { validator: this.verify.validateStandardNum, trigger: 'blur' }
+        ],
+        replacedStandNum: [
+          { validator: this.verify.validateStandardNum, trigger: 'blur' }
+        ],
+        interStandNum: [
+          { type: 'string', max: 100, message: '1-100个字符', trigger: 'blur' }
+        ],
         adoptExtent: [],
         emergyKind: [
           { required: true, type: 'array', message: '能源种类不能为空', trigger: 'change' }],
@@ -325,8 +334,12 @@ export default {
         newcarPutTime: [],
         productPutTime: [],
         newproductPutTime: [],
-        draftingUnit: [],
-        draftUser: [],
+        draftingUnit: [
+          { type: 'string', max: 1000, message: '1-1000个字符', trigger: 'blur' }
+        ],
+        draftUser: [
+          { type: 'string', max: 1000, message: '1-1000个字符', trigger: 'blur' }
+        ],
         standFileList: [
           { required: true, type: 'array', message: '文件不能为空', trigger: 'change' }
         ],
@@ -336,16 +349,24 @@ export default {
         sentScreenFile: [],
         approvalFile: [],
         relevanceFile: [],
-        tags: [],
-        synopsis: [],
-        responsibleUnit: [],
-        category: [],
-        remark: []
+        tags: [
+          { type: 'string', max: 100, message: '1-100个字符', trigger: 'blur' }
+        ],
+        synopsis: [
+          { type: 'string', max: 500, message: '1-500个字符', trigger: 'blur' }
+        ],
+        responsibleUnit: [
+          { type: 'string', max: 100, message: '1-100个字符', trigger: 'blur' }
+        ],
+        category: [
+        ],
+        remark: [
+          { type: 'string', max: 5000, message: '1-5000个字符', trigger: 'blur' }
+        ]
       }, // 标准添加过程中表单验证
       sarStandardItemRules: {
         itemsNum: [
-          { required: true, message: '条目号不能为空', trigger: 'blur' },
-          { type: 'string', max: 100, message: '1到100个任意字母、数字、汉字、小数点的组合', trigger: 'blur' }
+          { required: true, validator: this.verify.validateStandardItem, trigger: 'blur' }
         ],
         itemsName: [
           { type: 'string', max: 500, message: '条目名称不能超过500个字符', trigger: 'blur' }
@@ -355,7 +376,7 @@ export default {
           { type: 'string', max: 500, message: '涉及零部件不能超过500个字符', trigger: 'blur' }
         ],
         tackTime: [
-          { required: true, message: '标准年份不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '标准年份不能为空', trigger: 'change' }
         ],
         applyArctic: [
           { required: true, type: 'array', message: '能源种类不能为空', trigger: 'change' }],
@@ -726,11 +747,13 @@ export default {
       }
     },
     // 导入标准文件格式错误执行
+    // 导入标准文件格式错误执行
     handleFormatError (file) {
-      this.$Notice.warning({
-        title: 'The file format is incorrect',
-        desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
-      })
+      this.$Message.error('文件' + file.name + '格式不正确，请上传PDF、doc、docx文件')
+    },
+    // 导入文件大小超出范围
+    handleSizeError (file) {
+      this.$Message.error('文件' + file.name + '大小不超过200M')
     },
     // 导入标准数据成功后执行
     importFileSuccess (response, file) {
@@ -868,26 +891,33 @@ export default {
     },
     // 标准条目新增
     saveOrUpdateStandItem () {
-      this.standItemEO.tackTime = this.$dateFormat(this.standItemEO.tackTime, 'yyyy-MM-dd')
-      // 新增
-      if (this.itemAddOrUPdateFlag === 1) {
-        this.standItemEO.standId = this.standItemSearch.standId
-        this.$http.post('lawss/sarStandItems/addSarStandItemsList', this.standItemEO, {
-          _this: this
-        }, res => {
-          this.selectSarStandItems(this.standItemSearch.standId)
-        }, e => {
-        })
-      } else {
-        // 修改
-        this.$http.post('lawss/sarStandItems/updateStandItem', this.standItemEO, {
-          _this: this
-        }, res => {
-          this.selectSarStandItems(this.standItemSearch.standId)
-        }, e => {
-        })
-      }
-      this.modalItemaddShowflag = false
+      this.$refs['sarStandardsItemForm'].validate((valid) => {
+        if (valid) {
+          this.standItemEO.tackTime = this.$dateFormat(this.standItemEO.tackTime, 'yyyy-MM-dd')
+          // 新增
+          if (this.itemAddOrUPdateFlag === 1) {
+            this.standItemEO.standId = this.standItemSearch.standId
+            this.$http.post('lawss/sarStandItems/addSarStandItemsList', this.standItemEO, {
+              _this: this
+            }, res => {
+              this.selectSarStandItems(this.standItemSearch.standId)
+            }, e => {
+            })
+          } else {
+            // 修改
+            this.$http.post('lawss/sarStandItems/updateStandItem', this.standItemEO, {
+              _this: this
+            }, res => {
+              this.selectSarStandItems(this.standItemSearch.standId)
+            }, e => {
+            })
+          }
+          this.modalItemaddShowflag = false
+        } else {
+          this.$Message.error('请检查表单是否填写正确!')
+        }
+      })
+      alert(2)
     },
     // 标准条目删除
     deleteStandItem () {
