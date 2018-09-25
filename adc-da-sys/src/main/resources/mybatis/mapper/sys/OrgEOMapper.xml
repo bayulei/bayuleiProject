@@ -9,7 +9,7 @@
         <result column="org_desc" property="orgDesc"/>
         <result column="org_code" property="orgCode"/>
         <result column="org_type" property="orgType"/>
-        <result column="parent_id" property="parentId"/>
+        <result column="parent_id" property="pId"/>
         <result column="parent_ids" property="parentIds"/>
         <result column="is_show" property="isShow"/>
         <result column="remarks" property="remarks"/>
@@ -49,8 +49,8 @@
             <if test="orgType != null">
                 and org_type ${orgTypeOperator} #{orgType}
             </if>
-            <if test="parentId != null">
-                and parent_id ${parentIdOperator} #{parentId}
+            <if test="pId != null">
+                and parent_id ${parentIdOperator} #{pId}
             </if>
             <if test="parentIds != null">
                 and parent_ids ${parentIdsOperator} #{parentIds}
@@ -74,7 +74,7 @@
 			<if test="orgDesc != null" >org_desc,</if>
 			<if test="orgCode != null" >org_code,</if>
 			<if test="orgType != null" >org_type,</if>
-			<if test="parentId != null" >parent_id,</if>
+			<if test="pId != null" >parent_id,</if>
 			<if test="parentIds != null" >parent_ids,</if>
 			<if test="isShow != null" >is_show,</if>
 			<if test="remarks != null" >remarks,</if>
@@ -89,7 +89,7 @@
 			<if test="orgDesc != null" >#{orgDesc},</if>
 			<if test="orgCode != null" >#{orgCode},</if>
 			<if test="orgType != null" >#{orgType},</if>
-			<if test="parentId != null" >#{parentId},</if>
+			<if test="pId != null" >#{pId},</if>
 			<if test="parentIds != null" >#{parentIds},</if>
 			<if test="isShow != null" >#{isShow},</if>
 			<if test="remarks != null" >#{remarks},</if>
@@ -115,8 +115,8 @@
             <if test="orgName != null">
                 org_name = #{orgName},
             </if>
-            <if test="parentId != null">
-                parent_id = #{parentId},
+            <if test="pId != null">
+                parent_id = #{pId},
             </if>
             <if test="parentIds != null">
                 parent_ids = #{parentIds},
@@ -162,8 +162,8 @@
 		<if test="orgName != null">
 	    	AND org_name = #{orgName}
 		</if>
-		<if test="parentId != null">
-		    AND parent_id = #{parentId}
+		<if test="pId != null">
+		    AND parent_id = #{pId}
 		</if>
 			and valid_flag = 0
 	</select>
@@ -172,7 +172,43 @@
 		select
 		<include refid="Base_Column_List" />
 		from TS_ORG WHERE
-		parent_id = #{parentId} AND valid_flag = 0
+		parent_id = #{pId} AND valid_flag = 0
+	</select>
+
+	<!--liwenxuan：判断组织机构名不重复-->
+	<select id="getOrgEOByorgNameAndPidAndId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from TS_ORG
+		WHERE 1=1
+		<if test="orgName != null">
+			AND org_name = #{orgName}
+		</if>
+		<if test="pId != null">
+			AND parent_id = #{pId}
+		</if>
+		<if test="id != null">
+			AND id != #{id}
+		</if>
+		and valid_flag = 0
+	</select>
+
+	<!--liwenxuan：判断组织机构简称不重复-->
+	<select id="getOrgEOByShotNameAndPidAndId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from TS_ORG
+		WHERE 1=1
+		<if test="shotName != null">
+			AND shot_name = #{shotName}
+		</if>
+		<if test="pId != null">
+			AND parent_id = #{pId}
+		</if>
+		<if test="id != null">
+			AND id != #{id}
+		</if>
+		and valid_flag = 0
 	</select>
 
 
@@ -251,6 +287,7 @@
 	<delete id="deleteUserOrgByOrgId" parameterType="java.lang.String">
 		DELETE FROM TS_USER_ORG WHERE ORG_ID = #{id}
 	</delete>
+
 
 
 

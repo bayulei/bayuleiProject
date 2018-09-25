@@ -100,4 +100,9 @@ public interface UserEODao extends BaseDao<UserEO> {
 	public int updatePasswordByPrimaryKey(UserEO userEO);
 
 	public List<UserEO> queryOrgByAccount(String account);
+
+//liwenxuan:查找未分配组织结构的用户的行数
+	public int findBySetOrgCount(BasePage basePage);
+//liwenxuan：查询未分配组织机构人员信息
+	public List<UserEO> findBySetOrg(BasePage basePage);
 }

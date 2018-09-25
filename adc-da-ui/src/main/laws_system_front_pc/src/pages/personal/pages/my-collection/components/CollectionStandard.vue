@@ -30,7 +30,7 @@
          <div slot="content">
            <Form ref="formDynamic" :model="formDynamic" :label-width="200">
              <FormItem>
-               <Button type="dashed" class="btn" @click="handleAdd" icon="md-add">添加笔记</Button>
+               <Button type="dashed" class="btn" @click="handleAdd(num)" icon="md-add">添加笔记</Button>
              </FormItem>
              <FormItem
                v-for="(num, index) in formDynamic.items"
@@ -39,9 +39,9 @@
                :prop="'items.' + index + '.value'">
                <Row>
                  <Col span="12">
-                   <span>{{formDynamic.items[index].value}}</span>
+                   <span>{{num.value}}</span>
                  </Col>
-                 <Col span="6" offset="1">
+                 <Col span="6" offset="1" align="right">
                    <Button type="info" size="small" @click="handleRender(num)">书写笔记</Button>
                    <Button type="info"  size="small" @click="handleSubmit('formDynamic')">保存笔记</Button>
                    <Button type="info"  size="small" @click="handleReset('formDynamic')" >删除笔记</Button>
@@ -133,7 +133,8 @@ export default {
     handleReset (name) {
       alert('已取消')
     },
-    handleAdd () {
+    handleAdd (num) {
+      console.log(num)
       this.index++
       this.formDynamic.items.push({
         value: '',

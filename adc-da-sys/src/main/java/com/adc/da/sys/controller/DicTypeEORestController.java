@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.validation.constraints.NotNull;
 
 import com.adc.da.sys.util.UUIDUtils;
+import com.adc.da.util.constant.DeleteFlagEnum;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -68,10 +69,10 @@ public class DicTypeEORestController extends BaseController<DicTypeEO> {
         } else if (dicTypeEOS != null && !dicTypeEOS.isEmpty()) {
             return Result.error("字典类型名称存在");
         }
-
+//前台需要返回message和true，底层封装的返回方法只有这个返回值能用（返回的对象t:1前台不需要）
         Integer dicTypeEO = dicTypeEOService.saveDictype(beanMapper.map(dicTypeVO, DicTypeEO.class));
         if(dicTypeEO>0){
-          return   Result.success("true","新增成功");
+          return   Result.success("","新增成功",1);
         }
 
         return Result.error("新增失败");
@@ -89,6 +90,8 @@ public class DicTypeEORestController extends BaseController<DicTypeEO> {
     @GetMapping("/page")
 //	@RequiresPermissions("sys:dicType:page")
     public ResponseMessage<PageInfo<DicTypeEO>> pageListByDicId(DicTypeEOPage page) throws Exception {
+        page.setPager(new Pager());
+        page.setValidFlag(DeleteFlagEnum.NORMAL.getValue()+"");
         List<DicTypeEO> rows = dicTypeEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
@@ -127,7 +130,7 @@ public class DicTypeEORestController extends BaseController<DicTypeEO> {
         if(i==0){
             return Result.error("修改失败");
         }
-        return Result.success("true", "修改成功");
+        return Result.success("true", "修改成功",1);
     }
 
     /**

@@ -21,16 +21,16 @@
     </div>
     <div>
       <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-      <Drawer :title="userTitle" v-model="showUserModal" @on-close="closeDrawer" width="720" :mask-closable="false" >
+      <Drawer :title="userTitle" v-model="showUserModal"  width="720"  :styles="styles">
         <div>
           <Form ref="userVO" :model="userVO" :rules="userVOFormRules" label-position="right" class="label-input-form">
             <input v-model="userVO.usid" v-show="false">
             <Row>
-              <Col span="8">
+              <Col span="12">
                 <Row>
                   <Col>
                     <FormItem label="用户名称" prop="uname" class="laws-info-item">
-                      <Input  v-model="userVO.uname" />
+                      <Input  v-model="userVO.uname"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
@@ -40,53 +40,53 @@
                   </Col>
                   <Col>
                     <FormItem v-if="showPWD" label="用户密码" prop="password" class="laws-info-item">
-                      <Input type="password" v-model="userVO.password" />
+                      <Input type="password" v-model="userVO.password"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem v-if="showPWD" label="再次输入密码" prop="passwordCheck" class="laws-info-item">
-                      <Input type="password" v-model="userVO.passwordCheck" />
+                      <Input type="password" v-model="userVO.passwordCheck"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="用户类型" prop="userType" class="laws-info-item">
-                      <Select v-model="userVO.userType" style="width:200px">
+                      <Select v-model="userVO.userType" style="width:200px" :disabled="usersType">
                         <Option v-for="item in search.userTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                       </Select>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="用户角色" prop="roleId" class="laws-info-item">
-                      <Select v-model="userVO.roleId" style="width:200px">
+                      <Select v-model="userVO.roleId" style="width:200px" :disabled="usersType">
                         <Option v-for="item in search.roleOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                       </Select>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="手机号码" prop="mobilePhone" class="laws-info-item">
-                      <Input  v-model="userVO.mobilePhone" />
+                      <Input  v-model="userVO.mobilePhone"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="办公电话" prop="officePhone" class="laws-info-item">
-                      <Input  v-model="userVO.officePhone" />
+                      <Input  v-model="userVO.officePhone"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="用户邮箱" prop="email" class="laws-info-item">
-                      <Input  v-model="userVO.email" />
+                      <Input  v-model="userVO.email"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="用户状态" prop="disableFlag" class="laws-info-item">
-                      <Select v-model="userVO.disableFlag" style="width:200px">
+                      <Select v-model="userVO.disableFlag" style="width:200px" :disabled="usersType">
                         <Option v-for="item in search.disableFlagOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                       </Select>
                     </FormItem>
                   </Col>
                 </Row>
               </Col>
-              <Col span="8" >
+              <Col span="12" >
                 <!-- 此处获取组织机构架构图 -->
                 <FormItem label="组织机构" prop="orgId"  >
                   <ul id="orgTree" class="ztree" style="width: 200px;height: 500px;overflow: auto"></ul>
@@ -95,44 +95,49 @@
             </Row>
           </Form>
         </div>
-        <div id="roleFormButton" class="demo-drawer-footer">
+        <div id="roleFormButton" class="demo-drawer-footer" :class="{ 'disappear': usersType }">
           <Button type="primary" @click="saveUserInfo">提交</Button>
           <Button @click="closeDrawer">取消</Button>
         </div>
       </Drawer>
-      <Drawer :closable="false" width="640" :title="userTitle" v-model="userInfoModel" >
-        <div class="demo-drawer-profile">
-          <Row>
-            <Col span="12">
-              用户名称:{{userVO.uname}}
-            </Col>
-            <Col span="12" >账号:{{userVO.account}}</Col>
-          </Row>
-          <Row>
-            <Col span="12">
-              用户角色:{{userVO.roleName}}
-            </Col>
-            <Col span="12">
-              用户类型:{{userVO.userType ==='GQYJY' ? '广汽研究院':userVO.userType ==='GQJT'?'广汽集团':userVO.userType ==='OTHER'?'其他':''}};
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-              所属部门:{{userVO.orgName}}
-            </Col>
-            <Col span="12">手机号码:{{userVO.mobilePhone}}</Col>
-          </Row>
-          <Row>
-            <Col span="12">
-              办公电话:{{userVO.officePhone}}
-            </Col>
-            <Col span="12" >电子邮件:{{userVO.email}}</Col>
-          </Row>
-          <Row>
-            <Col span="12">用户状态:{{userVO.disableFlag==0? '启用':'禁用'}}</Col>
-          </Row>
-        </div>
-      </Drawer>
+      <!--<Drawer :closable="false" width="640" :title="userTitle" v-model="userInfoModel" >-->
+        <!--<div class="demo-drawer-profile">-->
+          <!--<Form label-position="right" class="label-input-form">-->
+          <!--<Row>-->
+            <!--<Col span="12">-->
+              <!--<FormItem label="用户名称" class="laws-info-item">-->
+                <!--<Input  v-model="userVO.uname" />-->
+              <!--</FormItem>-->
+              <!--用户名称:{{userVO.uname}}-->
+            <!--</Col>-->
+            <!--<Col span="12" >账号:{{userVO.account}}</Col>-->
+          <!--</Row>-->
+          <!--<Row>-->
+            <!--<Col span="12">-->
+              <!--用户角色:{{userVO.roleName}}-->
+            <!--</Col>-->
+            <!--<Col span="12">-->
+              <!--用户类型:{{userVO.userType ==='GQYJY' ? '广汽研究院':userVO.userType ==='GQJT'?'广汽集团':userVO.userType ==='OTHER'?'其他':''}};-->
+            <!--</Col>-->
+          <!--</Row>-->
+          <!--<Row>-->
+            <!--<Col span="12">-->
+              <!--所属部门:{{userVO.orgName}}-->
+            <!--</Col>-->
+            <!--<Col span="12">手机号码:{{userVO.mobilePhone}}</Col>-->
+          <!--</Row>-->
+          <!--<Row>-->
+            <!--<Col span="12">-->
+              <!--办公电话:{{userVO.officePhone}}-->
+            <!--</Col>-->
+            <!--<Col span="12" >电子邮件:{{userVO.email}}</Col>-->
+          <!--</Row>-->
+          <!--<Row>-->
+            <!--<Col span="12">用户状态:{{userVO.disableFlag==0? '启用':'禁用'}}</Col>-->
+          <!--</Row>-->
+          <!--</Form>-->
+        <!--</div>-->
+      <!--</Drawer>-->
     </div>
 
   </div>
@@ -170,6 +175,13 @@ export default {
         }],
         searching: false
       },
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
+      },
+      usersType: false,
       // 总数
       total: 0,
       // 当前页数
@@ -197,6 +209,7 @@ export default {
         },
         {
           title: '类型',
+          align: 'center',
           key: 'userType',
           render: (h, params) => {
             // let _this = this
@@ -219,26 +232,33 @@ export default {
         },
         {
           title: '用户名',
+          align: 'center',
           key: 'uname'
         },
         {
           title: '账号',
+          align: 'center',
           key: 'account'
         },
         {
           title: '工号',
+          align: 'center',
           key: 'workNum'
         },
         {
           title: '角色',
+          align: 'center',
           key: 'roleName'
         },
         {
           title: '所属部门',
+          align: 'center',
           key: 'orgName'
         },
         {
           title: '状态',
+          align: 'center',
+          width: 80,
           key: 'disableFlag',
           render: (h, params) => {
             // let _this = this
@@ -260,7 +280,22 @@ export default {
             return h('div', [
               h('Button', {
                 props: {
-                  type: 'primary'
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.userEdit(params.row)
+                  }
+                }
+              }, '编辑'),
+              h('Button', {
+                props: {
+                  type: 'warning',
+                  size: 'small'
                 },
                 style: {
                   marginRight: '5px'
@@ -273,20 +308,8 @@ export default {
               }, '查看'),
               h('Button', {
                 props: {
-                  type: 'primary'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.userEdit(params.index)
-                  }
-                }
-              }, '编辑'),
-              h('Button', {
-                props: {
-                  type: 'primary'
+                  type: 'error',
+                  size: 'small'
                 },
                 style: {
                   marginRight: '5px'
@@ -441,21 +464,21 @@ export default {
         })
     },
     // 用户编辑
-    userEdit (index) {
+    userEdit (row) {
       this.userTitle = '编辑用户'
       this.showPWD = false
       this.accountState = true
-      this.userVO = this.userList[index]
+      this.userVO = JSON.parse(JSON.stringify(row))
       this.getOrgTreeSource()
       this.showUserModal = true
     },
     // 用户删除
     userDel (index) {
       console.log(this.userList[index].usid)
-      this.$confirm({
-        title: '删除用户',
-        tips: '是否删除用户?',
-        confirm: () => {
+      this.$Modal.confirm({
+        title: '请选择',
+        content: '确定删除这些数据?',
+        onOk: () => {
           this.$http.delete('sys/user/' + this.userList[index].usid, {},
             { _this: this
             }, res => {
@@ -479,10 +502,10 @@ export default {
           userIds.push(userId)
         }
         let userIdsStr = userIds.join(',')
-        this.$confirm({
-          title: '删除用户',
-          tips: '是否删除用户?',
-          confirm: () => {
+        this.$Modal.confirm({
+          title: '请选择',
+          content: '确定删除这些数据?',
+          onOk: () => {
             this.$http.delete('sys/user/' + userIdsStr, {},
               { _this: this
               }, res => {
@@ -504,7 +527,9 @@ export default {
       this.userTitle = '查看用户信息'
       this.showPWD = false
       this.userVO = this.userList[index]
-      this.userInfoModel = true
+      // this.userInfoModel = true
+      this.showUserModal = true
+      this.usersType = true
     },
     /**
      * @description: 搜索框重置
@@ -566,6 +591,9 @@ export default {
   #user-manage{
     background: #FFF;
     padding: 0.2rem 0.3rem;
+  }
+  .disappear{
+    display: none;
   }
   .demo-drawer-footer{
     width: 100%;

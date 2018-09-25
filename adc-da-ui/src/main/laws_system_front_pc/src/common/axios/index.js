@@ -159,6 +159,7 @@ module.exports = {
         // 返回data数组
         thenFun.call(this, res.data)
       }
+      thenFun.call(this, res.data)
     }).catch(err => {
       if (_this && loading) {
         _this[loading] = false

@@ -14,9 +14,16 @@ public interface OrgEODao extends BaseDao<OrgEO>{
 
 	public List<OrgEO> listOrgEOByOrgName(@Param("orgName") String orgName);
 
-	public OrgEO getOrgEOByNameAndPid(@Param("orgName") String orgName,@Param("parentId")String parentId);
+	public OrgEO getOrgEOByNameAndPid(@Param("orgName") String orgName,@Param("pId")String pId);
+
+	//liwenxuan:判断组织机构名称不重复
+	public OrgEO getOrgEOByorgNameAndPidAndId(@Param("orgName") String orgName,@Param("pId")String pId,@Param("id")String id);
+
+//liwenxuan:判断组织机构简称不重复
+	public OrgEO getOrgEOByShotNameAndPidAndId(@Param("shotName") String shotName,@Param("pId")String pId,@Param("id")String id);
+
 	
-	public List<OrgEO> getOrgEOByPid(@Param("parentId") String parentId);
+	public List<OrgEO> getOrgEOByPid(@Param("pId") String pId);
 
 	public OrgEO getOrgEOById(String id);
 	

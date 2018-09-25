@@ -366,9 +366,10 @@ WHERE
         LEFT JOIN SAR_STAND_VAL ON SAR_STANDARDS_INFO.id = SAR_STAND_VAL.stand_id
         WHERE
         (
-        ( SAR_STAND_VAL.property_type = 'APPLY_ARCTIC'<if test="productTypeList!=null">AND
+        ( SAR_STAND_VAL.property_type = 'APPLY_ARCTIC'
+        <if test="productTypeList!=null">AND
         SAR_STAND_VAL.property_val IN
-        <foreach collection="productTypeList" index="index" item="item" open="(" separator="," close=")">
+           <foreach collection="productTypeList" index="index" item="item" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
