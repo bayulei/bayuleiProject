@@ -367,11 +367,11 @@ export default {
     },
     pageChange (page) {
       this.page = page
-      this.searchLawsInfo(this.saveSelectedNodes.id)
+      this.searchLawsInfo()
     },
     pageSizeChange (pageSize) {
       this.rows = pageSize
-      this.searchLawsInfo(this.saveSelectedNodes.id)
+      this.searchLawsInfo()
     },
     // 打开新增模态框
     openLawsModal () {
@@ -416,7 +416,7 @@ export default {
               _this: this
             }, res => {
               this.showLawsInfoModal = false
-              this.searchLawsInfo(this.saveSelectedNodes.id)
+              this.searchLawsInfo()
             }, e => {
 
             })
@@ -425,7 +425,7 @@ export default {
               _this: this
             }, res => {
               this.showLawsInfoModal = false
-              this.searchLawsInfo(this.saveSelectedNodes.id)
+              this.searchLawsInfo()
             }, e => {})
           }
         } else {
@@ -447,7 +447,7 @@ export default {
           }, {
             _this: this
           }, res => {
-            this.searchLawsInfo(this.saveSelectedNodes.id)
+            this.searchLawsInfo()
           }, e => {
           })
         },
@@ -465,7 +465,7 @@ export default {
       }, {
         _this: this
       }, res => {
-        this.searchLawsInfo(this.saveSelectedNodes.id)
+        this.searchLawsInfo()
       }, e => {
 
       })
@@ -573,7 +573,6 @@ export default {
         onCancel: () => {
         }
       })
-
     },
     // 导入条目
     importLawsItems () {
@@ -764,7 +763,7 @@ export default {
         selectedMulti: false
       }
     }
-    this.searchLawsInfo(this.saveSelectedNodes.id)
+    this.searchLawsInfo()
     this.loadInfoTree()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()
