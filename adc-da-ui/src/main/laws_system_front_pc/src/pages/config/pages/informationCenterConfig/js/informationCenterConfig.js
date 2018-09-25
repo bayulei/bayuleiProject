@@ -25,7 +25,7 @@ export default {
         id: ''
       },
       // 规范
-      informationRules: [],
+      informationRules: {},
       informationTable: [
         {
           type: 'selection',
