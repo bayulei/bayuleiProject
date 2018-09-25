@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -202,7 +203,7 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
      */
     @ApiOperation(value = "|SysCorpEO|导出excel")
     @GetMapping(value = "/exportStandardsInfoExcel")
-    public void exportStandardsInfoExcel(SarStandardsInfoEOPage page, HttpServletResponse response, HttpServletRequest request) {
+    public void exportStandardsInfoExcel(String idList, HttpServletResponse response, HttpServletRequest request) {
         OutputStream os = null;
         Workbook workbook = null;
         try {
@@ -211,7 +212,8 @@ public class SarStandardsInfoEOController extends BaseController<SarStandardsInf
             response.setContentType("application/force-download");
             ExportParams exportParams = new ExportParams();
             exportParams.setType(ExcelType.XSSF);
-
+            SarStandardsInfoEOPage page = new SarStandardsInfoEOPage();
+            page.setIdlist(idList.split(","));
             List<SarStandExcelDto> datas =  sarStandardsInfoEOService.getSarStandardsInfo(page);
            /* List<SarStandExcelDto> sarStandExcelVOList = new ArrayList<SarStandExcelDto>();
             if (datas != null && !datas.isEmpty()) {
