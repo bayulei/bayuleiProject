@@ -65,7 +65,7 @@
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="主要编织者" prop="compilersUser" class="laws-info-item">
+          <FormItem label="主要编制者" prop="compilersUser" class="laws-info-item">
             <Input v-model="submitStandPlan.compilersUser"></Input>
           </FormItem>
           </Col>

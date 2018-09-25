@@ -11,5 +11,13 @@ import com.adc.da.lawss.entity.SarLawsInfoEO;
  * @return
  **/
 public interface SarLawsInfoEODao extends BaseDao<SarLawsInfoEO> {
+    /**
+     * @Author yangxuenan
+     * @Description 通过id查询详细信息
+     * Date 2018/9/21 16:42
+     * @Param [id]
+     * @return com.adc.da.lawss.entity.SarLawsInfoEO
+     **/
+    SarLawsInfoEO selectInfoById(String id);
 
 }

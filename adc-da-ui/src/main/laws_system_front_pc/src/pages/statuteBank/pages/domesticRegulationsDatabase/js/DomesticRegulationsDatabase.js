@@ -12,6 +12,7 @@ export default {
       isAdvancedSearch: false, // 高级检索窗口是否打开
       checkAll: false, // 是否全选
       indeterminate: false, // 是否半选
+      selectedList: [],
       modal2: false,
       showMenuModal: false,
       deleteMenuModal: false,
@@ -27,7 +28,8 @@ export default {
       lawsInfo: {
         lawsNum: '',
         lawsName: '',
-        issueTime: ''
+        issueTime: '',
+        menuId: ''
       },
       styles: {
         height: 'calc(100% - 55px)',
@@ -217,9 +219,22 @@ export default {
         ]
       },
       addLawsItemsFormRules: {
-        // itemsNum: [
-        //  { required: true, message: '条目号不能为空', trigger: 'blur' }
-        // ]
+        itemsNum: [
+          { required: true, message: '条目号不能为空', trigger: 'blur' },
+          { type: 'string', max: 100, message: '条目号长度不能超过100个字符', trigger: 'blur' }
+        ],
+        itemsName: [
+          { type: 'string', max: 500, message: '条目名称长度不能超过500个字符', trigger: 'blur' }
+        ],
+        parts: [
+          { required: true, message: '涉及零部件不能为空', trigger: 'blur' }
+        ],
+        responsibleUnit: [
+          { required: true, message: '责任部门不能为空', trigger: 'blur' }
+        ],
+        remarks: [
+          { type: 'string', max: 5000, message: '备注长度不能超过5000个字符', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -292,15 +307,19 @@ export default {
       }
     },
     tipDeleteSarMenu (sarMenu) {
-      this.$http.get('lawss/sarMenu/judgequeryMenuByPid', sarMenu, {
-        _this: this
-      }, res => {
-        if (res.data === true) {
-          this.deleteMenuModal = true
-        } else {
-          this.sureDeleteSarMenu()
-        }
-      }, e => {})
+      if (sarMenu.pId == null || sarMenu.pId === '') {
+        this.$Message.error('不能删除根级节点')
+      } else {
+        this.$http.get('lawss/sarMenu/judgequeryMenuByPid', sarMenu, {
+          _this: this
+        }, res => {
+          if (res.data === true) {
+            this.deleteMenuModal = true
+          } else {
+            this.sureDeleteSarMenu()
+          }
+        }, e => {})
+      }
     },
     sureDeleteSarMenu () {
       this.$Modal.confirm({
@@ -324,7 +343,11 @@ export default {
       SarLawsInfoEOPage.page = this.page
       SarLawsInfoEOPage.pageSize = this.rows
       SarLawsInfoEOPage.lawsType = '1'
-      SarLawsInfoEOPage.menuId = menuId
+      if (this.saveSelectedNodes.pId == null || this.saveSelectedNodes.pId === '') {
+        SarLawsInfoEOPage.menuId = ''
+      } else {
+        SarLawsInfoEOPage.menuId = menuId
+      }
       if (SarLawsInfoEOPage.issueTime != null && SarLawsInfoEOPage.issueTime !== '') {
         SarLawsInfoEOPage.issueTime = this.$dateFormat(SarLawsInfoEOPage.issueTime, 'yyyy-MM-dd')
       }
@@ -332,6 +355,9 @@ export default {
         _this: this,
         loading: 'loading'
       }, res => {
+        for (let i = 0; i < res.data.list.length; i++) {
+          res.data.list[i].checked = false
+        }
         this.infoListData = res.data.list
         this.total = res.data.count
       }, e => {
@@ -340,11 +366,11 @@ export default {
     },
     pageChange (page) {
       this.page = page
-      this.searchLawsInfo()
+      this.searchLawsInfo(this.saveSelectedNodes.id)
     },
     pageSizeChange (pageSize) {
       this.rows = pageSize
-      this.searchLawsInfo()
+      this.searchLawsInfo(this.saveSelectedNodes.id)
     },
     // 打开新增模态框
     openLawsModal () {
@@ -382,11 +408,14 @@ export default {
           this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
           this.SarLawsInfoEO.lawsType = '1'
           if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
+            if (this.saveSelectedNodes.pId != null && this.saveSelectedNodes.pId !== '') {
+              this.SarLawsInfoEO.menuId = this.saveSelectedNodes.id
+            }
             this.$http.post('lawss/sarLawsInfo/createLawsInfo', this.SarLawsInfoEO, {
               _this: this
             }, res => {
               this.showLawsInfoModal = false
-              this.searchLawsInfo()
+              this.searchLawsInfo(this.saveSelectedNodes.id)
             }, e => {
 
             })
@@ -395,7 +424,7 @@ export default {
               _this: this
             }, res => {
               this.showLawsInfoModal = false
-              this.searchLawsInfo()
+              this.searchLawsInfo(this.saveSelectedNodes.id)
             }, e => {})
           }
         } else {
@@ -417,7 +446,7 @@ export default {
           }, {
             _this: this
           }, res => {
-            this.searchLawsInfo()
+            this.searchLawsInfo(this.saveSelectedNodes.id)
           }, e => {
           })
         },
@@ -435,14 +464,18 @@ export default {
       }, {
         _this: this
       }, res => {
-        this.searchLawsInfo()
+        this.searchLawsInfo(this.saveSelectedNodes.id)
       }, e => {
 
       })
     },
     // 导出法规信息
     exportLawsInfo () {
-      console.log(this.saveSelectedDatas)
+      if (this.selectedList.length === 0) {
+        this.$Message.error('请选择要导出的数据')
+      } else {
+        window.location.href = '/api/lawss/sarLawsInfo/exportLawsInfos?ids=' + this.selectedList.join(',')
+      }
     },
     // 法规条目相关方法
     // 分页查询条目
@@ -470,18 +503,16 @@ export default {
     },
     // 打开新增条目模态框
     openAddItemsModal () {
-      this.SarLawsItemsEO = ''
+      // this.SarLawsItemsEO = ''
       this.addLawsItemsModal = true
       this.addLawsItemsTitle = '新增法规条目'
       this.saveLawsItemsBtn = true
-      this.SarLawsItemsEO.lawsId = this.saveLawsId
     },
     // 打开编辑条目模态框
     editLawsItems (row) {
       this.addLawsItemsModal = true
       this.saveLawsItemsBtn = true
       this.SarLawsItemsEO = row
-      this.SarLawsItemsEO.lawsId = this.saveLawsId
       this.SarLawsItemsEO.applyArctic = this.combineToArray(this.SarLawsItemsEO.applyArctic)
       this.SarLawsItemsEO.energyKind = this.combineToArray(this.SarLawsItemsEO.energyKind)
     },
@@ -501,6 +532,7 @@ export default {
           if (this.SarLawsItemsEO.tackTime != null) {
             this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
           }
+          this.SarLawsItemsEO.lawsId = this.saveLawsId
           if (this.SarLawsItemsEO.id == null || this.SarLawsItemsEO.id === '') {
             this.$http.post('lawss/sarLawsItems/addLawsItems', this.SarLawsItemsEO, {
               _this: this
@@ -524,14 +556,23 @@ export default {
     },
     // 删除条目
     removeLawsItems (id) {
-      this.$http.put('lawss/sarLawsItems/deleteLawsItems', {
-        id: id
-      }, {
-        _this: this
-      }, res => {
-        this.searchLawsItems(this.saveLawsId)
-      }, e => {
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.put('lawss/sarLawsItems/deleteLawsItems', {
+            id: id
+          }, {
+            _this: this
+          }, res => {
+            this.searchLawsItems(this.saveLawsId)
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
       })
+
     },
     // 导入条目
     importLawsItems () {
@@ -722,7 +763,7 @@ export default {
         selectedMulti: false
       }
     }
-    this.searchLawsInfo()
+    this.searchLawsInfo(this.saveSelectedNodes.id)
     this.loadInfoTree()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()

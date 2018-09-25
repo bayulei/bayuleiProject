@@ -936,6 +936,7 @@ export default {
     },
     // 导出选中的标准  此处因为复选框没有设置好，所以先设置导出所有数据
     exportStandard () {
+      //window.location.href = '/api/lawss/sarStandardsInfo/exportStandardsInfoExcel?exportPlanDatas=' + jsonData
       this.$http.get('lawss/sarStandardsInfo/exportStandardsInfoExcel', this.sarStandardsSearch, {
         _this: this
       }, res => {

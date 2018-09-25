@@ -57,7 +57,7 @@
 <script src="./js/informationCenterConfig.js"></script>
 <style lang="less">
   .InformationCenterConfig{
-    display: flex;
+    /*display: flex;*/
     background: #FFF;
     .container{
       width: 100%;

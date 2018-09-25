@@ -1,35 +1,19 @@
 package com.adc.da.convert.MQService;
 
 import com.adc.da.convert.common.DocConverter;
-import com.adc.da.convert.controller.ConvertMqEOController;
-import com.adc.da.convert.entity.ConvertMqEO;
-import com.adc.da.convert.service.ConvertMqEOService;
+import com.adc.da.convert.entity.OtConvertMqEO;
+import com.adc.da.convert.service.OtConvertMqEOService;
 import com.adc.da.file.store.IFileStore;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
-import com.adc.da.util.utils.FileUtil;
-import com.adc.da.util.utils.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,7 +30,7 @@ public class SendMQService {
     private IFileStore iFileStore;
 
     @Autowired
-    private ConvertMqEOService convertMqEOService;
+    private OtConvertMqEOService convertMqEOService;
 
     /**
      * @Author yangxuenan
@@ -95,23 +79,23 @@ public class SendMQService {
                 //调用conver方法开始转换，先执行doc2pdf()将office文件转换为pdf;再执行pdf2swf()将pdf转换为swf;
                 d.conver(fileType);
                 //调用getswfPath()方法，打印转换后的swf文件路径
-                String dPath = d.getswfPath();
-                System.out.println("*****转换后的swf文件路径*******"+dPath);
+                swfpath = d.getswfPath();
+                System.out.println("*****转换后的swf文件路径*******"+swfpath);
                 //生成swf相对路径，以便传递给flexpaper播放器
-                int subIndex = dPath.indexOf("/upload");
-                swfpath = dPath.substring(subIndex,dPath.length());
-                System.out.println("*****转换后的文件相对路径*******"+swfpath);
+                //int subIndex = dPath.indexOf("/upload");
+                //swfpath = dPath.substring(subIndex,dPath.length());
+                //System.out.println("*****转换后的文件相对路径*******"+swfpath);
                 //转换成功后修改数据状态
-                ConvertMqEO convertMqEO = new ConvertMqEO();
+                OtConvertMqEO convertMqEO = new OtConvertMqEO();
                 if(!swfpath.isEmpty()){
                     convertMqEO.setId(convertId);
-                    convertMqEO.setUpdateTime(new Date());
+                    convertMqEO.setModifyTime(new Date());
                     convertMqEO.setFilePath(swfpath);
                     convertMqEO.setMqState(1);
                     convertMqEOService.updateByPrimaryKeySelective(convertMqEO);
                 } else {
                     convertMqEO.setId(convertId);
-                    convertMqEO.setUpdateTime(new Date());
+                    convertMqEO.setModifyTime(new Date());
                     convertMqEO.setMqState(2);
                     convertMqEOService.updateByPrimaryKeySelective(convertMqEO);
                 }
