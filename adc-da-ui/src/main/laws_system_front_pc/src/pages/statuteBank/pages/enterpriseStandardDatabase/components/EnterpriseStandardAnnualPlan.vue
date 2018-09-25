@@ -65,7 +65,7 @@
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="主要编织者" prop="compilersUser" class="laws-info-item">
+          <FormItem label="主要编制者" prop="compilersUser" class="laws-info-item">
             <Input v-model="submitStandPlan.compilersUser"></Input>
           </FormItem>
           </Col>
@@ -77,24 +77,29 @@
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="评审稿提交日期" v-if="reviewSubmitTime" prop="reviewSubmitTime" class="laws-info-item">
-            <DatePicker type="date" v-model="submitStandPlan.reviewSubmitTime" format="yyyy-MM-dd"></DatePicker>
+          <FormItem label="报批稿完成时间" prop="approvalDraftTime" class="laws-info-item">
+            <DatePicker type="date" v-model="submitStandPlan.approvalDraftTime" format="yyyy-MM-dd"></DatePicker>
           </FormItem>
           </Col>
         </Row>
         <Row>
+          <Col span="12">
+          <FormItem label="评审稿提交日期" v-if="reviewSubmitTime" prop="reviewSubmitTime" class="laws-info-item">
+            <DatePicker type="date" v-model="submitStandPlan.reviewSubmitTime" format="yyyy-MM-dd"></DatePicker>
+          </FormItem>
+          </Col>
           <Col span="12">
           <FormItem label="评审会日期" v-if="reviewMeetTime" prop="reviewMeetTime" class="laws-info-item">
             <DatePicker type="date" v-model="submitStandPlan.reviewMeetTime" format="yyyy-MM-dd"></DatePicker>
           </FormItem>
           </Col>
+        </Row>
+        <Row>
           <Col span="12">
           <FormItem label="评审后修改提交时间" v-if="reviewModifyTime" prop="reviewModifyTime" class="laws-info-item">
             <DatePicker type="date" v-model="submitStandPlan.reviewModifyTime" format="yyyy-MM-dd"></DatePicker>
           </FormItem>
           </Col>
-        </Row>
-        <Row>
           <Col span="12">
           <FormItem label="开始流程日期" v-if="startFlowTime" prop="startFlowTime" class="laws-info-item">
             <DatePicker type="date" v-model="submitStandPlan.startFlowTime" format="yyyy-MM-dd"></DatePicker>

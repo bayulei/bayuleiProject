@@ -60,7 +60,7 @@ public class BuyApprovalController {
             processInstanceId = buyApprovalService.startProcess(buyApprovalVO,userId,processDefinitionKey,processInstanceId);
             return Result.success(processInstanceId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("保存失败");
         }
     }
@@ -81,7 +81,7 @@ public class BuyApprovalController {
             buyApprovalService.completeApproval(processInstanceId,userId,comment);
             return Result.success(processInstanceId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("审批失败");
         }
     }
@@ -101,7 +101,7 @@ public class BuyApprovalController {
             buyApprovalService.completeApproval(processInstanceId,nowUserId,comment);
             return Result.success(processInstanceId);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("审批失败");
         }
     }

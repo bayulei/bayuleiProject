@@ -157,11 +157,8 @@ module.exports = {
         }
       } else {
         // 返回data数组
-        if (res.data.data.length > 0) {
-          thenFun.call(this, res.data)
-        }
+        thenFun.call(this, res.data)
       }
-      thenFun.call(this, res.data)
     }).catch(err => {
       if (_this && loading) {
         _this[loading] = false
