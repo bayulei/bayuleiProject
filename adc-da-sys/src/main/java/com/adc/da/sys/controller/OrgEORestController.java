@@ -67,7 +67,6 @@ public class OrgEORestController extends BaseController<OrgEO>{
 
 		return orgEOService.save(beanMapper.map(orgVO, OrgEO.class));
 
-
 	}
 
 
@@ -82,6 +81,7 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:org:update")
 	public ResponseMessage<OrgVO> update(@RequestBody OrgVO orgVO) throws Exception {
+
 		return orgEOService.updateById(beanMapper.map(orgVO, OrgEO.class));
 	}
 	/**

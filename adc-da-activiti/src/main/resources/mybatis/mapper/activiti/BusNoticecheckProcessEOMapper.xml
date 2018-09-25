@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.activiti.dao.BusNoticecheckProcessEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.activiti.entity.BusNoticecheckProcessEO" >
+    <id column="id" property="id" />
+    <result column="project" property="project" />
+    <result column="plan" property="plan" />
+    <result column="solution" property="solution" />
+    <result column="isqualified" property="isqualified" />
+    <result column="clausecontent" property="clausecontent" />
+    <result column="clausenum" property="clausenum" />
+    <result column="office" property="office" />
+    <result column="dept" property="dept" />
+    <result column="engineerid" property="engineerid" />
+    <result column="responsiblemanid" property="responsiblemanid" />
+    <result column="task_id" property="taskId" />
+    <result column="proc_inst_id" property="procInstId" />
+  </resultMap>
+
+  <!-- BUS_NOTICECHECK_PROCESS table all fields -->
+  <sql id="Base_Column_List" >
+     project, plan, solution, isqualified, clausecontent, clausenum, office, dept, engineerid, responsiblemanid, task_id, proc_inst_id, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="project != null" >
+        and project ${projectOperator} #{project}
+      </if>
+      <if test="plan != null" >
+        and plan ${planOperator} #{plan}
+      </if>
+      <if test="solution != null" >
+        and solution ${solutionOperator} #{solution}
+      </if>
+      <if test="isqualified != null" >
+        and isqualified ${isqualifiedOperator} #{isqualified}
+      </if>
+      <if test="clausecontent != null" >
+        and clausecontent ${clausecontentOperator} #{clausecontent}
+      </if>
+      <if test="clausenum != null" >
+        and clausenum ${clausenumOperator} #{clausenum}
+      </if>
+      <if test="office != null" >
+        and office ${officeOperator} #{office}
+      </if>
+      <if test="dept != null" >
+        and dept ${deptOperator} #{dept}
+      </if>
+      <if test="engineerid != null" >
+        and engineerid ${engineeridOperator} #{engineerid}
+      </if>
+      <if test="responsiblemanid != null" >
+        and responsiblemanid ${responsiblemanidOperator} #{responsiblemanid}
+      </if>
+      <if test="taskId != null" >
+        and task_id ${taskIdOperator} #{taskId}
+      </if>
+      <if test="procInstId != null" >
+        and proc_inst_id ${procInstIdOperator} #{procInstId}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.activiti.entity.BusNoticecheckProcessEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_BUS_NOTICECHECK_PROCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into BUS_NOTICECHECK_PROCESS(<include refid="Base_Column_List" />)
+    values (#{project, jdbcType=VARCHAR}, #{plan, jdbcType=VARCHAR}, #{solution, jdbcType=VARCHAR}, #{isqualified, jdbcType=INTEGER}, #{clausecontent, jdbcType=VARCHAR}, #{clausenum, jdbcType=VARCHAR}, #{office, jdbcType=VARCHAR}, #{dept, jdbcType=VARCHAR}, #{engineerid, jdbcType=VARCHAR}, #{responsiblemanid, jdbcType=VARCHAR}, #{taskId, jdbcType=VARCHAR}, #{procInstId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.activiti.entity.BusNoticecheckProcessEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_BUS_NOTICECHECK_PROCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into BUS_NOTICECHECK_PROCESS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="project != null" >project,</if>
+                <if test="plan != null" >plan,</if>
+                <if test="solution != null" >solution,</if>
+                <if test="isqualified != null" >isqualified,</if>
+                <if test="clausecontent != null" >clausecontent,</if>
+                <if test="clausenum != null" >clausenum,</if>
+                <if test="office != null" >office,</if>
+                <if test="dept != null" >dept,</if>
+                <if test="engineerid != null" >engineerid,</if>
+                <if test="responsiblemanid != null" >responsiblemanid,</if>
+                <if test="taskId != null" >task_id,</if>
+                <if test="procInstId != null" >proc_inst_id,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="project != null" >#{project, jdbcType=VARCHAR},</if>
+                <if test="plan != null" >#{plan, jdbcType=VARCHAR},</if>
+                <if test="solution != null" >#{solution, jdbcType=VARCHAR},</if>
+                <if test="isqualified != null" >#{isqualified, jdbcType=INTEGER},</if>
+                <if test="clausecontent != null" >#{clausecontent, jdbcType=VARCHAR},</if>
+                <if test="clausenum != null" >#{clausenum, jdbcType=VARCHAR},</if>
+                <if test="office != null" >#{office, jdbcType=VARCHAR},</if>
+                <if test="dept != null" >#{dept, jdbcType=VARCHAR},</if>
+                <if test="engineerid != null" >#{engineerid, jdbcType=VARCHAR},</if>
+                <if test="responsiblemanid != null" >#{responsiblemanid, jdbcType=VARCHAR},</if>
+                <if test="taskId != null" >#{taskId, jdbcType=VARCHAR},</if>
+                <if test="procInstId != null" >#{procInstId, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.activiti.entity.BusNoticecheckProcessEO" >
+    update BUS_NOTICECHECK_PROCESS
+       set  project = #{project},
+            plan = #{plan},
+            solution = #{solution},
+            isqualified = #{isqualified},
+            clausecontent = #{clausecontent},
+            clausenum = #{clausenum},
+            office = #{office},
+            dept = #{dept},
+            engineerid = #{engineerid},
+            responsiblemanid = #{responsiblemanid},
+            task_id = #{taskId},
+            proc_inst_id = #{procInstId}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.activiti.entity.BusNoticecheckProcessEO" >
+    update BUS_NOTICECHECK_PROCESS
+    <set >
+      <if test="project != null" >
+        project = #{project},
+      </if>
+      <if test="plan != null" >
+        plan = #{plan},
+      </if>
+      <if test="solution != null" >
+        solution = #{solution},
+      </if>
+      <if test="isqualified != null" >
+        isqualified = #{isqualified},
+      </if>
+      <if test="clausecontent != null" >
+        clausecontent = #{clausecontent},
+      </if>
+      <if test="clausenum != null" >
+        clausenum = #{clausenum},
+      </if>
+      <if test="office != null" >
+        office = #{office},
+      </if>
+      <if test="dept != null" >
+        dept = #{dept},
+      </if>
+      <if test="engineerid != null" >
+        engineerid = #{engineerid},
+      </if>
+      <if test="responsiblemanid != null" >
+        responsiblemanid = #{responsiblemanid},
+      </if>
+      <if test="taskId != null" >
+        task_id = #{taskId},
+      </if>
+      <if test="procInstId != null" >
+        proc_inst_id = #{procInstId},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 BUS_NOTICECHECK_PROCESS -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from BUS_NOTICECHECK_PROCESS
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BUS_NOTICECHECK_PROCESS
+     where id = #{value}
+
+  </delete>
+
+  <!-- BUS_NOTICECHECK_PROCESS 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from BUS_NOTICECHECK_PROCESS
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询BUS_NOTICECHECK_PROCESS列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from BUS_NOTICECHECK_PROCESS
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from BUS_NOTICECHECK_PROCESS
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

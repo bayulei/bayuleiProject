@@ -1,9 +1,6 @@
 <!-- 动态信息管理 -->
 <template>
   <div class="dynamic-information-manage">
-
-    <div class="container">
-      <div class="header">
         <table-tools-bar>
           <div slot="left">
             <label-select v-model="search.msgType" :options="search.msgTypeOptions" placeholder="按模块查找" label="消息模块"></label-select>
@@ -20,11 +17,9 @@
         <Button type="success" style="margin-left: 15px" @click="dynamicEdit">编辑</Button>
         <Button type="warning" style="margin-left: 15px">删除</Button>-->
         <!-- 显示模态框 -->
-      </div>
       <loading :loading="loading">数据获取中</loading>
       <Table border :columns="dynamicTable " :data="msgList" @on-selection-change="handleRowChange" ></Table>
       <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-    </div>
   </div>
 </template>
 
@@ -116,6 +111,20 @@ export default {
                 },
                 on: {
                   click: () => {
+                    this.editMsg(params.index)
+                  }
+                }
+              }, '编辑'),
+              h('Button', {
+                props: {
+                  type: 'warning',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
                     this.showMsgPage(params.index)
                   }
                 }
@@ -125,16 +134,8 @@ export default {
                   type: 'error',
                   size: 'small'
                 },
-                on: {
-                  click: () => {
-                    this.editMsg(params.index)
-                  }
-                }
-              }, '编辑'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
+                style: {
+                  marginRight: '5px'
                 },
                 on: {
                   click: () => {
@@ -183,10 +184,10 @@ export default {
         }
         let msgIdsStr = msgIds.join(',')
         console.log(msgIdsStr)
-        this.$confirm({
-          title: '删除动态',
-          tips: '是否删除动态?',
-          confirm: () => {
+        this.$Modal.confirm({
+          title: '请选择',
+          content: '确定删除这些数据?',
+          onOk: () => {
             this.$http.delete('lawss/msgDynamicInfo/' + msgIdsStr, {},
               { _this: this
               }, res => {
@@ -197,7 +198,6 @@ export default {
                   this.executeError('删除失败! 失败原因:' + res.message)
                 }
               })
-            this.$Modal.remove()
           }})
       } else {
         this.executeError('未选择动态，请选择')
@@ -210,15 +210,15 @@ export default {
     },
     // 编辑消息
     editMsg (index) {
-
+      this.$router.push('/dynamicInformationManage/dynamicInfomationPage/' + this.msgList[index].id)
     },
     // 删除消息
     delMsgInfo (index) {
       console.log(this.msgList[index].id)
-      this.$confirm({
-        title: '删除动态',
-        tips: '是否删除动态?',
-        confirm: () => {
+      this.$Modal.confirm({
+        title: '请选择',
+        content: '确定删除这些数据?',
+        onOk: () => {
           this.$http.delete('lawss/msgDynamicInfo/' + this.msgList[index].id, {},
             { _this: this
             }, res => {
@@ -264,8 +264,8 @@ export default {
 
 <style lang="less">
   .dynamic-information-manage{
-    display: flex;
     background: #FFF;
+    padding: 0.2rem 0.3rem;
     .container{
       width: 100%;
       margin: 1rem;

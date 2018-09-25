@@ -104,7 +104,7 @@ public class SarMenuEOService extends BaseService<SarMenuEO, String> {
     public boolean  judgequeryMenuByPid(SarMenuEO sarMenuEO) throws Exception {
         boolean result = false;   //true 表示有记录，false表示无记录
         //先判断目录下是否有子节点
-        List<SarMenuEO> list = dao.queryMenuByPid(sarMenuEO);
+        List<SarMenuEO> list = dao.queryByPidExcpetSelf(sarMenuEO);
         if(list.size()<=0){
             //再查节点下是否有标准，法规，企业标准记录
             switch (sarMenuEO.getSorDivide()){

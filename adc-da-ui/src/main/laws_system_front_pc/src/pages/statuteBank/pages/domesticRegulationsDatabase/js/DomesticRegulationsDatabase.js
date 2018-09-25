@@ -1,17 +1,27 @@
+import 'zTree/js/jquery.ztree.core.js'
+import 'zTree/js/jquery.ztree.excheck.js'
+import 'zTree/js/jquery.ztree.exedit.js'
 export default {
   name: 'DomesticRegulationsDatabase',
   data () {
     return {
+      setting: '',
+      MoveTest: '',
+      zNodes: [],
+      saveSelectedNodes: '',
       isAdvancedSearch: false, // 高级检索窗口是否打开
       checkAll: false, // 是否全选
       indeterminate: false, // 是否半选
       modal2: false,
+      showMenuModal: false,
+      deleteMenuModal: false,
       showLawsInfoModal: false,
       showLawsItemsModal: false,
       addLawsItemsModal: false,
       importItemsModal: false,
       showLawsInfoTitle: '',
       addLawsItemsTitle: '',
+      showMenuTitle: '',
       saveInfoBtn: true,
       saveLawsItemsBtn: true,
       lawsInfo: {
@@ -24,6 +34,11 @@ export default {
         overflow: 'auto',
         paddingBottom: '53px',
         position: 'static'
+      },
+      SarMenuEO: {
+        id: '',
+        menuName: '',
+        displaySeq: ''
       },
       SarLawsInfoEO: {
         editLawsId: '',
@@ -166,6 +181,7 @@ export default {
       applyArcticOptions: '',
       energyKindOptions: '',
       applyAuthOptions: '',
+      SarMenuEOFormRules: {},
       lawsInfoRules: {},
       lawsInfoFormRules: {
         country: [],
@@ -209,12 +225,106 @@ export default {
   },
   methods: {
     // 法规信息相关方法
+    // 加载树形结构
+    loadInfoTree () {
+      this.$http.get('lawss/sarMenu/selectmenu', {
+        sorDivide: 'INLAND_LAWS'
+      }, {
+        _this: this
+      }, res => {
+        let cur = res.data
+        let str = []
+        let option = {}
+        for (var i = 0; i < cur.length; i++) {
+          option = { id: cur[i].id,
+            pId: cur[i].parentId,
+            name: cur[i].menuName,
+            sorDivide: cur[i].sorDivide,
+            displaySeq: cur[i].displaySeq}
+          str.push(option)
+        }
+        this.zNodes = str
+        let treeObj = $.fn.zTree.init($('#lawsInfoTree'), this.setting, this.zNodes)
+        treeObj.expandAll(true)
+        // 获取节点
+        let nodes = treeObj.getNodes()
+        treeObj.selectNode(nodes[0], true)
+      }, e => {
+      })
+    },
+    // 点击节点
+    clickOneNode (event, treeId, treeNode) {
+      this.searchLawsInfo(treeNode.id)
+      this.saveSelectedNodes = treeNode
+      this.SarMenuEO.parentId = treeNode.id
+    },
+    clickDropMenu (name) {
+      if (name === 'addMenu') {
+        this.showMenuModal = true
+        this.showMenuTitle = '新增菜单'
+        this.SarMenuEO.sorDivide = 'INLAND_LAWS'
+      } else if (name === 'editMenu') {
+        this.showMenuModal = true
+        this.showMenuTitle = '修改菜单'
+        this.SarMenuEO = this.saveSelectedNodes
+        this.SarMenuEO.menuName = this.saveSelectedNodes.name
+      } else {
+        this.tipDeleteSarMenu(this.saveSelectedNodes)
+      }
+    },
+    cancelAddMenu () {
+      this.showMenuModal = false
+    },
+    saveMenu () {
+      if (this.SarMenuEO.id == null || this.SarMenuEO.id === '') {
+        this.$http.post('lawss/sarMenu/addSarMenu', this.SarMenuEO, {
+          _this: this
+        }, res => {
+          this.loadInfoTree()
+        }, e => {
+        })
+      } else {
+        this.$http.post('lawss/sarMenu/updateSarMenu', this.SarMenuEO, {
+          _this: this
+        }, res => {
+          this.loadInfoTree()
+        }, e => {})
+      }
+    },
+    tipDeleteSarMenu (sarMenu) {
+      this.$http.get('lawss/sarMenu/judgequeryMenuByPid', sarMenu, {
+        _this: this
+      }, res => {
+        if (res.data === true) {
+          this.deleteMenuModal = true
+        } else {
+          this.sureDeleteSarMenu()
+        }
+      }, e => {})
+    },
+    sureDeleteSarMenu () {
+      this.$Modal.confirm({
+        title: '确认删除',
+        content: '<p>确认删除该条数据？</p>',
+        onOk: () => {
+          this.$http.post('lawss/sarMenu/deleteMenuAndChildren', this.saveSelectedNodes, {
+            _this: this
+          }, res => {
+            this.loadInfoTree()
+          }, e => {
+          })
+        },
+        onCancel: () => {
+        }
+      })
+    },
     // 分页查询法规信息
-    searchLawsInfo () {
+    searchLawsInfo (menuId) {
       let SarLawsInfoEOPage = this.lawsInfo
       SarLawsInfoEOPage.page = this.page
       SarLawsInfoEOPage.pageSize = this.rows
       SarLawsInfoEOPage.lawsType = '1'
+      SarLawsInfoEOPage.menuId = menuId
       if (SarLawsInfoEOPage.issueTime != null && SarLawsInfoEOPage.issueTime !== '') {
         SarLawsInfoEOPage.issueTime = this.$dateFormat(SarLawsInfoEOPage.issueTime, 'yyyy-MM-dd')
       }
@@ -365,7 +475,6 @@ export default {
       this.addLawsItemsTitle = '新增法规条目'
       this.saveLawsItemsBtn = true
       this.SarLawsItemsEO.lawsId = this.saveLawsId
-      console.log(this.saveLawsId)
     },
     // 打开编辑条目模态框
     editLawsItems (row) {
@@ -381,31 +490,37 @@ export default {
     },
     // 保存条目数据
     saveLawsItems () {
-      if (this.SarLawsItemsEO.applyArctic != null && this.SarLawsItemsEO.applyArctic !== '' && this.SarLawsItemsEO.applyArctic !== undefined) {
-        this.SarLawsItemsEO.applyArctic = this.breakMultiSelect(this.SarLawsItemsEO.applyArctic)
-      }
-      if (this.SarLawsItemsEO.energyKind != null && this.SarLawsItemsEO.energyKind !== '' && this.SarLawsItemsEO.energyKind !== undefined) {
-        this.SarLawsItemsEO.energyKind = this.breakMultiSelect(this.SarLawsItemsEO.energyKind)
-      }
-      if (this.SarLawsItemsEO.tackTime != null) {
-        this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
-      }
-      if (this.SarLawsItemsEO.id == null || this.SarLawsItemsEO.id === '') {
-        this.$http.post('lawss/sarLawsItems/addLawsItems', this.SarLawsItemsEO, {
-          _this: this
-        }, res => {
-          this.addLawsItemsModal = false
-          this.searchLawsItems(this.saveLawsId)
-        }, e => {
-        })
-      } else {
-        this.$http.put('lawss/sarLawsItems/updateLawsItems', this.SarLawsItemsEO, {
-          _this: this
-        }, res => {
-          this.addLawsItemsModal = false
-          this.searchLawsItems(this.saveLawsId)
-        }, e => {})
-      }
+      this.$refs['SarLawsItemsEO'].validate((valid) => {
+        if (valid) {
+          if (this.SarLawsItemsEO.applyArctic != null && this.SarLawsItemsEO.applyArctic !== '' && this.SarLawsItemsEO.applyArctic !== undefined) {
+            this.SarLawsItemsEO.applyArctic = this.breakMultiSelect(this.SarLawsItemsEO.applyArctic)
+          }
+          if (this.SarLawsItemsEO.energyKind != null && this.SarLawsItemsEO.energyKind !== '' && this.SarLawsItemsEO.energyKind !== undefined) {
+            this.SarLawsItemsEO.energyKind = this.breakMultiSelect(this.SarLawsItemsEO.energyKind)
+          }
+          if (this.SarLawsItemsEO.tackTime != null) {
+            this.SarLawsItemsEO.tackTime = this.$dateFormat(this.SarLawsItemsEO.tackTime, 'yyyy-MM-dd')
+          }
+          if (this.SarLawsItemsEO.id == null || this.SarLawsItemsEO.id === '') {
+            this.$http.post('lawss/sarLawsItems/addLawsItems', this.SarLawsItemsEO, {
+              _this: this
+            }, res => {
+              this.addLawsItemsModal = false
+              this.searchLawsItems(this.saveLawsId)
+            }, e => {
+            })
+          } else {
+            this.$http.put('lawss/sarLawsItems/updateLawsItems', this.SarLawsItemsEO, {
+              _this: this
+            }, res => {
+              this.addLawsItemsModal = false
+              this.searchLawsItems(this.saveLawsId)
+            }, e => {})
+          }
+        } else {
+          this.$Message.error('请检查表单是否填写正确')
+        }
+      })
     },
     // 删除条目
     removeLawsItems (id) {
@@ -576,7 +691,39 @@ export default {
     }
   },
   mounted () {
+    this.setting = {
+      edit: {
+        enable: true,
+        showRemoveBtn: false,
+        showRenameBtn: false
+        // drag: {
+        //   prev: MoveTest.prevTree,
+        //   next: MoveTest.nextTree,
+        //   inner: MoveTest.innerTree
+        // }
+      },
+      data: {
+        keep: {
+          parent: true,
+          leaf: true
+        },
+        simpleData: {
+          enable: true
+        }
+      },
+      callback: {
+        // beforeDrag: MoveTest.dragTree2Dom,
+        // onDrop: MoveTest.dropTree2Dom,
+        // onDragMove: MoveTest.dragMove,
+        // onMouseUp: MoveTest.dom2Tree,
+        onClick: this.clickOneNode
+      },
+      view: {
+        selectedMulti: false
+      }
+    }
     this.searchLawsInfo()
+    this.loadInfoTree()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()
     this.loadDicTypeDatas3()

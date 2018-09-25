@@ -2,7 +2,15 @@
 <template>
  <div id="domesticRegulationsDatabase">
    <div class="tree">
-     <ul id="treeDemo" class="ztree"></ul>
+     <Dropdown trigger="click" style="margin-left: 20px" @on-click="clickDropMenu">
+       <Button type="primary" icon="ios-arrow-down">设置</Button>
+       <DropdownMenu slot="list">
+         <DropdownItem name="addMenu">新建</DropdownItem>
+         <DropdownItem name="editMenu">编辑</DropdownItem>
+         <DropdownItem name="deleteMenu">删除</DropdownItem>
+       </DropdownMenu>
+     </Dropdown>
+     <ul id="lawsInfoTree" class="ztree"></ul>
    </div>
    <div class="tree-right">
     <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false">
@@ -58,6 +66,22 @@
     </div>
     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
 
+     <!--新增修改文件夹模态框-->
+     <Modal :title="showMenuTitle" width="300px" v-model="showMenuModal" @on-ok="saveMenu" @on-cancel="cancelAddMenu">
+       <Form ref="SarMenuEO" :model="SarMenuEO" :rules="SarMenuEOFormRules" class="label-input-form">
+         <input v-model="SarMenuEO.id" v-show="false">
+         <input v-model="SarMenuEO.parentId" v-show="false">
+         <FormItem label="名称" prop="menuName" class="laws-info-item">
+           <Input v-model="SarMenuEO.menuName"></Input>
+         </FormItem>
+         <FormItem label="序号" prop="displaySeq" class="laws-info-item">
+           <Input v-model="SarMenuEO.displaySeq"></Input>
+         </FormItem>
+       </Form>
+     </Modal>
+     <Modal title="确认删除" width="300px" v-model="deleteMenuModal" @on-ok="sureDeleteSarMenu" @on-cancel="deleteMenuModal = false">
+       <p>该节点下有记录，是否删除？</p>
+     </Modal>
    <!--新增修改查看法规模态框-->
      <Drawer :title="showLawsInfoTitle" v-model="showLawsInfoModal" width="900">
        <Form ref="SarLawsInfoEO" :model="SarLawsInfoEO" :rules="lawsInfoFormRules" class="label-input-form">

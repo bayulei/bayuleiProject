@@ -190,12 +190,12 @@ const routes = [
         }
       },
       {
-        path: '/dynamicInformationManage/dynamicInfomationPage',
+        path: '/dynamicInformationManage/dynamicInfomationPage/:id?',
         name: 'dynamicInfo',
         component: resolve => require(['pages/config/pages/dynamicInformationManage/dynamicInfomationPage'], resolve),
         meta: {
           requireAuth: true,
-          title: '新增动态信息'
+          title: '动态信息维护'
         }
       },
       {
