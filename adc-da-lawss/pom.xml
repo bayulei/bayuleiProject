@@ -13,12 +13,40 @@
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
 
-	<name>adc-da-lawss</name>
-	<description>web project for Spring Boot</description>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.7</java.version>
+		<java_source_version>1.7</java_source_version>
+		<java_target_version>1.7</java_target_version>
+		<spring.version>4.3.9.RELEASE</spring.version>
+		<mybatis.version>3.4.0</mybatis.version>
+		<shiro.version>1.4.0-RC2</shiro.version>
 		<poi.version>3.9</poi.version>
 		<xerces.version>2.9.1</xerces.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>adc</id>
+			<url>http://60.30.69.57:8182/nexus/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>thirdparty</id>
+			<name>Nexus Thirdparty Repository</name>
+			<url>http://60.30.69.57:8182/nexus/content/repositories/thirdparty/</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
@@ -213,35 +241,19 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
-
-
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!-- <configuration> -->
-				<!-- <executable>true</executable> -->
-				<!-- <fork>true</fork> -->
-				<!-- <addResources>true</addResources> -->
-
-				<!-- <includeSystemScope>true</includeSystemScope> -->
-				<!-- </configuration> -->
-
-				<!-- <executions> -->
-				<!-- <execution> -->
-				<!-- <goals> -->
-				<!-- <goal>repackage</goal> -->
-				<!-- </goals> -->
-				<!-- <configuration> -->
-				<!-- 非必填项，即在生成的jar包名称后面追加该分类名称 -->
-				<!-- <classifier>boot</classifier> -->
-				<!-- <mainClass>com.adc.StandardApplication</mainClass> -->
-				<!-- </configuration> -->
-				<!-- </execution> -->
-				<!-- </executions> -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerVersion>${java.version}</compilerVersion>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 
