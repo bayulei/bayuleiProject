@@ -64,13 +64,24 @@ export default {
       } else if (this.password === '') {
         this.$Message.warning('密码不能为空')
       } else {
-        if (this.username === 'admin' && this.password === '123456') {
-          this.setToken('isLogin')
-          this.$router.push('/')
-        } else {
-          this.$Message.warning('用户名:admin 密码:123456')
-        }
+        this.loginUser(this.username, this.password)
       }
+    },
+    loginUser (userName, PWD) {
+      this.$http.post('/login',
+        {
+          username: userName,
+          password: PWD
+        }, {_this: this}, res => {
+          if (res.ok) {
+            this.setToken(res.data.usid)
+            this.$router.push('/')
+          } else if (res.respCode === 'r0012') {
+            this.$Message.error(res.message)
+          } else {
+            this.$Message.error(res.message)
+          }
+        })
     },
     /**
      * @description: vuex拓展方法

@@ -14,6 +14,8 @@ import java.util.Date;
  */
 public class MenuEO extends TreeEntity implements Serializable{
 
+    private static final long serialVersionUID = 2497292638985614077L;
+
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -24,10 +26,6 @@ public class MenuEO extends TreeEntity implements Serializable{
     private Integer isShow;
     private String icon;
     private String href;
-    private String parentIds;
-    private String parentId;
-    private String name;
-    private String id;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
