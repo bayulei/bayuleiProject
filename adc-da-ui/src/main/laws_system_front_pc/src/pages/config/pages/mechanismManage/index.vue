@@ -153,7 +153,8 @@ export default {
         {
           type: 'selection',
           width: 60,
-          align: 'center'
+          align: 'center',
+          fixed: 'left'
         },
         {
           title: '组织机构类型',
@@ -223,6 +224,37 @@ export default {
           title: '修改时间',
           key: 'modifyTime',
           width: 150
+        },
+        {
+          title: '操作',
+          key: 'Action',
+          width: 150,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {}
+                }
+              }, '查看'),
+              h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {}
+                }
+              }, '删除')
+            ])
+          },
+          fixed: 'right'
         }
       ],
       deptEmpData: [], // 组织下的员工列表

@@ -262,4 +262,17 @@
     </if>
   </select>
 
+    <select id="getUserEOAndInfoEOByUserCode" resultMap="UserMap" parameterType="java.lang.String">
+    select
+      u.account as account,
+      u.uname as uname,
+      u.email as email,
+      ur.user_id as usid,
+      ur.duty as duty,
+      ur.office_phone as officePhone,
+      ur.mobile_phone as mobilePhone,
+      ur.fax_address as faxAddress,
+      ur.signature as signature
+      from TS_USER u left join TS_USER_INFO ur on u.USID=ur.USER_ID where user_id=#{userId}
+    </select>
 </mapper>

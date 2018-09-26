@@ -47,16 +47,23 @@ export default {
   methods: {
     handleSubmit () {
       this.$http.putData('sys/warnTime/updateSource',
-        {warnTimeType: this.warningForm.warning},
+        {warnType: this.warningForm.warning},
         {_this: this}, res => {
-          if (res.ok) {
-            this.$Message.success('设置成功！')
-          }
+
         })
     },
     handleReset () {
       this.warningForm.warning = ''
+    },
+    getWarnTimeInfo () {
+      this.$http.get('sys/warnTime/', {}, {_this: this}, res => {
+        console.log(res)
+        this.warningForm.warning = res.data[0].warnType
+      })
     }
+  },
+  mounted () {
+    this.getWarnTimeInfo()
   }
 }
 </script>
