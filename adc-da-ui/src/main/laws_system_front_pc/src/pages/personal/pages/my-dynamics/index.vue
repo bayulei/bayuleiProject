@@ -20,10 +20,10 @@
           </Row>
         </Card>
       </div>
-      <div v-if="total===0">暂无数据</div>
+      <has-no-data pClass="content-detail" v-if="total === 0"></has-no-data>
       <loading :loading="loading">数据获取中</loading>
-      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
     </div>
+    <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
   </div>
 </template>
 
@@ -79,6 +79,13 @@ export default {
     padding: 0.2rem 0.3rem;
     .content .ivu-card-body{
       padding: 1rem;
+    }
+    .content .content-detail {
+      width: 100%;
+      height: calc(100% + 2px);
+      overflow-y: auto;
+      padding: 0.1rem;
+      background-color: white;
     }
   }
 </style>

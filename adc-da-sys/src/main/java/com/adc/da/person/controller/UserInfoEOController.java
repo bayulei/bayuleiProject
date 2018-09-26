@@ -3,9 +3,14 @@ package com.adc.da.person.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.List;
+import java.util.Map;
+
+
 import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.util.UUIDUtils;
+import com.adc.da.util.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,22 +49,23 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
 
     @ApiOperation(value = "|UserInfoEO|查询")
     @GetMapping("")
-    //@RequiresPermissions("person:userInfo:list")
+    @RequiresPermissions("person:userInfo:list")
     public ResponseMessage<List<UserInfoEO>> list(UserInfoEOPage page) throws Exception {
         return Result.success(userInfoEOService.queryByList(page));
     }
 
     /**
      * 刘寅楠
-     * @param userId
+     * @param
      * @return com.adc.da.person.entity.UserInfoEO
      * @throws Exception
      */
-    @ApiOperation(value = "显示用户信息接口")
-    @PostMapping("/getByUserInfoCode")
-    public ResponseMessage<List<UserEO>> getByUserInfoCode(String userId) throws Exception {
-        List<UserEO> userEO = userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
-        return Result.success(userEO);
+    @ApiOperation(value = "查找用户信息接口")
+    @GetMapping("/getByUserInfoCode")
+    public ResponseMessage<UserInfoEO> getByUserInfoCode() throws Exception {
+        String userId= LoginUserUtil.getUserId();
+        UserInfoEO userInfoEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
+        return Result.success(userInfoEO);
     }
 
 
@@ -128,7 +134,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
     @ApiOperation(value = "|UserInfoEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     //@RequiresPermissions("person:userInfo:update")
-    public ResponseMessage update(@RequestBody UserInfoEO userInfoEO) throws Exception {
+    public ResponseMessage update(@RequestBody UserInfoEO userInfoEO, @PathVariable("restPath") String restPath) throws Exception {
         if(StringUtils.isBlank(userInfoEO.getOfficePhone())){
             return Result.error("r0018","电话号码不能为空");
         }
@@ -141,6 +147,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
         if(StringUtils.isBlank(userInfoEO.getFaxAddress())){
             return Result.error("r0021","传真地址不能为空");
         }
+
         return Result.success(userInfoEOService.updateById(userInfoEO));
     }
 
@@ -148,7 +155,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
 
     @ApiOperation(value = "|UserInfoEO|删除")
     @DeleteMapping("/{id}")
-    //@RequiresPermissions("person:userInfo:delete")
+    @RequiresPermissions("person:userInfo:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         userInfoEOService.deleteByPrimaryKey(id);
         logger.info("delete from TS_USER_INFO where id = {}", id);

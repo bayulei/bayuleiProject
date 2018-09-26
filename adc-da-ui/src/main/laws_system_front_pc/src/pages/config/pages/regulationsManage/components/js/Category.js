@@ -206,6 +206,7 @@ export default {
     classificationEdit (item) {
       this.classificationModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.classificationTitle = '编辑标准'
       this.classificationModelAdd = JSON.parse(JSON.stringify(item))
     },

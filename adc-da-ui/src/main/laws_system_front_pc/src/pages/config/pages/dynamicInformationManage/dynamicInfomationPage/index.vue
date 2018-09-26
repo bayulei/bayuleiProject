@@ -153,7 +153,7 @@ export default {
     },
     loadMsgInfo () {
       let msgId = this.$route.params.id
-      console.log(this.$route.params.id)
+      // console.log(this.$route.params.id)
       if (msgId !== undefined || msgId !== '') {
         this.$http.get('lawss/msgDynamicInfo/' + msgId, {}, {_this: this}, res => {
           this.msgDynamicInfoVO = res.data
