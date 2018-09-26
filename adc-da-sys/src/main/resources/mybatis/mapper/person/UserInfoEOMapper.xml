@@ -262,8 +262,6 @@
     </if>
   </select>
 
-<<<<<<< Updated upstream
-=======
     <select id="getUserEOAndInfoEOByUserCode" resultMap="UserMap" parameterType="java.lang.String">
     select
       u.account as account,
@@ -277,5 +275,4 @@
       ur.signature as signature
       from TS_USER u left join TS_USER_INFO ur on u.USID=ur.USER_ID where user_id=#{userId}
     </select>
->>>>>>> Stashed changes
 </mapper>

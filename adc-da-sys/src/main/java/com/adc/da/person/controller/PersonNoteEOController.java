@@ -63,13 +63,13 @@ public class PersonNoteEOController extends BaseController<PersonNoteEO> {
         return Result.success(personNoteEO);
     }
 
-    @ApiOperation(value = "|PersonNoteEO|修改")
+/*    @ApiOperation(value = "|PersonNoteEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     @RequiresPermissions("person:personNote:update")
     public ResponseMessage<PersonNoteEO> update(@RequestBody PersonNoteEO personNoteEO) throws Exception {
         personNoteEOService.updateByPrimaryKeySelective(personNoteEO);
         return Result.success(personNoteEO);
-    }
+    }*/
 
     @ApiOperation(value = "|PersonNoteEO|删除")
     @DeleteMapping("/{id}")
