@@ -50,5 +50,5 @@ public interface RoleEODao extends BaseDao<RoleEO> {
 /**
  * 通过用户名查询所有用户信息
  * */
-   public List<RoleEO> queryNameExistenceByName(String name);
+   public List<RoleEO> selectByName(String name);
 }

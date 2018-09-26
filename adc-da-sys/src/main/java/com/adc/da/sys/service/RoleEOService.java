@@ -3,7 +3,9 @@ package com.adc.da.sys.service;
 import java.util.Date;
 import java.util.List;
 
+import com.adc.da.sys.util.UUIDUtils;
 import com.adc.da.sys.vo.RoleVO;
+import com.adc.da.util.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import com.adc.da.util.constant.DeleteFlagEnum;
 import com.adc.da.util.utils.CollectionUtils;
 import com.adc.da.util.utils.UUID;
 import com.adc.da.sys.dao.MenuEODao;
+
+import javax.xml.transform.Result;
 
 /**
  *
@@ -43,13 +47,17 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 
 	private MenuEODao menuEODao;
 	
-	public RoleEO save(RoleEO sysRoleEO) {
-		sysRoleEO.setId(UUID.randomUUID10());
+	public int save(RoleEO sysRoleEO) {
+		sysRoleEO.setId(UUIDUtils.randomUUID20());
 		sysRoleEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 		sysRoleEO.setCreationTime(new Date());
 		sysRoleEO.setModifyTime(new Date());
-		dao.insertSelective(sysRoleEO);
-		return sysRoleEO;
+		//判断角色名称不能重复，返回0代表角色名称已经存在
+		List<RoleEO> roleEOS = dao.selectByName(sysRoleEO.getName());
+			if(roleEOS!=null && !roleEOS.isEmpty()){
+				return 0;
+		}
+		return dao.insertSelective(sysRoleEO);
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -111,7 +119,7 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 	}
 //	如果用户存在，返回true，否则返回false
 	public boolean queryNameExistenceByName(String name){
-	  List<RoleEO> roleEOS = dao.queryNameExistenceByName(name);
+	  List<RoleEO> roleEOS = dao.selectByName(name);
 	  if(roleEOS!=null && !roleEOS.isEmpty()){
 	  	return true;
 	  }

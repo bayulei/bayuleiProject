@@ -251,7 +251,15 @@
 		<include refid="Base_Column_List" />
 		from TS_ROLE
 		where id = #{id} and valid_flag = 0
+	</select>
 
+	<!-- liwenxuan:根据角色名称查询 TS_ROLE -->
+	<select id="selectByName" resultMap="BaseResultMap"
+			parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from TS_ROLE
+		where TS_ROLE.name = #{name} and valid_flag = 0
 	</select>
 
 	<!-- 删除记录 -->

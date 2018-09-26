@@ -41,7 +41,6 @@ public class RoleEOController extends BaseController<RoleEO> {
 
 	@Autowired
 	private RoleEOService roleEOService;
-
 	@Autowired
 	BeanMapper beanMapper;
 	@Autowired
@@ -124,15 +123,20 @@ public class RoleEOController extends BaseController<RoleEO> {
 	@ApiOperation(value = "|RoleEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:role:save")
-	public ResponseMessage<RoleVO> create(@RequestBody RoleVO roleVO) throws Exception {
+	public ResponseMessage<Integer> create(@RequestBody RoleVO roleVO) throws Exception {
 		//TODO 此处调用了登录接口数据 暂时注销
 //		roleVO.setOprUser(LoginUserUtil.getUserId());
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
 		logger.info("获取角色相关信息:"+map.getName());
 		map.setRemarks(roleVO.getRemarks());
-		RoleEO roleEO = roleEOService.save(map);
-		roleVO.setRid(roleEO.getId());
-		return Result.success(roleVO);
+		int i = roleEOService.save(map);
+		if(StringUtils.isEmpty(roleVO.getName())){
+			return Result.error("角色名称不能为空");
+		}
+		if(i<=0){
+			return  Result.error("角色名称已经存在");
+		}
+		return Result.success("","新增成功",1);
 	}
 
 	@ApiOperation(value = "|RoleEO|修改")
