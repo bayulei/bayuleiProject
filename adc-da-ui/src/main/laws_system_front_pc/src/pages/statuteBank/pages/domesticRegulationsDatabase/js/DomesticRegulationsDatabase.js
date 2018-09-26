@@ -269,9 +269,9 @@ export default {
     },
     // 点击节点
     clickOneNode (event, treeId, treeNode) {
-      this.searchLawsInfo(treeNode.id)
       this.saveSelectedNodes = treeNode
       this.SarMenuEO.parentId = treeNode.id
+      this.searchLawsInfo()
     },
     clickDropMenu (name) {
       if (name === 'addMenu') {
@@ -338,7 +338,8 @@ export default {
       })
     },
     // 分页查询法规信息
-    searchLawsInfo (menuId) {
+    searchLawsInfo () {
+      let menuId = this.saveSelectedNodes.id
       let SarLawsInfoEOPage = this.lawsInfo
       SarLawsInfoEOPage.page = this.page
       SarLawsInfoEOPage.pageSize = this.rows
@@ -366,11 +367,11 @@ export default {
     },
     pageChange (page) {
       this.page = page
-      this.searchLawsInfo(this.saveSelectedNodes.id)
+      this.searchLawsInfo()
     },
     pageSizeChange (pageSize) {
       this.rows = pageSize
-      this.searchLawsInfo(this.saveSelectedNodes.id)
+      this.searchLawsInfo()
     },
     // 打开新增模态框
     openLawsModal () {
@@ -415,7 +416,7 @@ export default {
               _this: this
             }, res => {
               this.showLawsInfoModal = false
-              this.searchLawsInfo(this.saveSelectedNodes.id)
+              this.searchLawsInfo()
             }, e => {
 
             })
@@ -424,7 +425,7 @@ export default {
               _this: this
             }, res => {
               this.showLawsInfoModal = false
-              this.searchLawsInfo(this.saveSelectedNodes.id)
+              this.searchLawsInfo()
             }, e => {})
           }
         } else {
@@ -446,7 +447,7 @@ export default {
           }, {
             _this: this
           }, res => {
-            this.searchLawsInfo(this.saveSelectedNodes.id)
+            this.searchLawsInfo()
           }, e => {
           })
         },
@@ -464,7 +465,7 @@ export default {
       }, {
         _this: this
       }, res => {
-        this.searchLawsInfo(this.saveSelectedNodes.id)
+        this.searchLawsInfo()
       }, e => {
 
       })
@@ -572,7 +573,6 @@ export default {
         onCancel: () => {
         }
       })
-
     },
     // 导入条目
     importLawsItems () {
@@ -763,7 +763,7 @@ export default {
         selectedMulti: false
       }
     }
-    this.searchLawsInfo(this.saveSelectedNodes.id)
+    this.searchLawsInfo()
     this.loadInfoTree()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()

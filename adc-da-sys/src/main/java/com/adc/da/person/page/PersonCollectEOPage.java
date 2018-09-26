@@ -3,6 +3,7 @@ package com.adc.da.person.page;
 import com.adc.da.base.page.BasePage;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <b>功能：</b>TS_PERSON_COLLECT PersonCollectEOPage<br>
@@ -34,6 +35,8 @@ public class PersonCollectEOPage extends BasePage {
     private String userIdOperator = "=";
     private String id;
     private String idOperator = "=";
+
+    private List<String> collectTypeList;
 
     public String getModifyTime() {
         return this.modifyTime;
@@ -211,4 +214,11 @@ public class PersonCollectEOPage extends BasePage {
         this.idOperator = idOperator;
     }
 
+    public List<String> getCollectTypeList() {
+        return collectTypeList;
+    }
+
+    public void setCollectTypeList(List<String> collectTypeList) {
+        this.collectTypeList = collectTypeList;
+    }
 }

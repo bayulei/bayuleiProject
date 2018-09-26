@@ -442,8 +442,7 @@ export default {
     },
     // 关闭模态框
     cancelRoleModel () {
-      this.cleanRoleValue()
-      // this.showRoleInfoModal = false
+      this.showRoleInfoModal = false
     },
     // 配置角色信息
     roleConfigure () {

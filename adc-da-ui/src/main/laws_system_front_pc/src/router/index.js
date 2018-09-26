@@ -76,7 +76,7 @@ const routes = [
         component: resolve => require(['pages/personal/pages/individual-plate'], resolve),
         meta: {
           requireAuth: true,
-          title: '个人板块管理'
+          title: '板块管理'
         }
       },
       {

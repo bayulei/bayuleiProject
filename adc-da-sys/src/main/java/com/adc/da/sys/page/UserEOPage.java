@@ -29,18 +29,15 @@ public class UserEOPage extends BasePage {
     private String orgNameOperator = "=";
     private String workNum;
     private String workNumOperator ="=";
-
     private String orgId;
-    
+    private String orgIdOperator = "=";
     private String disableFlag;
-
     private String disableFlagOperator = "=";
     private String unlockFlag;
     private String unlockFLagOperator = "=";
-
     private String userType;
-
     private String userTypeOperator = "=";
+
 
     public String getUsid() {
         return this.usid;
@@ -237,5 +234,13 @@ public class UserEOPage extends BasePage {
 
     public String getOrgId(){
         return this.orgId;
+    }
+
+    public String getOrgIdOperator() {
+        return orgIdOperator;
+    }
+
+    public void setOrgIdOperator(String orgIdOperator) {
+        this.orgIdOperator = orgIdOperator;
     }
 }

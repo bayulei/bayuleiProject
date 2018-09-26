@@ -99,7 +99,11 @@ public class UserEOController extends BaseController<UserEO> {
 //		userVO.setOperUser(LoginUserUtil.getUserId());
         userVO.setOperUser("111111");
         UserEO userEO = userEOService.save(beanMapper.map(userVO, UserEO.class));
-        return Result.success(beanMapper.map(userEO, UserVO.class));
+        if(userEO==null){
+            return Result.error("操作失败");
+        }
+        return Result.success("true","操作成功",beanMapper.map(userEO, UserVO.class));
+
     }
 
     @ApiOperation(value = "|UserEO|修改")
@@ -108,25 +112,30 @@ public class UserEOController extends BaseController<UserEO> {
     public ResponseMessage<UserVO> update(@RequestBody UserVO userVO) throws Exception {
         UserEO userEO = beanMapper.map(userVO, UserEO.class);
         userEO.setModifyTime(new Date());
-
 /*		if(userEOService.getUserWithRoles(userVO.getUsid()).getWorkNum() !=null){
 			return  Result.error("r0016", "员工编号已存在");
 		}*/
-//		李文轩：修改用户信息的密码是在个人中心中完成
-//		userEO.setPassword("");
-        userEOService.updateByPrimaryKeySelective(userEO);
-//		注：一会看到角色管理时候看是否需要在这里进行修改用户权限
-        //userEOService.saveUserRole(userEO);
-        userEOService.updateUserOrg(userEO);
-        return Result.success(userVO);
+
+        int i = userEOService.updateByPrimaryKeySelective(userEO);
+//		注：角色管理需要在这里进行修改用户权限
+        int i1 = userEOService.saveUserRole(userEO);
+        int i2 = userEOService.updateUserOrg(userEO);
+        if(i>0 && i1>0 && i2>0){
+            return Result.success("true","操作成功",userVO);
+        }
+        return Result.error("操作失败");
+
     }
 
     @ApiOperation(value = "|UserEO|删除")
     @DeleteMapping("/{ids}")
 //	@RequiresPermissions("sys:user:delete")
     public ResponseMessage delete(@NotNull @PathVariable("ids") String[] ids) throws Exception {
-        userEOService.delete(Arrays.asList(ids));
-        return Result.success();
+        int i = userEOService.delete(Arrays.asList(ids));
+        if(i==0){
+            return  Result.error("删除失败");
+        }
+        return Result.success("true","删除成功","");
     }
 
     @ApiOperation(value = "配置用户角色|UserEO|")
@@ -143,9 +152,9 @@ public class UserEOController extends BaseController<UserEO> {
                 userEOService.saveUserRole(user);
             }
         } else {
-            return Result.error("r00100", "未设置角色信息");
+            return Result.error( "未设置角色信息");
         }
-        return Result.success(userVO);
+        return Result.success("","操作成功",userVO);
     }
 
     @ApiOperation(value = "|UserEO|重置密码")
@@ -155,14 +164,21 @@ public class UserEOController extends BaseController<UserEO> {
         if (line == 0) return Result.error();
         else return Result.success();
     }
-
+/**
+ * @Author liwenxuan
+ * @Description //组织机构分页：
+ * 根据组织机构和用户的关联表进行中orgId字段作为判断条件进行查询
+ * @Date Administrator 2018/9/25
+ * @Param [page]
+ * @return com.adc.da.util.http.ResponseMessage<com.adc.da.util.http.PageInfo<com.adc.da.sys.vo.UserVO>>
+ **/
     @ApiOperation(value = "|UserEO|组织机构查询用户")
     @GetMapping("/findByOrg")
     public ResponseMessage<PageInfo<UserVO>> queryByOrg(UserEOPage page) {
-        if (StringUtils.isNotBlank(page.getUname()))
-            page.setUname("%" + page.getUname() + "%");
-        List<UserEO> rows = userEOService.queryByOrg(page);
-        PageInfo<UserVO> mapPage = beanMapper.mapPage(getPageInfo(page.getPager(), rows), UserVO.class);
+       /* if (StringUtils.isNotBlank(page.getUname()))
+            page.setUname("%" + page.getUname() + "%");*/
+        List<UserEO> userEOs = userEOService.queryUserInfoByPage(page);
+        PageInfo<UserVO> mapPage = beanMapper.mapPage(getPageInfo(page.getPager(), userEOs), UserVO.class);
         return Result.success(mapPage);
     }
 
@@ -176,8 +192,6 @@ public class UserEOController extends BaseController<UserEO> {
     @ApiOperation(value = "|UserEO|查询未配置组织机构的用户")
     @GetMapping("/findBySetOrg")
     public  ResponseMessage<PageInfo<UserEO>> findBySetOrg(UserEOPage page) {
-        //TODO 此处暂时未实现
-
         page.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue() + "");
         page.setPager(new Pager());
         List<UserEO> userInfoByPage = userEOService.findUserInfoByPage(page);

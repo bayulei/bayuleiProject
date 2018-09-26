@@ -18,6 +18,13 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
+      },
+      '/uploadPath': {
+        target: global_config.staticFilePath,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/uploadPath': ''
+        }
       }
     },
 

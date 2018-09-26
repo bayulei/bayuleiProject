@@ -349,6 +349,10 @@
          :on-remove="removeOneFile"
          :action="simpleUploadPath"
          :default-file-list="defaultFileList"
+         :format="['PDF','doc','docx']"
+         :on-format-error="handleFormatError"
+         :max-size=204800
+         :on-exceeded-size="handleSizeError"
          name="file" ref="importFileAboutStand">
          <div style="padding: 20px 0">
            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
@@ -367,7 +371,7 @@
          </FormItem>
        </Form>
      </Modal>
-     <!--  查看标准条目列表   -->
+     <!--                  查看标准条目列表                -->
      <Drawer title="国内标准条目" v-model="modalStandItemflag" width="1500" :styles="styles" @on-close="resetForm" >
        <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false" class="label-input-form">
          <div slot="left">
@@ -385,7 +389,7 @@
      <!--                  新增标准条目                    -->
      <Drawer title="国内标准条目" v-model="modalItemaddShowflag" width="850" :styles="styles" @on-close="resetForm" >
        <div class="standardsItem-info-form">
-         <Form ref="" :model="standItemEO"  class="label-input-form" :rules="sarStandardItemRules" >
+         <Form ref="sarStandardsItemForm" :model="standItemEO"  class="label-input-form" :rules="sarStandardItemRules" >
            <FormItem label="条目号" prop="itemsNum" class="standards-info-item">
              <Input v-model="standItemEO.itemsNum" :disabled="formdisableflag"></Input>
            </FormItem>

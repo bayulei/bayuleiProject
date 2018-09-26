@@ -11,6 +11,9 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.person.dao.PersonCookiesEODao;
 import com.adc.da.person.entity.PersonCookiesEO;
 
+import java.util.Date;
+import java.util.List;
+
 
 /**
  *
@@ -33,4 +36,31 @@ public class PersonCookiesEOService extends BaseService<PersonCookiesEO, String>
         return dao;
     }
 
+
+    public PersonCookiesEO save(PersonCookiesEO personCookiesEO){
+        personCookiesEO.setCreationTime(new Date());
+        personCookiesEO.setModifyTime(new Date());
+        dao.insertSelective(personCookiesEO);
+        return personCookiesEO;
+    }
+
+    //删除个人浏览记录
+    public void delete(String id){
+        dao.deleteByPrimaryKey(id);
+    }
+
+//    public void updateById(PersonCookiesEO personCookiesEO){
+//        personCookiesEO.setCreationTime(new Date());
+//        personCookiesEO.setModifyTime(new Date());
+//        dao.updateByPrimaryKeySelective(personCookiesEO);
+//    }
+
+
+    public List<PersonCookiesEO> queryByCookieType(String cookieType){
+        return dao.queryByCookieType(cookieType);
+    }
+
+    public List<PersonCookiesEO> queryByUserId(String userId){
+        return dao.queryByUserId(userId);
+    }
 }
