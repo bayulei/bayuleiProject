@@ -337,6 +337,12 @@ const routes = [
       //   }
       // }
     ]
+  },
+  // **************************   搜索中心   ******************************* //
+  {
+    path: '/searchCenter/:selectKey/:selectValue',
+    name: 'SearchCenter',
+    component: resolve => require(['pages/searchCenter'], resolve)
   }
 ]
 
