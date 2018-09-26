@@ -1,6 +1,7 @@
 package com.adc.da.person.service;
 
 import com.adc.da.base.page.BasePage;
+import com.adc.da.sys.dao.UserEODao;
 import com.adc.da.sys.entity.UserEO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +32,29 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
     @Autowired
     private UserInfoEODao dao;
 
+    @Autowired
+    private UserEODao userEODao;
+
     public UserInfoEODao getDao() {
         return dao;
     }
 
-    public UserEO getUserEOAndInfoEOByUserCode(String userId){
-        return null;
+    public UserEODao getUserEODao() {
+        return userEODao;
+    }
+
+    public UserInfoEO getUserEOAndInfoEOByUserCode(String userId){
+        UserInfoEO userInfoEO= dao.getUserInfoByUserId(userId);
+        UserEO userEO= userEODao.selectByPrimaryKey(userId);
+        if(userInfoEO ==null){
+            userInfoEO=new UserInfoEO();
+        }
+        if(userEO !=null){
+            userInfoEO.setAccount(userEO.getAccount());
+            userInfoEO.setEmail(userEO.getEmail());
+            userInfoEO.setuName(userEO.getUname());
+        }
+        return userInfoEO;
     }
 
     public UserInfoEO getUserInfoEOByUserInfoId(String userId){

@@ -62,11 +62,11 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
      * @throws Exception
      */
     @ApiOperation(value = "查找用户信息接口")
-    @PostMapping("/getByUserInfoCode")
-    public ResponseMessage<UserEO> getByUserInfoCode() throws Exception {
+    @GetMapping("/getByUserInfoCode")
+    public ResponseMessage<UserInfoEO> getByUserInfoCode() throws Exception {
         String userId= LoginUserUtil.getUserId();
-        UserEO userEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
-        return Result.success(userEO);
+        UserInfoEO userInfoEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
+        return Result.success(userInfoEO);
     }
 
 
