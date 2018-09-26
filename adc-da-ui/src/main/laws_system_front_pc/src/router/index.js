@@ -337,6 +337,16 @@ const routes = [
       //   }
       // }
     ]
+  },
+  // **************************   pdf   ******************************* //
+  {
+    path: '/ssssspdf',
+    name: 'Pdf',
+    component: resolve => require(['@/common/components/pdf'], resolve),
+    meta: {
+      requireAuth: true,
+      title: 'pdf'
+    }
   }
 ]
 

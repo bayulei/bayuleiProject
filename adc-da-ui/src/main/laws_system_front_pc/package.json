@@ -19,6 +19,7 @@
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "nprogress": "^0.2.0",
+    "pdfvuer": "^1.0.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
