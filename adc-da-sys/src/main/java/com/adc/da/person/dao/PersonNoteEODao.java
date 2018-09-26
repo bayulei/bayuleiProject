@@ -11,11 +11,8 @@ import com.adc.da.person.entity.PersonNoteEO;
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public interface PersonNoteEODao extends BaseDao<PersonNoteEO> {
-<<<<<<< Updated upstream
 
-=======
      Integer updateByCollectId(PersonNoteEO personNoteEO);
      PersonNoteEO queryByCollectId(String collectId);
      Integer deleteByCollectId(String collectId);
->>>>>>> Stashed changes
 }

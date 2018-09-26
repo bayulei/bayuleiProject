@@ -2,13 +2,10 @@ package com.adc.da.person.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.person.entity.PersonConfEO;
-<<<<<<< Updated upstream
-=======
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
->>>>>>> Stashed changes
 /**
  *
  * <br>
@@ -19,8 +16,6 @@ import java.util.List;
  */
 public interface PersonConfEODao extends BaseDao<PersonConfEO> {
 
-<<<<<<< Updated upstream
-=======
 //    List<PersonConfEO> updateById();
 //    List<PersonConfEO> deleteByIdList(String ids);
 
@@ -28,5 +23,4 @@ public interface PersonConfEODao extends BaseDao<PersonConfEO> {
 //    public void insertSelective(@Param("Id"));
 
       List<PersonConfEO> insert1(PersonConfEO personConfEO);
->>>>>>> Stashed changes
 }

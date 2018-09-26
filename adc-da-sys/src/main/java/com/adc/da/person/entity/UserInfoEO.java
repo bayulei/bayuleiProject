@@ -30,9 +30,6 @@ public class UserInfoEO extends BaseEntity {
     private String duty;
     private String userId;
     private String id;
-
-<<<<<<< Updated upstream
-=======
 //    追加字段
     private String acount;
     private String uName;
@@ -42,7 +39,6 @@ public class UserInfoEO extends BaseEntity {
 //    protected List<UserEO> userEOList=new ArrayList<>();
 //    public UserEO userEO = new UserEO();
 
->>>>>>> Stashed changes
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -289,8 +285,6 @@ public class UserInfoEO extends BaseEntity {
         this.id = id;
     }
 
-<<<<<<< Updated upstream
-=======
     public String getAcount() {
         return acount;
     }
@@ -330,5 +324,4 @@ public class UserInfoEO extends BaseEntity {
 //    public void setUserEO(UserEO userEO) {
 //        this.userEO = userEO;
 //    }
->>>>>>> Stashed changes
 }
