@@ -56,7 +56,8 @@ export default {
         email: '', // 邮箱
         mobilePhone: '', // 手机
         faxAddress: '', // 传真
-        extInfo: '' // 个性签名
+        extInfo: '', // 个性签名
+        userPicid: ''
       },
       userInfoRules: {
         officePhone: [
@@ -87,11 +88,17 @@ export default {
     uploadAvator () {
       let avator = this.$refs.avatorUploadBtn.files[0]
       console.log(avator)
+      this.$http.post('/att/attFile/upload', {
+        file: avator },
+      {_this: this}, res => {
+        console.log(res)
+        let attVo = res.data
+        this.avator = '/uploadPath' + attVo.filePath + attVo.fileName
+        this.userInfo.userPicid = attVo.id
+      })
     },
     searchPersonal () {
-      this.$http.post('person/userInfo/getByUserInfoCode', {
-        userId: 'QJX2Z8E678'
-      }, {
+      this.$http.post('person/userInfo/getByUserInfoCode', {}, {
         _this: this,
         loading: 'loading'
       }, res => {
