@@ -48,11 +48,8 @@ export default {
   methods: {
     handleChange (newTargetKeys, targetKeys, direction, moveKeys) {
       this.targetKeys = newTargetKeys
-      console.log(newTargetKeys)
     },
     selectedChange (sourceSelectedKeys, targetSelectedKeys) {
-      console.log(sourceSelectedKeys)
-      console.log(targetSelectedKeys)
       this.numData = targetSelectedKeys
     },
     renderPersonal (item) {
@@ -64,6 +61,11 @@ export default {
       }
     },
     savePersonal () {
+    }
+  },
+  watch: {
+    targetKeys (val) {
+      console.log($('.ivu-transfer').find('.ivu-transfer-list:nth-child(3)').find('.ivu-transfer-list-content'))
     }
   }
 }

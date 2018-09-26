@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.adc.da.sys.util.UUIDUtils;
+import com.adc.da.util.http.ResponseMessageCodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class WarnTimeEOController extends BaseController<WarnTimeEO>{
 
 	@ApiOperation(value = "|WarnTimeEO|查询")
     @GetMapping("")
-    @RequiresPermissions("sys:warnTime:list")
+//    @RequiresPermissions("sys:warnTime:list")
     public ResponseMessage<List<WarnTimeEO>> list(WarnTimeEOPage page) throws Exception {
         return Result.success(warnTimeEOService.queryByList(page));
 	}
@@ -87,28 +88,31 @@ public class WarnTimeEOController extends BaseController<WarnTimeEO>{
     @ApiOperation(value = "|WarnTimeEO|修改")
     @PutMapping(value = "/updateSource",consumes = APPLICATION_JSON_UTF8_VALUE)
 //    @RequiresPermissions("sys:warnTime:update")
-    public ResponseMessage<WarnTimeEO> updateSource(@NotNull @PathVariable("warnTimeType") String warnTimeType) throws Exception {
+    public ResponseMessage<WarnTimeEO> updateSource(@NotNull @RequestBody WarnTimeEO warnTimeEO) throws Exception {
 	    WarnTimeEOPage page=new WarnTimeEOPage();
 	    List<WarnTimeEO> warnTimeEOList=warnTimeEOService.queryByList(page);
 	    if(warnTimeEOList!= null && !warnTimeEOList.isEmpty()){
 	        if(warnTimeEOList.size()>1){
                 WarnTimeEO eo=warnTimeEOList.get(0);
-                eo.setWarnType(warnTimeType);
+                eo.setWarnType(warnTimeEO.getWarnType());
                 warnTimeEOService.updateByPrimaryKey(eo);
                 //此处删除多余数据
                 for(int i=1;i<warnTimeEOList.size();i++){
                     WarnTimeEO e= warnTimeEOList.get(i);
                     warnTimeEOService.deleteByPrimaryKey(e.getId());
                 }
+            }else{
+                WarnTimeEO eo=warnTimeEOList.get(0);
+                eo.setWarnType(warnTimeEO.getWarnType());
+                warnTimeEOService.updateByPrimaryKey(eo);
             }
-
         }else{
 	        WarnTimeEO time=new WarnTimeEO();
 	        time.setId(UUIDUtils.randomUUID20());
-	        time.setWarnType(warnTimeType);
+	        time.setWarnType(warnTimeEO.getWarnType());
 	        warnTimeEOService.insert(time);
         }
-        return Result.success();
+        return Result.success(ResponseMessageCodeEnum.SUCCESS.getCode(),"设置成功",null);
     }
 
 }

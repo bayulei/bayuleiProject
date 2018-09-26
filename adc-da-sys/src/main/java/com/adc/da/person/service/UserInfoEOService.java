@@ -1,5 +1,7 @@
 package com.adc.da.person.service;
 
+import com.adc.da.base.page.BasePage;
+import com.adc.da.sys.entity.UserEO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,23 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
 
     public UserInfoEODao getDao() {
         return dao;
+    }
+
+    public UserEO getUserEOAndInfoEOByUserCode(String userId){
+        return null;
+    }
+
+    public UserInfoEO getUserInfoEOByUserInfoId(String userId){
+        return null;
+    }
+
+    public void save(UserInfoEO userInfoEO){
+
+    }
+
+
+    public UserInfoEO updateById(UserInfoEO userInfoEO){
+        return null;
     }
 
 }

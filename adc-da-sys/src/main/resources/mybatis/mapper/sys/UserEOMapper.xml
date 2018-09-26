@@ -140,10 +140,6 @@
 			<if test="orgId != null" >
 				and TUO.ORG_ID ${orgIdOperator} #{orgId}
 			</if>
-			<if test="roleId != null" >
-				AND TR.ID ${roleIdOperator} #{roleId}
-			</if>
-
 		</trim>
 	</sql>
 	<!-- 修改用户密码 -->
@@ -287,13 +283,13 @@
 				modify_time = #{modifyTime},
 			</if>
 			<if test="extInfo != null" >
-				ext_info = #{extInfo}
+				ext_info = #{extInfo},
 			</if>
 			<if test="disableFlag != null">
-				disable_flag = #{disableFlag}
+				disable_flag = #{disableFlag},
 			</if>
 			<if test="unlockFlag != null">
-				unlock_flag = #{unlockFlag}
+				unlock_flag = #{unlockFlag},
 			</if>
 			<if test="userType != null">
 				user_type = #{userType}
@@ -399,6 +395,15 @@
 		LEFT JOIN TS_USER tu ON TUO.USER_ID = TU.USID
 		LEFT JOIN TS_ORG ORG ON ORG.ID=TUO.ORG_ID
 		WHERE TUO.USER_ID =#{value} AND TU.VALID_FLAG=0
+	</select>
+
+	<!--根据当前登录用户id查询它所对应的组织机构的个数-->
+	<select id="selectOrgCountByPrimaryKey" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT
+		COUNT(1)
+		FROM
+		TS_USER_ORG TUO
+		WHERE TUO.USER_ID =#{value}
 	</select>
 
 	<!--根据当前登录用户id查询个人角色信息-->

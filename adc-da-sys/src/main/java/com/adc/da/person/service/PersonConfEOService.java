@@ -11,6 +11,8 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.person.dao.PersonConfEODao;
 import com.adc.da.person.entity.PersonConfEO;
 
+import java.util.Date;
+
 
 /**
  *
@@ -33,4 +35,49 @@ public class PersonConfEOService extends BaseService<PersonConfEO, String> {
         return dao;
     }
 
+
+    public PersonConfEO save(PersonConfEO personConfEO){
+        personConfEO.setCreationTime(new Date());
+        personConfEO.setModifyTime(new Date());
+        dao.insertSelective(personConfEO);
+        return personConfEO;
+    }
+
+
+
+
+    public PersonConfEO insert1(PersonConfEO personConfEO ){
+        if(personConfEO!=null){
+            dao.insertSelective(personConfEO);
+        }
+        return personConfEO;
+    }
+
+//    public List<PersonConfEO> insertByList(PersonConfEO personConfEO){
+//        if(CollectionUtils.isNotEmpty(personConfEO.)){
+//            dao.updateByPrimaryKeySelective(personConfEO.getId());
+//            for(){
+//
+//            }
+//        }
+//        return dao.insertByList(personConfEO);
+//    }
+
+
+//    public void updateById(PersonConfEO personConfEO){
+//        personConfEO.setCreationTime(new Date());
+//        personConfEO.setModifyTime(new Date());
+//        dao.updateById(personConfEO);
+//
+//    }
+
+
+//    public  List<PersonConfEO> selectByDisplay(){
+//        return dao.selectByDisplay();
+//    }
+
+
+//    public List<PersonConfEO> deleteByIdList(String ids){
+//        return dao.deleteByIdList(ids);
+//    }
 }

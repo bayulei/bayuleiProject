@@ -26,6 +26,7 @@ public class MsgFileEO extends BaseEntity {
     private String id;
 
     private String name;
+    private String oldFileName;
     private String status="finished";
 
     private String fileType;
@@ -189,6 +190,14 @@ public class MsgFileEO extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getOldFileName() {
+        return this.fileName;
+    }
+
+    public void setOldFileName(String oldFileName) {
+        this.oldFileName = oldFileName;
     }
 }
 

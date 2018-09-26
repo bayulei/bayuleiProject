@@ -108,9 +108,9 @@ public class OrgEORestController extends BaseController<OrgEO>{
 	 * @return com.adc.da.util.http.ResponseMessage
 	 **/
 	@ApiOperation(value = "|OrgEO|删除")
-	@DeleteMapping("/{id}")
+	@DeleteMapping("")
 //	@RequiresPermissions("sys:org:delete")
-	public ResponseMessage delete(@NotNull @PathVariable("id") String id) throws Exception {
+	public ResponseMessage delete( String id) throws Exception {
 		return orgEOService.delete(id);
 	}
 

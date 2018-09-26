@@ -49,6 +49,19 @@
                </Row>
              </FormItem>
            </Form>
+           <Modal v-model="standardModal" width="360">
+             <p slot="header" style="color:#f60;text-align:center">
+               <Icon type="ios-information-circle"></Icon>
+               <span>Delete confirmation</span>
+             </p>
+             <div style="text-align:center">
+               <p>After this task is deleted, the downstream 10 tasks will not be implemented.</p>
+               <p>Will you delete it?</p>
+             </div>
+             <div slot="footer">
+               <Button type="error" size="large">Delete</Button>
+             </div>
+           </Modal>
          </div>
        </Panel>
      </Collapse>
@@ -64,6 +77,7 @@ export default {
   name: 'collectionStandard',
   data () {
     return {
+      standardModal: false,
       collapseValue: '0',
       // 字数统计
       remnant: 200,
@@ -89,6 +103,9 @@ export default {
     }
   },
   methods: {
+    click () {
+      this.standardModal = true
+    },
     // 分页
     pageChange (page) {
       this.page = page
@@ -165,6 +182,7 @@ export default {
           num.input = ''
         }
       })
+      // this.standardModal = true
     }
   },
   mounted () {

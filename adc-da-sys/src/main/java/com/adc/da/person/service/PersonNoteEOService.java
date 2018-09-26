@@ -11,9 +11,10 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.person.dao.PersonNoteEODao;
 import com.adc.da.person.entity.PersonNoteEO;
 
+import java.util.Date;
+
 
 /**
- *
  * <br>
  * <b>功能：</b>TS_PERSON_NOTE PersonNoteEOService<br>
  * <b>作者：</b>code generator<br>
@@ -33,4 +34,41 @@ public class PersonNoteEOService extends BaseService<PersonNoteEO, String> {
         return dao;
     }
 
+    //刘寅楠
+    public PersonNoteEO save(PersonNoteEO personNoteEO) {
+        personNoteEO.setCreartionTime(new Date());
+        personNoteEO.setModifyTime(new Date());
+        dao.insertSelective(personNoteEO);
+        return personNoteEO;
+    }
+
+
+    public void updateById(PersonNoteEO personNoteEO) {
+        personNoteEO.setCreartionTime(new Date());
+        personNoteEO.setModifyTime(new Date());
+        dao.updateByPrimaryKeySelective(personNoteEO);
+    }
+
+
+    public void delete(String id) {
+        dao.deleteByPrimaryKey(id);
+    }
+
+
+    public Integer updateByCollectId(PersonNoteEO personNoteEO) {
+        personNoteEO.setModifyTime(new Date());
+        Integer i = dao.updateByCollectId(personNoteEO);
+        return i;
+    }
+
+
+    public PersonNoteEO queryByCollectId(String collectId) {
+        PersonNoteEO personNoteEO= dao.queryByCollectId(collectId);
+        return personNoteEO;
+    }
+
+
+    public Integer deleteByCollectId(String collectId){
+        return  dao.deleteByCollectId(collectId);
+    }
 }

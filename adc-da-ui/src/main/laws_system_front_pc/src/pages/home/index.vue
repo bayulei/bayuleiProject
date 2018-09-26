@@ -1,32 +1,25 @@
 <!-- 首页 -->
 <template>
   <div id="home">
-    <header class="home-header">
-      <div class="logo"></div>
-      <ul class="home-nav">
-        <router-link tag="li" v-for="topNav in topNavList" :key="topNav.name" :to="topNav.path">{{ topNav.title }}</router-link>
-      </ul>
-      <div class="header-right">
-        <div class="time-box">{{ currentTime }}</div>
-        <div class="user-info">
-          <img :src="userAvator" alt="avator">
-          <Dropdown trigger="click" @on-click="userInfoOpen">
-            <span>欢迎您，管理员 <Icon type="ios-arrow-down"></Icon></span>
-            <DropdownMenu slot="list">
-              <DropdownItem name="personal">个人中心</DropdownItem>
-              <DropdownItem name="logout">退出</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      </div>
-    </header>
+    <com-header></com-header>
     <section class="home-section">
       <!-- 搜索框 -->
       <div class="search-box">
         <div class="search-option">
           <Select v-model="searchType">
             <Option :value="1">标准编号</Option>
-            <Option :value="2">标准类别</Option>
+            <Option :value="2">标准名称</Option>
+            <Option :value="3">标准状态</Option>
+            <Option :value="4">标准正文内容</Option>
+            <Option :value="5">适用车型</Option>
+            <Option :value="6">发布日期</Option>
+            <Option :value="7">实施日期</Option>
+            <Option :value="2">起草人</Option>
+            <Option :value="2">起草部门</Option>
+            <Option :value="2">代替标准</Option>
+            <Option :value="2">被代替标准</Option>
+            <Option :value="2">文件名称</Option>
+            <Option :value="2">动态标题</Option>
           </Select>
         </div>
         <div class="search-input">
@@ -131,46 +124,13 @@
 </template>
 
 <script>
+import ComHeader from 'pages/components/Header'
 export default {
   name: 'index',
   data () {
     return {
-      currentTime: '', // 当前时间
-      userAvator: require('assets/images/user-avator.png'), // 用户头像
       searchType: 1, // 搜索类型
       keywords: '',
-      topNavList: [
-        {
-          title: '首页',
-          path: '/',
-          name: 'home'
-        },
-        // {
-        //   title: '云端资源库',
-        //   path: '/yunduanziyuanku',
-        //   name: 'yunduanziyuanku'
-        // },
-        {
-          title: '本地资源库',
-          path: '/bendiziyuanku',
-          name: 'bendiziyuanku'
-        },
-        {
-          title: '数据报表',
-          path: '/shujubaobiao',
-          name: 'shujubaobiao'
-        },
-        {
-          title: '分析工具',
-          path: '/fenxigongju',
-          name: 'fenxigongju'
-        },
-        {
-          title: '配置管理',
-          path: '/config',
-          name: 'Config'
-        }
-      ],
       searchText: '标准高级检索',
       searchRecommend: '请输入关键词',
       todoList: [
@@ -321,49 +281,14 @@ export default {
       logoSm: require('assets/images/home/logo_sm.png')
     }
   },
-  methods: {
-    /**
-     * @description: 获取当前时间
-     * @author: chenxiaoxi
-     * @date: 2018-09-02 10:59:50
-     */
-    getTime () {
-      setInterval(() => {
-        this.currentTime = this.$dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-        // this.currentTime = this.$dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss') + ' 星期' + '日一二三四五六'.charAt(new Date().getDay())
-      }, 1000)
-    },
-    /**
-     * @description: 用户菜单栏点击
-     * @author: chenxiaoxi
-     * @date: 2018-09-13 10:03:52
-     */
-    userInfoOpen (name) {
-      switch (name) {
-        case 'personal':
-          this.$router.push('/personal')
-          break
-        case 'logout':
-          this.$confirm({
-            title: '登出',
-            tips: '您确认要退出吗？',
-            confirm: () => {
-              this.$store.commit('logout')
-              this.$Modal.remove()
-              this.$router.push('/sign_in')
-            }
-          })
-          break
-      }
-    }
+  methods: {},
+  components: {
+    ComHeader
   },
-  components: {},
   props: {},
   computed: {},
   watch: {},
-  mounted () {
-    this.getTime()
-  }
+  mounted () {}
 }
 </script>
 
@@ -371,73 +296,6 @@ export default {
   @import '~styles/style';
   @import '~styles/mixins';
   #home{
-    .home-header{
-      height: 7.8%;
-      background: @homeHeaderBgColor;
-      padding: 0 0.95%;
-      .un-select();
-      .flex();
-      align-items: center;
-      color: #FFF;
-      font-size: 15px;
-      font-weight: bold;
-      .logo{
-        height: 86.6%;
-        flex: 0 0 23.71%;
-        background: #DDE;
-        background: url("~assets/images/home/logo.png") no-repeat left center;
-        background-size: 85%;
-      }
-      .home-nav{
-        flex: 1;
-        .flex();
-        padding: 0 5%;
-        height: 86.6%;
-        li{
-          color: #FFF;
-          font-size: 16px;
-          width: 25%;
-          text-align: center;
-          position: relative;
-          transition: transform 0.3s linear;
-          .un-select();
-          .flex();
-          justify-content: center;
-          align-items: center;
-          &:hover{
-            cursor:pointer;
-            color: #52b8db;
-          }
-        }
-      }
-      @media screen and (max-width: 1366px) {
-        .header-right{
-          flex: 0 0 27.5% !important;
-        }
-      }
-      .header-right{
-        height: 86.6%;
-        flex: 0 0 20%;
-        .flex();
-        .time-box{
-          flex: 1;
-          .flex();
-          align-items: center;
-          justify-content: flex-end;
-        }
-        .user-info{
-          flex: 0 0 55%;
-          .flex();
-          align-items: center;
-          justify-content: flex-end;
-          cursor: pointer;
-          img{
-            width: 40px;
-            margin-right: 4.5%;
-          }
-        }
-      }
-    }
     .home-section{
       height: 77.2%;
       background: @homeSectionBgColor;
