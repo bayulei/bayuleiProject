@@ -142,7 +142,7 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
  * @Author liwenxuan
  * @Description  新增动态信息表和新增动态信息附件表
  * 先根据需求判断一些字段不能为空，先新增动态信息表然后生成动态信息数据id，把此id作为新增动态信息附件表中消息id字段新增到动态信息附件表
- *对象里面的发布日期不能为空
+ * 对象里面的发布日期不能为空
  * 调用附件存入动态信息id/文件名称/文件后缀/文件ID
  * @Date Administrator 2018/9/17
  * @Param [msgDynamicInfoVO]
@@ -152,20 +152,19 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //    @RequiresPermissions("lawss:msgDynamicInfo:save")
     public ResponseMessage create(@RequestBody MsgDynamicInfoVO msgDynamicInfoVO) throws Exception {
-        Date nowDate=new Date();
         if(StringUtils.isBlank(msgDynamicInfoVO.getTitle())){
-            return Result.error("r0014", "动态标题不能为空");
+            return Result.error("动态标题不能为空");
         }
         if(msgDynamicInfoVO.getPubTime()==null){
-            return  Result.error("r0015", "发布时间不能为空");
+            return  Result.error("发布时间不能为空");
         }
 
         if(StringUtils.isBlank(msgDynamicInfoVO.getMsgType())){
-            return  Result.error("r0016","消息类型不能为空");
+            return  Result.error("消息类型不能为空");
         }
 
         if(StringUtils.isBlank(msgDynamicInfoVO.getContent())){
-            return  Result.error("r0016", "动态内容不能为空");
+            return  Result.error( "动态内容不能为空");
         }
         //TODO 此处获取用户的登录ID   进行数据记录
         msgDynamicInfoVO.setPubUser("");

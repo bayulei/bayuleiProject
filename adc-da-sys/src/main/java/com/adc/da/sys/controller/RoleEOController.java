@@ -126,13 +126,13 @@ public class RoleEOController extends BaseController<RoleEO> {
 	public ResponseMessage<Integer> create(@RequestBody RoleVO roleVO) throws Exception {
 		//TODO 此处调用了登录接口数据 暂时注销
 //		roleVO.setOprUser(LoginUserUtil.getUserId());
-		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
-		logger.info("获取角色相关信息:"+map.getName());
-		map.setRemarks(roleVO.getRemarks());
-		int i = roleEOService.save(map);
 		if(StringUtils.isEmpty(roleVO.getName())){
 			return Result.error("角色名称不能为空");
 		}
+		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
+		logger.info("获取角色相关信息:"+map.getName());
+		//判断角色名称不能重复，返回0代表角色名称已经存在,否则进行插入操作返回1
+		int i = roleEOService.save(map);
 		if(i<=0){
 			return  Result.error("角色名称已经存在");
 		}
@@ -142,12 +142,18 @@ public class RoleEOController extends BaseController<RoleEO> {
 	@ApiOperation(value = "|RoleEO|修改")
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:role:update")
-	public ResponseMessage<RoleVO> update(@RequestBody RoleVO roleVO) throws Exception {
-		roleVO.setModifyTime(new Date());
+	public ResponseMessage<Integer> update(@RequestBody RoleVO roleVO) throws Exception {
+		if(StringUtils.isEmpty(roleVO.getName())){
+			return Result.error("角色名称不能为空");
+		}
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
-		map.setRemarks(roleVO.getRemarks());
-		roleEOService.updateByPrimaryKeySelective(map);
-		return Result.success(roleVO);
+		//判断角色名称不能重复，返回0代表角色名称已经存在,否则进行修改操作返回1
+		int i = roleEOService.updateByPrimaryKeySelective(map);
+		if(i<=0){
+			return  Result.error("角色名称已经存在");
+		}
+		return Result.success("","操作成功",1);
+
 	}
 
 	@ApiOperation(value = "|RoleEO|删除")

@@ -254,12 +254,18 @@
 	</select>
 
 	<!-- liwenxuan:根据角色名称查询 TS_ROLE -->
-	<select id="selectByName" resultMap="BaseResultMap"
-			parameterType="java.lang.String">
+	<select id="selectByNameAndId" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from TS_ROLE
-		where TS_ROLE.name = #{name} and valid_flag = 0
+		where 1=1
+        <if test="name !=null">
+         and TS_ROLE.name = #{name}
+        </if>
+        <if test="id !=null">
+         and  TS_ROLE.id != #{id}
+        </if>
+         and valid_flag = 0
 	</select>
 
 	<!-- 删除记录 -->

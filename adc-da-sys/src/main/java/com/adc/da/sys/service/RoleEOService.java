@@ -46,19 +46,43 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 	}
 
 	private MenuEODao menuEODao;
-	
+
+/**
+ * @Author liwenxuan
+ * @Description 新增
+ * @Date Administrator 2018/9/26
+ * @Param [sysRoleEO]
+ * @return int
+ **/
 	public int save(RoleEO sysRoleEO) {
 		sysRoleEO.setId(UUIDUtils.randomUUID20());
 		sysRoleEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 		sysRoleEO.setCreationTime(new Date());
 		sysRoleEO.setModifyTime(new Date());
-		//判断角色名称不能重复，返回0代表角色名称已经存在
-		List<RoleEO> roleEOS = dao.selectByName(sysRoleEO.getName());
+		//判断角色名称不能重复，返回0代表角色名称已经存在,否则进行插入操作返回1
+		List<RoleEO> roleEOS = dao.selectByNameAndId(sysRoleEO.getId(),sysRoleEO.getName());
 			if(roleEOS!=null && !roleEOS.isEmpty()){
 				return 0;
-		}
+			}
 		return dao.insertSelective(sysRoleEO);
 	}
+/**
+ * @Author liwenxuan
+ * @Description 修改角色名称、状态、角色描述
+ * @Date Administrator 2018/9/26
+ * @Param [roleEO]
+ * @return int
+ **/
+	public int updateByPrimaryKeySelective(RoleEO roleEO) throws Exception {
+		roleEO.setModifyTime(new Date());
+		//判断角色名称不能重复，返回0代表角色名称已经存在,否则进行修改操作返回1
+		List<RoleEO> roleEOS = dao.selectByNameAndId(roleEO.getId(),roleEO.getName());
+		if(roleEOS!=null && !roleEOS.isEmpty()){
+			return 0;
+		}
+		return dao.updateByPrimaryKeySelective(roleEO);
+	}
+
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public RoleEO getRoleWithMenus(String id) {
@@ -116,13 +140,5 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 	public boolean isBelong(String userId, String roleId) {
 		int count = dao.isBelong(userId, roleId);
 		return count > 0;
-	}
-//	如果用户存在，返回true，否则返回false
-	public boolean queryNameExistenceByName(String name){
-	  List<RoleEO> roleEOS = dao.selectByName(name);
-	  if(roleEOS!=null && !roleEOS.isEmpty()){
-	  	return true;
-	  }
-	  return  false;
 	}
 }

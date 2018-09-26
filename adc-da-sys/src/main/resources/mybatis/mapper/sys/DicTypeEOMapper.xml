@@ -195,7 +195,6 @@
         </if>
         ) tmp_tb where rownum &lt;= ${pager.endIndex}) a
         where rn &gt;= ${pager.startIndex}
-
     </select>
 
     <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
