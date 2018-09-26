@@ -24,9 +24,9 @@
         </div>
       </div>
     </div>
-    <div class="side-bar-position border-right" @click="toggleSideBar">
-      <div class="router-map"></div>
-    </div>
+    <!--<div class="side-bar-position" @click="toggleSideBar">-->
+      <!--<div class="router-map"></div>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -112,7 +112,7 @@ export default {
   @import '~styles/style';
   @import '~styles/mixins';
   .side-bar{
-    height: calc(~'100% - 7.8% - 10px');
+    height: calc(~'100% - 7.8%');
     float: left;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -126,27 +126,28 @@ export default {
       }
     }
     .side-bar-left{
-      width: 230px;
+      /*width: 230px;*/
+      width: 200px;
       height: 100%;
-      border-top: 1px solid #EDEDED;
       border-right: 1px solid #EDEDED;
       background: @sideBarColor;
       transition: box-shadow .3s linear;
       float: left;
       transition: all .3s linear;
       overflow: hidden;
+      color: #FFF;
       .content{
         height: 100%;
         margin: 0 auto;
         .user-info{
-          width: 180px;
+          width: 100%;
           margin: 0 auto;
-          height: 140px;
-          padding: 40px 0;
-          box-sizing: border-box;
+          height: 85px;
+          padding: 23px 42px 19px 22px;
+          .flex();
           .user-avator{
-            width: 60px;
-            height: 60px;
+            flex: 0 0 47px;
+            height: 46px;
             background: #DDD;
             box-sizing: border-box;
             display: inline-block;
@@ -156,32 +157,72 @@ export default {
             }
           }
           .user-info-box{
-            padding: 0 25px;
-            box-sizing: border-box;
+            margin-left: 17px;
+            flex: 0 0 72px;
             height: 100%;
-            display: inline-block;
+          }
+          dl{
+            width: 100%;
+            height: 100%;
+            dt{
+              font-size: 15px;
+              position: relative;
+              top: 2px;
+            }
+            dd{
+              position: relative;
+              top: 4px;
+            }
           }
         }
         .nav-list{
-          padding-left: 15px;
-          width: calc(~'100% - 40px');
+          /*padding-left: 15px;*/
+          width: 100%;
+          /*width: calc(~'100% - 40px');*/
           ul{
             li{
               width: 100%;
-              height: 40px;
-              line-height: 40px;
+              height: 50px;
+              line-height: 50px;
               cursor: pointer;
+              padding-left: 27px;
+              border-bottom: 1px solid #4D8CC0;
+              position: relative;
+              &:first-child{
+                border-top: 1px solid #4D8CC0;
+              }
+              &:hover{
+                background: #4480bb;
+                border-bottom: 1px solid transparent;
+              }
+              &::before{
+                content: '';
+                display: block;
+                width: 0;
+                height: 100%;
+                background: @homeHeaderBgColor;
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+              }
               &.active{
-                padding-left: 14px;
-                transition: all linear .2s;
-                color: @baseColor;
-                background: #F0F0F0;
-                box-shadow: 2px 2px 5px #DDD;
-                span{
-                  text-shadow: 2px 2px 5px #DDD;
-                  &::before{
-                    display: none;
-                  }
+                /*padding-left: 14px;*/
+                /*color: @baseColor;*/
+                /*background: #F0F0F0;*/
+                /*box-shadow: 2px 2px 5px #DDD;*/
+                /*span{*/
+                  /*&::before{*/
+                    /*display: none;*/
+                  /*}*/
+                /*}*/
+                background: transparent;
+                &:hover{
+                  background: transparent !important;
+                }
+                &::before{
+                  width: 100%;
+                  transition: all linear .2s;
                 }
               }
               &:hover{
@@ -195,17 +236,17 @@ export default {
               }
               span{
                 position: relative;
-                &::before{
-                  content: '';
-                  position: absolute;
-                  width: 0;
-                  left: 50%;
-                  top: 125%;
-                  transform: translate(-50%);
-                  height: 2px;
-                  background: @baseColor;
-                  transition: all .2s ease-in-out;
-                }
+                /*&::before{*/
+                  /*content: '';*/
+                  /*position: absolute;*/
+                  /*width: 0;*/
+                  /*left: 50%;*/
+                  /*top: 125%;*/
+                  /*transform: translate(-50%);*/
+                  /*height: 2px;*/
+                  /*background: #FFF;*/
+                  /*transition: all .2s ease-in-out;*/
+                /*}*/
               }
             }
           }
@@ -217,9 +258,8 @@ export default {
       height: 200px;
       color: #333;
       font-size: 12.5px;
-      border-top: 1px solid #EDEDED;
       border-bottom: 1px solid #EDEDED;
-      background: #FFF;
+      background: #5596CC;
       float: left;
       cursor: pointer;
       display: flex;
@@ -230,7 +270,7 @@ export default {
       left: -1px;
       .router-map{
         width: 100%;
-        color: #AAA;
+        color: #FFF;
       }
     }
   }
