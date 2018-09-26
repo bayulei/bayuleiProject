@@ -207,6 +207,7 @@ export default {
     categoryEdit (row) {
       this.categoryModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.categoryTitle = '编辑标准'
       this.categoryModelAdd = JSON.parse(JSON.stringify(row))
     },

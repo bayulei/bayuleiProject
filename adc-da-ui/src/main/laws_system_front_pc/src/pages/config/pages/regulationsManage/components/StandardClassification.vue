@@ -45,12 +45,12 @@
             </Row>
             <Row>
               <Col span="12">
-                <!--<FormItem label="创建日期" prop="creationDate"  label-position="top" class="standards-info-item">-->
-                  <!--<Input v-model="classModelAdd.creationDate" :disabled='modalType === 3'></Input>-->
-                <!--</FormItem>-->
-                <FormItem label="创建日期" prop="creationDate" class="laws-info-item">
-                  <DatePicker v-model="classModelAdd.creationDate"  type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="请选择" :disabled='modalType === 3'></DatePicker>
+                <FormItem label="创建日期" prop="creationTime"  label-position="top" class="standards-info-item">
+                  <Input v-model="classModelAdd.creationTime" :disabled='modalType === 3'></Input>
                 </FormItem>
+                <!--<FormItem label="创建日期" prop="creationTime" class="laws-info-item">-->
+                  <!--<DatePicker v-model="classModelAdd.creationTime"  type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="请选择" :disabled='modalType === 3'></DatePicker>-->
+                <!--</FormItem>-->
               </Col>
               <Col span="12">
                 <FormItem label="创建人" prop="founder"  label-position="top" class="standards-info-item">

@@ -25,7 +25,7 @@ export default {
         title: '个人板块管理',
         path: '/plate'
       }, {
-        title: 'categoryModelAdd动态',
+        title: '我的动态',
         path: '/dynamics'
       }, {
         title: '我的收藏',

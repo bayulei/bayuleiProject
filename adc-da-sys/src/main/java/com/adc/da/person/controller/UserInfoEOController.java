@@ -7,6 +7,7 @@ import java.util.Map;
 
 
 import com.adc.da.sys.entity.UserEO;
+import com.adc.da.sys.util.LoginUserUtil;
 import com.adc.da.sys.util.UUIDUtils;
 import com.adc.da.util.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -56,15 +57,16 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
 
     /**
      * 刘寅楠
-     * @param userId
+     * @param
      * @return com.adc.da.person.entity.UserInfoEO
      * @throws Exception
      */
     @ApiOperation(value = "查找用户信息接口")
-    @PostMapping("/getByUserInfoCode")
-    public ResponseMessage<UserEO> getByUserInfoCode(String userId) throws Exception {
-        UserEO userEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
-        return Result.success(userEO);
+    @GetMapping("/getByUserInfoCode")
+    public ResponseMessage<UserInfoEO> getByUserInfoCode() throws Exception {
+        String userId= LoginUserUtil.getUserId();
+        UserInfoEO userInfoEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
+        return Result.success(userInfoEO);
     }
 
 
