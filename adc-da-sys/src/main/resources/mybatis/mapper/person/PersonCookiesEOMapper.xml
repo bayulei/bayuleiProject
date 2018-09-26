@@ -118,6 +118,7 @@
      where  id = #{id}
   </update>
 
+<<<<<<< Updated upstream
   <!-- 修改记录，只修改只不为空的字段 -->
   <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.person.entity.PersonCookiesEO" >
     update TS_PERSON_COOKIES
@@ -157,6 +158,47 @@
      where id = #{value}
 
   </select>
+=======
+    <!-- 修改记录，只修改只不为空的字段 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.person.entity.PersonCookiesEO">
+        update TS_PERSON_COOKIES
+        <set>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="creationTime != null">
+                creation_time = #{creationTime},
+            </if>
+            <if test="validFlag != null">
+                valid_flag = 1,
+            </if>
+            <if test="resUri != null">
+                res_uri = #{resUri},
+            </if>
+            <if test="resId != null">
+                res_id = #{resId},
+            </if>
+            <if test="resTitle != null">
+                res_title = #{resTitle},
+            </if>
+            <if test="cookieType != null">
+                cookie_type = #{cookieType},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id查询 TS_PERSON_COOKIES -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from TS_PERSON_COOKIES
+        where id = #{value}
+    </select>
+>>>>>>> Stashed changes
 
   <!-- 删除记录 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -165,11 +207,36 @@
 
   </delete>
 
+<<<<<<< Updated upstream
   <!-- TS_PERSON_COOKIES 列表总数-->
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
     select count(1) from TS_PERSON_COOKIES
     <include refid="Base_Where_Clause"/>
   </select>
+=======
+    <!-- TS_PERSON_COOKIES 列表总数-->
+    <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+        select count(1) from TS_PERSON_COOKIES
+        <include refid="Base_Where_Clause"/>
+    </select>
+
+    <!-- 查询TS_PERSON_COOKIES列表 -->
+    <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        (select tmp_tb.* , rownum rn from
+        (select
+        <include refid="Base_Column_List"/>
+        from TS_PERSON_COOKIES
+        <include refid="Base_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''">
+            ${pager.orderCondition}
+        </if>
+        ) tmp_tb where rownum &lt;= ${pager.endIndex})
+        where rn &gt;= ${pager.startIndex} and user_id=#{userId}
+    </select>
+>>>>>>> Stashed changes
 
   <!-- 查询TS_PERSON_COOKIES列表 -->
   <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
@@ -192,4 +259,23 @@
     </if>
   </select>
 
+<<<<<<< Updated upstream
+=======
+    <!-- 根据浏览资源类型查看用户浏览过的内容-->
+    <select id="queryByCookieType" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from TS_PERSON_COOKIES
+        where cookie_type=#{cookieType, jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 根据用户id查询浏览记录-->
+    <select id="queryByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from TS_PERSON_COOKIES
+        where user_id=#{userId}
+    </select>
+>>>>>>> Stashed changes
 </mapper>

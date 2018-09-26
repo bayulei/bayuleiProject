@@ -31,6 +31,18 @@ public class UserInfoEO extends BaseEntity {
     private String userId;
     private String id;
 
+<<<<<<< Updated upstream
+=======
+//    追加字段
+    private String acount;
+    private String uName;
+    private String email;
+
+    //刘寅楠
+//    protected List<UserEO> userEOList=new ArrayList<>();
+//    public UserEO userEO = new UserEO();
+
+>>>>>>> Stashed changes
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -277,4 +289,46 @@ public class UserInfoEO extends BaseEntity {
         this.id = id;
     }
 
+<<<<<<< Updated upstream
+=======
+    public String getAcount() {
+        return acount;
+    }
+
+    public void setAcount(String acount) {
+        this.acount = acount;
+    }
+
+    public String getuName() {
+        return uName;
+    }
+
+    public void setuName(String uName) {
+        this.uName = uName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+//    public List<UserEO> getUserEOList() {
+//        return userEOList;
+//    }
+//
+//    public void setUserEOList(List<UserEO> userEOList) {
+//        this.userEOList = userEOList;
+//    }
+
+//    public UserEO getUserEO() {
+//        return userEO;
+//    }
+//
+//    public void setUserEO(UserEO userEO) {
+//        this.userEO = userEO;
+//    }
+>>>>>>> Stashed changes
 }

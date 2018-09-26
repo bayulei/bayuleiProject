@@ -1,85 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adc.da.person.dao.PersonNoteEODao" >
-  <!-- Result Map-->
-  <resultMap id="BaseResultMap" type="com.adc.da.person.entity.PersonNoteEO" >
-    <id column="id" property="id" />
-    <result column="modify_time" property="modifyTime" />
-    <result column="creartion_time" property="creartionTime" />
-    <result column="valid_flag" property="validFlag" />
-    <result column="note_content" property="noteContent" />
-    <result column="res_type" property="resType" />
-    <result column="res_id" property="resId" />
-    <result column="collect_id" property="collectId" />
-    <result column="user_id" property="userId" />
-  </resultMap>
+<mapper namespace="com.adc.da.person.dao.PersonNoteEODao">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.adc.da.person.entity.PersonNoteEO">
+        <id column="id" property="id"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="creartion_time" property="creartionTime"/>
+        <result column="valid_flag" property="validFlag"/>
+        <result column="note_content" property="noteContent"/>
+        <result column="res_type" property="resType"/>
+        <result column="res_id" property="resId"/>
+        <result column="collect_id" property="collectId"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
 
-  <!-- TS_PERSON_NOTE table all fields -->
-  <sql id="Base_Column_List" >
-     modify_time, creartion_time, valid_flag, note_content, res_type, res_id, collect_id, user_id, id
+    <!-- TS_PERSON_NOTE table all fields -->
+    <sql id="Base_Column_List">
+     modify_time, creartion_time, valid_flag, res_type, res_id, collect_id, user_id, id
   </sql>
 
-  <!-- 查询条件 -->
-  <sql id="Base_Where_Clause">
-    where 1=1
-    <trim suffixOverrides="," >
-      <if test="modifyTime != null" >
-        and modify_time ${modifyTimeOperator} #{modifyTime}
-      </if>
-      <if test="modifyTime1 != null" >
-        and modify_time &gt;= #{modifyTime1}
-      </if>
-      <if test="modifyTime2 != null" >
-        and modify_time &lt;= #{modifyTime2}
-      </if>
-      <if test="creartionTime != null" >
-        and creartion_time ${creartionTimeOperator} #{creartionTime}
-      </if>
-      <if test="creartionTime1 != null" >
-        and creartion_time &gt;= #{creartionTime1}
-      </if>
-      <if test="creartionTime2 != null" >
-        and creartion_time &lt;= #{creartionTime2}
-      </if>
-      <if test="validFlag != null" >
-        and valid_flag ${validFlagOperator} #{validFlag}
-      </if>
-      <if test="noteContent != null" >
-        and note_content ${noteContentOperator} #{noteContent}
-      </if>
-      <if test="resType != null" >
-        and res_type ${resTypeOperator} #{resType}
-      </if>
-      <if test="resId != null" >
-        and res_id ${resIdOperator} #{resId}
-      </if>
-      <if test="collectId != null" >
-        and collect_id ${collectIdOperator} #{collectId}
-      </if>
-      <if test="userId != null" >
-        and user_id ${userIdOperator} #{userId}
-      </if>
-      <if test="id != null" >
-        and id ${idOperator} #{id}
-      </if>
-    </trim>
-  </sql>
+    <!-- 查询条件 -->
+    <sql id="Base_Where_Clause">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="modifyTime != null">
+                and modify_time ${modifyTimeOperator} #{modifyTime}
+            </if>
+            <if test="modifyTime1 != null">
+                and modify_time &gt;= #{modifyTime1}
+            </if>
+            <if test="modifyTime2 != null">
+                and modify_time &lt;= #{modifyTime2}
+            </if>
+            <if test="creartionTime != null">
+                and creartion_time ${creartionTimeOperator} #{creartionTime}
+            </if>
+            <if test="creartionTime1 != null">
+                and creartion_time &gt;= #{creartionTime1}
+            </if>
+            <if test="creartionTime2 != null">
+                and creartion_time &lt;= #{creartionTime2}
+            </if>
+            <if test="validFlag != null">
+                and valid_flag ${validFlagOperator} #{validFlag}
+            </if>
+            <if test="noteContent != null">
+                and note_content ${noteContentOperator} #{noteContent}
+            </if>
+            <if test="resType != null">
+                and res_type ${resTypeOperator} #{resType}
+            </if>
+            <if test="resId != null">
+                and res_id ${resIdOperator} #{resId}
+            </if>
+            <if test="collectId != null">
+                and collect_id ${collectIdOperator} #{collectId}
+            </if>
+            <if test="userId != null">
+                and user_id ${userIdOperator} #{userId}
+            </if>
+            <if test="id != null">
+                and id ${idOperator} #{id}
+            </if>
+        </trim>
+    </sql>
 
-  <!-- 插入记录 -->
-  <insert id="insert" parameterType="com.adc.da.person.entity.PersonNoteEO" >
-    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_TS_PERSON_NOTE.NEXTVAL FROM DUAL
-    </selectKey> -->
-    insert into TS_PERSON_NOTE(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creartionTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{noteContent, jdbcType=VARCHAR}, #{resType, jdbcType=VARCHAR}, #{resId, jdbcType=VARCHAR}, #{collectId, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
-  </insert>
+    <!-- 插入记录 -->
+    <insert id="insert" parameterType="com.adc.da.person.entity.PersonNoteEO">
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+            SELECT SEQ_TS_PERSON_NOTE.NEXTVAL FROM DUAL
+        </selectKey> -->
+        insert into TS_PERSON_NOTE(<include refid="Base_Column_List"/>)
+        values (#{modifyTime, jdbcType=TIMESTAMP}, #{creartionTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER},
+        #{noteContent, jdbcType=VARCHAR}, #{resType, jdbcType=VARCHAR}, #{resId, jdbcType=VARCHAR},
+        #{collectId, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+    </insert>
 
-  <!-- 动态插入记录 主键是序列 -->
-  <insert id="insertSelective" parameterType="com.adc.da.person.entity.PersonNoteEO" >
+    <!-- 动态插入记录 主键是序列 -->
+    <insert id="insertSelective" parameterType="com.adc.da.person.entity.PersonNoteEO">
         <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_TS_PERSON_NOTE.NEXTVAL FROM DUAL
     </selectKey> -->
         insert into TS_PERSON_NOTE
+<<<<<<< Updated upstream
     <trim prefix="(" suffix=")" suffixOverrides="," >
                 <if test="modifyTime != null" >modify_time,</if>
                 <if test="creartionTime != null" >creartion_time,</if>
@@ -155,16 +158,96 @@
     select <include refid="Base_Column_List" /> 
       from TS_PERSON_NOTE
      where id = #{value}
+=======
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modifyTime != null">modify_time,</if>
+            <if test="creartionTime != null">creartion_time,</if>
+            <if test="validFlag != null">valid_flag,</if>
+            <if test="noteContent != null">note_content,</if>
+            <if test="resType != null">res_type,</if>
+            <if test="resId != null">res_id,</if>
+            <if test="collectId != null">collect_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="id != null">id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modifyTime != null">#{modifyTime, jdbcType=TIMESTAMP},</if>
+            <if test="creartionTime != null">#{creartionTime, jdbcType=TIMESTAMP},</if>
+            <if test="validFlag != null">#{validFlag, jdbcType=INTEGER},</if>
+            <if test="noteContent != null">#{noteContent, jdbcType=VARCHAR},</if>
+            <if test="resType != null">#{resType, jdbcType=VARCHAR},</if>
+            <if test="resId != null">#{resId, jdbcType=VARCHAR},</if>
+            <if test="collectId != null">#{collectId, jdbcType=VARCHAR},</if>
+            <if test="userId != null">#{userId, jdbcType=VARCHAR},</if>
+            <if test="id != null">#{id, jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
 
-  </select>
+    <!--&lt;!&ndash; 根据pk，修改记录&ndash;&gt;-->
+    <!--<update id="updateByPrimaryKey" parameterType="com.adc.da.person.entity.PersonNoteEO" >-->
+    <!--update TS_PERSON_NOTE-->
+    <!--set  modify_time = #{modifyTime},-->
+    <!--creartion_time = #{creartionTime},-->
+    <!--valid_flag = #{validFlag},-->
+    <!--note_content = #{noteContent},-->
+    <!--res_type = #{resType},-->
+    <!--res_id = #{resId},-->
+    <!--collect_id = #{collectId},-->
+    <!--user_id = #{userId}-->
+    <!--where  id = #{id}-->
+    <!--</update>-->
 
-  <!-- 删除记录 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+
+    <!-- 修改记录，只修改只不为空的字段 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.person.entity.PersonNoteEO">
+        update TS_PERSON_NOTE
+        <set>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="creartionTime != null">
+                creartion_time = #{creartionTime},
+            </if>
+            <if test="validFlag != null">
+                valid_flag = #{validFlag},
+            </if>
+            <if test="noteContent != null">
+                note_content = #{noteContent},
+            </if>
+            <if test="resType != null">
+                res_type = #{resType},
+            </if>
+            <if test="resId != null">
+                res_id = #{resId},
+            </if>
+            <if test="collectId != null">
+                collect_id = #{collectId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+>>>>>>> Stashed changes
+
+    <!-- 根据id查询 TS_PERSON_NOTE -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from TS_PERSON_NOTE
+        where id = #{value}
+
+    </select>
+
+    <!-- 删除记录 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from TS_PERSON_NOTE
      where id = #{value}
 
   </delete>
 
+<<<<<<< Updated upstream
   <!-- TS_PERSON_NOTE 列表总数-->
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
     select count(1) from TS_PERSON_NOTE
@@ -192,4 +275,61 @@
     </if>
   </select>
 
+=======
+    <!-- TS_PERSON_NOTE 列表总数-->
+    <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+        select count(1) from TS_PERSON_NOTE
+        <include refid="Base_Where_Clause"/>
+    </select>
+
+    <!-- 查询TS_PERSON_NOTE列表 -->
+    <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        (select tmp_tb.* , rownum rn from
+        (select
+        <include refid="Base_Column_List"/>
+        from TS_PERSON_NOTE
+        <include refid="Base_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''">
+            ${pager.orderCondition}
+        </if>
+        ) tmp_tb where rownum &lt;= ${pager.endIndex})
+        where rn &gt;= ${pager.startIndex}
+    </select>
+
+    <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select
+        <include refid="Base_Column_List"/>
+        from TS_PERSON_NOTE
+        <include refid="Base_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''">
+            ${pager.orderCondition}
+        </if>
+    </select>
+
+
+    <!-- 根据收藏id修改笔记内容 -->
+    <update id="updateByCollectId" parameterType="com.adc.da.person.entity.PersonNoteEO">
+        update TS_PERSON_NOTE set note_Content =#{noteContent} where collect_Id = #{collectId}
+    </update>
+
+
+    <!-- 根据收藏id查询笔记-->
+    <select id="queryByCollectId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from TS_PERSON_NOTE
+        where collect_id=#{collectId, jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 根据收藏id删除笔记-->
+    <delete id="deleteByCollectId" parameterType="java.lang.String">
+        delete
+        from TS_PERSON_NOTE
+        where collect_id=#{collectId, jdbcType=VARCHAR}
+    </delete>
+>>>>>>> Stashed changes
 </mapper>
