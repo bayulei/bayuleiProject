@@ -26,7 +26,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 @RestController
 @RequestMapping("/${restPath}/person/personCookies")
 @Api(description = "|PersonCookiesEO|")
-public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
+public class PersonCookiesEOController extends BaseController<PersonCookiesEO> {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonCookiesEOController.class);
 
@@ -35,7 +35,7 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
 
     @ApiOperation(value = "|PersonCookiesEO|分页查询")
     @GetMapping("/page")
-    @RequiresPermissions("person:personCookies:page")
+    //@RequiresPermissions("person:personCookies:page")
     public ResponseMessage<PageInfo<PersonCookiesEO>> page(PersonCookiesEOPage page) throws Exception {
         List<PersonCookiesEO> rows = personCookiesEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
@@ -43,21 +43,21 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
 
     @ApiOperation(value = "|PersonCookiesEO|查询")
     @GetMapping("")
-    @RequiresPermissions("person:personCookies:list")
+    //@RequiresPermissions("person:personCookies:list")
     public ResponseMessage<List<PersonCookiesEO>> list(PersonCookiesEOPage page) throws Exception {
         return Result.success(personCookiesEOService.queryByList(page));
     }
 
     @ApiOperation(value = "|PersonCookiesEO|详情")
     @GetMapping("/{id}")
-    @RequiresPermissions("person:personCookies:get")
+    //@RequiresPermissions("person:personCookies:get")
     public ResponseMessage<PersonCookiesEO> find(@PathVariable String id) throws Exception {
         return Result.success(personCookiesEOService.selectByPrimaryKey(id));
     }
 
     @ApiOperation(value = "|PersonCookiesEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("person:personCookies:save")
+    //@RequiresPermissions("person:personCookies:save")
     public ResponseMessage<PersonCookiesEO> create(@RequestBody PersonCookiesEO personCookiesEO) throws Exception {
         personCookiesEOService.insertSelective(personCookiesEO);
         return Result.success(personCookiesEO);
@@ -65,11 +65,11 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
 
     @ApiOperation(value = "|PersonCookiesEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("person:personCookies:update")
+    //@RequiresPermissions("person:personCookies:update")
     public ResponseMessage<PersonCookiesEO> update(@RequestBody PersonCookiesEO personCookiesEO) throws Exception {
         personCookiesEO.setModifyTime(new Date());
-        int i=personCookiesEOService.updateByPrimaryKeySelective(personCookiesEO);
-        if(i>0){
+        int i = personCookiesEOService.updateByPrimaryKeySelective(personCookiesEO);
+        if (i > 0) {
             return Result.error("删除失败");
         }
         return Result.success(personCookiesEO);
@@ -78,7 +78,7 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
 
     @ApiOperation(value = "|PersonCookiesEO|删除")
     @DeleteMapping("/{id}")
-    @RequiresPermissions("person:personCookies:delete")
+    //@RequiresPermissions("person:personCookies:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         personCookiesEOService.deleteByPrimaryKey(id);
         logger.info("delete from TS_PERSON_COOKIES where id = {}", id);
@@ -98,13 +98,16 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
 //    }
 
 
-    @ApiOperation(value = "根据用户id查询")
-    @GetMapping("/userId")
-    public ResponseMessage<List<PersonCookiesEO>> queryByUserId(String userId)throws Exception{
-        List<PersonCookiesEO> personCookiesEOS = personCookiesEOService.queryByUserId(userId);
-        if(personCookiesEOS==null){
-            return Result.error("查询失败");
-        }
-        return Result.success(personCookiesEOS);
-    }
+//    @ApiOperation(value = "根据用户id查询")
+//    @GetMapping("/userId")
+//    public ResponseMessage<List<PersonCookiesEO>> queryByUserId(String ids) throws Exception {
+//        String[] idList = ids.split(",");
+//        if (idList != null && idList.length > 0) {
+//            for (String id : idList) {
+//                List<PersonConfEO> list = personConfEOService.deleteByIdList(id);
+//            }
+//        }
+//        return Result.success();
+//    }
 }
+

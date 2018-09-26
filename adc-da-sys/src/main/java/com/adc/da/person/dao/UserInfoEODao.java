@@ -1,8 +1,14 @@
 package com.adc.da.person.dao;
 
 import com.adc.da.base.dao.BaseDao;
+import com.adc.da.base.page.BasePage;
 import com.adc.da.person.entity.UserInfoEO;
+import com.adc.da.sys.entity.UserEO;
+
+import java.util.List;
+
 /**
+
  *
  * <br>
  * <b>功能：</b>TS_USER_INFO UserInfoEODao<br>
@@ -11,5 +17,9 @@ import com.adc.da.person.entity.UserInfoEO;
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public interface UserInfoEODao extends BaseDao<UserInfoEO> {
+
+  List<UserEO> getUserEOAndInfoEOByUserCode(String userId);
+
+  List<UserInfoEO> queryByUserId(String userId);
 
 }

@@ -13,6 +13,8 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.person.dao.UserInfoEODao;
 import com.adc.da.person.entity.UserInfoEO;
 
+import java.util.List;
+
 
 /**
  *
@@ -31,12 +33,10 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
     @Autowired
     private UserInfoEODao dao;
 
+
+
     public UserInfoEODao getDao() {
         return dao;
-    }
-
-    public UserEO getUserEOAndInfoEOByUserCode(String userId){
-        return null;
     }
 
     public UserInfoEO getUserInfoEOByUserInfoId(String userId){
@@ -46,10 +46,15 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
     public void save(UserInfoEO userInfoEO){
 
     }
-
-
     public UserInfoEO updateById(UserInfoEO userInfoEO){
         return null;
     }
 
+    public List<UserEO> getUserEOAndInfoEOByUserCode(String userId){
+        return dao.getUserEOAndInfoEOByUserCode(userId);
+    }
+
+    public List<UserInfoEO> queryByUserId(String userId){
+        return dao.queryByUserId(userId);
+    }
 }

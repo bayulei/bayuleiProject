@@ -1,6 +1,7 @@
 package com.adc.da.sys.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.adc.da.person.entity.UserInfoEO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +29,6 @@ public class UserEO extends BaseEntity {
     private String password;
     private String account;
     private String usid;
-
     private  String userType;
     private String orgId;
     private String orgName;
@@ -46,6 +46,14 @@ public class UserEO extends BaseEntity {
     private int disableFlag;
 
     private int unlockFlag;
+
+
+    //追加字段
+    private List<UserInfoEO> UserEOList=new ArrayList<>();
+    private String duty;
+    private String faxAddress;
+
+
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -315,4 +323,27 @@ public class UserEO extends BaseEntity {
         return this.roleName;
     }
 
+    public List<UserInfoEO> getUserEOList() {
+        return UserEOList;
+    }
+
+    public void setUserEOList(List<UserInfoEO> userEOList) {
+        UserEOList = userEOList;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
+    }
+
+    public String getFaxAddress() {
+        return faxAddress;
+    }
+
+    public void setFaxAddress(String faxAddress) {
+        this.faxAddress = faxAddress;
+    }
 }
