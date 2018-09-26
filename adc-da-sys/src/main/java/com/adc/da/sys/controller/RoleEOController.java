@@ -163,10 +163,10 @@ public class RoleEOController extends BaseController<RoleEO> {
 		List<UserRoleEO> list = roleEOService.getUserRoleListByRoleId(id);
 		// 如果角色有对应用户，则不允许删除
 		if (list != null && list.size() > 0) {
-			return Result.error("r0031", "该角色有对应用户，不能删除");
+			return Result.error( "该角色有对应用户，不能删除");
 		}
 		roleEOService.delete(id);
-		return Result.success();
+		return Result.success("true","操作成功","");
 	}
 	/**
 	 * @Author liwenxuan
@@ -185,7 +185,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 				List<UserRoleEO> list = roleEOService.getUserRoleListByRoleId(id);
 				// 如果角色有对应用户，则不允许删除
 				if (list != null && list.size() > 0) {
-					return Result.error("r0031", "该角色有对应用户，不能删除");
+					return Result.error("该角色有对应用户，不能删除");
 				}
 			/*	String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 				if(loginUserId != null || loginUserId != ""){
@@ -203,7 +203,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 				roleEOService.delete(id);
 			}
 		}
-		return Result.success();
+		return Result.success("true","操作成功","");
 	}
 	
 	
@@ -223,7 +223,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 		}else{
 			return Result.error("r00100","未设置角色信息");
 		}
-		return Result.success(roleVO);
+		return Result.success("true","操作成功",roleVO);
 	}
 	
 	@ApiOperation(value = "|RoleEO|全部")

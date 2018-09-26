@@ -105,6 +105,7 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 	public void delete(String roleId) {
 		dao.deleteLogic(roleId);
 		dao.deleteRoleMenuByRoleId(roleId);
+
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
