@@ -97,6 +97,7 @@ public class NoticeAndCheckApprovalService {
             }
             switch (task.getName()){
                 case "法规管理工程师发起流程":
+                    map.put("userId",userId);
                     map.put("applicat", userId);
                     BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
                     busExecuProcessEOPage.setProcInstId(processInstanceId);
@@ -180,6 +181,7 @@ public class NoticeAndCheckApprovalService {
             map.put("endTime",noticeAndCheckApprovalVO.getEndTime());
             map.put("project",noticeAndCheckApprovalVO.getProject());
             map.put("workRequirements",noticeAndCheckApprovalVO.getWorkRequirements());
+            map.put("userId",userId);
             //启动流程
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, map);
             processInstanceId = processInstance.getId();
@@ -367,6 +369,9 @@ public class NoticeAndCheckApprovalService {
                     }
                 }
             } else {
+                Map map = runtimeService.getVariables(processInstanceId);
+                map.put("userId","下一个人");
+                runtimeService.setVariables(processInstanceId,map);
                 Task taskNow = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
                 if (taskNow != null) {
                     //设置下一步的代办人
@@ -588,7 +593,6 @@ public class NoticeAndCheckApprovalService {
             destTaskKey = "usertask1";
             break;
         case "usertask4":
-            destTaskKey = "usertask1";
             break;
         case "usertask5":
             destTaskKey = "usertask4";
@@ -605,7 +609,37 @@ public class NoticeAndCheckApprovalService {
         if(message.equals("无需驳回")){
             return message;
         }
-        message = flowProcessUtil.rejectTask(processInstanceId, nowUserId, destTaskKey, comment);
+        if("usertask4".equals(nowTaskKey)){
+            List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskDefinitionKey("usertask1").orderByTaskCreateTime().desc().list();
+            if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+                for(HistoricTaskInstance historicTaskInstance : historicTaskInstanceList){
+                    if(historicTaskInstance.getEndTime()!=null){
+                        Map map = runtimeService.getVariables(processInstanceId);
+                        map.put("userId",historicTaskInstance.getAssignee());
+                        map.put("flag",2);
+                        runtimeService.setVariables(processInstanceId,map);
+                        break;
+                    }
+                }
+            }
+
+            List<Task> taskList =  taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+            if(taskList!=null && !taskList.isEmpty()){
+                for(Task task : taskList){
+                    task.setDescription(comment);//设置驳回意见
+                    taskService.saveTask(task);
+                    taskService.complete(task.getId());
+                }
+            }
+        }else {
+            message = flowProcessUtil.rejectTask(processInstanceId, nowUserId, destTaskKey, comment);
+            BusNoticecheckProcessEOPage page = new BusNoticecheckProcessEOPage();
+            page.setTaskId(taskEntity.getParentTaskId());
+            List<BusNoticecheckProcessEO> list = busNoticecheckProcessEOService.queryByList(page);
+            if(list!=null && !list.isEmpty()){
+                busNoticecheckProcessEOService.deleteNoticeCheckInfo(taskEntity.getParentTaskId());
+            }
+        }
         //修改业务表的上一操作人
         BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
         busExecuProcessEOPage.setProcInstId(processInstanceId);
