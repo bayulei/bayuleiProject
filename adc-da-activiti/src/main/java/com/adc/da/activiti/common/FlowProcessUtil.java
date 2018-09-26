@@ -1,9 +1,12 @@
 package com.adc.da.activiti.common;
 
 import com.adc.da.activiti.entity.BusExecuProcessEO;
+import com.adc.da.activiti.entity.BusNoticecheckProcessEO;
 import com.adc.da.activiti.entity.BusProcessEO;
 import com.adc.da.activiti.page.BusExecuProcessEOPage;
+import com.adc.da.activiti.page.BusNoticecheckProcessEOPage;
 import com.adc.da.activiti.service.BusExecuProcessEOService;
+import com.adc.da.activiti.service.BusNoticecheckProcessEOService;
 import com.adc.da.activiti.service.BusProcessEOService;
 import com.adc.da.sys.util.UUIDUtils;
 import io.swagger.annotations.Api;
@@ -62,6 +65,9 @@ public class FlowProcessUtil {
     @Autowired
     private BusProcessEOService busProcessEOService;
 
+
+    @Autowired
+    private BusNoticecheckProcessEOService busNoticecheckProcessEOService;
 
     @ApiOperation(value = "部署流程")
     @GetMapping("/deploymentProcessDefinition")
@@ -137,14 +143,14 @@ public class FlowProcessUtil {
      * @return:String
      * date: 2018年9月5日 10:15:04
      */
-    public String entrust(String processInstanceId,String owner){
-        String oldOwner = taskService.createTaskQuery().processInstanceId(processInstanceId).
-                singleResult().getOwner();
+    public String entrust(String processInstanceId,String nowUserId,String owner){
+        String oldOwner = taskService.createTaskQuery().processInstanceId(processInstanceId)
+                .taskAssignee(nowUserId).singleResult().getOwner();
         if(!StringUtils.isEmpty(oldOwner)){
             return "单个任务只能委托一次";
         }else{
-            Task task=taskService.createTaskQuery().processInstanceId(processInstanceId)
-                    .singleResult();
+            Task task = taskService.createTaskQuery().processInstanceId(processInstanceId)
+                    .taskAssignee(nowUserId).singleResult();
             taskService.delegateTask(task.getId(),owner);
             return "委托成功";
         }
@@ -194,7 +200,7 @@ public class FlowProcessUtil {
      * @return:String
      * date: 2018年9月12日 13:31:02
      */
-    public String rejectTask(String processInstanceId,String nowUserId,String destTaskKey,String rejectMessage){
+    public String rejectTask(String processInstanceId,String nowUserId,String destTaskKey,String rejectMessage) throws Exception{
         //获得当前任务的对应实列
         Task taskEntity =  taskService.createTaskQuery().processInstanceId(processInstanceId).taskAssignee(nowUserId).singleResult();
 //        if (!StringUtils.isEmpty(rejectMessage)) {
@@ -220,7 +226,21 @@ public class FlowProcessUtil {
             int sign = 0;
             for (ActivityImpl activityImpl : activitilist) {
                 //确定当前活动activiti节点
-
+                //如果是subprocess1证明进入子流程，则需要再来一层循环来遍历子流程所有节点
+                if("subprocess1".equals(activityImpl.getId())){
+                    List<ActivityImpl> childActivityImplList = activityImpl.getActivities();
+                    if(childActivityImplList!=null && !childActivityImplList.isEmpty()){
+                        for(ActivityImpl childActivityImpl : childActivityImplList){
+                            if (taskDefKey.equals(childActivityImpl.getId())) {
+                                currActiviti = childActivityImpl;
+                                sign++;
+                            } else if (destTaskKey.equals(childActivityImpl.getId())) {
+                                destActiviti = childActivityImpl;
+                                sign++;
+                            }
+                        }
+                    }
+                }
                 if (taskDefKey.equals(activityImpl.getId())) {
                     currActiviti = activityImpl;
 
@@ -261,8 +281,35 @@ public class FlowProcessUtil {
 //        variables.put(WfConstant.WF_VAR_IS_REJECTED.value(), WfConstant.IS_REJECTED.value());
             //执行当前任务驳回到目标任务draft
             //查询流程当前所有任务
-            List<Task> taskList = taskService.createTaskQuery().processInstanceId(taskEntity.getProcessInstanceId())
-                    .list();
+            List<Task> taskList = new ArrayList<Task>();
+            if(taskEntity.getParentTaskId()!=null && !taskEntity.getParentTaskId().isEmpty()){
+                //有子任务的存在
+                List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskParentTaskId(taskEntity.getParentTaskId()).list();
+                if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+                    for(HistoricTaskInstance historicTaskInstance : historicTaskInstanceList){
+                        taskList.add(taskService.createTaskQuery().taskId(historicTaskInstance.getId()).singleResult());
+                    }
+                }
+            }else if(!taskEntity.getExecutionId().equals(taskEntity.getProcessInstanceId())){
+                //有子流程的存在
+                taskList.add(taskService.createTaskQuery().executionId(taskEntity.getExecutionId()).singleResult());
+            }else{
+                //主流程
+                taskList.add(taskService.createTaskQuery().processInstanceId(taskEntity.getProcessInstanceId()).singleResult());
+            }
+            String executionId = "";
+
+            if(taskEntity.getParentTaskId()!=null && !taskEntity.getParentTaskId().isEmpty()) {
+                //有子任务的存在下
+                //查到上层的执行对象I的（一共三层）
+                String parentExecutionId = runtimeService.createExecutionQuery().executionId(taskEntity.getExecutionId()).singleResult()
+                        .getParentId();
+                String parentExecutionId2 = runtimeService.createExecutionQuery().executionId(parentExecutionId).singleResult().getParentId();
+                executionId = runtimeService.createExecutionQuery().executionId(parentExecutionId2).singleResult().getId();
+            }else{
+                //子流程要用对应的执行对象；主流程下面直接用流程实例
+                executionId = taskEntity.getExecutionId();
+            }
             for (Task task :  taskList){
                 if(!StringUtils.isEmpty(task.getOwner())){
                     taskService.resolveTask(task.getId());
@@ -270,13 +317,60 @@ public class FlowProcessUtil {
                 taskService.complete(task.getId());
             }
 
+            Task nowTask = null;
             //获取驳回到目的节点（最新审批的）之前的审批人，并将审批人赋值给最新的节点上
-            Task nowTask = taskService.createTaskQuery().processInstanceId(taskEntity.getProcessInstanceId()).singleResult();
-            List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskDefinitionKey(destTaskKey)
-                    .orderByTaskCreateTime().desc().list();
-            if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
-                //第二条才是最新的目的节点上次历史记录，因为第一条是最新的一条，不是历史
-                taskService.setAssignee(nowTask.getId(),historicTaskInstanceList.get(1).getAssignee());
+            //判断是否是在子流程内部
+            if(!taskEntity.getExecutionId().equals(taskEntity.getProcessInstanceId())){
+                //判断是否是子任务
+                if(taskEntity.getParentTaskId()!=null && !taskEntity.getParentTaskId().isEmpty()){
+                    //驳回后把工程师流程业务表删除掉之前的任务ID（废数据）
+                    nowTask = taskService.createTaskQuery().executionId(executionId).singleResult();
+                    BusNoticecheckProcessEOPage page = new BusNoticecheckProcessEOPage();
+                    page.setTaskId(taskEntity.getParentTaskId());
+                    List<BusNoticecheckProcessEO> list = busNoticecheckProcessEOService.queryByList(page);
+                    if(list!=null && !list.isEmpty()){
+                        busNoticecheckProcessEOService.deleteNoticeCheckInfo(taskEntity.getParentTaskId());
+                    }
+                    List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskDefinitionKey(destTaskKey)
+                            .taskId(taskEntity.getParentTaskId()).orderByTaskCreateTime().desc().list();
+                    if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+                        //第二条才是最新的目的节点上次历史记录，因为第一条是最新的一条，不是历史
+                        for(HistoricTaskInstance historicTaskInstance : historicTaskInstanceList){
+                            if(historicTaskInstance.getEndTime()!=null){
+                                taskService.setAssignee(nowTask.getId(),historicTaskInstance.getAssignee());
+                                break;
+                            }
+                        }
+
+                    }
+                }else{
+                    nowTask = taskService.createTaskQuery().executionId(taskEntity.getExecutionId()).singleResult();
+                    List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskDefinitionKey(destTaskKey)
+                            .executionId(taskEntity.getExecutionId()).orderByTaskCreateTime().desc().list();
+                    if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+                        //第二条才是最新的目的节点上次历史记录，因为第一条是最新的一条，不是历史
+                        for(HistoricTaskInstance historicTaskInstance : historicTaskInstanceList){
+                            if(historicTaskInstance.getEndTime()!=null){
+                                taskService.setAssignee(nowTask.getId(),historicTaskInstance.getAssignee());
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }else{
+                nowTask = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
+                List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskDefinitionKey(destTaskKey)
+                        .orderByTaskCreateTime().desc().list();
+                if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){
+                    //第二条才是最新的目的节点上次历史记录，因为第一条是最新的一条，不是历史
+                    for(HistoricTaskInstance historicTaskInstance : historicTaskInstanceList){
+                        if(historicTaskInstance.getEndTime()!=null){
+                            taskService.setAssignee(nowTask.getId(),historicTaskInstance.getAssignee());
+                            break;
+                        }
+                    }
+                }
             }
 
 //            //清除目标节点的新流入项

@@ -5,93 +5,108 @@
       <div slot="left">
         <label-input v-model="roleSearch.roleName" placeholder="请输入选项" label="角色名称"></label-input>
         <label-select v-model="roleSearch.type" :options="roleSearch.typeOptions" label="状态"></label-select>
-      </div>
-      <div slot="right">
         <Button type="info" @click="selectRoleBtn">查询</Button>
         <Button type="primary" @click="resetRole">重置</Button>
       </div>
-    </table-tools-bar>
-    <div class="content">
-      <div class="btn-group">
-      <Button type="success" @click="openRoleAddModel">增加</Button>
-      <Button type="error" @click="roleConfigure" style="margin-left: 0.3rem">配置角色资源</Button>
-      </div>
-      <Table :columns="roleColumns" :data="roleList" border ref="selection"></Table>
-      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-    </div>
-    <div>
-      <Drawer :title="roleTitle" v-model="showRoleInfoModal" @on-close="closeDrawer" width="720" :mask-closable="false" >
-        <div>
+      <div slot="right">
+        <Button type="primary" @click="openRoleAddModel">增加</Button>
+        <Button type="primary" @click="roleConfigure" >配置角色资源</Button>
+        <Button  type="error" @click="roleBatchDelete">批量删除</Button>
+        <Drawer :title="roleTitle" v-model="showRoleInfoModal" width="720" :styles="styles">
+        <div class="laws-info-form">
           <Form ref="roleVO" :model="roleVO" :rules="roleVOFormRules" label-position="right" class="label-input-form">
-            <input v-model="roleVO.id" v-show="false">
+              <input v-model="roleVO.id" v-show="false">
+              <Row>
+                <Col span="12">
+                  <FormItem label="角色名称" prop="name" class="laws-info-item">
+                    <Input  v-model="roleVO.name" />
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span="12">
+                  <FormItem label="角色描述" prop="remarks"  class="laws-info-item">
+                    <Input v-model="roleVO.remarks"  placeholder="角色描述......" />
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span="12">
+                  <!--<FormItem label="角色类型" prop="roleType" class="laws-info-item">-->
+                    <!--<Select v-model="roleVO.roleType" multiple>-->
+                      <!--<Option v-for="item in roleTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+                    <!--</Select>-->
+                  <!--</FormItem>-->
+                  <FormItem label="角色类型" prop="roleType" class="laws-info-item">
+                    <Select v-model="roleVO.roleType" clearable >
+                      <Option v-for="item in roleTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span="12">
+                  <FormItem label="角色状态" prop="useFlag" class="laws-info-item">
+                    <Switch v-model="roleVO.useFlag" size="large" :true-value="Number(0)" :false-value="Number(1)" >
+                      <span slot="open">启用</span>
+                      <span slot="close">禁用</span>
+                    </Switch>
+                  </FormItem>
+                </Col>
+              </Row>
+
+            </Form>
+        </div>
+          <div id="roleFormButton" class="demo-drawer-footer">
+            <Button type="primary" @click="saveRoleInfo">提交</Button>
+            <Button @click="cancelRoleModel">取消</Button>
+          </div>
+        </Drawer>
+        <Drawer :closable="false" width="640" :title="roleTitle" v-model="roleInfoModel" >
+          <div class="demo-drawer-profile">
+            <Form class="label-input-form" >
             <Row>
-              <Col span="8">
-                <FormItem label="角色名称" prop="name" class="laws-info-item">
-                  <Input  v-model="roleVO.name" />
+              <Col span="12">
+                <FormItem label="角色名称"  label-position="top" class="laws-info-item">
+                  <Input v-model="roleVO.name" disabled></Input>
                 </FormItem>
+                <!--角色名称:{{roleVO.name}}-->
               </Col>
             </Row>
             <Row>
-              <Col span="8">
-                <FormItem lable="角色类型" prop="roleType" class="laws-info-item" >
-                  <Select  v-model="roleVO.roleType" clearable style="width:200px">
+              <Col span="12">
+                <FormItem label="角色类型" prop="roleType" class="laws-info-item">
+                  <Select v-model="roleVO.roleType" clearable  disabled>
                     <Option v-for="item in roleTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
                 </FormItem>
+                <!--角色类型:{{roleVO.roleType === 'AUTHBODY'? '认证机构':roleVO.roleType ==='CITEK' ? '检测机构':roleVO.roleType === 'CONADMIN' ? '配置管理员':'暂无'}}-->
               </Col>
             </Row>
             <Row>
-              <Col span="8">
-                <FormItem label="角色状态" prop="useFlag" class="laws-info-item">
-                  <Switch v-model="roleVO.useFlag" size="large" :true-value="Number(0)" :false-value="Number(1)" >
-                    <span slot="open">启用</span>
-                    <span slot="close">禁用</span>
-                  </Switch>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="8">
-                <FormItem label="角色描述" prop="remarks"  class="laws-info-item">
-                  <Input v-model="roleVO.remarks" type="textarea" :rows="4" placeholder="角色描述......" />
-                </FormItem>
-              </Col>
-            </Row>
-          </Form>
-
-        </div>
-        <div id="roleFormButton" class="demo-drawer-footer">
-          <Button type="primary" @click="saveRoleInfo">提交</Button>
-          <Button @click="cancelRoleModel">取消</Button>
-        </div>
-      </Drawer>
-      <Drawer :closable="false" width="640" :title="roleTitle" v-model="roleInfoModel" >
-        <div class="demo-drawer-profile">
-          <Row>
-            <Col span="12">
-                角色名称:{{roleVO.name}}
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-                角色类型:{{roleVO.roleType === 'AUTHBODY'? '认证机构':roleVO.roleType ==='CITEK' ? '检测机构':roleVO.roleType === 'CONADMIN' ? '配置管理员':'暂无'}}
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
+              <Col span="12">
                 角色状态:{{roleVO.useFlag ===0 ? '启用':'禁用'}}
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-              角色描述:{{roleVO.remarks}}
-            </Col>
-          </Row>
-        </div>
-
-      </Drawer>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="12">
+                <FormItem label="角色描述"  label-position="top" class="laws-info-item">
+                  <Input v-model="roleVO.remarks" disabled></Input>
+                </FormItem>
+                <!--角色描述:{{roleVO.remarks}}-->
+              </Col>
+            </Row>
+            </Form>
+          </div>
+        </Drawer>
+      </div>
+    </table-tools-bar>
+    <div class="content">
+      <loading :loading="roleDataLoading">数据获取中</loading>
+      <Table :columns="roleColumns" :data="roleList" border ref="selection" @on-selection-change=" handleSelectone">
+      </Table>
+      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
     </div>
-    <loading :loading="roleDataLoading">执行中</loading>
   </div>
 </template>
 
@@ -104,15 +119,22 @@ export default {
       roleInfoModel: false,
       total: 0,
       roleTitle: '',
+      selectNum: '',
       roleSearch: {
         roleName: '',
         type: '',
         typeOptions: [{label: '全部', value: '-1'}, {label: '有效', value: '0'}, {label: '无效', value: '1'}]
       },
       pageNo: 0,
-      pageSize: 20,
+      pageSize: 10,
       userList: [],
       showRoleInfoModal: false,
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
+      },
       roleVO: {
         id: '',
         name: '',
@@ -198,28 +220,28 @@ export default {
               },
               on: {
                 click: () => {
-                  this.showRole(params.index)
+                  this.roleEdit(params.row)
                 }
               }
-            }, '查看'),
+            }, '编辑'),
             h('Button', {
               props: {
-                type: 'primary',
-                size: 'smaill'
+                type: 'warning',
+                size: 'small'
               },
               style: {
                 marginRight: '5px'
               },
               on: {
                 click: () => {
-                  this.roleEdit(params.index)
+                  this.showRole(params.index)
                 }
               }
-            }, '编辑'),
+            }, '查看'),
             h('Button', {
               props: {
-                type: 'primary',
-                size: 'smaill'
+                type: 'error',
+                size: 'small'
               },
               style: {
                 marginRight: '5px'
@@ -245,7 +267,7 @@ export default {
         useFlag = this.roleSearch.type
       }
       this.$http.get('sys/role/page',
-        {pageNo: this.pageNo, pageSize: this.pageSize, roleName: this.roleSearch.roleName, useFlag: useFlag},
+        {pageNo: this.pageNO, pageSize: this.pageSize, roleName: this.roleSearch.roleName, useFlag: useFlag},
         {
           _this: this,
           loading: 'roleDataLoading'
@@ -266,25 +288,97 @@ export default {
       this.roleSearch.roleName = ''
       this.roleSearch.type = ''
     },
+    //  全选
+    handleSelectAll (status) {
+      this.$refs.selection.selectAll(status)
+    },
+    // 非全选
+    handleSelectone (row) {
+      this.selectNum = row
+    },
+    // 对话框
+    instance (type, content) {
+      const title = '请选择'
+      switch (type) {
+        case 'info':
+          this.$Modal.info({
+            title: title,
+            content: content
+          })
+          break
+        case 'success':
+          this.$Modal.success({
+            title: title,
+            content: content
+          })
+          break
+        case 'warning':
+          this.$Modal.warning({
+            title: title,
+            content: content
+          })
+          break
+        case 'error':
+          this.$Modal.error({
+            title: title,
+            content: content
+          })
+          break
+      }
+    },
     // 添加角色信息
     openRoleAddModel () {
+      this.$nextTick(() => {
+        this.$refs['roleVO'].resetFields()
+      })
       this.roleTitle = '添加角色信息'
       this.showRoleInfoModal = true
-      // this.cleanRoleValue()
     },
     // 编辑角色信息
-    roleEdit (index) {
-      this.roleVO = this.roleList[index]
+    roleEdit (row) {
+      this.roleVO = JSON.parse(JSON.stringify(row))
       this.roleTitle = '编辑角色信息'
       this.showRoleInfoModal = true
+    },
+    // 批量删除
+    roleBatchDelete () {
+      if (this.selectNum === '' || this.selectNum.length === 0) {
+        this.instance('warning', '请选择一条数据进行删除')
+      } else {
+        let delIds = []
+        for (let i = 0; i < this.selectNum.length; i++) {
+          delIds.push(this.selectNum[i].id)
+        }
+        delIds = delIds.join(',')
+        this.$Modal.confirm({
+          title: '请选择',
+          content: '确定删除这些数据?',
+          onOk: () => {
+            this.$http.delete('sys/role/deleteList', {
+              ids: delIds
+            },
+            { _this: this
+            }, res => {
+              if (res.ok) {
+                this.executeSuccess('删除成功')
+                // 此处调用新增页面关闭代码 并刷新页面
+                this.roleSelectPage()
+              } else {
+                this.executeError('删除失败! 失败原因:' + res.message)
+              }
+            })
+          },
+          onCancel: () => {
+          }})
+      }
     },
     // 删除角色
     roleDel (index) {
       // 此处需要confirm功能
-      this.$confirm({
-        title: '删除角色',
-        tips: '是否删除角色?',
-        confirm: () => {
+      this.$Modal.confirm({
+        title: '请选择',
+        content: '确定删除这一条数据?',
+        onOk: () => {
           this.$http.delete('sys/role/' + this.roleList[index].id, {},
             { _this: this
             }, res => {
@@ -297,6 +391,8 @@ export default {
               }
             })
           this.$Modal.remove()
+        },
+        onCancel: () => {
         }})
     },
     // 保存角色信息
@@ -313,6 +409,7 @@ export default {
               this.executeSuccess('编辑成功')
               // 此处调用新增页面关闭代码 并刷新页面
               this.roleSelectPage()
+              this.showRoleInfoModal = false
             } else {
               this.executeError('编辑失败! 失败原因:' + res.message)
             }
@@ -330,6 +427,7 @@ export default {
               this.executeSuccess('保存成功')
               // 此处调用新增页面关闭代码 并刷新页面
               this.roleSelectPage()
+              this.showRoleInfoModal = false
             } else {
               this.executeError('保存失败! 失败原因:' + res.message)
             }
@@ -344,8 +442,7 @@ export default {
     },
     // 关闭模态框
     cancelRoleModel () {
-      this.cleanRoleValue()
-      // this.showRoleInfoModal = false
+      this.showRoleInfoModal = false
     },
     // 配置角色信息
     roleConfigure () {
@@ -361,30 +458,30 @@ export default {
       this.pageSize = pageSize
       this.roleSelectPage()
     },
-    cleanRoleValue () {
-      this.showRoleInfoModal = false
-      this.$nextTick(() => {
-        this.$refs['roleVO'].resetFields()
-      })
-    },
+    // cleanRoleValue () {
+    //   this.showRoleInfoModal = false
+    //   this.$nextTick(() => {
+    //     this.$refs['roleVO'].resetFields()
+    //   })
+    // },
     executeSuccess (message) {
       this.$Message.success(message)
     },
     executeError (message) {
       this.$Message.error(message)
-    },
-    closeDrawer () {
-      console.log('关闭抽屉页面')
-      this.cleanRoleValue()
     }
+    // closeDrawer () {
+    //   console.log('关闭抽屉页面')
+    //   this.cleanRoleValue()
+    // }
   },
-  watch: {
-    showRoleInfoModal (newVal, oldVal) {
-      if (!newVal) {
-        this.cleanRoleValue()
-      }
-    }
-  },
+  // watch: {
+  //   showRoleInfoModal (newVal, oldVal) {
+  //     if (!newVal) {
+  //       this.cleanRoleValue()
+  //     }
+  //   }
+  // },
   mounted () {
     this.pageNo = 1
     this.roleSearch.roleName = null
@@ -394,12 +491,22 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   .role-manage{
     background: #FFF;
     padding: 0.2rem 0.3rem;
     .content .btn-group{
       margin-bottom: 0.5rem;
     }
+    .pagination {
+      width: 100%;
+      position: absolute;
+      bottom: -71px;
+      left: 0;
+    }
+  }
+  .laws-info-form{
+    min-height: 400px;
+    overflow : auto;
   }
 </style>

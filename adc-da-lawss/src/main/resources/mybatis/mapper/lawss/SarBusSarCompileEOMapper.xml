@@ -87,22 +87,22 @@
         and issue_time &lt;= #{issueTime2}
       </if>
       <if test="standName != null" >
-        and stand_name ${standNameOperator} #{standName}
+        and stand_name ${standNameOperator} concat(concat('%',#{standName}),'%')
       </if>
       <if test="standYear != null" >
         and stand_year ${standYearOperator} #{standYear}
       </if>
       <if test="standNumber != null" >
-        and stand_number ${standNumberOperator} #{standNumber}
+        and stand_number ${standNumberOperator} concat(concat('%',#{standNumber}),'%')
       </if>
       <if test="standCode != null" >
         and stand_code ${standCodeOperator} #{standCode}
       </if>
       <if test="classifyCode != null" >
-        and classify_code ${classifyCodeOperator} #{classifyCode}
+        and classify_code ${classifyCodeOperator} concat(concat('%',#{classifyCode}),'%')
       </if>
       <if test="busStandSubclass != null" >
-        and bus_stand_subclass ${busStandSubclassOperator} #{busStandSubclass}
+        and bus_stand_subclass ${busStandSubclassOperator} concat(concat('%',#{busStandSubclass}),'%')
       </if>
       <if test="busStandClassify != null" >
         and bus_stand_classify ${busStandClassifyOperator} #{busStandClassify}
@@ -293,5 +293,13 @@
        ${pager.orderCondition}
     </if>
   </select>
+
+    <select id="queryByStandCode" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select <include refid="Base_Column_List"/> from SAR_BUS_SAR_COMPILE
+        where stand_number = #{standNumber} and valid_flag = #{validFlag}
+        <if test="id != null" >
+            and id != #{id}
+        </if>
+    </select>
 
 </mapper>

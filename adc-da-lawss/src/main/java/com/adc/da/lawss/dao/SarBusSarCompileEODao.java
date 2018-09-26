@@ -2,6 +2,10 @@ package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarBusSarCompileEO;
+import com.adc.da.lawss.page.SarBusSarCompileEOPage;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -12,4 +16,12 @@ import com.adc.da.lawss.entity.SarBusSarCompileEO;
  */
 public interface SarBusSarCompileEODao extends BaseDao<SarBusSarCompileEO> {
 
+    /**
+     * @Author yangxuenan
+     * @Description 根据标准编号查询数据
+     * Date 2018/9/17 9:00
+     * @Param [sarBusSarCompileEO]
+     * @return java.util.List<com.adc.da.lawss.entity.SarBusSarCompileEO>
+     **/
+    List<SarBusSarCompileEO> queryByStandCode(SarBusSarCompileEOPage sarBusSarCompileEO);
 }

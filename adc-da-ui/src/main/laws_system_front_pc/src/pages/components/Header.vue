@@ -27,11 +27,11 @@ export default {
   .com-header{
     width: 100%;
     position: relative;
-    height: 1.6rem;
-    background: @bgColor;
+    height: 7.8%;
+    background: @homeHeaderBgColor;
     display: flex;
     align-items: center;
-    padding-left: 0.4rem;
+    padding-left: 20px;
     .logo{
       width: 22.7%;
       height: 58.75%;

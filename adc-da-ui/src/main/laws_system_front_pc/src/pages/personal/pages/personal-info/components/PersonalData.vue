@@ -12,7 +12,7 @@
     <div class="user-info-form">
       <Form ref="userInfo" :model="userInfo" :rules="userInfoRules" :label-width="80" class="label-input-form">
         <FormItem label="用户名" prop="username" class="user-info-item">
-          <Input v-model="userInfo.username"></Input>
+          <Input v-model="userInfo.account"></Input>
         </FormItem>
         <FormItem label="姓 名" prop="cname" class="user-info-item">
           <Input v-model="userInfo.cname"></Input>
@@ -49,8 +49,8 @@ export default {
     return {
       avator: require('assets/images/user-big-avator.png'),
       userInfo: {
-        username: '', // 用户名
-        cname: '', // 姓名
+        account: '', // 用户名
+        uname: '', // 姓名
         department: '', // 任职部门
         phone: '', // 电话
         email: '', // 邮箱
@@ -89,16 +89,13 @@ export default {
       console.log(avator)
     },
     searchPersonal () {
-      this.$http.get('person/userInfo', {}, {
+      this.$http.post('person/userInfo/getByUserInfoCode', {
+        userId: 'QJX2Z8E678'
+      }, {
         _this: this,
         loading: 'loading'
       }, res => {
-        this.userInfo.username = res.data[0].userId
-        this.userInfo.department = res.data[0].duty
-        this.userInfo.phone = res.data[0].officePhone
-        this.userInfo.mobile = res.data[0].mobilePhone
-        this.userInfo.fax = res.data[0].faxAddress
-        this.userInfo.autograph = res.data[0].signature
+        this.userInfo = res.data
       }, e => {})
     }
   },

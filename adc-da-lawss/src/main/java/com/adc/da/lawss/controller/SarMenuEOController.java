@@ -6,6 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.lawss.entity.SarBussStandMenuEO;
+import com.adc.da.lawss.entity.SarLawsMenuEO;
+import com.adc.da.lawss.entity.SarStandMenuEO;
+import com.adc.da.lawss.page.SarLawsMenuEOPage;
+import com.adc.da.lawss.vo.NewmenuOldmenuVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +47,12 @@ public class SarMenuEOController extends BaseController<SarMenuEO>{
     }
 
 	@ApiOperation(value = "|SarMenuEO|查询")
-    @GetMapping("")
+    @GetMapping("/selectmenu")
     /*@RequiresPermissions("lawss:sarMenu:list")*/
     public ResponseMessage<List<SarMenuEO>> list(SarMenuEOPage page) throws Exception {
-        return Result.success(sarMenuEOService.queryByList(page));
+        page.setValidFlag("0");
+        List<SarMenuEO> list = sarMenuEOService.queryByList(page);
+        return Result.success(list);
 	}
 
     @ApiOperation(value = "|SarMenuEO|详情")
@@ -58,14 +65,14 @@ public class SarMenuEOController extends BaseController<SarMenuEO>{
     @ApiOperation(value = "|SarMenuEO|新增")
     @PostMapping("/addSarMenu")
     /*@RequiresPermissions("lawss:sarMenu:save")*/
-    public ResponseMessage<SarMenuEO> create(SarMenuEO sarMenuEO) throws Exception {
+    public ResponseMessage<SarMenuEO> addSarMenu(SarMenuEO sarMenuEO) throws Exception {
         return sarMenuEOService.createSarMenu(sarMenuEO);
     }
 
     @ApiOperation(value = "|SarMenuEO|修改")
-    @PutMapping("/updateSarMenu")
+    @PostMapping("/updateSarMenu")
     /*@RequiresPermissions("lawss:sarMenu:update")*/
-    public ResponseMessage<SarMenuEO> update(@RequestBody SarMenuEO sarMenuEO) throws Exception {
+    public ResponseMessage<SarMenuEO> updateSarMenu(SarMenuEO sarMenuEO) throws Exception {
         sarMenuEO.setModifyTime(new Date());
         int countUpdate = sarMenuEOService.updateByPrimaryKeySelective(sarMenuEO);
         if(countUpdate > 0){
@@ -86,16 +93,16 @@ public class SarMenuEOController extends BaseController<SarMenuEO>{
 
     /**
      * @Author yangxuenan
-     * @Description 根据父ID查询子节点
+     * @Description 根据父ID查询子节点下是否有记录
      * Date 2018/9/11 17:06
      * @Param [parentId]
      * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.lawss.entity.SarMenuEO>>
      **/
     @ApiOperation(value = "|SarMenuEO|查询子节点")
-    @GetMapping("/queryMenuByPid")
+    @GetMapping("/judgequeryMenuByPid")
     /*@RequiresPermissions("lawss:sarMenu:list")*/
-    public ResponseMessage<List<SarMenuEO>> queryMenuByPid(String parentId) throws Exception {
-        return Result.success(sarMenuEOService.queryMenuByPid(parentId));
+    public ResponseMessage<Boolean> judgequeryMenuByPid(SarMenuEO sarMenuEO) throws Exception {
+        return Result.success(sarMenuEOService.judgequeryMenuByPid(sarMenuEO));
     }
 
     /**
@@ -106,23 +113,26 @@ public class SarMenuEOController extends BaseController<SarMenuEO>{
      * @return com.adc.da.util.http.ResponseMessage
      **/
     @ApiOperation(value = "|SarMenuEO|删除目录及子目录")
-    @PutMapping("/deleteMenuAndChildren")
+    @PostMapping("/deleteMenuAndChildren")
     /*@RequiresPermissions("lawss:sarMenu:update")*/
-    public ResponseMessage deleteMenuAndChildren(@RequestParam("id") String id) throws Exception {
-        SarMenuEO sarMenuEO = new SarMenuEO();
-        sarMenuEO.setId(id);
+    public ResponseMessage deleteMenuAndChildren(SarMenuEO sarMenuEO) throws Exception {
+        sarMenuEO.setModifyTime(new Date());
         sarMenuEO.setValidFlag(1);
         int countUpdate = sarMenuEOService.updateByPrimaryKeySelective(sarMenuEO);
         if(countUpdate > 0){
             //查询是否包含子目录
-            List<SarMenuEO> getChildrenMenu = sarMenuEOService.queryMenuByPid(id);
+            List<SarMenuEO> getChildrenMenu = sarMenuEOService.queryMenuByPid(sarMenuEO);
             if(getChildrenMenu.size() > 0) {
                 for(int i=0;i<getChildrenMenu.size();i++){
                     SarMenuEO upMenu = new SarMenuEO();
                     upMenu.setId(getChildrenMenu.get(i).getId());
                     upMenu.setValidFlag(1);
+                    upMenu.setSorDivide(sarMenuEO.getSorDivide());
                     //删除子目录
                     sarMenuEOService.updateByPrimaryKeySelective(upMenu);
+                    //删除对应标准，法规，
+                    sarMenuEOService.updateStandLawsBymenuid(upMenu);
+
                 }
             }
             return Result.success("0","删除成功",sarMenuEO);

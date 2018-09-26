@@ -2,6 +2,7 @@ package com.adc.da.lawss.vo;
 
 import com.adc.da.base.entity.BaseEntity;
 import com.adc.da.lawss.entity.MsgFileEO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,14 +14,14 @@ import java.util.List;
 public class MsgDynamicInfoVO extends BaseEntity {
 
 
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private Integer validFlag;
     private String pubOrg;
     private String pubUser;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date pubTime;
     private String linkUri;
     private String content;
@@ -29,6 +30,7 @@ public class MsgDynamicInfoVO extends BaseEntity {
     private String msgType;
     private String id;
 
+    private Integer isPicMsg;
 //新填字段
 //    文件ID
     private String attId;
@@ -40,7 +42,9 @@ public class MsgDynamicInfoVO extends BaseEntity {
     private String msgId;
 
 //
-    List<MsgFileEO> msgFileEOList = new ArrayList<MsgFileEO>();
+    private  List<MsgFileEO> msgFileEOList;
+
+    private MsgFileEO picFileEO;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -73,6 +77,7 @@ public class MsgDynamicInfoVO extends BaseEntity {
             case "msgMode": return "msg_mode";
             case "msgType": return "msg_type";
             case "id": return "id";
+            case "isPicMsg": return "is_pic_msg";
             default: return null;
         }
     }
@@ -108,6 +113,7 @@ public class MsgDynamicInfoVO extends BaseEntity {
             case "msg_mode": return "msgMode";
             case "msg_type": return "msgType";
             case "id": return "id";
+            case "is_pic_msg": return "isPicMsg";
             default: return null;
         }
     }
@@ -246,5 +252,21 @@ public class MsgDynamicInfoVO extends BaseEntity {
 
     public void setMsgFileEOList(List<MsgFileEO> msgFileEOList) {
         this.msgFileEOList = msgFileEOList;
+    }
+
+    public void setIsPicMsg(Integer isPicMsg){
+        this.isPicMsg=isPicMsg;
+    }
+
+    public Integer getIsPicMsg(){
+        return this.isPicMsg;
+    }
+
+    public void setPicFileEO(MsgFileEO picFileEO){
+        this.picFileEO=picFileEO;
+    }
+
+    public MsgFileEO getPicFileEO(){
+        return this.picFileEO;
     }
 }

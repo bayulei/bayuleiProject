@@ -3,31 +3,71 @@
  <div id="CollectionStandard">
    <table-tools-bar>
      <div slot="left">
-       <label-input v-model="search.standardName" placeholder="请输入动态信息" label="动态搜索"></label-input>
+       <label-input v-model="search.collectType" placeholder="请输入动态信息" label="标准搜索"></label-input>
        <Button type="info" @click="standardSelect">查询</Button>
      </div>
      <div slot="right"></div>
    </table-tools-bar>
    <div class="content">
-     <div v-for="(item,index) in coollectionList" :key="index">
-       <Card :bordered="false"  style="border-bottom: 1px solid #e8eaec;">
+     <Collapse v-model="collapseValue" accordion>
+       <Panel :name="item.id" v-for="(item,index) in collectionList" :key="index" hide-arrow :dispaly="isDis">
+         <div>
          <Row>
            <Col span="3"  offset="1">
              <Icon type="md-bookmark" />
-             <span >{{item.number}}</span>
+             <span >{{item.collectResId}}</span>
            </Col>
            <Col span="6">
-             <strong>{{item.theme}}</strong>
+             <strong>{{item.collectTitle}}</strong>
            </Col>
-           <Col span="4">{{item.time}}</Col>
+           <Col span="4">{{item.creationTime}}</Col>
            <Col span="4" offset="6">
-             <Button type="dashed" >{{item.cancelBtn}}</Button>
-             <Button type="dashed" @click="writeNotes">{{item.writeBtn}}</Button>
+             <Button type="dashed"  @click="cancelCollection">取消收藏</Button>
+             <Button type="dashed" @click="writeNotes(item)">书写笔记</Button>
            </Col>
          </Row>
-       </Card>
-       <Input v-model="textarea" type="textarea" :autosize="{minRows: 5,maxRows: 7}"  placeholder="笔记内容..." style="width: 90%; margin: 0.5rem 1.5rem" v-show="inputType"></Input>
-     </div>
+         </div>
+         <div slot="content">
+           <Form ref="formDynamic" :model="formDynamic" :label-width="200">
+             <FormItem>
+               <Button type="dashed" class="btn" @click="handleAdd(num)" icon="md-add">添加笔记</Button>
+             </FormItem>
+             <FormItem
+               v-for="(num, index) in formDynamic.items"
+               :key="index"
+               :label="'笔记 ' + num.index + ':'"
+               :prop="'items.' + index + '.value'">
+               <Row>
+                 <Col span="12">
+                   <span>{{num.value}}</span>
+                 </Col>
+                 <Col span="6" offset="1" align="right">
+                   <Button type="info" size="small" @click="handleRender(num)">书写笔记</Button>
+                   <Button type="info"  size="small" @click="handleSubmit('formDynamic')">保存笔记</Button>
+                   <Button type="info"  size="small" @click="handleReset('formDynamic')" >删除笔记</Button>
+                 </Col>
+               </Row>
+             </FormItem>
+           </Form>
+           <Modal v-model="standardModal" width="360">
+             <p slot="header" style="color:#f60;text-align:center">
+               <Icon type="ios-information-circle"></Icon>
+               <span>Delete confirmation</span>
+             </p>
+             <div style="text-align:center">
+               <p>After this task is deleted, the downstream 10 tasks will not be implemented.</p>
+               <p>Will you delete it?</p>
+             </div>
+             <div slot="footer">
+               <Button type="error" size="large">Delete</Button>
+             </div>
+           </Modal>
+         </div>
+       </Panel>
+     </Collapse>
+     <div v-if="total===0">暂无数据</div>
+     <loading :loading="loading">数据获取中</loading>
+     <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
    </div>
  </div>
 </template>
@@ -37,51 +77,153 @@ export default {
   name: 'collectionStandard',
   data () {
     return {
+      standardModal: false,
+      collapseValue: '0',
+      // 字数统计
+      remnant: 200,
+      isDis: false,
+      total: 0,
+      page: 1,
+      rows: 10,
+      loading: false,
       search: {
-        standardName: ''
+        collectType: '' // 输入框内容
       },
-      textarea: '',
-      inputType: false,
-      coollectionList: [{
-        number: 'GB-34660-2017',
-        theme: '道路车辆 电磁兼容性要求和测验方法',
-        time: '2018年/09/13  12：00',
-        cancelBtn: '取消收藏',
-        writeBtn: '书写笔记'
-      }, {
-        number: 'GB-34660-2017',
-        theme: '道路车辆 电磁兼容性要求和测验方法',
-        time: '2018年/09/13  12：00',
-        cancelBtn: '取消收藏',
-        writeBtn: '书写笔记'
-      }, {
-        number: 'GB-34660-2017',
-        theme: '道路车辆 电磁兼容性要求和测验方法',
-        time: '2018年/09/13  12：00',
-        cancelBtn: '取消收藏',
-        writeBtn: '书写笔记'
-      }]
+      index: 1,
+      formDynamic: {
+        items: [
+          {
+            input: '',
+            value: '',
+            index: 1
+          }
+        ]
+      },
+      collectionList: [] // 内容
     }
   },
   methods: {
+    click () {
+      this.standardModal = true
+    },
+    // 分页
+    pageChange (page) {
+      this.page = page
+      this.selectClass()
+    },
+    pageSizeChange (pageSize) {
+      this.rows = pageSize
+      this.selectClass()
+    },
+    // 计算数字
+    descInput () {
+      let txtVal = this.textarea.length
+      this.remnant = 200 - txtVal
+    },
     // 检索
-    standardSelect () {},
-    writeNotes () {
-      if (this.inputType === false) {
-        this.inputType = true
-      } else {
-        this.inputType = false
-      }
+    standardSelect () {
+      this.$http.get('person/personCollect/page', {
+        pageNo: this.page,
+        pageSize: this.rows,
+        collectTitle: this.search.collectType
+      }, {
+        _this: this,
+        loading: 'loading'
+      }, res => {
+        this.collectionList = res.data.list
+        this.total = res.data.count
+      }, e => {})
+    },
+    cancelCollection () {
+      this.$http.get('', {
+      }, {
+        _this: this
+      }, res => {
+        this.standardSelect()
+      }, e => {})
+    },
+    writeNotes (item) {
+    },
+    handleSubmit (name) {
+      alert('已提交')
+    },
+    handleReset (name) {
+      alert('已取消')
+    },
+    handleAdd (num) {
+      console.log(num)
+      this.index++
+      this.formDynamic.items.push({
+        value: '',
+        index: this.index
+      })
+    },
+    handleRender (num) {
+      this.$Modal.confirm({
+        render: (h) => {
+          return h('Input', {
+            props: {
+              type: 'textarea',
+              maxlength: 200,
+              value: num.value,
+              placeholder: '请书写笔记……'
+            },
+            on: {
+              input: (val) => {
+                num.input = val
+              }
+            }
+          })
+        },
+        onOk: () => {
+          num.value = num.input
+        },
+        onCancel: () => {
+          num.input = ''
+        }
+      })
+      // this.standardModal = true
     }
+  },
+  mounted () {
+    this.standardSelect()
   }
 }
 </script>
 
 <style lang="less">
    #CollectionStandard{
-     .coStyle{
-       width: 80%;
-       margin: 0 auto;
-     }
+   }
+   .btn-group{
+     position: relative;
+     top:-1.3rem;
+     left: 23rem;
+   }
+   .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header{
+     height: 38px;
+     line-height: 36px;
+     padding-left: 16px;
+     color: #666;
+     cursor: pointer;
+     position: relative;
+     border-bottom: 1px solid transparent;
+     -webkit-transition: all 0.2s ease-in-out;
+     transition: all 0.2s ease-in-out;
+   }
+   .ivu-collapse {
+     background-color: #FFFFFF;
+     border-radius: 3px;
+     border: none;
+   }
+   .ivu-form-item {
+     margin-bottom: 0.3rem;
+     vertical-align: top;
+     zoom: 1;
+   }
+   .ivu-form-item-content {
+     position: relative;
+     line-height: 32px;
+     font-size: 12px;
+     margin-left: 0 !important;
    }
 </style>

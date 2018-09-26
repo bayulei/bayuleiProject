@@ -3,13 +3,22 @@ package com.adc.da.lawss.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
 import com.adc.da.lawss.entity.MsgFileEO;
+import com.adc.da.lawss.page.MsgFileEOPage;
 import com.adc.da.lawss.service.MsgFileEOService;
 import com.adc.da.lawss.vo.MsgDynamicInfoVO;
 
+import com.adc.da.sys.constant.ValidFlagEnum;
+import com.adc.da.sys.entity.UserEO;
+import com.adc.da.sys.service.UserEOService;
+import com.adc.da.sys.util.UUIDUtils;
+import com.adc.da.util.http.ResponseMessageCodeEnum;
 import com.adc.da.util.utils.BeanMapper;
 import com.adc.da.util.utils.StringUtils;
 
@@ -31,6 +40,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 
+import javax.validation.constraints.NotNull;
+
 @RestController
 @RequestMapping("/${restPath}/lawss/msgDynamicInfo")
 @Api(description = "|MsgDynamicInfoEO|")
@@ -42,15 +53,24 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
     private MsgDynamicInfoEOService msgDynamicInfoEOService;
 
     @Autowired
+    private UserEOService userEOService;
+
+    @Autowired
     BeanMapper beanMapper;
 
     @Autowired
     private MsgFileEOService msgFileEOService;
-
+/**
+ * @Author liwenxuan
+ * @Description  分页查询动态信息表信息
+ * @Date Administrator 2018/9/17
+ * @Param [pageNo, pageSize]
+ * @return com.adc.da.util.http.ResponseMessage<com.adc.da.util.http.PageInfo<com.adc.da.lawss.entity.MsgDynamicInfoEO>>
+ **/
 	@ApiOperation(value = "|MsgDynamicInfoEO|分页查询")
     @GetMapping("/page")
 //    @RequiresPermissions("lawss:msgDynamicInfo:page")
-    public ResponseMessage<PageInfo<MsgDynamicInfoEO>> page(Integer pageNo,Integer pageSize) throws Exception {
+    public ResponseMessage<PageInfo<MsgDynamicInfoEO>> page(Integer pageNo,Integer pageSize,String msgType,String msgTitle) throws Exception {
         MsgDynamicInfoEOPage page = new MsgDynamicInfoEOPage();
         if (pageNo != null) {
             page.setPage(pageNo);
@@ -58,10 +78,33 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
         if (pageSize != null) {
             page.setPageSize(pageSize);
         }
+        if(StringUtils.isNotEmpty(msgType)){
+            page.setMsgType(msgType);
+        }
+        if(StringUtils.isNotEmpty(msgTitle)){
+            page.setTitle("%"+msgTitle+"%");
+            page.setTitleOperator("LIKE");
+        }
+        page.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue()+"");
+        // 此处增加查询创建人代码
         List<MsgDynamicInfoEO> rows = msgDynamicInfoEOService.queryByPage(page);
+        if(rows!=null && !rows.isEmpty()){
+            for(MsgDynamicInfoEO EO:rows){
+                if(StringUtils.isNotEmpty(EO.getPubUser())){
+                  UserEO pubUser= userEOService.selectByPrimaryKey(EO.getPubUser());
+                  EO.setPubUserName(pubUser!=null?pubUser.getUname():null);
+                }
+            }
+        }
         return Result.success(getPageInfo(page.getPager(), rows));
     }
-
+/**
+ * @Author liwenxuan
+ * @Description
+ * @Date Administrator 2018/9/17
+ * @Param [page]
+ * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.lawss.entity.MsgDynamicInfoEO>>
+ **/
 	@ApiOperation(value = "|MsgDynamicInfoEO|查询")
     @GetMapping("")
 //    @RequiresPermissions("lawss:msgDynamicInfo:list")
@@ -72,19 +115,47 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
     @ApiOperation(value = "|MsgDynamicInfoEO|详情")
     @GetMapping("/{id}")
 //    @RequiresPermissions("lawss:msgDynamicInfo:get")
-    public ResponseMessage<MsgDynamicInfoEO> find(@PathVariable String id) throws Exception {
-        return Result.success(msgDynamicInfoEOService.selectByPrimaryKey(id));
+    public ResponseMessage<MsgDynamicInfoVO> find(@PathVariable String id) throws Exception {
+	    // 此处需要增加查询相关参数信息
+        MsgDynamicInfoEO msgDynamicInfoEO= msgDynamicInfoEOService.selectByPrimaryKey(id);
+        MsgDynamicInfoVO  msgDynamicInfoVO=   beanMapper.map(msgDynamicInfoEO, MsgDynamicInfoVO.class);
+        MsgFileEOPage fileEOPage=new MsgFileEOPage();
+        fileEOPage.setMsgId(id);
+        fileEOPage.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue()+"");
+        List<MsgFileEO> fileList= msgFileEOService.queryByList(fileEOPage);
+        if(fileList!=null && !fileList.isEmpty()){
+            List<MsgFileEO> fileEOS=new ArrayList<MsgFileEO>();
+            for(MsgFileEO f:fileList){
+                if(f.getFileType().equals("PIC")){
+                    msgDynamicInfoVO.setPicFileEO(f);
+                }else{
+                    fileEOS.add(f);
+                }
+            }
+            if(!fileEOS.isEmpty()){
+                msgDynamicInfoVO.setMsgFileEOList(fileEOS);
+            }
+        }
+        return Result.success(msgDynamicInfoVO);
     }
-
+/**
+ * @Author liwenxuan
+ * @Description  新增动态信息表和新增动态信息附件表
+ * 先根据需求判断一些字段不能为空，先新增动态信息表然后生成动态信息数据id，把此id作为新增动态信息附件表中消息id字段新增到动态信息附件表
+ *对象里面的发布日期不能为空
+ * 调用附件存入动态信息id/文件名称/文件后缀/文件ID
+ * @Date Administrator 2018/9/17
+ * @Param [msgDynamicInfoVO]
+ * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.MsgDynamicInfoEO>
+ **/
     @ApiOperation(value = "|MsgDynamicInfoEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //    @RequiresPermissions("lawss:msgDynamicInfo:save")
-    public ResponseMessage<MsgDynamicInfoEO> create(@RequestBody MsgDynamicInfoVO msgDynamicInfoVO) throws Exception {
-
+    public ResponseMessage create(@RequestBody MsgDynamicInfoVO msgDynamicInfoVO) throws Exception {
+        Date nowDate=new Date();
         if(StringUtils.isBlank(msgDynamicInfoVO.getTitle())){
             return Result.error("r0014", "动态标题不能为空");
         }
-//        对象里面的发布日期不能为空
         if(msgDynamicInfoVO.getPubTime()==null){
             return  Result.error("r0015", "发布时间不能为空");
         }
@@ -93,50 +164,56 @@ public class MsgDynamicInfoEOController extends BaseController<MsgDynamicInfoEO>
             return  Result.error("r0016","消息类型不能为空");
         }
 
-        if(StringUtils.isBlank(msgDynamicInfoVO.getMsgMode())){
-            return  Result.error("r0016", "消息消息所属模块不能为空");
-        }
         if(StringUtils.isBlank(msgDynamicInfoVO.getContent())){
             return  Result.error("r0016", "动态内容不能为空");
         }
-
-        MsgDynamicInfoEO  msgDynamicInfoEO=   beanMapper.map(msgDynamicInfoVO, MsgDynamicInfoEO.class);
-        msgDynamicInfoEOService.insertSelective( msgDynamicInfoEO);
-
-
-//        调用附件存入动态信息id/文件名称/文件后缀/文件ID
-        List<MsgFileEO> msgFileEOList = msgDynamicInfoVO.getMsgFileEOList();
-        for( MsgFileEO  msgFileEO :   msgFileEOList){
-            msgFileEO.setId(UUID.randomUUID10());
-            msgFileEOService.insert(msgFileEO);
-        }
-//        msgDynamicInfoEOService.updateIdOfMsgFile(msgFileEOList);
-        return Result.success(msgDynamicInfoEO);
+        //TODO 此处获取用户的登录ID   进行数据记录
+        msgDynamicInfoVO.setPubUser("");
+//      MsgDynamicInfoEO  msgDynamicInfoEO=   beanMapper.map(msgDynamicInfoVO, MsgDynamicInfoEO.class);
+        String msgId=msgDynamicInfoEOService.saveMsgInfo( msgDynamicInfoVO);
+        return Result.success(ResponseMessageCodeEnum.SUCCESS.getCode(),"发布成功",msgId);
     }
-//比新增要多添加msgDynamicInfo.getId
+    /**
+     * @Author liwenxuan
+     * @Description
+     * 1.修改动态信息表
+     * 2.修改动态信息附件表（不可以在这里修改只可以插入附件）
+     *
+     * @Date Administrator 2018/9/17
+     * @Param [msgDynamicInfoVO]
+     * @return com.adc.da.util.http.ResponseMessage<com.adc.da.lawss.entity.MsgDynamicInfoEO>
+     **/
     @ApiOperation(value = "|MsgDynamicInfoEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //    @RequiresPermissions("lawss:msgDynamicInfo:update")
     public ResponseMessage<MsgDynamicInfoEO> update(@RequestBody MsgDynamicInfoVO msgDynamicInfoVO) throws Exception {
-        MsgDynamicInfoEO msgDynamicInfoEO = beanMapper.map(msgDynamicInfoVO, MsgDynamicInfoEO.class);
-//        修改动态信息表
-        msgDynamicInfoEOService.updateByPrimaryKeySelective(msgDynamicInfoEO);
-//        修改动态信息附件表（不可以在这里修改只可以插入附件）
-       List<MsgFileEO> msgFileEOList = msgDynamicInfoVO.getMsgFileEOList();
-        /*      msgFileEOService.updateByPrimaryKeySelective(msgFileEOList);*/
-
-        for( MsgFileEO  msgFileEO :   msgFileEOList){
-            msgFileEOService.updateByPrimaryKey(msgFileEO);
-        }
-        return Result.success(msgDynamicInfoEO);
+        msgDynamicInfoEOService.updateMsgInfo(msgDynamicInfoVO);
+        return Result.success(ResponseMessageCodeEnum.SUCCESS.getCode(),"编辑成功！",null);
     }
-
-    @ApiOperation(value = "|MsgDynamicInfoEO|删除")
+/**
+ * @Author liwenxuan
+ * @Description  删除动态信息表信息（设置valid_flag=1）
+ * @Date Administrator 2018/9/17
+ * @Param [id]
+ * @return com.adc.da.util.http.ResponseMessage
+ **/
+/*    @ApiOperation(value = "|MsgDynamicInfoEO|删除")
     @DeleteMapping("/{id}")
 //    @RequiresPermissions("lawss:msgDynamicInfo:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         msgDynamicInfoEOService.deleteByPrimaryKey(id);
         logger.info("delete from MSG_DYNAMIC_INFO where id = {}", id);
+        return Result.success();
+    }*/
+
+
+    @ApiOperation(value = "|MsgDynamicInfoEO|删除")
+    @DeleteMapping("/{ids}")
+//    @RequiresPermissions("lawss:msgDynamicInfo:delete")
+    public ResponseMessage deleteMsgList(@NotNull @PathVariable("ids") String[] ids) throws Exception {
+        msgDynamicInfoEOService.deleteLogicInBatch(Arrays.asList(ids));
+//        msgDynamicInfoEOService.deleteByPrimaryKey(id);
+//        logger.info("delete from MSG_DYNAMIC_INFO where id = {}", id);
         return Result.success();
     }
 

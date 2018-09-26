@@ -866,9 +866,13 @@ public class SarStandardsInfoEOPage extends BasePage {
     private String  menuId;
     private List<String> applyArctics;
     private List<String> replaceStandNums;
+
+    private String[] idlist;  //用于导出数据过程中传递选择的标准id
+
     public String getMenuId() {
         return menuId;
     }
+
     public void setMenuId(String menuId) {
         this.menuId = menuId;
     }
@@ -887,5 +891,13 @@ public class SarStandardsInfoEOPage extends BasePage {
 
     public void setReplaceStandNums(List<String> replaceStandNums) {
         this.replaceStandNums = replaceStandNums;
+    }
+
+    public String[] getIdlist() {
+        return idlist;
+    }
+
+    public void setIdlist(String[] idlist) {
+        this.idlist = idlist;
     }
 }

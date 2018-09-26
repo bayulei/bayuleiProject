@@ -11,11 +11,12 @@
     <result column="file_suffix" property="fileSuffix" />
     <result column="file_name" property="fileName" />
     <result column="msg_id" property="msgId" />
+      <result column="file_type" property="fileType" />
   </resultMap>
 
   <!-- MSG_FILE table all fields -->
   <sql id="Base_Column_List" >
-     modify_time, creation_time, valid_flag, att_id, file_suffix, file_name, msg_id, id
+     modify_time, creation_time, valid_flag, att_id, file_suffix, file_name, msg_id, id,file_type
   </sql>
 
   <!-- 查询条件 -->
@@ -58,6 +59,9 @@
       <if test="id != null" >
         and id ${idOperator} #{id}
       </if>
+        <if test="fileType != null" >
+            and file_type ${fileTypeOperator} #{fileType}
+        </if>
     </trim>
   </sql>
 
@@ -67,7 +71,7 @@
         SELECT SEQ_MSG_FILE.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into MSG_FILE(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{attId, jdbcType=VARCHAR}, #{fileSuffix, jdbcType=VARCHAR}, #{fileName, jdbcType=VARCHAR}, #{msgId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{attId, jdbcType=VARCHAR}, #{fileSuffix, jdbcType=VARCHAR}, #{fileName, jdbcType=VARCHAR}, #{msgId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR},#{fileType, jdbcType=VARCHAR})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -85,6 +89,7 @@
                 <if test="fileName != null" >file_name,</if>
                 <if test="msgId != null" >msg_id,</if>
                 <if test="id != null" >id,</if>
+                <if test="fileType != null" >file_type,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
                 <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
@@ -95,6 +100,7 @@
                 <if test="fileName != null" >#{fileName, jdbcType=VARCHAR},</if>
                 <if test="msgId != null" >#{msgId, jdbcType=VARCHAR},</if>
                 <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+                <if test="fileType != null" >#{fileType, jdbcType=VARCHAR},</if>
             </trim>
   </insert>
 
@@ -107,7 +113,8 @@
             att_id = #{attId},
             file_suffix = #{fileSuffix},
             file_name = #{fileName},
-            msg_id = #{msgId}
+            msg_id = #{msgId},
+            file_type = #{fileType}
      where  id = #{id}
   </update>
 
@@ -136,6 +143,9 @@
       <if test="msgId != null" >
         msg_id = #{msgId},
       </if>
+        <if test="fileType != null" >
+            file_type = #{fileType},
+        </if>
     </set>
     <!-- where id = #{id}-->
       where msg_file.id in
@@ -145,6 +155,16 @@
       </foreach>
   </update>
 
+
+    <update id="deleteLogicInBatch" parameterType="java.util.List">
+        update MSG_FILE
+        set valid_flag = 1
+        where msg_id in
+        <foreach item="msgId" collection="list" open="(" separator=","
+                 close=")" index="index">
+            #{msgId}
+        </foreach>
+    </update>
   <!-- 根据id查询 MSG_FILE -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List" /> 

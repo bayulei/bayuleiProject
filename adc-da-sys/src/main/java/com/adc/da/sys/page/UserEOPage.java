@@ -20,27 +20,24 @@ public class UserEOPage extends BasePage {
     private String password;
     private String passwordOperator = "=";
     private String uname;
-    private String nameOperator = "=";
+    private String unameOperator = "=";
     private String roleName;
     private String roleNameOperator = "=";
     private String roleId;
-    private String roleOperator = "=";
+    private String roleIdOperator = "=";
     private String orgName;
     private String orgNameOperator = "=";
     private String workNum;
     private String workNumOperator ="=";
-
     private String orgId;
-    
+    private String orgIdOperator = "=";
     private String disableFlag;
-
     private String disableFlagOperator = "=";
     private String unlockFlag;
     private String unlockFLagOperator = "=";
-
     private String userType;
-
     private String userTypeOperator = "=";
+
 
     public String getUsid() {
         return this.usid;
@@ -114,12 +111,12 @@ public class UserEOPage extends BasePage {
         this.uname = uname;
     }
 
-    public String getNameOperator() {
-        return this.nameOperator;
+    public String getUnameOperator() {
+        return this.unameOperator;
     }
 
-    public void setNameOperator(String nameOperator) {
-        this.nameOperator = nameOperator;
+    public void setUnameOperator(String uameOperator) {
+        this.unameOperator = unameOperator;
     }
 
 	public String getOrgName() {
@@ -162,12 +159,12 @@ public class UserEOPage extends BasePage {
 		this.roleId = roleId;
 	}
 
-	public String getRoleOperator() {
-		return roleOperator;
+	public String getRoleIdOperator() {
+		return roleIdOperator;
 	}
 
-	public void setRoleOperator(String roleOperator) {
-		this.roleOperator = roleOperator;
+	public void setRoleIdOperator(String roleIdOperator) {
+		this.roleIdOperator = roleIdOperator;
 	}
 
     public String getRoleName() {
@@ -237,5 +234,13 @@ public class UserEOPage extends BasePage {
 
     public String getOrgId(){
         return this.orgId;
+    }
+
+    public String getOrgIdOperator() {
+        return orgIdOperator;
+    }
+
+    public void setOrgIdOperator(String orgIdOperator) {
+        this.orgIdOperator = orgIdOperator;
     }
 }

@@ -20,7 +20,7 @@ public class CodeUtil {
         entityPackage = "lawss";
 
 
-        DbCodeGenerateFactory.codeGenerate("MSG_BROWSE_INFO", entityPackage);
+        /*DbCodeGenerateFactory.codeGenerate("MSG_BROWSE_INFO", entityPackage);
         DbCodeGenerateFactory.codeGenerate("MSG_DYNAMIC_INFO", entityPackage);
         DbCodeGenerateFactory.codeGenerate("MSG_FILE", entityPackage);
         DbCodeGenerateFactory.codeGenerate("MSG_MODULE", entityPackage);
@@ -44,9 +44,9 @@ public class CodeUtil {
         DbCodeGenerateFactory.codeGenerate("SAR_LAWS_RES", entityPackage);
         DbCodeGenerateFactory.codeGenerate("SAR_LAWS_VAL", entityPackage);
         DbCodeGenerateFactory.codeGenerate("SAR_MENU", entityPackage);
-        DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_INFO", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_INFO", entityPackage);*/
         DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_LAWS", entityPackage);
-        DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_STAND", entityPackage);
+        /*DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_STAND", entityPackage);
         DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_TEST", entityPackage);
         DbCodeGenerateFactory.codeGenerate("SAR_PRODUCT_VAL", entityPackage);
         DbCodeGenerateFactory.codeGenerate("SAR_SAR_ACCESS", entityPackage);
@@ -64,7 +64,7 @@ public class CodeUtil {
         DbCodeGenerateFactory.codeGenerate("UT_CAR_ENVIRON", entityPackage);
         DbCodeGenerateFactory.codeGenerate("UT_CAR_EXEMPTION", entityPackage);
         DbCodeGenerateFactory.codeGenerate("UT_CAR_EXPAND", entityPackage);
-        DbCodeGenerateFactory.codeGenerate("UT_CAR_NOTICE", entityPackage);
+        DbCodeGenerateFactory.codeGenerate("UT_CAR_NOTICE", entityPackage);*/
 
 
 

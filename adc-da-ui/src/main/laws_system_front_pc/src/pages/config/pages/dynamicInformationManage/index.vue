@@ -1,94 +1,91 @@
 <!-- 动态信息管理 -->
 <template>
   <div class="dynamic-information-manage">
-    <div class="container">
-      <div class="header">
-        <Button type="info" @click="dynamicAdd">新增</Button>
-        <Button type="success" style="margin-left: 15px" @click="dynamicEdit">编辑</Button>
-        <Button type="warning" style="margin-left: 15px">删除</Button>
-        <!-- 显示模态框 -->
-        <Modal
-          v-model="dynamicModal"
-          :title="dynamicTitle"
-          :class="{ 'hide-modal-footer': modalType === 3 }" width="600">
-          <div>
-            <Form :model="dynamicFrom" label-position="right" :label-width="100">
-              <FormItem label="动态标题">
-                <Input v-model="dynamicFrom.title" style="width: 7rem"></Input>
-              </FormItem>
-              <FormItem label="消息模块">
-                <Row>
-                  <Col span="11">
-                    <Select v-model="dynamicFrom.messageModule" >
-                      <Option value="beijing">资料中心</Option>
-                      <Option value="shanghai">London</Option>
-                      <Option value="shenzhen">Sydney</Option>
-                    </Select>
-                  </Col>
-                  <Col span="11" style="margin-left: 10px">
-                    <Select v-model="dynamicFrom.messageModule" >
-                      <Option value="beijing">消息</Option>
-                      <Option value="shanghai">London</Option>
-                      <Option value="shenzhen">Sydney</Option>
-                    </Select>
-                  </Col>
-                </Row>
-              </FormItem>
-              <FormItem label="发布时间">
-                <DatePicker type="datetime" placeholder="请选择发布时间" style="width: 200px"></DatePicker>
-              </FormItem>
-              <FormItem label="发布机构">
-                <Input v-model="dynamicFrom.value" style="width: 7rem"></Input>
-              </FormItem>
-            <FormItem label="动态内容">
-              <Input v-model="dynamicFrom.textarea" type="textarea" :autosize="{minRows: 4,maxRows: 7}"></Input>
-            </FormItem>
-              <FormItem label="相关附件">
-                <Upload action="//jsonplaceholder.typicode.com/posts/">
-                  <Button icon="ios-cloud-upload-outline">上传附件</Button>
-                </Upload>
-              </FormItem>
-              <FormItem label="相关链接">
-                <Input v-model="dynamicFrom.value" style="width: 7rem"></Input>
-              </FormItem>
-              <FormItem label="相关附件">
-                <Upload action="//jsonplaceholder.typicode.com/posts/">
-                  <Button icon="ios-cloud-upload-outline">上传图片</Button>
-                </Upload>
-              </FormItem>
-            </Form>
+        <table-tools-bar>
+          <div slot="left">
+            <label-select v-model="search.msgType" :options="search.msgTypeOptions" placeholder="按模块查找" label="消息模块"></label-select>
+            <label-input v-model="search.msgTitle" placeholder="请输入消息标题" label="消息标题"></label-input>
+            <Button type="primary" icon="ios-search" @click="searchMSGPage" :loading="search.searching" title="搜索"></Button>
+            <Button type="primary" title="重置" @click="resetSearch">重置</Button>
           </div>
-        </Modal>
-      </div>
-      <Table border :columns="dynamicTable " :data="data1"></Table>
-    </div>
+          <div slot="right">
+            <Button type="primary" icon="ios-add" title="新增" @click="openAddMSGModal">新增</Button>
+            <Button type="error" icon="md-trash" title="批量删除" @click="batchMSGDel" >批量删除</Button>
+          </div>
+        </table-tools-bar>
+<!--        <Button type="info" @click="dynamicAdd">新增</Button>
+        <Button type="success" style="margin-left: 15px" @click="dynamicEdit">编辑</Button>
+        <Button type="warning" style="margin-left: 15px">删除</Button>-->
+        <!-- 显示模态框 -->
+      <loading :loading="loading">数据获取中</loading>
+      <Table border :columns="dynamicTable " :data="msgList" @on-selection-change="handleRowChange" ></Table>
+      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
   </div>
 </template>
-
 <script>
 export default {
   name: 'dynamic-information-manage',
   data () {
     return {
-      dynamicModal: false,
-      dynamicTitle: '',
-      modalType: '',
-      dynamicFrom: {
-        title: '',
-        messageModule: '',
-        textarea: '',
-        input1: '',
-        input2: ''
+      search: {
+        msgType: '',
+        msgTitle: '',
+        msgTypeOptions: [{
+          label: '国内动态',
+          value: 'INLAND'
+        }, {
+          label: '国外动态',
+          value: 'FOREIGN'
+        }, {
+          label: '资料中心',
+          value: 'RESOURCE'
+        }]
       },
+      // 查看对话框标题
+      dynamicTitle: '查看信息',
+      dynamicModal: false,
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
+      },
+      loading: false,
+      // 总数
+      total: 0,
+      // 当前页数
+      pageNo: 1,
+      // 单页数量
+      pageSize: 10,
+      // 选中消息列表
+      clickMsgList: [],
       dynamicTable: [
         {
           type: 'selection',
           width: 60,
           align: 'center'
         }, {
-          title: '模块消息',
-          key: 'moduleMessage',
-          align: 'center'
+          title: '消息模块',
+          key: 'msgType',
+          align: 'center',
+          render: (h, params) => {
+            // let _this = this
+            let texts = ''
+            switch (params.row.msgType) {
+              case 'INLAND' :
+                texts = '国内动态'
+                break
+              case 'FOREIGN' :
+                texts = '国外动态'
+                break
+              case 'RESOURCE' :
+                texts = '资料中心'
+                break
+            }
+            return h('div', {
+              props: {}
+            }, texts)
+          }
         },
         {
           title: '标题',
@@ -98,12 +95,12 @@ export default {
         },
         {
           title: '发布日期',
-          key: 'releaseDate',
+          key: 'pubTime',
           align: 'center'
         },
         {
           title: '创建人',
-          key: 'founder',
+          key: 'pubUserName',
           align: 'center'
         },
         {
@@ -122,7 +119,21 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.show(params.index)
+                    this.editMsg(params.index)
+                  }
+                }
+              }, '编辑'),
+              h('Button', {
+                props: {
+                  type: 'warning',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.showMsgPage(params.index)
                   }
                 }
               }, '查看'),
@@ -131,9 +142,12 @@ export default {
                   type: 'error',
                   size: 'small'
                 },
+                style: {
+                  marginRight: '5px'
+                },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+                    this.delMsgInfo(params.index)
                   }
                 }
               }, '删除')
@@ -141,63 +155,125 @@ export default {
           }
         }
       ],
-      data1: [
-        {
-          moduleMessage: '国内动态',
-          title: '电动汽车首批三项强制性国家标准通过技术审查',
-          releaseDate: '2018/9/7/17:16',
-          founder: '管理员'
-        },
-        {
-          moduleMessage: '图片新闻',
-          title: '电动汽车首批三项强制性国家标准通过技术审查',
-          releaseDate: '2018/9/7/17:16',
-          founder: '管理员'
-        },
-        {
-          moduleMessage: '国内动态',
-          title: '电动汽车首批三项强制性国家标准通过技术审查',
-          releaseDate: '2018/9/7/17:16',
-          founder: '管理员'
-        },
-        {
-          moduleMessage: '图片新闻',
-          title: '电动汽车首批三项强制性国家标准通过技术审查',
-          releaseDate: '2018/9/7/17:16',
-          founder: '管理员'
-        }
-      ]
+      // 消息列表
+      msgList: []
     }
   },
   methods: {
-    // 新增
-    dynamicAdd () {
-      this.dynamicModal = true
-      this.dynamicTitle = '新增模块'
-      this.modalType = 'ADD'
+    // 检索查询分页
+    searchMSGPage () {
+      this.$http.get('lawss/msgDynamicInfo/page',
+        {
+          pageNo: this.pageNo,
+          pageSize: this.pageSize,
+          msgType: this.search.msgType,
+          msgTitle: this.search.msgTitle
+        },
+        {_this: this, loading: 'loading'},
+        res => {
+          console.log(res)
+          if (res.ok) {
+            this.msgList = res.data.list
+          }
+        })
     },
-    // 编辑
-    dynamicEdit () {
-      this.dynamicModal = true
-      this.dynamicTitle = '编辑模块'
-      this.modalType = 'PUT'
+    // 新增消息
+    openAddMSGModal () {
+      this.$router.push('/dynamicInformationManage/dynamicInfomationPage')
     },
-    show (index) {
-      this.dynamicModal = true
-      this.dynamicTitle = '查看模块信息'
-      this.modalType = 3
+    // 批量删除
+    batchMSGDel () {
+      // 此处获取选中的数据
+      if (this.clickMsgList.length > 0) {
+        let msgIds = []
+        for (let i = 0; i < this.clickMsgList.length; i++) {
+          let msgId = this.clickMsgList[i].id
+          msgIds.push(msgId)
+        }
+        let msgIdsStr = msgIds.join(',')
+        console.log(msgIdsStr)
+        this.$Modal.confirm({
+          title: '请选择',
+          content: '确定删除这些数据?',
+          onOk: () => {
+            this.$http.delete('lawss/msgDynamicInfo/' + msgIdsStr, {},
+              { _this: this
+              }, res => {
+                if (res.ok) {
+                  this.executeSuccess('删除成功')
+                  this.searchMSGPage()
+                } else {
+                  this.executeError('删除失败! 失败原因:' + res.message)
+                }
+              })
+          }})
+      } else {
+        this.executeError('未选择动态，请选择')
+      }
     },
-    remove (index) {
-      this.data1.splice(index, 1)
+    // 重置检索条件
+    resetSearch () {
+      this.search.msgType = ''
+      this.search.msgTitle = ''
+    },
+    // 编辑消息
+    editMsg (index) {
+      this.$router.push('/dynamicInformationManage/dynamicInfomationPage/' + this.msgList[index].id)
+    },
+    // 删除消息
+    delMsgInfo (index) {
+      console.log(this.msgList[index].id)
+      this.$Modal.confirm({
+        title: '请选择',
+        content: '确定删除这些数据?',
+        onOk: () => {
+          this.$http.delete('lawss/msgDynamicInfo/' + this.msgList[index].id, {},
+            { _this: this
+            }, res => {
+              if (res.ok) {
+                this.executeSuccess('删除成功')
+                this.searchMSGPage()
+              } else {
+                this.executeError('删除失败! 失败原因:' + res.message)
+              }
+            })
+          this.$Modal.remove()
+        }})
+    },
+    // 查看消息内容
+    showMsgPage (index) {
+
+    },
+    handleRowChange (selection) {
+      this.clickMsgList = selection
+    },
+    pageChange (page) {
+      this.pageNo = page
+      this.searchMSGPage()
+    },
+    pageSizeChange (pageSize) {
+      this.pageSize = pageSize
+      this.searchMSGPage()
+    },
+    // 成功弹框
+    executeSuccess (message) {
+      this.$Message.success(message)
+    },
+    // 失败弹框
+    executeError (message) {
+      this.$Message.error(message)
     }
+  },
+  mounted () {
+    this.searchMSGPage()
   }
 }
 </script>
 
 <style lang="less">
   .dynamic-information-manage{
-    display: flex;
     background: #FFF;
+    padding: 0.2rem 0.3rem;
     .container{
       width: 100%;
       margin: 1rem;

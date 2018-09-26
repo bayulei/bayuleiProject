@@ -33,6 +33,9 @@ public class MsgFileEOPage extends BasePage {
     private String id;
     private String idOperator = "=";
 
+    private String fileType;
+    private String fileTypeOperator = "=";
+
     public String getModifyTime() {
         return this.modifyTime;
     }
@@ -193,4 +196,20 @@ public class MsgFileEOPage extends BasePage {
         this.idOperator = idOperator;
     }
 
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFileTypeOperator() {
+        return fileTypeOperator;
+    }
+
+    public void setFileTypeOperator(String fileTypeOperator) {
+        this.fileTypeOperator = fileTypeOperator;
+    }
 }

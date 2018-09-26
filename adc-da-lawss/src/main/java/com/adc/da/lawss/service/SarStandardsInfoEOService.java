@@ -1,19 +1,17 @@
 package com.adc.da.lawss.service;
 
+import com.adc.da.att.vo.AttFileVo;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.common.PropertyTypeEnum;
-import com.adc.da.lawss.dao.SarStandMenuEODao;
-import com.adc.da.lawss.dao.SarStandValEODao;
-import com.adc.da.lawss.dao.SarStandardsInfoEODao;
+import com.adc.da.lawss.common.StandFileClassifyEnum;
+import com.adc.da.lawss.dao.*;
 import com.adc.da.lawss.dto.LawsInfoImportDto;
-import com.adc.da.lawss.entity.SarLawsInfoEO;
-import com.adc.da.lawss.entity.SarStandMenuEO;
-import com.adc.da.lawss.entity.SarStandValEO;
-import com.adc.da.lawss.entity.SarStandardsInfoEO;
+import com.adc.da.lawss.entity.*;
 import com.adc.da.lawss.page.SarStandardsInfoEOPage;
 import com.adc.da.lawss.dto.SarStandExcelDto;
 import com.adc.da.sys.constant.ValueStateEnum;
 import com.adc.da.sys.dao.DicTypeEODao;
+import com.adc.da.sys.util.UUIDUtils;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import com.adc.da.util.utils.UUID;
@@ -61,6 +59,12 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
     @Autowired
     private DicTypeEODao dicTypeEODao;
 
+    @Autowired
+    private SarStandResEODao sarStandResEODao;
+
+    @Autowired
+    private SarStandFileEODao sarStandFileEODao;
+
     public SarStandardsInfoEODao getDao() {
         return sarStandardsInfoEOdao;
     }
@@ -83,10 +87,14 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
                 sarStandMenuEO.setId(UUID.randomUUID(20));
                 sarStandMenuEODao.insertSelective(sarStandMenuEO);
             }
-
             //标准关联表中插入数据，对于标准多选属性，标准信息表中存储已逗号隔开，标准关联表中还需要存入相关数据
             //具体多选属性包括( 适用车型:applyArctic 能源种类:emergyKind 适用认证:applyAuth 所属类别:category;  代替标准号前台页面要求是多选，但常量EXCEL中没有提及需要确认)
             insertSarStandVal(sarStandardsInfoEO);
+            //标准文件资源表，标准文件详情表中插入数据，并保存数据
+            if(sarStandardsInfoEO.getStandFileList() != null) {
+                insertSarStandFile(sarStandardsInfoEO.getId(), sarStandardsInfoEO.getStandFileList(), StandFileClassifyEnum.STAND_FILE.getValue());
+            }
+
             return  Result.success("00","插入数据成功",sarStandardsInfoEO);
         }
         else {
@@ -246,6 +254,35 @@ public class SarStandardsInfoEOService extends BaseService<SarStandardsInfoEO, S
                 sarStandValEO.setPropertyType(PropertyTypeEnum.CATEGORY.getValue());
                 sarStandValEO.setPropertyVal(category);
                 sarStandValEODao.insertSelective(sarStandValEO);
+            }
+        }
+    }
+
+    public void insertSarStandFile(String standId ,List<AttFileVo> list,String standFileClassify){
+        if (list != null) {
+            SarStandResEO sarStandResEO = new SarStandResEO();
+            SarStandFileEO sarStandFileEO = new SarStandFileEO();
+            for (AttFileVo fileInfo  : list) {
+                //标准文件资源表存数据库
+                sarStandResEO.setStandId(standId);            //标准ID
+                sarStandResEO.setStandFileClassify(standFileClassify);  //文件分类
+                sarStandResEO.setFileName(fileInfo.getOldFileName());           //文件名称@@@@@@@需要确定取name 还是 oldname
+                sarStandResEO.setFileSuffix(fileInfo.getFileSuffix());         //文件类型
+                sarStandResEO.setId(UUIDUtils.randomUUID20());
+                sarStandResEO.setCreationTime(new Date());
+                sarStandResEO.setModifyTime(new Date());
+                sarStandResEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
+                int i = sarStandResEODao.insertSelective(sarStandResEO);
+                //标准文件详情表存数据库
+                sarStandFileEO.setId(UUIDUtils.randomUUID20());
+                sarStandFileEO.setCreationTime(new Date());
+                sarStandFileEO.setModifyTime(new Date());
+                sarStandFileEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
+                sarStandFileEO.setStandId(standId);     //标准ID
+                sarStandFileEO.setResId(sarStandResEO.getId());       //资源ID
+                sarStandFileEO.setAttId(fileInfo.getId());       //文件ID
+                sarStandFileEO.setUseModel("");  //文件使用模式        //文件名称@@@@@@@需要修改
+                sarStandFileEODao.insertSelective(sarStandFileEO);
             }
         }
     }

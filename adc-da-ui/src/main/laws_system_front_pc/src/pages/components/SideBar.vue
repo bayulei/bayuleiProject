@@ -24,8 +24,8 @@
         </div>
       </div>
     </div>
-    <div class="side-bar-position border-right">
-      <!--首页 个人中心-->
+    <div class="side-bar-position border-right" @click="toggleSideBar">
+      <div class="router-map"></div>
     </div>
   </div>
 </template>
@@ -40,7 +40,49 @@ export default {
       userAvator: require('assets/images/user-avator.png')
     }
   },
+  methods: {
+    toggleSideBar () {
+      this.$emit('change', this.sideClose)
+    },
+    /**
+     * @description: 当前位置
+     * @author: chenxiaoxi
+     * @date: 2018-09-18 15:05:38
+     */
+    setRouterMap (router) {
+      let routerMap = []
+      for (let i = 0; i < router.matched.length; i++) {
+        routerMap.push(router.matched[i].meta.title)
+      }
+      routerMap = routerMap.join(',')
+      let mapString = ''
+      let routerParent = ''
+      let routerSplit = ''
+      let routerCurrnet = ''
+      for (let i = 0; i < routerMap.length; i++) {
+        let splitIndex = routerMap.indexOf(',')
+        if (i < splitIndex) {
+          routerParent += routerMap[i] + '<br />'
+        } else if (i === splitIndex) {
+          routerSplit += '<span class="iconfont" style="font-size:12px;color:#CCC;display: inline-block;width: calc(100% - 5px);text-align: center">&#xe61a;</span><br />'
+        } else if (i === routerMap.length) {
+          routerCurrnet += routerMap[i]
+        } else {
+          routerCurrnet += routerMap[i] + '<br />'
+        }
+      }
+      routerParent = '<span class="router-map-parent">' + routerParent + '</span>'
+      routerCurrnet = '<span class="router-map-current">' + routerCurrnet + '</span>'
+      mapString = routerParent + routerSplit + routerCurrnet
+      $('.side-bar-position div').html(mapString)
+    }
+  },
+  model: {
+    prop: 'sideClose',
+    event: 'change'
+  },
   props: {
+    sideClose: Boolean,
     navList: {
       type: Array,
       required: true
@@ -51,68 +93,86 @@ export default {
     active () {
       return this.$route.path
     }
+  },
+  watch: {
+    '$route': {
+      deep: true,
+      handler (val) {
+        this.setRouterMap(val)
+      }
+    }
+  },
+  mounted () {
+    this.setRouterMap(this.$route)
   }
 }
 </script>
 
 <style lang="less" scoped>
   @import '~styles/style';
+  @import '~styles/mixins';
   .side-bar{
-    width: 16.17%;
-    height: 100%;
-    position: relative;
+    height: calc(~'100% - 7.8% - 10px');
     float: left;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    position: absolute;
+    left: 0;
+    transition: all .3s linear;
     &:hover{
       .side-bar-left{
         box-shadow: -1px 17px 20px 0px #CCC;
       }
     }
     .side-bar-left{
-      width: 84.6%;
+      width: 230px;
       height: 100%;
       border-top: 1px solid #EDEDED;
       border-right: 1px solid #EDEDED;
       background: @sideBarColor;
       transition: box-shadow .3s linear;
+      float: left;
+      transition: all .3s linear;
+      overflow: hidden;
       .content{
-        width: 77.54%;
         height: 100%;
         margin: 0 auto;
         .user-info{
-          height: 2.8rem;
-          padding: 0.8rem 0;
+          width: 180px;
+          margin: 0 auto;
+          height: 140px;
+          padding: 40px 0;
           box-sizing: border-box;
-          display: flex;
           .user-avator{
-            width: 1.2rem;
-            height: 1.2rem;
+            width: 60px;
+            height: 60px;
             background: #DDD;
             box-sizing: border-box;
-            flex: 1;
+            display: inline-block;
             img{
               width: 100%;
               height: 100%;
             }
           }
           .user-info-box{
-            padding: 0 0.5rem;
+            padding: 0 25px;
             box-sizing: border-box;
             height: 100%;
+            display: inline-block;
           }
         }
         .nav-list{
+          padding-left: 15px;
+          width: calc(~'100% - 40px');
           ul{
             li{
               width: 100%;
-              height: 0.8rem;
-              line-height: 0.8rem;
+              height: 40px;
+              line-height: 40px;
               cursor: pointer;
               &.active{
-                padding-left: 0.28rem;
+                padding-left: 14px;
                 transition: all linear .2s;
                 color: @baseColor;
                 background: #F0F0F0;
@@ -153,18 +213,25 @@ export default {
       }
     }
     .side-bar-position{
-      width: 15.4%;
-      height: 4rem;
-      writing-mode:lr-tb;
+      width: 40px;
+      height: 200px;
       color: #333;
-      font-size: .4rem;
-      margin: 0 auto;
+      font-size: 12.5px;
       border-top: 1px solid #EDEDED;
       border-bottom: 1px solid #EDEDED;
-      position: absolute;
-      top: 0;
-      right: 1px;
       background: #FFF;
+      float: left;
+      cursor: pointer;
+      display: flex;
+      display: -ms-flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      left: -1px;
+      .router-map{
+        width: 100%;
+        color: #AAA;
+      }
     }
   }
 </style>

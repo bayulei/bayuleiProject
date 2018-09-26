@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.att.vo.AttFileVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 @RestController
 @RequestMapping("/${restPath}/att/attFile")
-@Api(description = "|AttFileEO|")
+@Api(description = "|AttFileEO|文件上传")
 public class AttFileEOController extends BaseController<AttFileEO>{
 
     private static final Logger logger = LoggerFactory.getLogger(AttFileEOController.class);
@@ -87,13 +88,17 @@ public class AttFileEOController extends BaseController<AttFileEO>{
 
     @ApiOperation(value="|File|上传文件")
     @PostMapping(value="/upload",consumes="multipart/*",headers="content-type=multipart/form-data" )
-    public ResponseMessage uploadFile(@RequestParam("file") @ApiParam(value="上传文件",required=true) MultipartFile file) throws Exception{
+    public ResponseMessage<AttFileVo> uploadFile(@RequestParam("file") @ApiParam(value="上传文件",required=true) MultipartFile file) throws Exception{
     	
-    	String AttId = attFileEOService.saveFileInfo(file);
-    	JSONObject jsonObject=new JSONObject();
-    	jsonObject.put("ATTId", AttId);
-    	return Result.success(jsonObject.toJSONString());
+    	AttFileVo fileInfo = attFileEOService.saveFileInfo(file);
+    	return Result.success(fileInfo);
     }
-    
+
+    @ApiOperation(value="|File|上传文件")
+    @PostMapping(value="/uploadFiles",consumes="multipart/*",headers="content-type=multipart/form-data" )
+    public ResponseMessage<List<AttFileVo>> uploadFile(@RequestParam("files") @ApiParam(value="上传文件",required=true) MultipartFile[] files) throws Exception{
+       List<AttFileVo> fileInfoList= attFileEOService.saveFilesInfo(files);
+        return Result.success(fileInfoList);
+    }
     
 }

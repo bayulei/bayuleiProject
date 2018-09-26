@@ -51,13 +51,13 @@ public class SarBussStandPlanEOPage extends BasePage {
     private String reviewLevel;
     private String reviewLevelOperator = "=";
     private String compileUnit;
-    private String compileUnitOperator = "=";
+    private String compileUnitOperator = "like";
     private String replaceStandNum;
-    private String replaceStandNumOperator = "=";
+    private String replaceStandNumOperator = "like";
     private String makeRevisonType;
-    private String makeRevisonTypeOperator = "=";
+    private String makeRevisonTypeOperator = "like";
     private String standName;
-    private String standNameOperator = "=";
+    private String standNameOperator = "like";
     private String id;
     private String idOperator = "=";
 

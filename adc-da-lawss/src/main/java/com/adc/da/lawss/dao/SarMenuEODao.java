@@ -15,6 +15,10 @@ import java.util.List;
  */
 public interface SarMenuEODao extends BaseDao<SarMenuEO> {
 
-    public List<SarMenuEO> queryMenuByPid(String parentId);
+    List<SarMenuEO> queryMenuByPid(SarMenuEO sarMenuEO);
+
+    List<SarMenuEO> queryByPidExcpetSelf(SarMenuEO sarMenuEO);
+
+    List<SarMenuEO> queryMenuByDis(SarMenuEO sarMenuEO);
 
 }

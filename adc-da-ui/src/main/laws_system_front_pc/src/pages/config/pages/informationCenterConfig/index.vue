@@ -4,132 +4,60 @@
       <div class="container">
         <div class="header">
           <Button type="info" @click="informationAdd">新增</Button>
-          <Button type="success" style="margin-left: 15px" @click="informationEdit">编辑</Button>
-          <Button type="warning" style="margin-left: 15px">删除</Button>
+          <!--<Button type="error" style="margin-left: 15px" @click="informationBatchDel">删除</Button>-->
           <!-- 显示模态框 -->
-          <Modal
+          <!--<Modal v-model="informationModal" :title="informationTitle" :class="{ 'hide-modal-footer': modalType === 3 }" width="450"-->
+                 <!--@on-ok="saveInformation">-->
+            <!--<Form :model="informationModelAdd" label-position="right" :label-width="80">-->
+              <!--<input v-model="informationModelAdd.id" v-show="false">-->
+              <!--<FormItem label="模块类型">-->
+                <!--<Input v-model="informationModelAdd.moduleType" :style="{width:6+'rem'}" disabled></Input>-->
+              <!--</FormItem>-->
+              <!--<FormItem label="模块名称">-->
+                <!--<Input v-model="informationModelAdd.moduleName" :style="{width:6+'rem'}" :disabled='modalType === 3'></Input>-->
+              <!--</FormItem>-->
+            <!--</Form>-->
+          <!--</Modal>-->
+          <Drawer
+            :title="informationTitle"
             v-model="informationModal"
-            :title="informationTitle">
-            <div v-if="modalType === 1">
-              <p>我是新增内容</p>
+            width="900"
+            :styles="styles"
+          >
+            <Form :model="informationModelAdd" ref="informationModelAdd" :rules="informationRules"  class="label-input-form" >
+              <input v-model="informationModelAdd.id" v-show="false">
+              <Row>
+                <Col span="12">
+                  <FormItem label="模块类型" prop="moduleType"  label-position="top" class="standards-info-item">
+                    <Input v-model="informationModelAdd.moduleType" disabled></Input>
+                  </FormItem>
+                </Col>
+                <Col span="12">
+                  <FormItem label="模块名称" prop="moduleName" label-position="top" class="standards-info-item">
+                    <Input v-model="informationModelAdd.moduleName" :disabled='modalType === 3'></Input>
+                  </FormItem>
+                </Col>
+              </Row>
+            </Form>
+            <div class="demo-drawer-footer" :class="{ 'disappear': modalType === 3 }">
+              <Button style="margin-right: 8px" @click="closeModal">取消</Button>
+              <Button type="primary" @click="saveInformation">提交</Button>
             </div>
-            <div v-else>
-              <p>我是编辑内容</p>
-            </div>
-          </Modal>
+          </Drawer>
         </div>
-        <Table border :columns="informationTable " :data="data1"></Table>
+        <div class="content">
+          <loading :loading="loading">数据获取中</loading>
+          <Table border ref="selection" :columns="informationTable" :data="informationData" @on-selection-change="handleSelectone">
+          </Table>
+          <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
+        </div>
       </div>
   </div>
 </template>
-<script>
-export default {
-  name: 'informationCenterConfig',
-  data () {
-    return {
-      informationModal: false,
-      informationTitle: '',
-      modalType: '',
-      informationTable: [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center'
-        }, {
-          title: '参数',
-          key: 'parameter',
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Icon', {
-                props: {
-                  type: 'person'
-                }
-              }),
-              h('strong', params.row.parameter)
-            ])
-          }
-        },
-        {
-          title: '操作',
-          key: 'action',
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.show(params.index)
-                  }
-                }
-              }, '查看'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.remove(params.index)
-                  }
-                }
-              }, '删除')
-            ])
-          }
-        }
-      ],
-      data1: [
-        {
-          parameter: '通知'
-        },
-        {
-          parameter: '共享资料'
-        },
-        {
-          parameter: '标准法规月报'
-        },
-        {
-          parameter: '会议资料'
-        }
-      ]
-    }
-  },
-  methods: {
-    // 新增
-    informationAdd () {
-      this.informationModal = true
-      this.informationTitle = '新增参数'
-      this.modalType = 1
-    },
-    // 编辑
-    informationEdit () {
-      this.informationModal = true
-      this.informationTitle = '编辑参数'
-      this.modalType = 2
-    },
-    show (index) {
-      this.$Modal.info({
-        title: '查看参数',
-        content: `参数：${this.data1[index].parameter}`
-      })
-    },
-    remove (index) {
-      this.data1.splice(index, 1)
-    }
-  }
-}
-</script>
-
-<style lang="less" scoped>
+<script src="./js/informationCenterConfig.js"></script>
+<style lang="less">
   .InformationCenterConfig{
-    display: flex;
+    /*display: flex;*/
     background: #FFF;
     .container{
       width: 100%;
@@ -137,7 +65,26 @@ export default {
     }
     .header{
       margin-bottom:0.7rem;
-
     }
+    .content{
+      width: 100%;
+      height: calc(100% - 20px);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
+  .disappear{
+    display: none;
+  }
+  .ivu-modal-confirm .ivu-modal-confirm-footer{
+    display: block;
+  }
+   .content .ivu-table-wrapper .ivu-table-tip{
+    width: 100%;
+    height: calc(100% - 8px);
+    overflow: hidden;
+  }
+  .content .ivu-table-wrapper .ivu-table-tip table {
+    height: 100%;
   }
 </style>

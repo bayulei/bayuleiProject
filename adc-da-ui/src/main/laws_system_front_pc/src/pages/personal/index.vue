@@ -25,7 +25,7 @@ export default {
         title: '个人板块管理',
         path: '/plate'
       }, {
-        title: '我的动态',
+        title: 'categoryModelAdd动态',
         path: '/dynamics'
       }, {
         title: '我的收藏',
@@ -36,6 +36,9 @@ export default {
       }, {
         title: '我的浏览',
         path: '/browsing'
+      }, {
+        title: '意见反馈',
+        path: '/feedback'
       }]
     }
   },

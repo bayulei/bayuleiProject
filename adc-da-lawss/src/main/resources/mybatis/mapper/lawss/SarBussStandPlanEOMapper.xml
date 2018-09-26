@@ -19,6 +19,10 @@
     <result column="replace_stand_num" property="replaceStandNum" />
     <result column="make_revison_type" property="makeRevisonType" />
     <result column="stand_name" property="standName" />
+    <result column="reviewSubmitDays" property="reviewSubmitDays" />
+    <result column="submitDelayDays" property="submitDelayDays" />
+    <result column="planReleaseDays" property="planReleaseDays" />
+    <result column="releaseDelayDays" property="releaseDelayDays" />
   </resultMap>
 
   <!-- SAR_BUSS_STAND_PLAN table all fields -->
@@ -112,16 +116,16 @@
         and review_level ${reviewLevelOperator} #{reviewLevel}
       </if>
       <if test="compileUnit != null" >
-        and compile_unit ${compileUnitOperator} #{compileUnit}
+        and compile_unit ${compileUnitOperator} concat(concat('%',#{compileUnit}),'%')
       </if>
       <if test="replaceStandNum != null" >
-        and replace_stand_num ${replaceStandNumOperator} #{replaceStandNum}
+        and replace_stand_num ${replaceStandNumOperator} concat(concat('%',#{replaceStandNum}),'%')
       </if>
       <if test="makeRevisonType != null" >
-        and make_revison_type ${makeRevisonTypeOperator} #{makeRevisonType}
+        and make_revison_type ${makeRevisonTypeOperator} concat(concat('%',#{makeRevisonType}),'%')
       </if>
       <if test="standName != null" >
-        and stand_name ${standNameOperator} #{standName}
+        and stand_name ${standNameOperator} concat(concat('%',#{standName}),'%')
       </if>
       <if test="id != null" >
         and id ${idOperator} #{id}
@@ -279,9 +283,26 @@
 
   <!-- 查询SAR_BUSS_STAND_PLAN列表 -->
   <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-	select <include refid="Base_Column_List" /> from
+	select <include refid="Base_Column_List" />,reviewSubmitDays,submitDelayDays,planReleaseDays,releaseDelayDays from
 		(select tmp_tb.* , rownum rn from
-			(select <include refid="Base_Column_List" /> from SAR_BUSS_STAND_PLAN
+			(select <include refid="Base_Column_List" />,
+              (
+                  select Round(TO_NUMBER(SAR_BUSS_STAND_PLAN.FINISH_REVIEW_TIME- SYSDATE))
+                  from dual
+              ) as reviewSubmitDays,
+              (
+                  select Round(TO_NUMBER(SAR_BUSS_STAND_PLAN.REVIEW_SUBMIT_TIME- SAR_BUSS_STAND_PLAN.FINISH_REVIEW_TIME))
+                  from dual
+              ) as submitDelayDays,
+              (
+                  select Round(TO_NUMBER(SAR_BUSS_STAND_PLAN.APPROVAL_DRAFT_TIME- SYSDATE))
+                  from dual
+              ) as planReleaseDays,
+              (
+                  select Round(TO_NUMBER(SAR_BUSS_STAND_PLAN.START_FLOW_TIME- SAR_BUSS_STAND_PLAN.APPROVAL_DRAFT_TIME))
+                  from dual
+              ) as releaseDelayDays
+              from SAR_BUSS_STAND_PLAN
 			 <include refid="Base_Where_Clause"/>
 			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
 			 	${pager.orderCondition}

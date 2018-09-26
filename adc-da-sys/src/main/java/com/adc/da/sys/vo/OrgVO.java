@@ -11,7 +11,7 @@ public class OrgVO extends TreeVO<OrgVO>{
 	private Integer validFlag;
 	private Integer isShow;
 	private String parentIds;
-	private String parentId;
+	private String pId;
 	private String shotName;
 	private String remarks;
 	private Integer orgDesc;
@@ -128,5 +128,13 @@ public class OrgVO extends TreeVO<OrgVO>{
 	@Override
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getpId() {
+		return pId;
+	}
+
+	public void setpId(String pId) {
+		this.pId = pId;
 	}
 }

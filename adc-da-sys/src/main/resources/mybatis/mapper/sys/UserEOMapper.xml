@@ -16,6 +16,8 @@
 		<result column="modify_time" property="modifyTime" />
 		<result column="user_type" property="userType" />
 		<result column="role_name" property="roleName" />
+		<result column="role_id" property="roleId" />
+		<result column="org_id" property="orgId" />
 		<result column="oper_user" property="operUser" />
 		<result column="disable_flag" property="disableFlag" />
 		<result column="unlock_flag" property="unlockFlag" />
@@ -29,11 +31,12 @@
 			<result column="is_default" property="isDefault" />
 			<result column="name" property="name" />
 			<result column="remarks" property="remarks" />
-			<result column="r_extInfo" property="extInfo" />
+			<result column="ext_Info" property="extInfo" />
+			<result column="use_flag" property="useFlag" />
 		</collection>
 		<collection property="orgEOList" ofType="com.adc.da.sys.entity.OrgEO">
 			<id column="org_id" property="id" />
-			<result column="org_name" property="name" />
+			<result column="org_name" property="orgName" />
 			<result column="org_desc" property="orgDesc" />
 			<result column="org_code" property="orgCode" />
 			<result column="org_type" property="orgType" />
@@ -137,10 +140,6 @@
 			<if test="orgId != null" >
 				and TUO.ORG_ID ${orgIdOperator} #{orgId}
 			</if>
-			<if test="roleId != null" >
-				AND TR.ID ${roleIdOperator} #{roleId}
-			</if>
-
 		</trim>
 	</sql>
 	<!-- 修改用户密码 -->
@@ -247,8 +246,9 @@
 		insert into TS_USER(
 		<include refid="Base_Column_List" />
 		)
-		values (#{usid}, #{account}, #{validFlag}, #{password}, #{uname}, #{extInfo},#{email},#{workNum},#{creationTime},#{modifyTime},#{operUser},#{userSource},#{disableFlag},#{unlockFlag})
+		values (#{usid}, #{account}, #{validFlag}, #{password}, #{uname}, #{extInfo},#{email},#{workNum},#{creationTime},#{modifyTime},#{operUser},#{userSource},#{disableFlag},#{unlockFlag},#{userType})
 	</insert>
+
 
 	<!-- 根据pk，修改记录 -->
 	<update id="updateByPrimaryKey" parameterType="com.adc.da.sys.entity.UserEO">
@@ -283,13 +283,13 @@
 				modify_time = #{modifyTime},
 			</if>
 			<if test="extInfo != null" >
-				ext_info = #{extInfo}
+				ext_info = #{extInfo},
 			</if>
 			<if test="disableFlag != null">
-				disable_flag = #{disableFlag}
+				disable_flag = #{disableFlag},
 			</if>
 			<if test="unlockFlag != null">
-				unlock_flag = #{unlockFlag}
+				unlock_flag = #{unlockFlag},
 			</if>
 			<if test="userType != null">
 				user_type = #{userType}
@@ -363,8 +363,8 @@
 			FROM(
 				SELECT
 				TU.usid,TU.USER_TYPE,TU."ACCOUNT",TU.UNAME,TU.EMAIL,TU.WORK_NUM,
-				tu.modify_time,tr. NAME,tui.mobile_phone,tui.office_phone,
-				tor.org_name
+				tu.modify_time,tr.NAME AS ROLE_NAME,tui.mobile_phone,tui.office_phone,
+				tor.org_name,tuo.ORG_ID,tur.ROLE_ID
 				FROM TS_USER tu
 				LEFT JOIN TS_USER_ROLE tur ON TU.USID = TUR.USER_ID
 				LEFT JOIN TS_USER_INFO tui ON tu.usid = tui.user_id
@@ -395,6 +395,15 @@
 		LEFT JOIN TS_USER tu ON TUO.USER_ID = TU.USID
 		LEFT JOIN TS_ORG ORG ON ORG.ID=TUO.ORG_ID
 		WHERE TUO.USER_ID =#{value} AND TU.VALID_FLAG=0
+	</select>
+
+	<!--根据当前登录用户id查询它所对应的组织机构的个数-->
+	<select id="selectOrgCountByPrimaryKey" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT
+		COUNT(1)
+		FROM
+		TS_USER_ORG TUO
+		WHERE TUO.USER_ID =#{value}
 	</select>
 
 	<!--根据当前登录用户id查询个人角色信息-->
@@ -446,5 +455,34 @@
 			  LEFT JOIN  TS_ORG   ON  TR_USER_ORG.ORG_ID = TS_ORG.ID
 			  LEFT JOIN  SYS_CORP  ON  SYS_CORP.ID = TS_ORG.CORP_ID
 		where TS_USER.valid_flag = 0 and account = #{account}
+	</select>
+
+	<!--查找未分配组织结构的用户的行数-->
+	<select id="findBySetOrgCount" resultType="java.lang.Integer"
+			parameterType="com.adc.da.base.page.BasePage">
+		SELECT count(1)
+		FROM TS_USER tu
+		LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
+		WHERE tu.valid_FLAG = '0' AND tuo.user_id is null
+	</select>
+
+	<!--查询所有未分配组织结构的用户-->
+	<select id="findBySetOrg"  resultMap="UserRoleMap"
+			parameterType="com.adc.da.base.page.BasePage">
+		SELECT * FROM
+		(SELECT  tmp_tb.* , rownum rn FROM
+		(SELECT tu.usid, tu.uname, tu.account, tu.work_num AS workNum, tu.email,
+		tu.modify_time AS modifyTime,
+		torg.org_Name,
+		tr.name,tr.use_flag
+		FROM TS_USER tu
+		LEFT JOIN TS_USER_ORG tuo ON tuo.user_id = tu.usid
+		LEFT JOIN TS_ORG torg ON  torg.id = tuo.org_id
+		LEFT JOIN TS_USER_ROLE tur ON tur.user_id = tu.usid
+		LEFT JOIN TS_ROLE    tr ON tr.id = tur.role_id
+		WHERE tu.VALID_FLAG = 0 AND tuo.user_id is null
+		order by tu.modify_time desc
+		) tmp_tb WHERE rownum &lt;= ${pager.endIndex}
+		) WHERE rn &gt;= ${pager.startIndex}
 	</select>
 </mapper>

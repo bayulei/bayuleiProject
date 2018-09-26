@@ -12,100 +12,139 @@
       </div>
       <div slot="right">
         <Button type="primary" icon="ios-add" title="新增" @click="openAddUserModal">新增</Button>
-        <Button type="error" icon="md-trash" title="批量删除">批量删除</Button>
+        <Button type="error" icon="md-trash" title="批量删除" @click="batchUserDel" >批量删除</Button>
       </div>
     </table-tools-bar>
     <div class="content">
       <loading :loading="loading">数据获取中</loading>
-      <Table :columns="userColumns" :data="userList" border ref="selection"></Table>
+      <Table :columns="userColumns" :data="userList" border ref="selection" @on-selection-change="handleRowChange" ></Table>
     </div>
     <div>
       <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
-      <Drawer :title="userTitle" v-model="showUserModal" @on-close="closeDrawer" width="720" :mask-closable="false" >
+      <Drawer :title="userTitle" v-model="showUserModal"  width="720"  :styles="styles">
         <div>
           <Form ref="userVO" :model="userVO" :rules="userVOFormRules" label-position="right" class="label-input-form">
             <input v-model="userVO.usid" v-show="false">
             <Row>
-              <Col span="8">
+              <Col span="12">
                 <Row>
                   <Col>
                     <FormItem label="用户名称" prop="uname" class="laws-info-item">
-                      <Input  v-model="userVO.uname" />
+                      <Input  v-model="userVO.uname"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
-                    <FormItem label="用户账号" prop="account" class="laws-info-item">
-                      <Input  v-model="userVO.account" />
+                    <FormItem  label="用户账号" prop="account" class="laws-info-item">
+                      <Input :disabled="createType" v-model="userVO.account" />
                     </FormItem>
                   </Col>
                   <Col>
-                    <FormItem label="用户密码" prop="password" class="laws-info-item">
-                      <Input type="password" v-model="userVO.password" />
+                    <FormItem v-if="showPWD" label="用户密码" prop="password" class="laws-info-item">
+                      <Input type="password" v-model="userVO.password"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
-                    <FormItem label="再次输入密码" prop="passwordCheck" class="laws-info-item">
-                      <Input  v-model="userVO.passwordCheck" />
+                    <FormItem v-if="showPWD" label="再次输入密码" prop="passwordCheck" class="laws-info-item">
+                      <Input type="password" v-model="userVO.passwordCheck"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="用户类型" prop="userType" class="laws-info-item">
-                      <Input  v-model="userVO.userType" />
+                      <Select v-model="userVO.userType" style="width:200px" :disabled="usersType">
+                        <Option v-for="item in search.userTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                      </Select>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="用户角色" prop="roleId" class="laws-info-item">
-                      <Input  v-model="userVO.roleId" />
+                      <Select v-model="userVO.roleId" style="width:200px" :disabled="usersType">
+                        <Option v-for="item in search.roleOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                      </Select>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="手机号码" prop="mobilePhone" class="laws-info-item">
-                      <Input  v-model="userVO.mobilePhone" />
+                      <Input  v-model="userVO.mobilePhone"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="办公电话" prop="officePhone" class="laws-info-item">
-                      <Input  v-model="userVO.officePhone" />
+                      <Input  v-model="userVO.officePhone"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="用户邮箱" prop="email" class="laws-info-item">
-                      <Input  v-model="userVO.email" />
+                      <Input  v-model="userVO.email"  :disabled="usersType"/>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem label="用户状态" prop="disableFlag" class="laws-info-item">
-                      <Input  v-model="userVO.disableFlag" />
-                    </FormItem>
-                  </Col>
-                  <Col>
-                    <FormItem label="用户账号" prop="account" class="laws-info-item">
-                      <Input  v-model="userVO.account" />
+                      <Select v-model="userVO.disableFlag" style="width:200px" :disabled="usersType">
+                        <Option v-for="item in search.disableFlagOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                      </Select>
                     </FormItem>
                   </Col>
                 </Row>
               </Col>
-              <Col span="8" >
+              <Col span="12" >
                 <!-- 此处获取组织机构架构图 -->
                 <FormItem label="组织机构" prop="orgId"  >
-                  <Tree :data="orgList"></Tree>
+                  <ul id="orgTree" class="ztree" style="width: 200px;height: 500px;overflow: auto"></ul>
                 </FormItem>
               </Col>
             </Row>
           </Form>
         </div>
-        <div id="roleFormButton" class="demo-drawer-footer">
+        <div id="roleFormButton" class="demo-drawer-footer" :class="{ 'disappear': usersType }">
           <Button type="primary" @click="saveUserInfo">提交</Button>
-          <Button @click="cancelUserModel">取消</Button>
+          <Button @click="closeDrawer">取消</Button>
         </div>
       </Drawer>
+      <!--<Drawer :closable="false" width="640" :title="userTitle" v-model="userInfoModel" >-->
+        <!--<div class="demo-drawer-profile">-->
+          <!--<Form label-position="right" class="label-input-form">-->
+          <!--<Row>-->
+            <!--<Col span="12">-->
+              <!--<FormItem label="用户名称" class="laws-info-item">-->
+                <!--<Input  v-model="userVO.uname" />-->
+              <!--</FormItem>-->
+              <!--用户名称:{{userVO.uname}}-->
+            <!--</Col>-->
+            <!--<Col span="12" >账号:{{userVO.account}}</Col>-->
+          <!--</Row>-->
+          <!--<Row>-->
+            <!--<Col span="12">-->
+              <!--用户角色:{{userVO.roleName}}-->
+            <!--</Col>-->
+            <!--<Col span="12">-->
+              <!--用户类型:{{userVO.userType ==='GQYJY' ? '广汽研究院':userVO.userType ==='GQJT'?'广汽集团':userVO.userType ==='OTHER'?'其他':''}};-->
+            <!--</Col>-->
+          <!--</Row>-->
+          <!--<Row>-->
+            <!--<Col span="12">-->
+              <!--所属部门:{{userVO.orgName}}-->
+            <!--</Col>-->
+            <!--<Col span="12">手机号码:{{userVO.mobilePhone}}</Col>-->
+          <!--</Row>-->
+          <!--<Row>-->
+            <!--<Col span="12">-->
+              <!--办公电话:{{userVO.officePhone}}-->
+            <!--</Col>-->
+            <!--<Col span="12" >电子邮件:{{userVO.email}}</Col>-->
+          <!--</Row>-->
+          <!--<Row>-->
+            <!--<Col span="12">用户状态:{{userVO.disableFlag==0? '启用':'禁用'}}</Col>-->
+          <!--</Row>-->
+          <!--</Form>-->
+        <!--</div>-->
+      <!--</Drawer>-->
     </div>
 
   </div>
 </template>
 
 <script>
-import expandRow from './components/TableExpand'
+import 'zTree/js/jquery.ztree.core.js'
 export default {
   name: 'user-manage',
   data () {
@@ -136,6 +175,14 @@ export default {
         }],
         searching: false
       },
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
+      },
+      usersType: false,
+      createType: true,
       // 总数
       total: 0,
       // 当前页数
@@ -148,19 +195,14 @@ export default {
       userTitle: '',
       // 用户木太狂
       showUserModal: false,
+      // 显示密码
+      showPWD: true,
+      // 账户禁用
+      accountState: false,
+      // 用户查看模态框
+      userInfoModel: false,
       // 用户列表列信息
       userColumns: [
-        {
-          type: 'expand',
-          width: 50,
-          render: (h, params) => {
-            return h(expandRow, {
-              props: {
-                row: params.row
-              }
-            })
-          }
-        },
         {
           type: 'selection',
           width: 60,
@@ -168,31 +210,69 @@ export default {
         },
         {
           title: '类型',
-          key: 'roleType'
+          align: 'center',
+          key: 'userType',
+          render: (h, params) => {
+            // let _this = this
+            let texts = ''
+            switch (params.row.userType) {
+              case 'GQYJY' :
+                texts = '广汽研究院'
+                break
+              case 'GQJT' :
+                texts = '广汽集团'
+                break
+              case 'OTHER' :
+                texts = '其他'
+                break
+            }
+            return h('div', {
+              props: {}
+            }, texts)
+          }
         },
         {
           title: '用户名',
+          align: 'center',
           key: 'uname'
         },
         {
           title: '账号',
+          align: 'center',
           key: 'account'
         },
         {
           title: '工号',
+          align: 'center',
           key: 'workNum'
         },
         {
           title: '角色',
+          align: 'center',
           key: 'roleName'
         },
         {
           title: '所属部门',
+          align: 'center',
           key: 'orgName'
         },
         {
           title: '状态',
-          key: 'disableFlag'
+          align: 'center',
+          width: 80,
+          key: 'disableFlag',
+          render: (h, params) => {
+            // let _this = this
+            let texts = ''
+            if (params.row.disableFlag === 0) {
+              texts = '启用'
+            } else {
+              texts = '禁用'
+            }
+            return h('div', {
+              props: {}
+            }, texts)
+          }
         }, {
           title: '操作',
           key: 'action',
@@ -209,28 +289,28 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.showUser(params.index)
+                    this.userEdit(params.row)
                   }
                 }
-              }, '查看'),
+              }, '编辑'),
               h('Button', {
                 props: {
-                  type: 'primary',
-                  size: 'smaill'
+                  type: 'warning',
+                  size: 'small'
                 },
                 style: {
                   marginRight: '5px'
                 },
                 on: {
                   click: () => {
-                    this.userEdit(params.index)
+                    this.showUser(params.index)
                   }
                 }
-              }, '编辑'),
+              }, '查看'),
               h('Button', {
                 props: {
-                  type: 'primary',
-                  size: 'smaill'
+                  type: 'error',
+                  size: 'small'
                 },
                 style: {
                   marginRight: '5px'
@@ -253,24 +333,50 @@ export default {
         passwordCheck: '',
         uname: '',
         roleId: '',
+        roleName: '',
         userType: '',
         mobilePhone: '',
         officePhone: '',
         workNum: '',
         email: '',
         disableFlag: '',
-        orgId: ''
+        orgId: '',
+        orgName: ''
+      },
+      userVOFormRules: {
+        account: [{required: true, message: '账户不能为空', trigger: 'blur'}],
+        uname: [{required: true, messgae: '用户名称不能为空', trigger: 'blur'}]
+        // 此处需要两次输入的密码是否一致
       },
       // 用户列表数据
       userList: [],
+      clickUserList: [],
       // 组织机构
-      orgList: {}
+      orgList: [],
+      orgTree: {},
+      setting: {
+        check: {
+          enable: false
+        },
+        view: {
+          showLine: true,
+          nameIsHTML: true
+        },
+        data: {
+          simpleData: {
+            enable: true
+          }
+        },
+        callback: {
+          onClick: this.zTreeOnClick()
+        }
+      }
     }
   },
   methods: {
     // 用户信息分页查询
     searchUserPage () {
-      this.$http.get('sys/user',
+      this.$http.get('sys/user/',
         {
           pageNo: this.pageNo,
           pageSize: this.pageSize,
@@ -279,13 +385,12 @@ export default {
           roleId: this.search.roleId,
           disableFlag: this.search.disableFlag
         },
-        {_this: this, loading: this.loading},
+        {_this: this, loading: 'loading'},
         res => {
-          console.log(res)
           if (res.ok) {
-            // 开始加载表格
             this.userList = res.data.list
-          } else {
+            this.pageNo = res.data.pageNo
+            this.total = res.data.count
           }
         })
     },
@@ -307,16 +412,129 @@ export default {
     //  打开新增用户模态框
     openAddUserModal () {
       this.userTitle = '新增用户'
+      this.showPWD = true
+      this.accountState = false
+      this.createType = false
+      this.getOrgTreeSource()
       this.cleanUserValue()
       this.showUserModal = true
     },
     // 保存用户信息
     saveUserInfo () {
-
+      // 更新
+      if (this.userVO.usid !== null && this.userVO.usid !== '') {
+        this.$http.put('sys/user', this.userVO,
+          {_this: this, loading: this.loading},
+          res => {
+            console.log(res)
+          })
+      } else {
+        // 新增
+        this.$http.postData('sys/user', this.userVO,
+          {_this: this, loading: this.loading},
+          res => {
+            if (res.ok) {
+              this.executeSuccess('保存用户成功！')
+              this.closeDrawer()
+            }
+          })
+      }
+      this.searchUserPage()
     },
     // 获取组织机构数据
     getOrgTreeSource () {
-      this.$http.get()
+      this.$http.get('sys/org/getTree', {}, {_this: this},
+        res => {
+          console.log(res)
+          if (res.ok) {
+            let orgTreeList = res.data
+            let treeStr = []
+            for (let i = 0; i < orgTreeList.length; i++) {
+              let option = { id: orgTreeList[i].id,
+                pId: orgTreeList[i].parentId,
+                name: orgTreeList[i].orgName,
+                open: orgTreeList[i].isShow,
+                orgDesc: orgTreeList[i].orgDesc,
+                orgCode: orgTreeList[i].orgCode,
+                orgType: orgTreeList[i].orgType,
+                isShow: orgTreeList[i].isShow,
+                shortName: orgTreeList[i].shortName}
+              treeStr.push(option)
+            }
+            this.orgTree = $.fn.zTree.init($('#orgTree'), this.setting, treeStr)
+          }
+        })
+    },
+    // 用户编辑
+    userEdit (row) {
+      this.userTitle = '编辑用户'
+      this.usersType = false
+      this.createType = true
+      this.showPWD = false
+      this.accountState = true
+      this.userVO = JSON.parse(JSON.stringify(row))
+      this.getOrgTreeSource()
+      this.showUserModal = true
+    },
+    // 用户删除
+    userDel (index) {
+      console.log(this.userList[index].usid)
+      this.$Modal.confirm({
+        title: '请选择',
+        content: '确定删除这些数据?',
+        onOk: () => {
+          this.$http.delete('sys/user/' + this.userList[index].usid, {},
+            { _this: this
+            }, res => {
+              if (res.ok) {
+                this.executeSuccess('删除成功')
+                this.searchUserPage()
+              } else {
+                this.executeError('删除失败! 失败原因:' + res.message)
+              }
+            })
+          this.$Modal.remove()
+        }})
+    },
+    // 批量删除
+    batchUserDel () {
+      // 此处获取选中的数据
+      if (this.clickUserList.length > 0) {
+        let userIds = []
+        for (let i = 0; i < this.clickUserList.length; i++) {
+          let userId = this.clickUserList[i].usid
+          userIds.push(userId)
+        }
+        let userIdsStr = userIds.join(',')
+        this.$Modal.confirm({
+          title: '请选择',
+          content: '确定删除这些数据?',
+          onOk: () => {
+            this.$http.delete('sys/user/' + userIdsStr, {},
+              { _this: this
+              }, res => {
+                if (res.ok) {
+                  this.executeSuccess('删除成功')
+                  this.searchUserPage()
+                } else {
+                  this.executeError('删除失败! 失败原因:' + res.message)
+                }
+              })
+            this.$Modal.remove()
+          }})
+      } else {
+        this.executeError('未选择用户，请选择')
+      }
+    },
+    // 用户查看
+    showUser (index) {
+      this.userTitle = '查看用户信息'
+      this.showPWD = false
+      this.createType = true
+      this.userVO = this.userList[index]
+      // this.userInfoModel = true
+      this.showUserModal = true
+      this.usersType = true
     },
     /**
      * @description: 搜索框重置
@@ -324,7 +542,7 @@ export default {
      * @date: 2018-09-10 14:18:19
      */
     resetSearch () {
-      this.search.userType = 'OTHER'
+      this.search.userType = ''
       this.search.userName = ''
       this.search.roleId = ''
       this.search.disableFlag = ''
@@ -349,6 +567,9 @@ export default {
       this.showUserModal = false
       this.cleanUserValue()
     },
+    handleRowChange (selection) {
+      this.clickUserList = selection
+    },
     // 成功弹框
     executeSuccess (message) {
       this.$Message.success(message)
@@ -356,6 +577,9 @@ export default {
     // 失败弹框
     executeError (message) {
       this.$Message.error(message)
+    },
+    zTreeOnClick (event, treeId, treeNode, clickFlag) {
+
     }
   },
   components: {},
@@ -367,10 +591,14 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+  @import '../../../../assets/zTree/css/zTreeStyle/zTreeStyle.css';
   #user-manage{
     background: #FFF;
     padding: 0.2rem 0.3rem;
+  }
+  .disappear{
+    display: none;
   }
   .demo-drawer-footer{
     width: 100%;

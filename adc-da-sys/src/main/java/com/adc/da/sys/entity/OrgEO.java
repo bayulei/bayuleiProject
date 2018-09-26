@@ -19,7 +19,7 @@ public class OrgEO extends BaseEntity {
     private Integer validFlag;
     private Integer isShow;
     private String parentIds;
-    private String parentId;
+    private String pId;
     private String shotName;
     private String remarks;
     private Integer orgDesc;
@@ -152,14 +152,13 @@ public class OrgEO extends BaseEntity {
         this.parentIds = parentIds;
     }
 
-    /**  **/
-    public String getParentId() {
-        return this.parentId;
+
+    public String getpId() {
+        return pId;
     }
 
-    /**  **/
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setpId(String pId) {
+        this.pId = pId;
     }
 
     /**  **/

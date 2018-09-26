@@ -272,20 +272,34 @@ export default {
       applyAuthOptions: '',
       lawsInfoRules: {},
       lawsInfoFormRules: {
+        country: [],
+        lawsProperty: [],
+        lawsNumber: [],
         lawsName: [
           { required: true, message: '文件名称不能为空', trigger: 'blur' }
         ],
+        issueUnit: [],
         lawsState: [
           { required: true, message: '文件状态不能为空', trigger: 'blur' }
         ],
         issueTime: [
-          { required: true, message: '发布日期不能为空', trigger: 'blur' }
+          { required: true, type: 'date', message: '发布日期不能为空', trigger: 'change' }
         ],
         putTime: [
           { required: true, message: '实施日期不能为空', trigger: 'blur' }
-        ]
+        ],
+        replaceLawsNum: [],
+        applyArctic: [],
+        energyKind: [],
+        applyAuth: [],
+        responsibleUnit: [],
+        linkUri: []
       },
-      addLawsItemsFormRules: {}
+      addLawsItemsFormRules: {
+        // itemsNum: [
+        //  { required: true, message: '条目号不能为空', trigger: 'blur' }
+        // ]
+      }
     }
   },
   methods: {
@@ -478,7 +492,6 @@ export default {
       }, res => {
         this.searchLawsItems(this.saveLawsId)
       }, e => {
-
       })
     },
     // 分解多选下拉
@@ -491,8 +504,12 @@ export default {
     },
     // 多选合并为数组显示
     combineToArray (value) {
-      let arrayValue = value.split(',')
-      return arrayValue
+      if (value != null && value !== '') {
+        let arrayValue = value.split(',')
+        return arrayValue
+      } else {
+        return value
+      }
     },
     // 加载数据字典
     loadDicTypeDatas1 () {

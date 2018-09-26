@@ -1,6 +1,7 @@
 package com.adc.da.lawss.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
@@ -12,22 +13,22 @@ import java.util.Date;
  */
 public class SarBussStandPlanEO extends BaseEntity {
 
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private Integer validFlag;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date approvalDraftTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startFlowTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date reviewModifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date reviewMeetTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date reviewSubmitTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date finishReviewTime;
     private String compilersUser;
     private String reviewLevel;
@@ -36,6 +37,10 @@ public class SarBussStandPlanEO extends BaseEntity {
     private String makeRevisonType;
     private String standName;
     private String id;
+    private String reviewSubmitDays;
+    private String submitDelayDays;
+    private String planReleaseDays;
+    private String releaseDelayDays;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -76,6 +81,10 @@ public class SarBussStandPlanEO extends BaseEntity {
             case "makeRevisonType": return "make_revison_type";
             case "standName": return "stand_name";
             case "id": return "id";
+            case "reviewSubmitDays": return "reviewSubmitDays";
+            case "submitDelayDays": return "submitDelayDays";
+            case "planReleaseDays": return "planReleaseDays";
+            case "releaseDelayDays": return "releaseDelayDays";
             default: return null;
         }
     }
@@ -119,6 +128,10 @@ public class SarBussStandPlanEO extends BaseEntity {
             case "make_revison_type": return "makeRevisonType";
             case "stand_name": return "standName";
             case "id": return "id";
+            case "reviewSubmitDays": return "reviewSubmitDays";
+            case "submitDelayDays": return "submitDelayDays";
+            case "planReleaseDays": return "planReleaseDays";
+            case "releaseDelayDays": return "releaseDelayDays";
             default: return null;
         }
     }
@@ -283,4 +296,35 @@ public class SarBussStandPlanEO extends BaseEntity {
         this.id = id;
     }
 
+    public String getReviewSubmitDays() {
+        return reviewSubmitDays;
+    }
+
+    public void setReviewSubmitDays(String reviewSubmitDays) {
+        this.reviewSubmitDays = reviewSubmitDays;
+    }
+
+    public String getSubmitDelayDays() {
+        return submitDelayDays;
+    }
+
+    public void setSubmitDelayDays(String submitDelayDays) {
+        this.submitDelayDays = submitDelayDays;
+    }
+
+    public String getPlanReleaseDays() {
+        return planReleaseDays;
+    }
+
+    public void setPlanReleaseDays(String planReleaseDays) {
+        this.planReleaseDays = planReleaseDays;
+    }
+
+    public String getReleaseDelayDays() {
+        return releaseDelayDays;
+    }
+
+    public void setReleaseDelayDays(String releaseDelayDays) {
+        this.releaseDelayDays = releaseDelayDays;
+    }
 }

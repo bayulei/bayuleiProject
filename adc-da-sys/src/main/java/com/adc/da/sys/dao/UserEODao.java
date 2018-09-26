@@ -57,7 +57,7 @@ public interface UserEODao extends BaseDao<UserEO> {
 	 */
 	public void deleteUserOrgByUsid(String usid);
 
-	public void deleteLogicInBatch(List<String> usids);
+	public int deleteLogicInBatch(List<String> usids);
 
 	/**
 	 * 批量删除用户角色关联
@@ -65,7 +65,7 @@ public interface UserEODao extends BaseDao<UserEO> {
 	 * @param usids
 	 *            用户ID集合
 	 */
-	public void deleteUserRoleByUsidInBatch(List<String> usids);
+	public int deleteUserRoleByUsidInBatch(List<String> usids);
 	
 	/**
 	 * 批量删除用户组织机构关联
@@ -73,7 +73,7 @@ public interface UserEODao extends BaseDao<UserEO> {
 	 * @param usids
 	 *            用户ID集合
 	 */
-	public void deleteUserOrgByUsidInBatch(List<String> usids);
+	public int deleteUserOrgByUsidInBatch(List<String> usids);
 
 	public UserEO getUserEOByAccount(String account);
 
@@ -91,13 +91,21 @@ public interface UserEODao extends BaseDao<UserEO> {
 	 */
 	UserEO selectOrgByPrimaryKey(String usid);
 
+	Integer selectOrgCountByPrimaryKey(String usid);
+
 	UserEO selectRoleMessageByPrimaryKey(String usid);
 
 	public List<UserEO> queryByOrg(BasePage basePage);
+
 	public UserEO selectByUnameAndPwd(UserEO userEO);
 	public int queryByOrgCount(BasePage basePage);
 
 	public int updatePasswordByPrimaryKey(UserEO userEO);
 
 	public List<UserEO> queryOrgByAccount(String account);
+
+//liwenxuan:查找未分配组织结构的用户的行数
+	public int findBySetOrgCount(BasePage basePage);
+//liwenxuan：查询未分配组织机构人员信息
+	public List<UserEO> findBySetOrg(BasePage basePage);
 }

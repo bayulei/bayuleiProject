@@ -1,19 +1,17 @@
+<!-- 首页 -->
 <template>
-  <div class="home">
-    <div class="home-header">
-      <!-- logo -->
+  <div id="home">
+    <header class="home-header">
       <div class="logo"></div>
-      <!-- 顶部导航 -->
       <ul class="home-nav">
         <router-link tag="li" v-for="topNav in topNavList" :key="topNav.name" :to="topNav.path">{{ topNav.title }}</router-link>
       </ul>
-      <!-- 用户信息 -->
       <div class="header-right">
         <div class="time-box">{{ currentTime }}</div>
         <div class="user-info">
           <img :src="userAvator" alt="avator">
           <Dropdown trigger="click" @on-click="userInfoOpen">
-            <span>欢迎您，张三 <Icon type="ios-arrow-down"></Icon></span>
+            <span>欢迎您，管理员 <Icon type="ios-arrow-down"></Icon></span>
             <DropdownMenu slot="list">
               <DropdownItem name="personal">个人中心</DropdownItem>
               <DropdownItem name="logout">退出</DropdownItem>
@@ -21,100 +19,107 @@
           </Dropdown>
         </div>
       </div>
-    </div>
-    <!-- 搜索框 -->
-    <div class="search-box">
-      <div class="search-option">主题</div>
-      <div class="search-input">
-        <Input type="text" v-model="keywords" autofocus id="search-input" :placeholder="searchRecommend" clearable></Input>
+    </header>
+    <section class="home-section">
+      <!-- 搜索框 -->
+      <div class="search-box">
+        <div class="search-option">
+          <Select v-model="searchType">
+            <Option :value="1">标准编号</Option>
+            <Option :value="2">标准名称</Option>
+            <Option :value="3">标准状态</Option>
+            <Option :value="4">标准正文内容</Option>
+            <Option :value="5">适用车型</Option>
+            <Option :value="6">发布日期</Option>
+            <Option :value="7">实施日期</Option>
+            <Option :value="2">起草人</Option>
+            <Option :value="2">起草部门</Option>
+            <Option :value="2">代替标准</Option>
+            <Option :value="2">被代替标准</Option>
+            <Option :value="2">文件名称</Option>
+            <Option :value="2">动态标题</Option>
+          </Select>
+        </div>
+        <div class="search-input">
+          <Input type="text" v-model="keywords" autofocus id="search-input" :placeholder="searchRecommend" clearable></Input>
+        </div>
+        <div class="search-btn">
+          <Icon type="ios-search" :size="34" color="rgba(0,0,0,.8)" />
+        </div>
+        <div class="search-text">{{ searchText }}</div>
       </div>
-      <div class="search-btn">
-        <Icon type="ios-search" :size="34" color="rgba(0,0,0,.8)" />
-      </div>
-      <div class="search-text">{{ searchText }}</div>
-    </div>
-    <!-- 导航 -->
-    <div class="nav">
-      <div class="nav-content">
-        <div class="nav-content-left">
-          <!-- 国内外标准法规库 -->
-          <router-link tag="div" class="nav-left-top nav-item" id="standardRegulationLibrary" to="/statuteBank">
-            <div class="nav-icon iconfont">&#xe656;</div>
-            <h5>国内外标准法规库</h5>
-          </router-link>
-          <!-- 企业标准库 -->
-          <div class="nav-left-top nav-item" id="enterpriseStandardLaw">
-            <div class="nav-icon iconfont">&#xe6ee;</div>
-            <h5>企业标准库</h5>
+      <nav class="section-nav">
+        <div class="nav-content">
+          <div class="nav-content-left">
+            <!-- 国内外标准法规库 -->
+            <router-link tag="div" class="nav-left-top nav-item" id="standardRegulationLibrary" to="/statuteBank">
+              <dl>
+                <dt class="nav-icon iconfont">&#xe656;</dt>
+                <dd>国内外标准法规库</dd>
+              </dl>
+            </router-link>
+            <!-- 企业标准库 -->
+            <div class="nav-left-top nav-item" id="enterpriseStandardLaw">
+              <dl>
+                <dt class="nav-icon iconfont">&#xe6ee;</dt>
+                <dd>企业标准库</dd>
+              </dl>
+            </div>
+            <!-- 流程中心 -->
+            <router-link tag="div" class="nav-left-top nav-item" id="processCenter" to="/processCenter">
+              <dl>
+                <dt class="nav-icon iconfont">&#xe634;</dt>
+                <dd>流程中心</dd>
+              </dl>
+            </router-link>
+            <!-- 标准团队 -->
+            <div class="nav-left-top nav-item" id="standardTeam">
+              <dl>
+                <dt class="nav-icon iconfont">&#xe600;</dt>
+                <dd>标准团队</dd>
+              </dl>
+            </div>
+            <!-- 待办任务 -->
+            <div class="nav-left-bottom" id="pendingTask">
+              <h5>待办任务</h5>
+              <div class="box-line"></div>
+              <ul>
+                <li v-for="needTodo in todoList" :key="needTodo.id">{{ needTodo.content }}</li>
+              </ul>
+            </div>
           </div>
-          <!-- 流程中心 -->
-          <router-link tag="div" class="nav-left-top nav-item" id="processCenter" to="/processCenter">
-            <div class="nav-icon iconfont">&#xe634;</div>
-            <h5>流程中心</h5>
-          </router-link>
-          <!-- 标准团队 -->
-          <div class="nav-left-top nav-item" id="standardTeam">
-            <div class="nav-icon iconfont">&#xe600;</div>
-            <h5>标准团队</h5>
-          </div>
-          <!-- 待办任务 -->
-          <div class="nav-left-bottom" id="pendingTask">
-            <h5>待办任务</h5>
-            <ul>
-              <li v-for="needTodo in todoList" :key="needTodo.id">{{ needTodo.content }}</li>
-            </ul>
+          <div class="nav-content-right">
+            <!-- 动态信息 -->
+            <div class="nav-right-top" id="dynamicEarlyWarning">
+              <h5>动态信息</h5>
+              <span class="more">更多</span>
+              <div class="box-line"></div>
+              <ul>
+                <li v-for="item in domesticDynamics" :key="item.id">
+                  <i v-if="item.id === '1001'">new</i>
+                  <a>{{ item.content }}</a>
+                  <span>{{ item.time }}</span>
+                </li>
+              </ul>
+            </div>
+            <!-- 资料中心 -->
+            <div class="nav-right-bottom" id="informationCenter">
+              <h5>资料中心信息</h5>
+              <span class="more">更多</span>
+              <div class="box-line"></div>
+              <ul>
+                <li v-for="item in informationData" :key="item.id">
+                  <span class="type">{{ item.type === 1 ? '新闻' : (item.type === 2 ? '通知' : (item.type === 3 ? '月报' : '资料')) }}</span>
+                  <a class="content">{{ item.content }}</a>
+                  <span class="time">{{ item.time }}</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-        <div class="nav-content-right">
-          <!-- 国内动态、国外动态、实时预警 -->
-          <div class="nav-right-top" id="dynamicEarlyWarning">
-            <span class="more">更多</span>
-            <Tabs size="small" @on-click="(name) => dynamicEarlyWarningTab = name">
-              <TabPane label="国内动态" name="1">
-                <ul>
-                  <li v-for="item in domesticDynamics" :key="item.id">
-                    <i v-if="item.id === '1001'">new</i>
-                    <a>{{ item.content }}</a>
-                    <span>{{ item.time }}</span>
-                  </li>
-                </ul>
-              </TabPane>
-              <TabPane label="国外动态" name="2">
-                <ul>
-                  <li v-for="item in foreignTrends" :key="item.id">
-                    <i v-if="item.id === '1001'">new</i>
-                    <a>{{ item.content }}</a>
-                    <span>{{ item.time }}</span>
-                  </li>
-                </ul>
-              </TabPane>
-              <TabPane label="实时预警" name="3">
-                <ul>
-                  <li v-for="item in earlyWarning" :key="item.id">
-                    <i v-if="item.id === '1001'">new</i>
-                    <a>{{ item.content }}</a>
-                    <span>{{ item.time }}</span>
-                  </li>
-                </ul>
-              </TabPane>
-            </Tabs>
-          </div>
-          <!-- 资料中心 -->
-          <div class="nav-right-bottom" id="informationCenter">
-            <h5>资料中心信息</h5>
-            <span class="more">更多</span>
-            <ul>
-              <li v-for="item in informationData" :key="item.id">
-                <span class="type">{{ item.type === 1 ? '新闻' : (item.type === 2 ? '通知' : (item.type === 3 ? '月报' : '资料')) }}</span>
-                <a class="content">{{ item.content }}</a>
-                <span class="time">{{ item.time }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="home-footer">
+      </nav>
+    </section>
+    <footer class="home-footer">
       <!-- 友情链接 -->
       <div class="friendshipLink">
         <span>友情链接:</span>
@@ -132,30 +137,30 @@
           <Col span="6" push="4"><span class="contact-address">地址: {{ contactAddress }}</span></Col>
         </Row>
       </div>
-    </div>
+    </footer>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'home',
+  name: 'index',
   data () {
     return {
-      searchText: '标准高级检索',
-      searchRecommend: '中文文献、外文文献 (elsevier、Springer、wiley......)',
-      keywords: '', // 搜索关键词
-      currentTime: '',
+      currentTime: '', // 当前时间
+      userAvator: require('assets/images/user-avator.png'), // 用户头像
+      searchType: 1, // 搜索类型
+      keywords: '',
       topNavList: [
         {
           title: '首页',
           path: '/',
           name: 'home'
         },
-        {
-          title: '云端资源库',
-          path: '/yunduanziyuanku',
-          name: 'yunduanziyuanku'
-        },
+        // {
+        //   title: '云端资源库',
+        //   path: '/yunduanziyuanku',
+        //   name: 'yunduanziyuanku'
+        // },
         {
           title: '本地资源库',
           path: '/bendiziyuanku',
@@ -177,7 +182,8 @@ export default {
           name: 'Config'
         }
       ],
-      userAvator: require('assets/images/user-avator.png'),
+      searchText: '标准高级检索',
+      searchRecommend: '请输入关键词',
       todoList: [
         {
           id: '1001',
@@ -238,51 +244,7 @@ export default {
           content: '汽车法规国内动态0004',
           time: '08/28 12:00'
         }
-      ], // 国内动态
-      foreignTrends: [
-        {
-          id: '1001',
-          content: '汽车法规国外动态0001',
-          time: '08/28 12:00'
-        },
-        {
-          id: '1002',
-          content: '汽车法规国外动态0002',
-          time: '08/28 12:00'
-        },
-        {
-          id: '1003',
-          content: '汽车法规国外动态0003',
-          time: '08/28 12:00'
-        },
-        {
-          id: '1004',
-          content: '汽车法规国外动态0004',
-          time: '08/28 12:00'
-        }
-      ], // 国外动态
-      earlyWarning: [
-        {
-          id: '1001',
-          content: '汽车法规实时预警0001',
-          time: '08/28 12:00'
-        },
-        {
-          id: '1002',
-          content: '汽车法规实时预警0002',
-          time: '08/28 12:00'
-        },
-        {
-          id: '1003',
-          content: '汽车法规实时预警0003',
-          time: '08/28 12:00'
-        },
-        {
-          id: '1004',
-          content: '汽车法规实时预警0004',
-          time: '08/28 12:00'
-        }
-      ], // 实时预警
+      ],
       informationData: [
         {
           id: '1001',
@@ -362,7 +324,7 @@ export default {
           title: 'ECE官网',
           url: '#'
         }
-      ], // 友情链接
+      ],
       currentInline: 45, // 同时在线人数
       totalInline: 300, // 累计登录总人数
       contactNumber: '022-23652365', // 联系电话
@@ -406,6 +368,9 @@ export default {
       }
     }
   },
+  components: {},
+  props: {},
+  computed: {},
   watch: {},
   mounted () {
     this.getTime()
@@ -416,443 +381,430 @@ export default {
 <style lang="less">
   @import '~styles/style';
   @import '~styles/mixins';
-  .home{
-    width: 100%;
-    height: 100%;
-    background: url("~assets/images/home/bg.png") no-repeat;
-    background-position: top center;
-    background-attachment: fixed;
-    background-size: cover;
-    position: relative;
+  #home{
     .home-header{
-      height: 7.5%;
-      display: flex;
+      height: 7.8%;
+      background: @homeHeaderBgColor;
+      padding: 0 0.95%;
+      .un-select();
+      .flex();
       align-items: center;
-      padding: 0 .54rem;
+      color: #FFF;
+      font-size: 15px;
+      font-weight: bold;
       .logo{
-        width: 22.7%;
-        height: 58.75%;
-        background: url('~assets/images/home/logo.png') no-repeat;
-        background-position: left center;
+        height: 86.6%;
+        flex: 0 0 23.71%;
+        background: #DDE;
+        background: url("~assets/images/home/logo.png") no-repeat left center;
         background-size: 85%;
       }
       .home-nav{
         flex: 1;
-        display: flex;
-        padding: 0 0.5rem;
+        .flex();
+        padding: 0 5%;
+        height: 86.6%;
         li{
-          float: left;
           color: #FFF;
           font-size: 16px;
-          flex: 1;
+          width: 25%;
           text-align: center;
           position: relative;
           transition: transform 0.3s linear;
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-          &::before{
-            content: '';
-            width: 0;
-            height: 2px;
-            background: #FFF;
-            position: absolute;
-            bottom: -0.15rem;
-            left: 50%;
-            transform: translate(-50%);
-            transition: all .3s linear;
-          }
+          .un-select();
+          .flex();
+          justify-content: center;
+          align-items: center;
           &:hover{
-            cursor: pointer;
-            transform: translateY(-5px);
-            &::before{
-              width: 50%;
-              bottom: -0.25rem;
-            }
+            cursor:pointer;
+            color: #52b8db;
           }
+        }
+      }
+      @media screen and (max-width: 1366px) {
+        .header-right{
+          flex: 0 0 27.5% !important;
         }
       }
       .header-right{
-        width: 11rem;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        color: #FFF;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        &>div{
-          height: 62.5%;
-          display: flex;
+        height: 86.6%;
+        flex: 0 0 20%;
+        .flex();
+        .time-box{
+          flex: 1;
+          .flex();
           align-items: center;
-          font-size: 15px;
-          &.time-box{
-            min-width: 3.92rem;
-            justify-content: center;
-            margin-right: 0.2rem;
-          }
-          &.user-info{
-            min-width: 3.5rem;
-            display: flex;
-            img{
-              width: 0.8rem;
-              height: 0.8rem;
-            }
-            .ivu-dropdown{
-              flex: 1;
-              height: 0.8rem;
-              line-height: 0.8rem;
-              cursor: pointer;
-              text-align: center;
-              margin-left: 0.2rem;
-            }
+          justify-content: flex-end;
+        }
+        .user-info{
+          flex: 0 0 55%;
+          .flex();
+          align-items: center;
+          justify-content: flex-end;
+          cursor: pointer;
+          img{
+            width: 40px;
+            margin-right: 4.5%;
           }
         }
       }
     }
-    .search-box{
-      width: 45.8%;
-      height: 5.55%;
-      margin: 3.5% auto 0 auto;
-      display: flex;
-      &>div{
-        height: 100%;
-      }
-      .search-option{
-        flex: 0 0 13.63%;
-        color: #515151;
-        font-size: .32rem;
-        background: rgba(255,255,255,.8);
-        border: 1px solid #B3C3C7;
-        .flex-center;
-      }
-      .search-input{
-        flex: 0 0 55%;
-        background: rgba(255,255,255,.8);
-        border: 1px solid #B3C3C7;
-        border-left: transparent;
-        .ivu-input-wrapper{
+    .home-section{
+      height: 77.2%;
+      background: @homeSectionBgColor;
+      padding-top: 1.6%;
+      .search-box{
+        width: 62.95%;
+        height: 7.9%;
+        margin: 0 auto;
+        display: flex;
+        margin-bottom: 1.65%;
+        &>div{
           height: 100%;
-          display: flex;
-          align-items: center;
-          .ivu-input{
+        }
+        .search-option{
+          flex: 0 0 13.63%;
+          color: #515151;
+          font-size: 16px;
+          background: rgba(255,255,255,.8);
+          border: 1px solid #B3C3C7;
+          .flex-center;
+          .ivu-select{
             height: 100%;
             background: transparent;
-            border: none !important;
-            box-shadow: none;
-            padding: 0 .4rem;
-            font-size: .32rem;
-          }
-        }
-      }
-      .search-btn{
-        flex: 0 0 13.63%;
-        background: @bgColor;
-        cursor: pointer;
-        &:hover{
-          opacity: .8;
-        }
-        .flex-center;
-      }
-      .search-text{
-        .flex-center;
-        color: #FEFEFE;
-        font-size: .32rem;
-        flex: 0 0 calc(~'100% - 82.26%');
-        position: relative;
-        top: 5px;
-        left: 0.55rem;
-      }
-    }
-    .nav{
-      width: 20.72rem;
-      height: 55%;
-      margin: 3.5% auto 0 auto;
-      .nav-content{
-        height: 100%;
-        color: #FFF;
-        position: relative;
-        .nav-content-left {
-          width: 6.2rem;
-          height: 100%;
-          position: absolute;
-          top: 0;
-          left: 0;
-          .nav-left-top{
-            &.nav-item{
-              width: 3rem;
-              height: 23%;
-              position: absolute;
-              padding-top: 0.4rem;
-              &:nth-child(1){
-                top: 0;
-                left: 0;
-              }
-              &:nth-child(2){
-                top: 0;
-                right: 0;
-              }
-              &:nth-child(3){
-                left: 0;
-                top: 24.9%;
-              }
-              &:nth-child(4){
-                right: 0;
-                top: 24.9%;
-              }
-              h5{
-                font-size: 0.28rem;
-                text-align: center;
+            border: none;
+            .ivu-select-selection{
+              height: 100%;
+              border: none;
+              border-radius: 0;
+              box-shadow: none;
+              & > div{
+                height: 100%;
+                .flex();
+                align-items: center;
+                justify-content: center;
               }
             }
           }
-          .nav-left-bottom{
-            width: 6.2rem;
-            height: 49%;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            color: #666;
-            padding: 0.25rem;
-            h5{
-              font-size: 0.32rem;
-              -webkit-user-select: none;
-              -moz-user-select: none;
-              -ms-user-select: none;
-              user-select: none;
+        }
+        .search-input{
+          flex: 0 0 55%;
+          background: rgba(255,255,255,.8);
+          border: 1px solid #B3C3C7;
+          border-left: transparent;
+          .ivu-input-wrapper{
+            height: 100%;
+            display: flex;
+            align-items: center;
+            .ivu-input{
+              height: 100%;
+              background: transparent;
+              border: none !important;
+              box-shadow: none;
+              padding: 0 20px;
+              font-size: 16px;
             }
-            ul{
-              margin-top: 0.1rem;
-              height: 85%;
-              border: 1px solid #DDD;
-              overflow-y: auto;
-              li{
-                padding: .1rem;
-                .ellipsis;
-              }
-            }
-          }
-          .nav-icon{
-            font-size: 0.8rem;
-            text-align: center;
           }
         }
-        .nav-content-right{
-          width: 12.52rem;
-          height: 100%;
-          position: absolute;
-          top: 0;
-          right: 0;
-          .nav-right-top{
+        .search-btn{
+          flex: 0 0 13.63%;
+          background: @homeHeaderBgColor;
+          cursor: pointer;
+          &:hover{
+            opacity: .8;
+          }
+          .flex-center;
+          .ivu-icon{
+            color: #FFF !important;
+          }
+        }
+        .search-text{
+          .flex-center;
+          color: #2A639B;
+          font-weight: bold;
+          font-size: 16px;
+          flex: 0 0 calc(~'100% - 82.26%');
+          position: relative;
+          top: 5px;
+        }
+      }
+      .section-nav{
+          width: 90%;
+          height: 87%;
+          margin: 0 auto;
+          max-width: 1600px;
+          .nav-content{
+            width: 100%;
+            height: 100%;
+            color: #FFF;
             position: relative;
-            width: 12.52rem;
-            height: 47.9%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            .more{
-              cursor: pointer;
-              color: @baseColor;
+            .nav-content-left {
+              width: 36.14%;
+              height: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+              .nav-left-top{
+                &.nav-item{
+                  width: 48.9%;
+                  height: 23%;
+                  position: absolute;
+                  .flex();
+                  justify-content: center;
+                  align-items: center;
+                  @media screen and (max-width: 1366px) {
+                    .nav-icon{font-size: 40px !important;}
+                  }
+                  .nav-icon{
+                    font-size: 50px;
+                    text-align: center;
+                  }
+                  dd{font-size:14px;}
+                  &:nth-child(1){
+                    top: 0;
+                    left: 0;
+                  }
+                  &:nth-child(2){
+                    top: 0;
+                    right: 0;
+                  }
+                  &:nth-child(3){
+                    left: 0;
+                    top: 24.9%;
+                  }
+                  &:nth-child(4){
+                    right: 0;
+                    top: 24.9%;
+                  }
+                  h5{
+                    font-size: 16px;
+                    text-align: center;
+                  }
+                }
+              }
+              .nav-left-bottom{
+                width: 100%;
+                height: 49%;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                color: #666;
+                h5{
+                  font-size: 18px;
+                  line-height: 30px;
+                  -webkit-user-select: none;
+                  -moz-user-select: none;
+                  -ms-user-select: none;
+                  user-select: none;
+                  font-weight: 600;
+                }
+                ul{
+                  margin-top: 5px;
+                  height: 85%;
+                  overflow-y: auto;
+                  li{
+                    padding: 5px;
+                    .ellipsis;
+                    font-size: 14px;
+                  }
+                }
+              }
+            }
+            .nav-content-right{
+              width: 60.46%;
+              height: 100%;
               position: absolute;
               top: 0;
               right: 0;
-              z-index: 100;
-              padding: 0.16rem 0.32rem;
-              &:hover{
-                color: #12508E;
-              }
-            }
-            .ivu-tabs{
-              height: 100%;
-              .ivu-tabs-bar{
-                margin-bottom: 0;
-              }
-              .ivu-tabs-content{
-                height: calc(~'100% - 0.66rem');
+              .nav-right-top{
+                position: relative;
+                width: 100%;
+                height: 47.9%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                h5{
+                  font-size: 18px;
+                  line-height: 30px;
+                  -webkit-user-select: none;
+                  -moz-user-select: none;
+                  -ms-user-select: none;
+                  user-select: none;
+                  font-weight: 600;
+                }
                 ul{
-                  width: 100%;
-                  height: 100%;
-                  padding: 0.15rem;
+                  height: 85%;
                   overflow-y: auto;
                   li{
-                    padding: 0 0.1rem;
-                    margin-bottom: 0.1rem;
+                    padding: 0 5px;
+                    margin-bottom: 5px;
                     position: relative;
                     cursor: pointer;
                     display: flex;
                     display: -ms-flex;
                     align-items: center;
+                    font-size: 14px;
                     &:last-child{
                       margin-bottom: 0;
                     }
                     a{
                       display: inline-block;
-                      max-width: 70%;
+                      max-width: 80%;
+                      color: #333;
                       .ellipsis;
                     }
                     &:hover{
                       a{
-                        color: @baseColor;
+                        color: #12508E;
                       }
                       span{
-                        color: @baseColor;
+                        color: #12508E;
                       }
                     }
                     i{
                       font-style: italic;
                       color: #E4393C;
                       font-weight: bold;
-                      margin-right: 0.1rem;
-                    }
-                    a{
-                      color: #515a6e;
+                      margin-right: 5px;
                     }
                     span{
                       position: absolute;
                       top: 0;
-                      right: 0.15rem;
+                      right: 7.5px;
                     }
                   }
                 }
               }
-            }
-          }
-          .nav-right-bottom{
-            width: 12.52rem;
-            height: 49%;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            padding: 0 0.2rem;
-            .more{
-              position: absolute;
-              top: 0;
-              right: 0;
-              padding: 0.16rem 0.32rem;
-              z-index: 100;
-              cursor: pointer;
-              color: #40A6D5;
-              &:hover{
-                color: #FFF;
+              .nav-right-bottom{
+                width: 100%;
+                height: 49%;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                h5{
+                  font-size: 18px;
+                  line-height: 30px;
+                  -webkit-user-select: none;
+                  -moz-user-select: none;
+                  -ms-user-select: none;
+                  user-select: none;
+                  font-weight: 600;
+                }
+                ul{
+                  width: 100%;
+                  height: 85%;
+                  overflow-y: auto;
+                  li{
+                    padding: 0 0.1rem;
+                    margin-bottom: 0.15rem;
+                    position: relative;
+                    cursor: pointer;
+                    display: flex;
+                    display: -ms-flex;
+                    align-items: center;
+                    font-size: 14px;
+                    &:last-child{
+                      margin-bottom: 0;
+                    }
+                    .type{
+                      position: relative;
+                      display: inline-block;
+                      padding-right: 0.15rem;
+                      &::before{
+                        content: '';
+                        display: inline-block;
+                        width: 2px;
+                        height: 80%;
+                        position: absolute;
+                        top: 7.5%;
+                        right: 0;
+                        background: #AAA;
+                      }
+                    }
+                    .time{
+                      position: absolute;
+                      top: 0;
+                      right: 0.1rem;
+                    }
+                    a{
+                      padding-left: 0.1rem;
+                      color: #333;
+                      display: inline-block;
+                      max-width: 80%;
+                      .ellipsis;
+                    }
+                    &:hover{
+                      a{
+                        color: #12508E;
+                      }
+                      .time{
+                        color: #12508E;
+                      }
+                    }
+                  }
+                }
               }
-            }
-            h5{
-              font-size: 0.32rem;
-              height: 0.8rem;
-              line-height: 0.8rem;
-              -webkit-user-select: none;
-              -moz-user-select: none;
-              -ms-user-select: none;
-              user-select: none;
-            }
-            ul{
-              width: 100%;
-              height: calc(~'100% - 1rem');
-              overflow-y: auto;
-              li{
-                padding: 0 0.1rem;
-                margin-bottom: 0.15rem;
-                position: relative;
+              .more{
                 cursor: pointer;
-                display: flex;
-                display: -ms-flex;
-                align-items: center;
-                &:last-child{
-                  margin-bottom: 0;
-                }
-                .type{
-                  position: relative;
-                  display: inline-block;
-                  padding-right: 0.15rem;
-                  &::before{
-                    content: '';
-                    display: inline-block;
-                    width: 2px;
-                    height: 80%;
-                    position: absolute;
-                    top: 7.5%;
-                    right: 0;
-                    background: #FFF;
-                  }
-                }
-                .time{
-                  position: absolute;
-                  top: 0;
-                  right: 0.1rem;
-                }
-                a{
-                  padding-left: 0.1rem;
-                  color: #FFF;
-                  display: inline-block;
-                  max-width: 70%;
-                  .ellipsis;
-                }
+                color: #12508E;
+                position: absolute;
+                top: 0;
+                right: 0;
+                z-index: 100;
+                padding: 5px 10px;
                 &:hover{
-                  a{
-                    color: #40A6D5;
-                  }
-                  .time{
-                    color: #40A6D5;
-                  }
+                  color: #FFF;
+                  background: #12508E;
+                  transition: all .2s linear;
                 }
               }
             }
+            #standardRegulationLibrary{
+              background: @homeHeaderBgColor;
+              color: #FFF;
+            }
+            #enterpriseStandardLaw{
+              background: @boxBgColor;
+              color: #FFF;
+            }
+            #processCenter{
+              background: @boxBgColor;
+              color: #FFF;
+            }
+            #standardTeam{
+              background: @homeHeaderBgColor;
+              color: #FFF;
+            }
+            #pendingTask{color: #333;}
+            #dynamicEarlyWarning{color: #333;}
+            #informationCenter{color: #333;}
+          }
+          .nav-item{
+            cursor: pointer;
           }
         }
-        #standardRegulationLibrary{
-          background: @boxColor3;
-          color: @boxColor2;
-          &:hover{
-            color: #FFF;
-          }
-        }
-        #enterpriseStandardLaw{
-          background: @boxColor2;
-          color: #417EC6;
-          &:hover{
-            color: #12508E;
-          }
-        }
-        #processCenter{
-          background: @boxColor2;
-          color: #417EC6;
-          &:hover{
-            color: #12508E;
-          }
-        }
-        #standardTeam{
-          background: @boxColor3;
-          color: @boxColor2;
-          &:hover{
-            color: #FFF;
-          }
-        }
-        #pendingTask{background: @boxColor2;}
-        #dynamicEarlyWarning{background: @boxColor2;}
-        #informationCenter{background: @boxColor3;}
-      }
-      .nav-item{
-        cursor: pointer;
-      }
     }
     .home-footer{
-      margin-top: 2.5%;
+      background: @homeSectionBgColor;
+      height: calc(~'100% - 7.8% - 77.2%');
+      .flex();
+      flex-wrap: wrap;
       .friendshipLink{
-        width: 19rem;
+        width: 68%;
         margin: 0 auto;
         display: flex;
         display: -ms-flex;
+        position: relative;
+        top: 10px;
         span{
-          color: #FFF;
+          color: #333;
           display: inline-flex;
           display: -ms-inline-flexbox;
           align-items: center;
           flex: 0 0 2rem;
           text-align: center;
           font-size: 0.28rem;
+          font-weight: bold;
         }
         ul{
           display: flex;
@@ -865,15 +817,22 @@ export default {
             display: -ms-flex;
             align-items: center;
             a{
-              color: #FFF;
+              color: #333;
+              font-size: 14px;
+              &:hover{
+                color: @baseColor;
+                text-decoration: underline;
+              }
             }
           }
         }
       }
       .footer{
-        width: 23.5rem;
+        width: 90%;
         margin: 0.3rem auto 0 auto;
-        color: #FFF;
+        color: #333;
+        font-size: 14px;
+        font-weight: bold;
         span{
           position: relative;
           display: inline-block;
@@ -883,11 +842,11 @@ export default {
               content: '';
               display: block;
               width: 1px;
-              height: 80%;
+              height: 75%;
               position: absolute;
-              top: 10%;
+              top: 12.5%;
               right: 0;
-              background: #FFF;
+              background: #333;
             }
           }
         }
@@ -895,7 +854,7 @@ export default {
           text-align: center;
         }
         a{
-          color: #FFF;
+          color: @baseColor;
           cursor: default;
         }
         img{

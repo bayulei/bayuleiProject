@@ -22,6 +22,8 @@ import com.adc.da.lawss.dto.LawsInfoExportDto;
 import com.adc.da.lawss.dto.LawsInfoImportDto;
 import com.adc.da.util.exception.AdcDaBaseException;
 import com.adc.da.util.utils.IOUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,7 +177,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
     @ApiOperation(value = "|SarLawsInfoEO|导入法规信息")
     @PostMapping("/importLawsInfos")
     /*@RequiresPermissions("lawss:sarLawsInfo:importLawsInfos")*/
-    public ResponseMessage importLawsInfos(@RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseMessage importLawsInfos(@RequestParam("file") MultipartFile file,String pageType) throws Exception {
         //验证文件名是否合格
         ReadExcel readExcel = new ReadExcel();
         if (!readExcel.validateExcel(file.getOriginalFilename())) {
@@ -198,7 +200,7 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
         List<LawsInfoImportDto> datas = result.getList();
         if(datas!=null &&!datas.isEmpty()){
             try {
-                return sarLawsInfoEOService.importLawsInfoDatas(datas);
+                return sarLawsInfoEOService.importLawsInfoDatas(datas,pageType);
             } catch (Exception e) {
                 return Result.error("fail", e.getMessage());
             }
@@ -216,7 +218,8 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
      **/
     @ApiOperation(value = "|SarLawsInfoEO|导出法规信息")
     @GetMapping("/exportLawsInfos")
-    public void exportLawsInfos(HttpServletResponse response, HttpServletRequest request) throws Exception{
+    public void exportLawsInfos(String ids,HttpServletResponse response, HttpServletRequest request) throws Exception{
+        String[] exportIds = ids.split(",");
         OutputStream os = null;
         Workbook workbook = null;
         try{
@@ -227,14 +230,17 @@ public class SarLawsInfoEOController extends BaseController<SarLawsInfoEO>{
             exportParams.setType(ExcelType.XSSF);
 
             //存放需要导出的数据
-            SarLawsInfoEO sarLawsInfoEO = new SarLawsInfoEO();
-            sarLawsInfoEO.setLawsName("11111");
-            //将导出对象与dto对应
-            List<LawsInfoExportDto> dto = new ArrayList<>();
-            BeanUtils.copyProperties(sarLawsInfoEO, dto);
+            List<LawsInfoExportDto> dtoDatas = new ArrayList<>();
+            for(int i=0;i<exportIds.length;i++){
+              SarLawsInfoEO getLawsInfo = sarLawsInfoEOService.selectInfoById(exportIds[i]);
+                //将导出对象与dto对应
+                LawsInfoExportDto dto = new LawsInfoExportDto();
+                BeanUtils.copyProperties(getLawsInfo, dto);
+                dtoDatas.add(dto);
+            }
 
             //导出数据到Excel
-            workbook = ExcelExportUtil.exportExcel(exportParams, LawsInfoExportDto.class, dto);
+            workbook = ExcelExportUtil.exportExcel(exportParams, LawsInfoExportDto.class, dtoDatas);
             os = response.getOutputStream();
             workbook.write(os);
             os.flush();

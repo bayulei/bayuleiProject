@@ -3,6 +3,7 @@
   <div id="testItemDatabase">
     试验项目库
   </div>
+
 </template>
 
 <script>
@@ -19,9 +20,7 @@ export default {
   mounted () {}
 }
 </script>
-
 <style lang="less">
   #testItemDatabase{
-
   }
 </style>

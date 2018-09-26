@@ -570,11 +570,12 @@
 
   <!-- 分页查询条件 -->
   <sql id="SarStandardsInfo_Where_Clause">
-        left join TS_DICTYPE dicountry on (dicountry.dic_type_code = SAR_STANDARDS_INFO.country  and dicountry.dic_id is not null)
-        left join TS_DICTYPE dicstandSort on  (dicstandSort.dic_type_code = SAR_STANDARDS_INFO.stand_sort  and dicstandSort.dic_id is not null)
-        left join TS_DICTYPE dicstandState on  (dicstandState.dic_type_code = SAR_STANDARDS_INFO.stand_state  and dicstandState.dic_id is not null)
-        left join TS_DICTYPE dicstandNature on  (dicstandNature.dic_type_code = SAR_STANDARDS_INFO.stand_nature  and dicstandNature.dic_id is not null)
-        left join TS_DICTYPE dicadoptExtent on  (dicadoptExtent.dic_type_code = SAR_STANDARDS_INFO.adopt_extent  and dicadoptExtent.dic_id is not null)
+        left join TS_DICTYPE dicountry on (dicountry.dic_type_code = SAR_STANDARDS_INFO.country  and dicountry.dic_id is not null and dicountry.valid_flag = 0)
+        left join TS_DICTYPE dicstandSort on  (dicstandSort.dic_type_code = SAR_STANDARDS_INFO.stand_sort  and dicstandSort.dic_id is not null and dicstandSort.valid_flag = 0 )
+        left join TS_DICTYPE dicstandState on  (dicstandState.dic_type_code = SAR_STANDARDS_INFO.stand_state  and dicstandState.dic_id is not null and dicstandState.valid_flag = 0 )
+        left join TS_DICTYPE dicstandNature on  (dicstandNature.dic_type_code = SAR_STANDARDS_INFO.stand_nature  and dicstandNature.dic_id is not null and dicstandNature.valid_flag = 0 )
+        left join TS_DICTYPE dicadoptExtent on  (dicadoptExtent.dic_type_code = SAR_STANDARDS_INFO.adopt_extent  and dicadoptExtent.dic_id is not null and dicadoptExtent.valid_flag = 0)
+        left join SAR_STAND_MENU ON SAR_STANDARDS_INFO.id = SAR_STAND_MENU.stand_id
         where 1=1
         <trim suffixOverrides="," >
             <!-- 标准分类 国内标准，国外标准  必要搜索项                 -->
@@ -624,11 +625,23 @@
             </if>
             <!--  目录判断 -->
             <if test="menuId != null and menuId !='nomenu'" >
-                and SAR_STAND_MENU.MENU_ID = #{menuId}
+                and SAR_STAND_MENU.MENU_ID in (
+                select SAR_MENU.id from SAR_MENU start with id=#{menuId} connect by prior id= parent_id
+                )
             </if>
+            <!-- 游离态标准查询 -->
             <if test="menuId != null and menuId =='nomenu'" >
-                and SAR_STAND_MENU.MENU_ID is null
+                and SAR_STAND_MENU.MENU_ID = (select SAR_MENU.id from SAR_MENU WHERE parent_id is null)
             </if>
+            <!-- 导出数据过程中，选择的id -->
+            <if test="idlist != null" >
+                and SAR_STANDARDS_INFO.id in
+                <foreach collection="idlist" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+
             <!--
              < 标准种类 >
              <if test="standSort != null" >

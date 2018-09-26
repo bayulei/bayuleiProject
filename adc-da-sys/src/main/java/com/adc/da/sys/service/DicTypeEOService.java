@@ -65,13 +65,13 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<DicTypeEO> getTypeIdByDicIdAndTypeName(String dicId, String typeName) {
-        return dicTypeEODao.getTypeIdByDicIdAndTypeName(dicId, typeName);
+    public List<DicTypeEO> getTypeIdByDicIdAndTypeName(String dicId,String id, String typeName) {
+        return dicTypeEODao.getTypeIdByDicIdAndTypeName(dicId,id, typeName);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<DicTypeEO> getDicTypeEOByDicTypeCode(String dicTypeCode) {
-        return dicTypeEODao.getDicTypeEOByDicTypeCode(dicTypeCode);
+    public List<DicTypeEO> getDicTypeEOByDicTypeCode(String dicId,String id,String dicTypeCode) {
+        return dicTypeEODao.getDicTypeEOByDicTypeCode(dicId,id,dicTypeCode);
     }
 
 	public void deleteDicTypeByDicId(String id) {
@@ -81,11 +81,10 @@ public class DicTypeEOService extends BaseService<DicTypeEO, String> {
     /**
      * 新增数据字典参数表
      * */
-    public DicTypeEO saveDictype(DicTypeEO dicTypeEO){
-        dicTypeEO.setId(UUID.randomUUID10());
+    public Integer saveDictype(DicTypeEO dicTypeEO){
+        dicTypeEO.setId(UUID.randomUUID(20));
         dicTypeEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
-        dicTypeEODao.insertSelective(dicTypeEO);
-        return dicTypeEO;
+        return dicTypeEODao.insertSelective(dicTypeEO);
     }
 
     /**

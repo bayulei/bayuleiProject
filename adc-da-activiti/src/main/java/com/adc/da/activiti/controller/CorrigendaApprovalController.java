@@ -61,7 +61,7 @@ public class CorrigendaApprovalController {
             processInstanceId = corrigendaApprovalService.startProcess(corrigendaApprovalVO,userId,processDefinitionKey,processInstanceId);
             return Result.success(processInstanceId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("保存失败");
         }
     }
@@ -82,7 +82,7 @@ public class CorrigendaApprovalController {
             corrigendaApprovalService.completeApproval(processInstanceId,userId,comment);
             return Result.success(processInstanceId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("审批失败");
         }
     }
@@ -102,36 +102,20 @@ public class CorrigendaApprovalController {
             corrigendaApprovalService.completeApproval(processInstanceId,nowUserId,comment);
             return Result.success(processInstanceId);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Result.error("审批失败");
         }
     }
 
     /**
-     *  获取流程变量的信息，填充表单
-     * @MethodName:getVariables
-     * @author: yuzhong
-     * @param:[processInstanceId]
-     * @return:Map
-     * date: 2018年9月4日 14:37:19
-     */
-    @ApiOperation(value = "获取流程变量的信息，填充表单")
-    @PostMapping ("/getVariables")
-    public ResponseMessage<Map<String,Object>> getVariables(String processInstanceId) {
-        Map<String,Object> map = runtimeService.getVariables(processInstanceId);
-        //List list = taskService.getTaskComments("1");
-        return Result.success(map);
-    }
-
-    /**
-     * 查看任务详情
+     * 各个任务页面展示所需数据
      * @MethodName:getTaskInfo
-     * @author: yuzhong
+     * @author:yuzhong
      * @param:[taskId]
      * @return:Map
      * date: 2018年9月6日 19:07:04
      */
-    @ApiOperation(value = "查看任务详情")
+    @ApiOperation(value = "各个任务页面展示所需数据")
     @PostMapping ("/getTaskInfo")
     public ResponseMessage<Map<String,Object>> getTaskInfo(String taskId,String processInstanceId) {
         Map<String,Object> map = corrigendaApprovalService.getTaskInfo(taskId,processInstanceId);
@@ -163,8 +147,8 @@ public class CorrigendaApprovalController {
      */
     @ApiOperation(value = "委托")
     @PostMapping ("/entrust")
-    public ResponseMessage<String> entrust(String processInstanceId,String owner) {
-        String message = flowProcessUtil.entrust(processInstanceId,owner);
+    public ResponseMessage<String> entrust(String processInstanceId,String nowUserId,String owner) {
+        String message = flowProcessUtil.entrust(processInstanceId,nowUserId,owner);
         return Result.success(message);
     }
 }

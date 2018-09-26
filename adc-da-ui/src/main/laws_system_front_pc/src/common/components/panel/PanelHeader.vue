@@ -35,13 +35,14 @@ export default {
     padding: 0.1rem 0 0 0.8rem;
     box-sizing: border-box;
     border-bottom: 1px solid #CCCDCE;
+    background: #F0F0F0;
     .tabs{
       li{
         float: left;
         height: 0.8rem;
         line-height: 0.8rem;
         text-align: center;
-        padding: 0 0.9rem;
+        padding: 0 20px;
         cursor: pointer;
         user-select: none;
         &.active{
