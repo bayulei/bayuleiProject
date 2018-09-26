@@ -2,6 +2,7 @@ package com.adc.da.person.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
     @Autowired
     private PersonCookiesEOService personCookiesEOService;
 
-	@ApiOperation(value = "|PersonCookiesEO|分页查询")
+    @ApiOperation(value = "|PersonCookiesEO|分页查询")
     @GetMapping("/page")
     @RequiresPermissions("person:personCookies:page")
     public ResponseMessage<PageInfo<PersonCookiesEO>> page(PersonCookiesEOPage page) throws Exception {
@@ -40,12 +41,12 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
-	@ApiOperation(value = "|PersonCookiesEO|查询")
+    @ApiOperation(value = "|PersonCookiesEO|查询")
     @GetMapping("")
     @RequiresPermissions("person:personCookies:list")
     public ResponseMessage<List<PersonCookiesEO>> list(PersonCookiesEOPage page) throws Exception {
         return Result.success(personCookiesEOService.queryByList(page));
-	}
+    }
 
     @ApiOperation(value = "|PersonCookiesEO|详情")
     @GetMapping("/{id}")
@@ -66,9 +67,14 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     @RequiresPermissions("person:personCookies:update")
     public ResponseMessage<PersonCookiesEO> update(@RequestBody PersonCookiesEO personCookiesEO) throws Exception {
-        personCookiesEOService.updateByPrimaryKeySelective(personCookiesEO);
+        personCookiesEO.setModifyTime(new Date());
+        int i=personCookiesEOService.updateByPrimaryKeySelective(personCookiesEO);
+        if(i>0){
+            return Result.error("删除失败");
+        }
         return Result.success(personCookiesEO);
     }
+
 
     @ApiOperation(value = "|PersonCookiesEO|删除")
     @DeleteMapping("/{id}")
@@ -79,4 +85,26 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO>{
         return Result.success();
     }
 
+
+//    @ApiOperation(value = "根据浏览类型查询")
+//    @GetMapping("/cookieType")
+//    @ResponseBody
+//    public ResponseMessage<List<PersonCookiesEO>> queryByCookieType(String cookieType) throws Exception{
+//        List<PersonCookiesEO> personCookiesEO=personCookiesEOService.queryByCookieType(cookieType);
+//	    if(personCookiesEO==null){
+//	        return Result.error("查询失败");
+//        }
+//        return Result.success(personCookiesEO);
+//    }
+
+
+    @ApiOperation(value = "根据用户id查询")
+    @GetMapping("/userId")
+    public ResponseMessage<List<PersonCookiesEO>> queryByUserId(String userId)throws Exception{
+        List<PersonCookiesEO> personCookiesEOS = personCookiesEOService.queryByUserId(userId);
+        if(personCookiesEOS==null){
+            return Result.error("查询失败");
+        }
+        return Result.success(personCookiesEOS);
+    }
 }

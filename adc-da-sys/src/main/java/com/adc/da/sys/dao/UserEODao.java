@@ -57,7 +57,7 @@ public interface UserEODao extends BaseDao<UserEO> {
 	 */
 	public void deleteUserOrgByUsid(String usid);
 
-	public void deleteLogicInBatch(List<String> usids);
+	public int deleteLogicInBatch(List<String> usids);
 
 	/**
 	 * 批量删除用户角色关联
@@ -65,7 +65,7 @@ public interface UserEODao extends BaseDao<UserEO> {
 	 * @param usids
 	 *            用户ID集合
 	 */
-	public void deleteUserRoleByUsidInBatch(List<String> usids);
+	public int deleteUserRoleByUsidInBatch(List<String> usids);
 	
 	/**
 	 * 批量删除用户组织机构关联
@@ -73,7 +73,7 @@ public interface UserEODao extends BaseDao<UserEO> {
 	 * @param usids
 	 *            用户ID集合
 	 */
-	public void deleteUserOrgByUsidInBatch(List<String> usids);
+	public int deleteUserOrgByUsidInBatch(List<String> usids);
 
 	public UserEO getUserEOByAccount(String account);
 
@@ -91,9 +91,12 @@ public interface UserEODao extends BaseDao<UserEO> {
 	 */
 	UserEO selectOrgByPrimaryKey(String usid);
 
+	Integer selectOrgCountByPrimaryKey(String usid);
+
 	UserEO selectRoleMessageByPrimaryKey(String usid);
 
 	public List<UserEO> queryByOrg(BasePage basePage);
+
 	public UserEO selectByUnameAndPwd(UserEO userEO);
 	public int queryByOrgCount(BasePage basePage);
 
