@@ -254,7 +254,17 @@ export default {
         {
           title: '所属部门',
           align: 'center',
-          key: 'orgName'
+          key: 'orgName',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.orgName
+              }
+            }, params.row.orgName)
+          }
         },
         {
           title: '状态',
@@ -277,6 +287,7 @@ export default {
           title: '操作',
           key: 'action',
           align: 'center',
+          width: 200,
           render: (h, params) => {
             return h('div', [
               h('Button', {
