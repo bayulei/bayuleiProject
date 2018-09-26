@@ -14,8 +14,8 @@
         <FormItem label="用户名" prop="account" class="user-info-item">
           <Input v-model="userInfo.account" disabled></Input>
         </FormItem>
-        <FormItem label="姓 名" prop="uname" class="user-info-item">
-          <Input v-model="userInfo.uname" disabled></Input>
+        <FormItem label="姓 名" prop="uName" class="user-info-item">
+          <Input v-model="userInfo.uName" disabled></Input>
         </FormItem>
         <FormItem label="任职部门" prop="duty" class="user-info-item">
           <Input v-model="userInfo.duty" disabled></Input>
@@ -50,14 +50,14 @@ export default {
       avator: require('assets/images/user-big-avator.png'),
       userInfo: {
         account: '', // 用户名
-        uname: '', // 姓名
+        uName: '', // 姓名
         duty: '', // 任职部门
         officePhone: '', // 电话
         email: '', // 邮箱
         mobilePhone: '', // 手机
         faxAddress: '', // 传真
         extInfo: '', // 个性签名
-        userPicid: ''
+        userPic: ''// 用户头像
       },
       userInfoRules: {
         officePhone: [
@@ -94,15 +94,30 @@ export default {
         console.log(res)
         let attVo = res.data
         this.avator = '/uploadPath' + attVo.filePath + attVo.fileName
-        this.userInfo.userPicid = attVo.id
+        this.userInfo.userPic = attVo.id
       })
     },
+    // 根据文件ID获取文件信息并将回显
+    getUserPicInfo (attId) {
+      this.$http.get('/att/attFile/' + attId, {}, {_this: this}, res => {
+        console.log(res)
+        let attVo = res.data
+        this.avator = '/uploadPath' + attVo.filePath + attVo.fileName
+      })
+    },
+    // 保存用户信息
+    saveUserInfo () {
+
+    },
     searchPersonal () {
-      this.$http.post('person/userInfo/getByUserInfoCode', {}, {
+      this.$http.get('person/userInfo/getByUserInfoCode', {}, {
         _this: this,
         loading: 'loading'
       }, res => {
         this.userInfo = res.data
+        if (res.data.userPic !== null) {
+          this.getUserPicInfo(res.data.userPic)
+        }
       }, e => {})
     }
   },
