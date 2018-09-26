@@ -169,6 +169,7 @@ export default {
         align: 'center'
       }, {
         title: '状态',
+        width: 80,
         key: 'useFlag',
         align: 'center',
         render: (h, params) => {
@@ -210,6 +211,7 @@ export default {
         align: 'center'
       }, {
         title: '操作人',
+        width: 100,
         key: 'operUserName',
         align: 'center'
       }, {

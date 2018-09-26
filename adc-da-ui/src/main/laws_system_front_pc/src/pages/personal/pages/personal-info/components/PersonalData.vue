@@ -159,7 +159,7 @@ export default {
       width: 16.28rem;
       float: left;
       min-height: 400px;
-      margin: 1.2rem 0 0 1.75rem;
+      margin: -5.6rem 0 0 6.75rem;
       .save{
         width: 4.24rem;
         height: 0.72rem;
@@ -167,6 +167,9 @@ export default {
         margin: 0.5rem 0 0 0.2rem;
       }
       .user-info-item{
+        margin-bottom: 12px;
+        vertical-align: top;
+        zoom: 1;
         .ivu-input{
           width: 250px;
         }
