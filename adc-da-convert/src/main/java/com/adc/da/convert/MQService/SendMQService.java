@@ -39,10 +39,10 @@ public class SendMQService {
      * @Param [convertInfo]
      * @return void
      **/
-    @RabbitListener(bindings = @QueueBinding(
+/*    @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "createConvertMQ", durable = "true"),
             exchange = @Exchange(value = "convert-exchange", ignoreDeclarationExceptions = "true"),
-            key = "convert-key"))
+            key = "convert-key"))*/
     public void createMQ(Map<String,Object> convertInfo) throws Exception{
         try{
             docUploadConvert(convertInfo);
