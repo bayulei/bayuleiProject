@@ -206,6 +206,7 @@ export default {
     collectionEdit (item) {
       this.collectionModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.collectionTitle = '编辑标准'
       this.collectionModelAdd = JSON.parse(JSON.stringify(item))
     },

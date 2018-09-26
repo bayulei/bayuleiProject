@@ -3,6 +3,7 @@ package com.adc.da.sys.entity;
 import com.adc.da.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.List;
  * <b>日期：</b> 2018-09-03 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
-public class UserEO extends BaseEntity {
+public class UserEO extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 3658632939727891047L;
 
     private Integer validFlag;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

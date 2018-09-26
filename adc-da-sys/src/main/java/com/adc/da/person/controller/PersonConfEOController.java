@@ -2,9 +2,12 @@ package com.adc.da.person.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
+import com.adc.da.sys.entity.RoleEO;
+import com.adc.da.sys.entity.UserRoleEO;
+import com.adc.da.sys.util.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +25,21 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 
+import javax.validation.constraints.NotNull;
+
 @RestController
 @RequestMapping("/${restPath}/person/personConf")
 @Api(description = "|PersonConfEO|")
-public class PersonConfEOController extends BaseController<PersonConfEO>{
+public class PersonConfEOController extends BaseController<PersonConfEO> {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonConfEOController.class);
 
     @Autowired
     private PersonConfEOService personConfEOService;
 
-	@ApiOperation(value = "|PersonConfEO|分页查询")
+
+
+    @ApiOperation(value = "|PersonConfEO|分页查询")
     @GetMapping("/page")
     @RequiresPermissions("person:personConf:page")
     public ResponseMessage<PageInfo<PersonConfEO>> page(PersonConfEOPage page) throws Exception {
@@ -40,12 +47,12 @@ public class PersonConfEOController extends BaseController<PersonConfEO>{
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
-	@ApiOperation(value = "|PersonConfEO|查询")
+    @ApiOperation(value = "|PersonConfEO|查询")
     @GetMapping("")
     @RequiresPermissions("person:personConf:list")
     public ResponseMessage<List<PersonConfEO>> list(PersonConfEOPage page) throws Exception {
         return Result.success(personConfEOService.queryByList(page));
-	}
+    }
 
     @ApiOperation(value = "|PersonConfEO|详情")
     @GetMapping("/{id}")
@@ -56,19 +63,65 @@ public class PersonConfEOController extends BaseController<PersonConfEO>{
 
     @ApiOperation(value = "|PersonConfEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("person:personConf:save")
+    // @RequiresPermissions("person:personConf:save")
     public ResponseMessage<PersonConfEO> create(@RequestBody PersonConfEO personConfEO) throws Exception {
-        personConfEOService.insertSelective(personConfEO);
+        personConfEO.setId(UUIDUtils.randomUUID20());
+        personConfEOService.save(personConfEO);
         return Result.success(personConfEO);
     }
 
+    /*
+     * @Author liuyinnan
+     * @Description //按一个对象更新个人板块
+     * @Date 8:38 2018/9/25
+     * @Param [personConfEO]
+     * @return com.adc.da.util.http.ResponseMessage<com.adc.da.person.entity.PersonConfEO>
+     **/
     @ApiOperation(value = "|PersonConfEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     @RequiresPermissions("person:personConf:update")
     public ResponseMessage<PersonConfEO> update(@RequestBody PersonConfEO personConfEO) throws Exception {
         personConfEOService.updateByPrimaryKeySelective(personConfEO);
+        personConfEO.setCreationTime(new Date());
+        personConfEO.setModifyTime(new Date());
+        int i=personConfEOService.updateByPrimaryKeySelective(personConfEO);
+        if(i==0){
+            return Result.error("修改失败");
+        }
         return Result.success(personConfEO);
     }
+
+
+//    @ApiOperation(value = "根据前台传来的对象保存")
+//    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseMessage<PersonConfEO> insertByList(PersonConfEO personConfEO)throws Exception{
+//        personConfEOService.updateByPrimaryKeySelective(personConfEO);
+//        personConfEOService.insertByList(personConfEO);
+//        return Result.success(personConfEO);
+//    }
+
+
+//    @ApiOperation(value = "根据前台传来的对象保存")
+//    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseMessage<PersonConfEO> insertByList(@RequestBody List<PersonConfEO> personConfEOList) throws Exception {
+//        if (personConfEOList != null && personConfEOList.size() > 0) {
+////           String[] personConfEO=personConfEO.split(",");
+//            for (int i = 0; i < personConfEOList.size(); i++) {
+//                PersonConfEO personConfEO = personConfEOList.get(i);
+//                personConfEO.setUserId("从session取");
+//                personConfEO.setDisplaySeq(i+1);
+//                personConfEO.setCreationTime(new Date());
+//                personConfEO.setModifyTime(new Date());
+//                System.out.println(personConfEOList.get(i));
+//                personConfEOService.updateByPrimaryKeySelective(personConfEOList.get(i));
+//                personConfEOService.insert1(personConfEOList.get(i));
+//            }
+//        }else {
+//
+//        }
+//        return Result.success();
+//    }
+
 
     @ApiOperation(value = "|PersonConfEO|删除")
     @DeleteMapping("/{id}")
@@ -79,4 +132,39 @@ public class PersonConfEOController extends BaseController<PersonConfEO>{
         return Result.success();
     }
 
+
+    /*
+     * @Author liuyinnan
+     * @Description //排序查询
+     * @Date 16:13 2018/9/21
+     * @Param []
+     * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.person.entity.PersonConfEO>>
+     **/
+//    @ApiOperation(value = "排序查询")
+//    @GetMapping("/selectByDisplay")
+//    //@RequiresPermissions("person:personConf:list")
+//    public ResponseMessage<List<PersonConfEO>> updateById() throws Exception {
+//        List<PersonConfEO> personConfEO = personConfEOService.updateById();
+//        return Result.success(personConfEO);
+//    }
+
+
+    /*
+     * @Author liuyinnan
+     * @Description //批量删除
+     * @Date 16:12 2018/9/21
+     * @Param [ids]
+     * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.person.entity.PersonConfEO>>
+     **/
+//    @ApiOperation(value = "批量删除")
+//    @DeleteMapping("/{ids}")
+//    public ResponseMessage<List<PersonConfEO>> deleteByIdList(@PathVariable String ids) throws Exception {
+//        String[] idList = ids.split(",");
+//        if (idList != null && idList.length > 0) {
+//            for (String id : idList) {
+//                List<PersonConfEO> list = personConfEOService.deleteByIdList(id);
+//            }
+//        }
+//        return Result.success();
+//    }
 }

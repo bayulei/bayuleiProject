@@ -123,7 +123,7 @@ public class LoginRestController {
         UserEO userEO;
         // 前台如果base64传输密文，则需要解码
         //username = new String(Encodes.decodeBase64(username));
-        password = new String(Encodes.decodeBase64(password));
+//        password = new String(Encodes.decodeBase64(password));
         username = username.trim();
         password = password.trim();
             try {
@@ -132,15 +132,9 @@ public class LoginRestController {
                 subject.login(usernamePasswordToken);
 
                 userEO = UserUtils.getUser();
-                List<MenuEO> menuList = UserUtils.getMenuList();
                 request.getSession().setAttribute(RequestUtils.LOGIN_USER, userEO);
                 request.getSession().setAttribute(RequestUtils.LOGIN_USER_ID, UserUtils.getUserId());
                 request.getSession().setAttribute(RequestUtils.LOGIN_ROLE_ID, UserUtils.getRoleIds());
-                List<UserEO> getUser =userService.queryOrgByAccount(username);
-                
-/*                if(menuList==null || menuList.isEmpty()){
-                	return Result.error("登录失败！账号无访问权限，请联系管理员授权");
-                }*/
                 return Result.success(beanMapper.map(userEO, UserVO.class));
             } catch (CaptchaException e) {
                 logger.info("验证码验证失败");

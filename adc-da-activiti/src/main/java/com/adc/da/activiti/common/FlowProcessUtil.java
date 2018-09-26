@@ -325,12 +325,12 @@ public class FlowProcessUtil {
                 if(taskEntity.getParentTaskId()!=null && !taskEntity.getParentTaskId().isEmpty()){
                     //驳回后把工程师流程业务表删除掉之前的任务ID（废数据）
                     nowTask = taskService.createTaskQuery().executionId(executionId).singleResult();
-                    BusNoticecheckProcessEOPage page = new BusNoticecheckProcessEOPage();
-                    page.setTaskId(taskEntity.getParentTaskId());
-                    List<BusNoticecheckProcessEO> list = busNoticecheckProcessEOService.queryByList(page);
-                    if(list!=null && !list.isEmpty()){
-                        busNoticecheckProcessEOService.deleteNoticeCheckInfo(taskEntity.getParentTaskId());
-                    }
+//                    BusNoticecheckProcessEOPage page = new BusNoticecheckProcessEOPage();
+//                    page.setTaskId(taskEntity.getParentTaskId());
+//                    List<BusNoticecheckProcessEO> list = busNoticecheckProcessEOService.queryByList(page);
+//                    if(list!=null && !list.isEmpty()){
+//                        busNoticecheckProcessEOService.deleteNoticeCheckInfo(taskEntity.getParentTaskId());
+//                    }
                     List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().taskDefinitionKey(destTaskKey)
                             .taskId(taskEntity.getParentTaskId()).orderByTaskCreateTime().desc().list();
                     if(historicTaskInstanceList!=null && !historicTaskInstanceList.isEmpty()){

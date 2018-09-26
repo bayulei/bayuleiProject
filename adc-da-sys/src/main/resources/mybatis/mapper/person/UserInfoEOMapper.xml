@@ -228,6 +228,11 @@
 
   </select>
 
+    <select id="getUserInfoByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select <include refid="Base_Column_List" />
+        from TS_USER_INFO
+        where user_id = #{value}
+    </select>
   <!-- 删除记录 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from TS_USER_INFO

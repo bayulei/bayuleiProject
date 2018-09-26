@@ -206,6 +206,7 @@ export default {
     fileEdit (item) {
       this.fileModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.fileTitle = '编辑标准'
       this.fileModelAdd = JSON.parse(JSON.stringify(item))
     },

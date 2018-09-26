@@ -42,7 +42,15 @@ public class NoticeAndCheckApprovalVO extends ApprovalProcessVO implements Seria
      */
     private String approvalOpinion;
 
+    /**
+     *  决定流程的走向
+     */
     private Integer flag;
+
+    /**
+     *  流程业务表集合
+     */
+    private List<BusNoticecheckProcessEO> busNoticecheckProcessEOList;
 
     public Integer getFlag() {
         return flag;
@@ -52,7 +60,6 @@ public class NoticeAndCheckApprovalVO extends ApprovalProcessVO implements Seria
         this.flag = flag;
     }
 
-    private List<BusNoticecheckProcessEO> busNoticecheckProcessEOList;
     public String getApprovalOpinion() {
         return approvalOpinion;
     }

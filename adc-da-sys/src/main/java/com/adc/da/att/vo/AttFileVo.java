@@ -7,6 +7,7 @@ public class AttFileVo {
     private String oldFileName;
     private String fileSuffix;
     private String filePath;
+    private String attId;
 
     private String name;
 
@@ -56,5 +57,13 @@ public class AttFileVo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAttId() {
+        return this.id;
+    }
+
+    public void setAttId(String attId) {
+        this.attId = attId;
     }
 }

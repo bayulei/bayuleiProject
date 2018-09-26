@@ -1,7 +1,11 @@
 package com.adc.da.person.dao;
 
 import com.adc.da.base.dao.BaseDao;
+import com.adc.da.base.page.BasePage;
 import com.adc.da.person.entity.PersonCookiesEO;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -12,4 +16,7 @@ import com.adc.da.person.entity.PersonCookiesEO;
  */
 public interface PersonCookiesEODao extends BaseDao<PersonCookiesEO> {
 
+    List<PersonCookiesEO> queryByCookieType(String cookieType);
+
+    List<PersonCookiesEO> queryByUserId(String userId);
 }

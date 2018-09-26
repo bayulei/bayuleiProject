@@ -153,12 +153,16 @@ export default {
     },
     loadMsgInfo () {
       let msgId = this.$route.params.id
-      console.log(this.$route.params.id)
+      // console.log(this.$route.params.id)
       if (msgId !== undefined || msgId !== '') {
         this.$http.get('lawss/msgDynamicInfo/' + msgId, {}, {_this: this}, res => {
           this.msgDynamicInfoVO = res.data
+          // 此处增加判断标签显示效果
+          console.log(this.msgDynamicInfoVO.msgMode)
+          if (this.msgDynamicInfoVO.msgMode !== null && this.msgDynamicInfoVO.msgMode !== '') {
+            this.showMsgMode = true
+          }
           // 加载文件信息
-          console.log(res.data.content)
           this.$refs.ueditor.setContent(res.data.content)
           // 加载 附件信息
           this.fileInfoList = res.data.msgFileEOList !== null ? res.data.msgFileEOList : []
@@ -181,7 +185,7 @@ export default {
             let file = {}
             file.attId = fileInfo.attId
             file.fileSuffix = fileInfo.fileSuffix
-            file.fileName = fileInfo.fileName
+            file.fileName = fileInfo.oldFileName
             FileEOList.push(file)
           }
           this.msgDynamicInfoVO.msgFileEOList = FileEOList
@@ -190,15 +194,14 @@ export default {
         // 判断是否有新闻图片
         if (JSON.stringify(this.PicFile) !== '{}') {
           let PicFile = {}
-          PicFile.attId = this.PicFile.id
+          PicFile.attId = this.PicFile.attId
           PicFile.fileSuffix = this.PicFile.fileSuffix
-          PicFile.fileName = this.PicFile.oldFileName
+          PicFile.fileName = this.PicFile.fileName
           this.msgDynamicInfoVO.picFileEO = PicFile
           this.msgDynamicInfoVO.isPicMsg = 0
         } else {
           this.msgDynamicInfoVO.isPicMsg = 1
         }
-
         // 获取正文内容
         let content = this.$refs.ueditor.getUEContent()
         this.msgDynamicInfoVO.content = content

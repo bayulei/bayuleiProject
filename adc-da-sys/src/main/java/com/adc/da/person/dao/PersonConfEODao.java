@@ -2,6 +2,10 @@ package com.adc.da.person.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.person.entity.PersonConfEO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -12,4 +16,11 @@ import com.adc.da.person.entity.PersonConfEO;
  */
 public interface PersonConfEODao extends BaseDao<PersonConfEO> {
 
+//    List<PersonConfEO> updateById();
+//    List<PersonConfEO> deleteByIdList(String ids);
+
+//    List<PersonConfEO> insertByList(PersonConfEO personConfEO);
+//    public void insertSelective(@Param("Id"));
+
+      List<PersonConfEO> insert1(PersonConfEO personConfEO);
 }
