@@ -256,7 +256,17 @@ export default {
         {
           title: '所属部门',
           align: 'center',
-          key: 'orgName'
+          key: 'orgName',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.orgName
+              }
+            }, params.row.orgName)
+          }
         },
         {
           title: '状态',

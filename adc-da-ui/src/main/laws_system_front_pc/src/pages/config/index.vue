@@ -1,7 +1,7 @@
 <!-- 配置管理 -->
 <template>
   <div class="config">
-    <com-header></com-header>
+    <com-header :isCollapsed="sideClose" @collapsedSider="toggleSideBar"></com-header>
     <div class="main">
       <side-bar :navList="navList" v-model="sideClose" @change="toggleSideBar" :class="{ 'side-close': sideClose }"></side-bar>
       <div class="sub-container" :class="{ 'side-close': sideClose }">
@@ -49,8 +49,8 @@ export default {
      * @author: chenxiaoxi
      * @date: 2018-09-18 11:11:46
      */
-    toggleSideBar (val) {
-      this.sideClose = !val
+    toggleSideBar () {
+      this.sideClose = !this.sideClose
     }
   },
   components: {
