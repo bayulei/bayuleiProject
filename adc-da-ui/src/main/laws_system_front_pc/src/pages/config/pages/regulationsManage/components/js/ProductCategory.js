@@ -204,6 +204,7 @@ export default {
     productEdit (item) {
       this.productModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.productTitle = '编辑标准'
       this.productModelAdd = JSON.parse(JSON.stringify(item))
     },
@@ -245,13 +246,14 @@ export default {
     },
     // 加载表格
     selectProduct () {
-      this.$http.get('sys/dictype/page', {
+      let DicTypeEOPage = {
         page: this.page,
         pageSize: this.rows,
         dicTypeName: this.standardForm.standName,
         dicTypeCode: this.standardForm.standCode,
         dicId: 'QSXCVSDWEF'
-      }, {
+      }
+      this.$http.get('sys/dictype/page', DicTypeEOPage, {
         _this: this,
         loading: 'loading'
       }, res => {

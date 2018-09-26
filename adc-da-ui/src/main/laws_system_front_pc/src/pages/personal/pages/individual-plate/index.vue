@@ -12,12 +12,12 @@
         @on-selected-change="selectedChange"
         filterable>
       </Transfer>
-      <div class="btn-group">
+    </div>
+    <div class="btn-group">
       <Button type="primary" @click="reloadMockData()">上移</Button>
       <Button type="primary" @click="reloadMockData" style="margin-left: 0.5rem;">下移</Button>
-      </div>
-      <Button type="primary" class="saveBtn" @click="savePersonal">保存修改</Button>
     </div>
+      <Button type="primary" class="saveBtn" @click="savePersonal">保存修改</Button>
   </div>
 </template>
 
@@ -48,8 +48,11 @@ export default {
   methods: {
     handleChange (newTargetKeys, targetKeys, direction, moveKeys) {
       this.targetKeys = newTargetKeys
+      console.log('targetKeys是：' + this.targetKeys)
     },
     selectedChange (sourceSelectedKeys, targetSelectedKeys) {
+      console.log('sourceSelectedKeys是：' + sourceSelectedKeys)
+      console.log('targetSelectedKeys是：' + targetSelectedKeys)
       this.numData = targetSelectedKeys
     },
     renderPersonal (item) {
@@ -62,11 +65,6 @@ export default {
     },
     savePersonal () {
     }
-  },
-  watch: {
-    targetKeys (val) {
-      console.log($('.ivu-transfer').find('.ivu-transfer-list:nth-child(3)').find('.ivu-transfer-list-content'))
-    }
   }
 }
 </script>
@@ -77,17 +75,20 @@ export default {
     padding: 0.2rem 0.3rem;
     .container{
       margin: 1rem 7rem;
-      .btn-group{
-        float: right;
-        margin:1rem 5rem;
       }
-      .btn-group Button{
-         width: 2.5rem;
-      }
-      .saveBtn{
-        margin: 0.1rem 4rem;
-        width: 4rem;
-      }
-    }
   }
+    .btn-group{
+      float: right;
+      position: absolute;
+      /*margin:0rem 12rem;*/
+      left: 15rem;
+    }
+    .btn-group Button{
+      width: 2.5rem;
+      }
+    .saveBtn{
+      margin: 1rem 12rem;
+      width: 4rem;
+    }
+
 </style>

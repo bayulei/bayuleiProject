@@ -207,6 +207,7 @@ export default {
     authenticationEdit (item) {
       this.authenticationModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.authenticationTitle = '编辑标准'
       this.authenticationModelAdd = JSON.parse(JSON.stringify(item))
     },

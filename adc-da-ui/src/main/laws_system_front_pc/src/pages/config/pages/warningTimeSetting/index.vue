@@ -29,7 +29,7 @@ export default {
           label: '6个月'
         },
         {
-          value: 'SIXMONTH',
+          value: 'ONEYEAR',
           label: '一年'
         },
         {

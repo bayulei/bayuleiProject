@@ -31,8 +31,8 @@
         <Button type="primary" @click="modal2 = true">导入</Button>
       </div>
 
-      <div class="content-detail" v-if="infoListData.length > 0">
-        <div class="card domBtn" v-for="(item, index) in infoListData" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
+      <div class="content-detail" v-if="browseList.length > 0">
+        <div class="card domBtn" v-for="(item, index) in browseList" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
           <Row>
             <Col span="5">
             <Checkbox v-model="item.checked" size="large"></Checkbox>

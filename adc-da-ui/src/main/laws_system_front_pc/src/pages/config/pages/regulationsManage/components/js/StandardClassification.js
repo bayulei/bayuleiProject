@@ -43,7 +43,7 @@ export default {
         // 数据id
         id: '',
         // 创建日期
-        creationDate: new Date(),
+        creationTime: '',
         // 创建人
         founder: ''
       },
@@ -68,7 +68,7 @@ export default {
         },
         {
           title: '创建日期',
-          key: 'creationDate',
+          key: 'creationTime',
           align: 'center'
         },
         {
@@ -209,6 +209,7 @@ export default {
       console.log(row)
       this.classModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.classTitle = '编辑标准'
       this.classModelAdd = JSON.parse(JSON.stringify(row))
       // this.classModelAdd = row

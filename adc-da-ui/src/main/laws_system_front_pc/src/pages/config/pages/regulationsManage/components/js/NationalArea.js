@@ -198,6 +198,7 @@ export default {
     regionEdit (item) {
       this.regionModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.regionTitle = '编辑标准'
       this.regionModelAdd = JSON.parse(JSON.stringify(item))
     },

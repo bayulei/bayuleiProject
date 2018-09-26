@@ -206,6 +206,7 @@ export default {
     energyEdit (item) {
       this.energyModal = true
       this.modalType = 2
+      this.handleSelectAll(false)
       this.energyTitle = '编辑标准'
       this.energyModelAdd = JSON.parse(JSON.stringify(item))
     },
