@@ -39,9 +39,6 @@ public class ElasticsearchConfig {
         } catch (java.net.UnknownHostException e) {
             e.printStackTrace();
         }
-        finally {
-            client.close();
-        }
       return  client;
     }
 

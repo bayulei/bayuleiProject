@@ -445,7 +445,7 @@ export default {
           {_this: this, loading: this.loading},
           res => {
             if (res.ok) {
-              this.executeSuccess('保存用户成功！')
+              // this.executeSuccess('保存用户成功！')
               this.closeDrawer()
             }
           })
@@ -560,11 +560,11 @@ export default {
     },
     pageChange (page) {
       this.pageNo = page
-      this.roleSelectPage()
+      this.searchUserPage()
     },
     pageSizeChange (pageSize) {
       this.pageSize = pageSize
-      this.roleSelectPage()
+      this.searchUserPage()
     },
     // 清除弹窗内容
     cleanUserValue () {

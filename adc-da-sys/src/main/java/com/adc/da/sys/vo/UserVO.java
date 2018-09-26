@@ -6,13 +6,14 @@ import java.util.List;
 
 import com.adc.da.sys.entity.OrgEO;
 import com.adc.da.sys.entity.RoleEO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class UserVO {
 
 	private Integer validFlag;
-	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date modifyTime;
-	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date creationTime;
 	private String operUser;
 	private String extInfo;

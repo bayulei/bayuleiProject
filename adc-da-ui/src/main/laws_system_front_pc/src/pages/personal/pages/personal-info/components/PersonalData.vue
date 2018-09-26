@@ -5,7 +5,7 @@
       <div class="img-warpper">
         <img :src="avator" alt="user-avator">
       </div>
-      <input type="file" v-show="false" ref="avatorUploadBtn" id="avatorUploadBtn" @change="uploadAvator">
+      <input type="file" accept="image/*" v-show="false" ref="avatorUploadBtn" id="avatorUploadBtn" @change="uploadAvator">
       <input type="button" class="btn-avator primary-btn" value="修改头像" @click="chooseAvator">
       <div class="tips"><span class="require">*</span> 图片大小不能超过2M</div>
     </div>
@@ -37,7 +37,7 @@
         </FormItem>
       </Form>
 
-      <input type="button" value="保存修改" class="save primary-btn">
+      <input type="button" value="保存修改" class="save primary-btn" @click="savePersonal">
     </div>
   </div>
 </template>
@@ -118,6 +118,13 @@ export default {
         if (res.data.userPic !== null) {
           this.getUserPicInfo(res.data.userPic)
         }
+      }, e => {})
+    },
+    savePersonal () {
+      this.$http.post('', this.userInfo.userPicid, {
+        _this: this
+      }, res => {
+        this.searchPersonal()
       }, e => {})
     }
   },

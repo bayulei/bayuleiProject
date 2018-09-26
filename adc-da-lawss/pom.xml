@@ -13,7 +13,7 @@
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
 
-	<name>web</name>
+	<name>adc-da-lawss</name>
 	<description>web project for Spring Boot</description>
 	<properties>
 		<poi.version>3.9</poi.version>

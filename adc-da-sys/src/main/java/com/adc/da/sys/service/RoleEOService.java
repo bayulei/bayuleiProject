@@ -3,7 +3,9 @@ package com.adc.da.sys.service;
 import java.util.Date;
 import java.util.List;
 
+import com.adc.da.sys.util.UUIDUtils;
 import com.adc.da.sys.vo.RoleVO;
+import com.adc.da.util.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import com.adc.da.util.constant.DeleteFlagEnum;
 import com.adc.da.util.utils.CollectionUtils;
 import com.adc.da.util.utils.UUID;
 import com.adc.da.sys.dao.MenuEODao;
+
+import javax.xml.transform.Result;
 
 /**
  *
@@ -42,15 +46,43 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 	}
 
 	private MenuEODao menuEODao;
-	
-	public RoleEO save(RoleEO sysRoleEO) {
-		sysRoleEO.setId(UUID.randomUUID10());
+
+/**
+ * @Author liwenxuan
+ * @Description 新增
+ * @Date Administrator 2018/9/26
+ * @Param [sysRoleEO]
+ * @return int
+ **/
+	public int save(RoleEO sysRoleEO) {
+		sysRoleEO.setId(UUIDUtils.randomUUID20());
 		sysRoleEO.setValidFlag(DeleteFlagEnum.NORMAL.getValue());
 		sysRoleEO.setCreationTime(new Date());
 		sysRoleEO.setModifyTime(new Date());
-		dao.insertSelective(sysRoleEO);
-		return sysRoleEO;
+		//判断角色名称不能重复，返回0代表角色名称已经存在,否则进行插入操作返回1
+		List<RoleEO> roleEOS = dao.selectByNameAndId(sysRoleEO.getId(),sysRoleEO.getName());
+			if(roleEOS!=null && !roleEOS.isEmpty()){
+				return 0;
+			}
+		return dao.insertSelective(sysRoleEO);
 	}
+/**
+ * @Author liwenxuan
+ * @Description 修改角色名称、状态、角色描述
+ * @Date Administrator 2018/9/26
+ * @Param [roleEO]
+ * @return int
+ **/
+	public int updateByPrimaryKeySelective(RoleEO roleEO) throws Exception {
+		roleEO.setModifyTime(new Date());
+		//判断角色名称不能重复，返回0代表角色名称已经存在,否则进行修改操作返回1
+		List<RoleEO> roleEOS = dao.selectByNameAndId(roleEO.getId(),roleEO.getName());
+		if(roleEOS!=null && !roleEOS.isEmpty()){
+			return 0;
+		}
+		return dao.updateByPrimaryKeySelective(roleEO);
+	}
+
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public RoleEO getRoleWithMenus(String id) {
@@ -73,6 +105,7 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 	public void delete(String roleId) {
 		dao.deleteLogic(roleId);
 		dao.deleteRoleMenuByRoleId(roleId);
+
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -108,13 +141,5 @@ public class RoleEOService extends BaseService<RoleEO, String> {
 	public boolean isBelong(String userId, String roleId) {
 		int count = dao.isBelong(userId, roleId);
 		return count > 0;
-	}
-//	如果用户存在，返回true，否则返回false
-	public boolean queryNameExistenceByName(String name){
-	  List<RoleEO> roleEOS = dao.queryNameExistenceByName(name);
-	  if(roleEOS!=null && !roleEOS.isEmpty()){
-	  	return true;
-	  }
-	  return  false;
 	}
 }
