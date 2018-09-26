@@ -2,6 +2,7 @@
 <template>
   <header class="home-header">
     <router-link tag="div" class="logo" to="/" title="回到首页"></router-link>
+    <Icon @click.native="collapsedSider" class="menu-icon" :class="rotateIcon" :style="{marginLeft: '20px',cursor: 'pointer'}" type="md-menu" size="24"></Icon>
     <ul class="home-nav">
       <router-link tag="li" v-for="topNav in topNavList" :key="topNav.name" :to="topNav.path">
         <span>{{ topNav.title }}</span>
@@ -99,6 +100,20 @@ export default {
           })
           break
       }
+    },
+    collapsedSider () {
+      this.$emit('collapsedSider')
+    }
+  },
+  props: {
+    isCollapsed: Boolean
+  },
+  computed: {
+    rotateIcon () {
+      return [
+        'menu-icon',
+        this.isCollapsed ? 'rotate-icon' : ''
+      ]
     }
   },
   mounted () {
@@ -127,6 +142,10 @@ export default {
       background: url("~assets/images/home/logo.png") no-repeat left center;
       background-size: 100%;
       cursor: pointer;
+    }
+    .menu-icon{
+      margin-left: 20px;
+      transition: all .3s linear;
     }
     .home-nav{
       flex: 1;
