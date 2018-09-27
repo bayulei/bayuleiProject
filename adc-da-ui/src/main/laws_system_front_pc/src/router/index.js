@@ -338,7 +338,7 @@ const routes = [
       //   }
       // }
     ]
-  },
+  }
   // **************************   搜索中心   ******************************* //
   // {
   //   path: '/searchCenter/:selectKey/:selectValue',
@@ -346,15 +346,15 @@ const routes = [
   //   component: resolve => require(['pages/searchCenter'], resolve)
   // },
   // **************************   pdf   ******************************* //
-  {
-    path: '/ssssspdf',
-    name: 'Pdf',
-    component: resolve => require(['@/common/components/pdf'], resolve),
-    meta: {
-      requireAuth: true,
-      title: 'pdf'
-    }
-  }
+  // {
+  //   path: '/ssssspdf',
+  //   name: 'Pdf',
+  //   component: resolve => require(['@/common/components/pdf'], resolve),
+  //   meta: {
+  //     requireAuth: true,
+  //     title: 'pdf'
+  //   }
+  // }
 ]
 
 const router = new VueRouter({

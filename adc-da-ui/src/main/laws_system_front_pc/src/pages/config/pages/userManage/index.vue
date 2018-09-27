@@ -168,10 +168,10 @@ export default {
         disableFlag: '',
         disableFlagOptions: [{
           label: '已启用',
-          value: 0
+          value: '0'
         }, {
           label: '已停用',
-          value: 1
+          value: '1'
         }],
         searching: false
       },
@@ -212,6 +212,7 @@ export default {
           title: '类型',
           align: 'center',
           key: 'userType',
+          width: 120,
           render: (h, params) => {
             // let _this = this
             let texts = ''
@@ -244,7 +245,8 @@ export default {
         {
           title: '工号',
           align: 'center',
-          key: 'workNum'
+          key: 'workNum',
+          width: 80
         },
         {
           title: '角色',
