@@ -5,7 +5,7 @@
       <div class="img-warpper">
         <img :src="avator" alt="user-avator">
       </div>
-      <input type="file" v-show="false" ref="avatorUploadBtn" id="avatorUploadBtn" @change="uploadAvator">
+      <input type="file" accept="image/*" v-show="false" ref="avatorUploadBtn" id="avatorUploadBtn" @change="uploadAvator">
       <input type="button" class="btn-avator primary-btn" value="修改头像" @click="chooseAvator">
       <div class="tips"><span class="require">*</span> 图片大小不能超过2M</div>
     </div>
@@ -37,7 +37,7 @@
         </FormItem>
       </Form>
 
-      <input type="button" value="保存修改" class="save primary-btn">
+      <input type="button" value="保存修改" class="save primary-btn" @click="savePersonal">
     </div>
   </div>
 </template>
@@ -131,6 +131,13 @@ export default {
           this.getUserPicInfo(res.data.userPic)
         }
       }, e => {})
+    },
+    savePersonal () {
+      this.$http.post('', this.userInfo.userPicid, {
+        _this: this
+      }, res => {
+        this.searchPersonal()
+      }, e => {})
     }
   },
   mounted () {
@@ -164,7 +171,7 @@ export default {
       width: 16.28rem;
       float: left;
       min-height: 400px;
-      margin: 1.2rem 0 0 1.75rem;
+      margin: -5.6rem 0 0 6.75rem;
       .save{
         width: 4.24rem;
         height: 0.72rem;
@@ -172,6 +179,9 @@ export default {
         margin: 0.5rem 0 0 0.2rem;
       }
       .user-info-item{
+        margin-bottom: 12px;
+        vertical-align: top;
+        zoom: 1;
         .ivu-input{
           width: 250px;
         }

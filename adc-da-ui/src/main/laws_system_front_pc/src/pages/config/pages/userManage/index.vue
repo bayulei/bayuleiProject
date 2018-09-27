@@ -168,10 +168,10 @@ export default {
         disableFlag: '',
         disableFlagOptions: [{
           label: '已启用',
-          value: 0
+          value: '0'
         }, {
           label: '已停用',
-          value: 1
+          value: '1'
         }],
         searching: false
       },
@@ -212,6 +212,7 @@ export default {
           title: '类型',
           align: 'center',
           key: 'userType',
+          width: 120,
           render: (h, params) => {
             // let _this = this
             let texts = ''
@@ -244,7 +245,8 @@ export default {
         {
           title: '工号',
           align: 'center',
-          key: 'workNum'
+          key: 'workNum',
+          width: 80
         },
         {
           title: '角色',
@@ -254,7 +256,17 @@ export default {
         {
           title: '所属部门',
           align: 'center',
-          key: 'orgName'
+          key: 'orgName',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.orgName
+              }
+            }, params.row.orgName)
+          }
         },
         {
           title: '状态',
@@ -277,6 +289,7 @@ export default {
           title: '操作',
           key: 'action',
           align: 'center',
+          width: 200,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -434,7 +447,7 @@ export default {
           {_this: this, loading: this.loading},
           res => {
             if (res.ok) {
-              this.executeSuccess('保存用户成功！')
+              // this.executeSuccess('保存用户成功！')
               this.closeDrawer()
             }
           })
@@ -549,11 +562,11 @@ export default {
     },
     pageChange (page) {
       this.pageNo = page
-      this.roleSelectPage()
+      this.searchUserPage()
     },
     pageSizeChange (pageSize) {
       this.pageSize = pageSize
-      this.roleSelectPage()
+      this.searchUserPage()
     },
     // 清除弹窗内容
     cleanUserValue () {

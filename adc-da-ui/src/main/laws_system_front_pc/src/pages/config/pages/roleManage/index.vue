@@ -169,6 +169,7 @@ export default {
         align: 'center'
       }, {
         title: '状态',
+        width: 80,
         key: 'useFlag',
         align: 'center',
         render: (h, params) => {
@@ -207,15 +208,18 @@ export default {
       }, {
         title: '操作时间',
         key: 'modifyTime',
-        align: 'center'
+        align: 'center',
+        width: 150
       }, {
         title: '操作人',
+        width: 100,
         key: 'operUserName',
         align: 'center'
       }, {
         title: '操作',
         key: 'action',
         align: 'center',
+        width: 200,
         render: (h, params) => {
           return h('div', [
             h('Button', {

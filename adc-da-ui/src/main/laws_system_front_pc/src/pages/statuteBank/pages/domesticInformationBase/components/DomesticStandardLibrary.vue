@@ -1,4 +1,5 @@
 <!-- 国内标准库 -->
+<script src="js/DomesticRegulationsDatabase.js"></script>
 <template>
  <div id="DomesticStandardLibrary">
    <table-tools-bar :isAdvancedSearch="isAdvancedSearch" @toggleSearch="isAdvancedSearch = false" class="label-input-form">

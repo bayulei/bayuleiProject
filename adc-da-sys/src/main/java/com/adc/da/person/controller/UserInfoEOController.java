@@ -59,6 +59,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
     @ApiOperation(value = "查找用户信息接口")
     @GetMapping("/getByUserInfoCode")
     public ResponseMessage<UserInfoEO> getByUserInfoCode() throws Exception {
+        //获取当前登录人
         String userId= LoginUserUtil.getUserId();
         UserInfoEO userInfoEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
         return Result.success(userInfoEO);
@@ -158,6 +159,15 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
         return Result.success();
     }
 
+
+
+//    @ApiOperation(value = "|UserInfoEO|修改")
+//    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseMessage<UserInfoEO> updateByUserId(RequestBody String userId)throws Exception{
+//        String userId= LoginUserUtil.getUserId();
+//        UserInfoEO userInfoEO=userInfoEOService.updateByUserId(userId);
+//        return Result.success(userInfoEO);
+//    }
 
 
     /*

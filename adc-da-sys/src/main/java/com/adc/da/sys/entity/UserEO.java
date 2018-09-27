@@ -1,7 +1,7 @@
 package com.adc.da.sys.entity;
 
 import com.adc.da.base.entity.BaseEntity;
-import com.adc.da.person.entity.UserInfoEO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ public class UserEO extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3658632939727891047L;
 
     private Integer validFlag;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
     private String operUser;
     private String extInfo;
@@ -49,14 +49,6 @@ public class UserEO extends BaseEntity implements Serializable {
     private int disableFlag;
 
     private int unlockFlag;
-
-
-    //追加字段
-    private List<UserInfoEO> UserEOList=new ArrayList<>();
-    private String duty;
-    private String faxAddress;
-
-
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -326,27 +318,4 @@ public class UserEO extends BaseEntity implements Serializable {
         return this.roleName;
     }
 
-    public List<UserInfoEO> getUserEOList() {
-        return UserEOList;
-    }
-
-    public void setUserEOList(List<UserInfoEO> userEOList) {
-        UserEOList = userEOList;
-    }
-
-    public String getDuty() {
-        return duty;
-    }
-
-    public void setDuty(String duty) {
-        this.duty = duty;
-    }
-
-    public String getFaxAddress() {
-        return faxAddress;
-    }
-
-    public void setFaxAddress(String faxAddress) {
-        this.faxAddress = faxAddress;
-    }
 }

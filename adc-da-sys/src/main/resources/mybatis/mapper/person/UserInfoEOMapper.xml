@@ -339,6 +339,22 @@
     </select>
 
 
+
+    <!-- 个人信息保存修改-->
+
+    <update id="updateByUserId" parameterType="com.adc.da.person.entity.UserInfoEO">
+        update TS_USER_INFO
+        set office_phone=#{officePhone},
+            email=#{email},
+            mobile_phone=#{mobilePhone},
+            fax_address=#{faxAdress},
+            signature=#{signature},
+            user_pic=#{userPic},
+            valid_flag=0
+        where user_id=#{userId}
+    </update>
+
+
     <!--&lt;!&ndash; 根据用户id更新个人信息&ndash;&gt;-->
     <!--<update id="queryByUserId" parameterType="com.adc.da.person.entity.UserInfoEO">-->
         <!--update TS_USER_INFO-->

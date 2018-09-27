@@ -361,6 +361,7 @@ export default {
         }
         this.browseList = res.data.list
         this.total = res.data.count
+        // window.open('/static/pdfjs-1.9.426-dist/viewer.html?file=E:/1.pdf')
       }, e => {
 
       })
