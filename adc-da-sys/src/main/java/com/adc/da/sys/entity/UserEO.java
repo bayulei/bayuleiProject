@@ -32,7 +32,7 @@ public class UserEO extends BaseEntity implements Serializable {
     private String password;
     private String account;
     private String usid;
-
+    // 扩展字段
     private  String userType;
     private String orgId;
     private String orgName;
@@ -40,15 +40,13 @@ public class UserEO extends BaseEntity implements Serializable {
     private String roleName;
     private List<String> roleIdList = new ArrayList<>();
     private List<RoleEO> roleEOList = new ArrayList<>();
-    
     private List<String> orgIdList = new ArrayList<>();
     private List<OrgEO> orgEOList = new ArrayList<>();
-
     private String mobilePhone;
     private String officePhone;
-
+    private String address;
+    private String faxAddress;
     private int disableFlag;
-
     private int unlockFlag;
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -319,4 +317,23 @@ public class UserEO extends BaseEntity implements Serializable {
         return this.roleName;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getFaxAddress() {
+        return faxAddress;
+    }
+
+    public void setFaxAddress(String faxAddress) {
+        this.faxAddress = faxAddress;
+    }
 }

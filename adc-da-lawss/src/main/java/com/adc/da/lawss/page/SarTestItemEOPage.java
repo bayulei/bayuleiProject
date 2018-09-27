@@ -31,13 +31,13 @@ public class SarTestItemEOPage extends BasePage {
     private String standCode;
     private String standCodeOperator = "=";
     private String authType;
-    private String authTypeOperator = "=";
+    private String authTypeOperator = "like";
     private String testItemName;
     private String testItemNameOperator = "=";
     private String testObj;
-    private String testObjOperator = "=";
+    private String testObjOperator = "like";
     private String testItemCode;
-    private String testItemCodeOperator = "=";
+    private String testItemCodeOperator = "like";
     private String id;
     private String idOperator = "=";
 

@@ -182,15 +182,12 @@ public class UserEOService extends BaseService<UserEO, String> {
 		UserOrgEO userOrgEO = new UserOrgEO();
 		userOrgEO.setUserId(userEO.getUsid());
 		userOrgEO.setOrgId(userEO.getOrgId());
-		if(StringUtils.isNotBlank(userEO.getOrgName())) {
 			//如果编辑之前此用户有组织机构，则进行修改，没有组织机构进行新增
 			int i = dao.selectOrgCountByPrimaryKey(userEO.getUsid());
 			if(i>0){
 			return orgEODao.updateUserOrg(userOrgEO);
 			}
 			return orgEODao.addOrgRelatedUser(userOrgEO);
-		}
-		   return 0;
 	}
 
 	/**

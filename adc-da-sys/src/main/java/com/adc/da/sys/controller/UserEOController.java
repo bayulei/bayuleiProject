@@ -53,10 +53,17 @@ public class UserEOController extends BaseController<UserEO> {
         return Result.success(userVO);
     }
 
+    /**
+     * @Author liwenxuan
+     * @Description 用户分页和组织机构分页共用!!!
+     * @Date Administrator 2018/9/27
+     * @Param [pageNo, pageSize, orgId, userType, uname, roleName, disableFlag]
+     * @return com.adc.da.util.http.ResponseMessage<com.adc.da.util.http.PageInfo<com.adc.da.sys.entity.UserEO>>
+     **/
     @ApiOperation(value = "|UserEO|分页查询")
     @GetMapping("")
 //	@RequiresPermissions("sys:user:list")
-    public ResponseMessage<PageInfo<UserEO>> UserInfoPage(Integer pageNo, Integer pageSize, String userType, String userName, String roleId, String disableFlag) throws Exception {
+    public ResponseMessage<PageInfo<UserEO>> UserInfoPage(Integer pageNo, Integer pageSize, String orgId, String userType, String uname,String roleName, String disableFlag) throws Exception {
         UserEOPage page = new UserEOPage();
         if (pageNo != null) {
             page.setPage(pageNo);
@@ -64,9 +71,8 @@ public class UserEOController extends BaseController<UserEO> {
         if (pageSize != null) {
             page.setPageSize(pageSize);
         }
-        if (StringUtils.isNotEmpty(userName)) {
-            page.setUname("%" + userName + "%");
-            page.setUname("LIKE");
+        if (StringUtils.isNotEmpty(uname)) {
+            page.setUname( uname );
         }
         if (StringUtils.isNotEmpty(userType)) {
             page.setUserType(userType);
@@ -74,12 +80,14 @@ public class UserEOController extends BaseController<UserEO> {
         if (StringUtils.isNotEmpty(disableFlag)) {
             page.setDisableFlag(disableFlag);
         }
-        if (StringUtils.isNotEmpty(roleId)) {
-            page.setRoleId(roleId);
+        if (StringUtils.isNotEmpty(orgId)) {
+            page.setOrgId(orgId);
         }
-        page.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue() + "");
+        if (StringUtils.isNotEmpty(roleName)) {
+            page.setRoleName(roleName);
+        }
+//        page.setValidFlag(ValidFlagEnum.VALID_TRUE.getValue() + "");
         page.setPager(new Pager());
-
         List<UserEO> userEOs = userEOService.queryUserInfoByPage(page);
         return Result.success(getPageInfo(page.getPager(), userEOs));
     }
@@ -107,6 +115,7 @@ public class UserEOController extends BaseController<UserEO> {
 /**
  * @Author liwenxuan
  * @Description 修改时同时对用户表、用户角色表关联表、用户组织机构关联表信息修改
+ * 前台必传参数：usid、orgId、roleIdList
  * @Date Administrator 2018/9/26
  * @Param [userVO]
  * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.UserVO>
@@ -118,12 +127,18 @@ public class UserEOController extends BaseController<UserEO> {
         UserEO userEO = beanMapper.map(userVO, UserEO.class);
         userEO.setModifyTime(new Date());
 //        修改用户表信息
+
         int i = userEOService.updateByPrimaryKeySelective(userEO);
 //		  修改用户权限
-        int i1 = userEOService.saveUserRole(userEO);
+        if(StringUtils.isNotEmpty(userEO.getRoleId())){
+            userEOService.saveUserRole(userEO);
+        }
 //        更新组织机构
-        int i2 = userEOService.updateUserOrg(userEO);
-        if(i>0 && i1>0 && i2>0){
+        if(!userEO.getOrgIdList().isEmpty()){
+            userEOService.updateUserOrg(userEO);
+        }
+
+        if(i>0){
             return Result.success("true","操作成功",userVO);
         }
         return Result.error("操作失败");
