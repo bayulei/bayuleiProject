@@ -67,7 +67,7 @@
       <Divider></Divider>
       <div class="content">
         <loading :loading="loading">正在获取用户列表</loading>
-        <Table border ref="selection" :columns="deptEmpColumns" :data="deptEmpData" v-if="deptEmpData.length > 0"></Table>
+        <Table border ref="selection" :height="tableHeight" :columns="deptEmpColumns" :data="deptEmpData" v-if="deptEmpData.length > 0"></Table>
         <hasNoData pClass="content" tips="未获取到组织机构" v-else></hasNoData>
       </div>
       <pagination :total="total"></pagination>
@@ -362,7 +362,8 @@ export default {
       orgId: '', // 组织机构id
       page: 1,
       rows: 10,
-      total: 0
+      total: 0,
+      tableHeight: 600
     }
   },
   methods: {
@@ -481,6 +482,16 @@ export default {
   },
   mounted () {
     let _this = this
+    this.$nextTick(() => {
+      let tableHeight = $('.content').css('height')
+      let height = parseInt(tableHeight.substring(0, tableHeight.indexOf('p'))) - 130
+      this.tableHeight = height
+      window.onresize = function () {
+        let tableHeight = $('.content').css('height')
+        let height = parseInt(tableHeight.substring(0, tableHeight.indexOf('p'))) - 130
+        _this.tableHeight = height
+      }
+    })
     // 获取组织结构树
     this.getTree()
     var setting = {

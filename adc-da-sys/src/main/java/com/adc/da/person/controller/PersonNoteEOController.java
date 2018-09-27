@@ -34,7 +34,7 @@ public class PersonNoteEOController extends BaseController<PersonNoteEO> {
 
     @ApiOperation(value = "|PersonNoteEO|分页查询")
     @GetMapping("/page")
-    @RequiresPermissions("person:personNote:page")
+    //@RequiresPermissions("person:personNote:page")
     public ResponseMessage<PageInfo<PersonNoteEO>> page(PersonNoteEOPage page) throws Exception {
         List<PersonNoteEO> rows = personNoteEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
@@ -42,21 +42,21 @@ public class PersonNoteEOController extends BaseController<PersonNoteEO> {
 
     @ApiOperation(value = "|PersonNoteEO|查询")
     @GetMapping("")
-    @RequiresPermissions("person:personNote:list")
+    //@RequiresPermissions("person:personNote:list")
     public ResponseMessage<List<PersonNoteEO>> list(PersonNoteEOPage page) throws Exception {
         return Result.success(personNoteEOService.queryByList(page));
     }
 
     @ApiOperation(value = "|PersonNoteEO|详情")
     @GetMapping("/{id}")
-    @RequiresPermissions("person:personNote:get")
+    //@RequiresPermissions("person:personNote:get")
     public ResponseMessage<PersonNoteEO> find(@PathVariable String id) throws Exception {
         return Result.success(personNoteEOService.selectByPrimaryKey(id));
     }
 
     @ApiOperation(value = "|PersonNoteEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    // @RequiresPermissions("person:personNote:save")
+    //@RequiresPermissions("person:personNote:save")
     public ResponseMessage<PersonNoteEO> create(@RequestBody PersonNoteEO personNoteEO) throws Exception {
         personNoteEO.setId(UUIDUtils.randomUUID20());
         personNoteEOService.save(personNoteEO);
@@ -84,7 +84,7 @@ public class PersonNoteEOController extends BaseController<PersonNoteEO> {
     //通过传入的收藏表的id和笔记表中的内容对笔记表进行修改
     @ApiOperation(value = "|PersonNoteEO|修改1")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    // @RequiresPermissions("person:personNote:update")
+    //@RequiresPermissions("person:personNote:update")
     public ResponseMessage<Integer> updateByCollectId(@RequestBody PersonNoteEO personNoteEO) throws Exception {
         Integer integer = personNoteEOService.updateByCollectId(personNoteEO);
         if (integer == 0) {

@@ -4,10 +4,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import com.adc.da.sys.constant.ValidFlagEnum;
 import com.adc.da.sys.util.UUIDUtils;
-import com.adc.da.util.utils.BeanMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,9 +121,7 @@ public class PersonCollectEOController extends BaseController<PersonCollectEO> {
     }
 
 
-//    public void update() {
-//
-//    }
+
 
     @ApiOperation(value = "|PersonCollectEO|删除")
     @DeleteMapping("/{id}")
