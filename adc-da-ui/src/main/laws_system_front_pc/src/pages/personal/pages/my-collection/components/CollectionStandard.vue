@@ -258,11 +258,6 @@ export default {
        }
      }
    }
-   .btn-group{
-     position: relative;
-     top:-1.3rem;
-     left: 23rem;
-   }
    .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header{
      height: 38px;
      line-height: 36px;

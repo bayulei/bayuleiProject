@@ -4,13 +4,13 @@
     <table-tools-bar>
       <div slot="left">
         <label-select v-model="search.userType" :options="search.userTypeOptions" placeholder="按类型查找" label="类型"></label-select>
-        <label-input v-model="search.userName" placeholder="请输入用户名" label="用户名称"></label-input>
-        <label-select v-model="search.roleId" :options="search.roleOptions" placeholder="按角色查找" label="角色名称"></label-select>
+        <label-input v-model="search.uname" placeholder="请输入用户名" label="用户名称"></label-input>
+        <label-select v-model="search.roleName" :options="search.roleOptions" placeholder="按角色查找" label="角色名称"></label-select><br> <br>
         <label-select v-model="search.disableFlag" :options="search.disableFlagOptions" placeholder="按状态查找" label="用户状态"></label-select>
-        <Button type="primary" icon="ios-search" @click="searchUserPage" :loading="search.searching" title="搜索"></Button>
-        <Button type="primary" title="重置" @click="resetSearch">重置</Button>
       </div>
       <div slot="right">
+        <Button type="primary" icon="ios-search" @click="searchUserPage" :loading="search.searching" title="搜索"></Button>
+        <Button type="primary" title="重置" @click="resetSearch">重置</Button>
         <Button type="primary" icon="ios-add" title="新增" @click="openAddUserModal">新增</Button>
         <Button type="error" icon="md-trash" title="批量删除" @click="batchUserDel" >批量删除</Button>
       </div>
@@ -56,8 +56,8 @@
                     </FormItem>
                   </Col>
                   <Col>
-                    <FormItem label="用户角色" prop="roleId" class="laws-info-item">
-                      <Select v-model="userVO.roleId" style="width:200px" :disabled="usersType">
+                    <FormItem label="用户角色" prop="roleName" class="laws-info-item">
+                      <Select v-model="userVO.roleName" style="width:200px" :disabled="usersType">
                         <Option v-for="item in search.roleOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                       </Select>
                     </FormItem>
@@ -88,7 +88,7 @@
               </Col>
               <Col span="12" >
                 <!-- 此处获取组织机构架构图 -->
-                <FormItem label="组织机构" prop="orgId"  >
+                <FormItem label="组织机构" prop="roleIdList"  >
                   <ul id="orgTree" class="ztree" style="width: 200px;height: 500px;overflow: auto"></ul>
                 </FormItem>
               </Col>
@@ -162,8 +162,8 @@ export default {
           label: '其他',
           value: 'OTHER'
         }],
-        userName: '',
-        roleId: '',
+        uname: '',
+        roleName: '',
         roleOptions: [],
         disableFlag: '',
         disableFlagOptions: [{
@@ -345,7 +345,6 @@ export default {
         password: '',
         passwordCheck: '',
         uname: '',
-        roleId: '',
         roleName: '',
         userType: '',
         mobilePhone: '',
@@ -353,7 +352,7 @@ export default {
         workNum: '',
         email: '',
         disableFlag: '',
-        orgId: '',
+        roleIdList: '',
         orgName: ''
       },
       userVOFormRules: {
@@ -394,8 +393,8 @@ export default {
           pageNo: this.pageNo,
           pageSize: this.pageSize,
           userType: this.search.userType,
-          userName: this.search.userName,
-          roleId: this.search.roleId,
+          uname: this.search.uname,
+          roleName: this.search.roleName,
           disableFlag: this.search.disableFlag
         },
         {_this: this, loading: 'loading'},
@@ -436,10 +435,11 @@ export default {
     saveUserInfo () {
       // 更新
       if (this.userVO.usid !== null && this.userVO.usid !== '') {
-        this.$http.put('sys/user', this.userVO,
+        this.$http.putData('sys/user', this.userVO,
           {_this: this, loading: this.loading},
           res => {
-            console.log(res)
+            this.closeDrawer()
+            this.searchUserPage()
           })
       } else {
         // 新增
@@ -449,6 +449,7 @@ export default {
             if (res.ok) {
               // this.executeSuccess('保存用户成功！')
               this.closeDrawer()
+              this.searchUserPage()
             }
           })
       }
@@ -556,8 +557,8 @@ export default {
      */
     resetSearch () {
       this.search.userType = ''
-      this.search.userName = ''
-      this.search.roleId = ''
+      this.search.uname = ''
+      this.search.roleName = ''
       this.search.disableFlag = ''
     },
     pageChange (page) {
@@ -622,5 +623,8 @@ export default {
     padding: 10px 16px;
     text-align: right;
     background: #fff;
+  }
+  .main .sub-container > div .ivu-table-wrapper{
+    height: calc(100% - 8px);
   }
 </style>
