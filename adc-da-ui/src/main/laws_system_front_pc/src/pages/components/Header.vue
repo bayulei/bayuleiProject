@@ -2,7 +2,7 @@
 <template>
   <header class="home-header">
     <router-link tag="div" class="logo" to="/" title="回到首页"></router-link>
-    <Icon @click.native="collapsedSider" class="menu-icon" :class="rotateIcon" :style="{marginLeft: '20px',cursor: 'pointer'}" type="md-menu" size="24"></Icon>
+    <Icon @click.native="collapsedSider" class="menu-icon" :class="rotateIcon" :style="{marginLeft: '20px',cursor: 'pointer'}" type="md-menu" size="24" v-show="$route.name !== 'Home'"></Icon>
     <ul class="home-nav">
       <router-link tag="li" v-for="topNav in topNavList" :key="topNav.name" :to="topNav.path">
         <span>{{ topNav.title }}</span>
