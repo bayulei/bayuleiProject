@@ -218,8 +218,8 @@ export default {
                   /*}*/
                 /*}*/
                 background: transparent;
-                &:hover{
-                  background: transparent !important;
+                &::before{
+                  width: 100%;
                 }
               }
               &:hover{
