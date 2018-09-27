@@ -34,6 +34,7 @@ public class UserInfoEO extends BaseEntity {
     private String account;
     private String uName;
     private String email;
+    private String orgName;
 
     //刘寅楠
 //    protected List<UserEO> userEOList=new ArrayList<>();
@@ -309,7 +310,16 @@ public class UserInfoEO extends BaseEntity {
         this.email = email;
     }
 
-//    public List<UserEO> getUserEOList() {
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+
+    //    public List<UserEO> getUserEOList() {
 //        return userEOList;
 //    }
 //

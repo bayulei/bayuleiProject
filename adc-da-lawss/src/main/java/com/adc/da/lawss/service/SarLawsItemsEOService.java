@@ -89,7 +89,7 @@ public class SarLawsItemsEOService extends BaseService<SarLawsItemsEO, String> {
                 SarLawsItemValEO sarLawsItemValEO = new SarLawsItemValEO();
                 sarLawsItemValEO.setId(UUID.randomUUID(20));
                 sarLawsItemValEO.setLawsItemId(itemsId);
-                sarLawsItemValEO.setPropertyType("PRODUCTTYPE");
+                sarLawsItemValEO.setPropertyType("APPLY_ARCTIC");
                 sarLawsItemValEO.setPropertyVal(applyArctic[a]);
                 sarLawsItemValEO.setValidFlag(0);
                 sarLawsItemValEO.setCreationTime(new Date());
@@ -106,7 +106,7 @@ public class SarLawsItemsEOService extends BaseService<SarLawsItemsEO, String> {
                 SarLawsItemValEO sarLawsItemValEO = new SarLawsItemValEO();
                 sarLawsItemValEO.setId(UUID.randomUUID(20));
                 sarLawsItemValEO.setLawsItemId(itemsId);
-                sarLawsItemValEO.setPropertyType("ENERGYTYPES");
+                sarLawsItemValEO.setPropertyType("ENERGY_KIND");
                 sarLawsItemValEO.setPropertyVal(energyKind[e]);
                 sarLawsItemValEO.setValidFlag(0);
                 sarLawsItemValEO.setCreationTime(new Date());

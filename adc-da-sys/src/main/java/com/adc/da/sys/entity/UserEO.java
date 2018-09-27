@@ -32,7 +32,6 @@ public class UserEO extends BaseEntity implements Serializable {
     private String password;
     private String account;
     private String usid;
-
     private  String userType;
     private String orgId;
     private String orgName;

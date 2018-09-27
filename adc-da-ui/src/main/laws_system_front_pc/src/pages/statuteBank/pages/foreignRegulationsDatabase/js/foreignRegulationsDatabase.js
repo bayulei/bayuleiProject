@@ -2,7 +2,7 @@ import 'zTree/js/jquery.ztree.core.js'
 import 'zTree/js/jquery.ztree.excheck.js'
 import 'zTree/js/jquery.ztree.exedit.js'
 export default {
-  name: 'DomesticRegulationsDatabase',
+  name: 'ForeignRegulationsDatabase',
   data () {
     return {
       setting: '',
@@ -44,7 +44,7 @@ export default {
       },
       SarLawsInfoEO: {
         editLawsId: '',
-        country: 'CN',
+        country: '',
         lawsProperty: '',
         lawsNumber: '',
         lawsName: '',
@@ -183,9 +183,7 @@ export default {
       applyArcticOptions: '',
       energyKindOptions: '',
       applyAuthOptions: '',
-      countryOptions: [
-        {label: '中国', value: 'CN'}
-      ],
+      countryOptions: '',
       SarMenuEOFormRules: {},
       lawsInfoRules: {},
       lawsInfoFormRules: {
@@ -246,7 +244,7 @@ export default {
     // 加载树形结构
     loadInfoTree () {
       this.$http.get('lawss/sarMenu/selectmenu', {
-        sorDivide: 'INLAND_LAWS'
+        sorDivide: 'FOREIGN_LAWS'
       }, {
         _this: this
       }, res => {
@@ -280,7 +278,10 @@ export default {
       if (name === 'addMenu') {
         this.showMenuModal = true
         this.showMenuTitle = '新增菜单'
-        this.SarMenuEO.sorDivide = 'INLAND_LAWS'
+        this.SarMenuEO.id = ''
+        this.SarMenuEO.menuName = ''
+        this.SarMenuEO.displaySeq = ''
+        this.SarMenuEO.sorDivide = 'FOREIGN_LAWS'
       } else if (name === 'editMenu') {
         this.showMenuModal = true
         this.showMenuTitle = '修改菜单'
@@ -346,7 +347,7 @@ export default {
       let SarLawsInfoEOPage = this.lawsInfo
       SarLawsInfoEOPage.page = this.page
       SarLawsInfoEOPage.pageSize = this.rows
-      SarLawsInfoEOPage.lawsType = 'INLAND'
+      SarLawsInfoEOPage.lawsType = 'FOREIGN'
       if (this.saveSelectedNodes.pId == null || this.saveSelectedNodes.pId === '') {
         SarLawsInfoEOPage.menuId = ''
       } else {
@@ -411,7 +412,7 @@ export default {
           this.SarLawsInfoEO.applyAuth = this.breakMultiSelect(this.SarLawsInfoEO.applyAuth)
           this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
           this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
-          this.SarLawsInfoEO.lawsType = 'INLAND'
+          this.SarLawsInfoEO.lawsType = 'FOREIGN'
           if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
             if (this.saveSelectedNodes.pId != null && this.saveSelectedNodes.pId !== '') {
               this.SarLawsInfoEO.menuId = this.saveSelectedNodes.id
@@ -462,7 +463,7 @@ export default {
     // 导入法规信息
     importLawsInfo () {
       let file = this.$refs.lawsInfoFile.files[0]
-      let pageType = 'INLAND'
+      let pageType = 'FOREIGN'
       this.$http.post('lawss/sarLawsInfo/importLawsInfos', {
         file: file,
         pageType: pageType
@@ -675,6 +676,18 @@ export default {
       }, e => {
       })
     },
+    loadDicTypeDatas6 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'COUNTRY'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.countryOptions = res.data
+        }
+      }, e => {
+      })
+    },
     // 列表相关方法
     handleSelectAll (checked) {
       // 全部选中
@@ -769,6 +782,7 @@ export default {
     }
     this.searchLawsInfo()
     this.loadInfoTree()
+    this.loadDicTypeDatas6()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()
     this.loadDicTypeDatas3()

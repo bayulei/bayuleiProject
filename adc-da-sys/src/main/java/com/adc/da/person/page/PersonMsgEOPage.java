@@ -15,23 +15,24 @@ public class PersonMsgEOPage extends BasePage {
     private String modifyTime;
     private String modifyTime1;
     private String modifyTime2;
-    private String modifyTimeOperator = "=";
+    private String modifyTimeOperator = "LIKE";
     private String creationTime;
     private String creationTime1;
     private String creationTime2;
-    private String creationTimeOperator = "=";
+    private String creationTimeOperator = "LIKE";
     private String validFlag;
-    private String validFlagOperator = "=";
+    private String validFlagOperator = "LIKE";
     private String readFlag;
-    private String readFlagOperator = "=";
+    private String readFlagOperator = "LIKE";
     private String msgContent;
-    private String msgContentOperator = "=";
+    private String msgContentOperator = "LIKE";
     private String msgTitle;
-    private String msgTitleOperator = "=";
+    private String msgTitleOperator = "LIKE";
     private String userId;
-    private String userIdOperator = "=";
+    private String userIdOperator = "LIKE";
     private String id;
-    private String idOperator = "=";
+    private String idOperator = "LIKE";
+
 
     public String getModifyTime() {
         return this.modifyTime;

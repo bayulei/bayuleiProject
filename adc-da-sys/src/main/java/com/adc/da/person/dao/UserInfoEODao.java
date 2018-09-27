@@ -2,7 +2,9 @@ package com.adc.da.person.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.person.entity.UserInfoEO;
-import org.apache.catalina.User;
+import com.adc.da.sys.entity.UserEO;
+
+import java.util.List;
 
 /**
  *
@@ -15,6 +17,12 @@ import org.apache.catalina.User;
 public interface UserInfoEODao extends BaseDao<UserInfoEO> {
 
 
-    public UserInfoEO getUserInfoByUserId(String userId);
+     public UserInfoEO getUserInfoByUserId(String userId);
+
+     List<UserEO> getUserEOAndInfoEOByUserCode(String userId);
+
+     List<UserInfoEO> queryByUserId(String userId);
+
+     UserInfoEO updateByUserId(String userId);
 
 }
