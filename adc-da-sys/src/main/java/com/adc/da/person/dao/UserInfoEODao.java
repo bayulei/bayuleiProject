@@ -2,6 +2,10 @@ package com.adc.da.person.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.person.entity.UserInfoEO;
+import com.adc.da.sys.entity.UserEO;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -14,9 +18,8 @@ public interface UserInfoEODao extends BaseDao<UserInfoEO> {
 
 
     public UserInfoEO getUserInfoByUserId(String userId);
+     List<UserEO> getUserEOAndInfoEOByUserCode(String userId);
 
-  List<UserEO> getUserEOAndInfoEOByUserCode(String userId);
-
-  List<UserInfoEO> queryByUserId(String userId);
+     List<UserInfoEO> queryByUserId(String userId);
 
 }

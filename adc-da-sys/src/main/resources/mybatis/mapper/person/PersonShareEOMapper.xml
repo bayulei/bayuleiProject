@@ -50,7 +50,7 @@
         and read_flag ${readFlagOperator} #{readFlag}
       </if>
       <if test="resTitle != null" >
-        and res_title ${resTitleOperator} concat(concat('%',#{resTitleOperator}),'%')
+        and res_title ${resTitleOperator} concat(concat('%',#{resTitle}),'%')
       </if>
       <if test="resUri != null" >
         and res_uri ${resUriOperator} #{resUri}

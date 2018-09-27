@@ -33,6 +33,7 @@ public class PersonMsgEOPage extends BasePage {
     private String id;
     private String idOperator = "LIKE";
 
+
     public String getModifyTime() {
         return this.modifyTime;
     }

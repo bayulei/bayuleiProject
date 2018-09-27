@@ -101,26 +101,27 @@ public class PersonConfEOController extends BaseController<PersonConfEO> {
 //    }
 
 
-//    @ApiOperation(value = "根据前台传来的对象保存")
-//    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-//    public ResponseMessage<PersonConfEO> insertByList(@RequestBody List<PersonConfEO> personConfEOList) throws Exception {
-//        if (personConfEOList != null && personConfEOList.size() > 0) {
-//            // String[] personConfEO=personConfEO.split(",");
-//            for (int i = 0; i < personConfEOList.size(); i++) {
-//                PersonConfEO personConfEO = personConfEOList.get(i);
-//                personConfEO.setUserId("从session取");
-//                personConfEO.setDisplaySeq(i+1);
-//                personConfEO.setCreationTime(new Date());
-//                personConfEO.setModifyTime(new Date());
-//                System.out.println(personConfEOList.get(i));
-//                personConfEOService.updateByPrimaryKeySelective(personConfEOList.get(i));
-//                personConfEOService.insert1(personConfEOList.get(i));
-//            }
-//        }else {
-//
-//        }
-//        return Result.success();
-//    }
+    @ApiOperation(value = "根据前台传来的对象保存")
+    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseMessage insertByList(@RequestBody List<PersonConfEO> personConfEOList) throws Exception {
+        if (personConfEOList != null && personConfEOList.size() > 0) {
+
+            // String[] personConfEO=personConfEO.split(",");
+            for (int i = 0; i < personConfEOList.size(); i++) {
+                PersonConfEO personConfEO = personConfEOList.get(i);
+                personConfEO.setUserId("1");
+                personConfEO.setDisplaySeq(i+1);
+                personConfEO.setCreationTime(new Date());
+                personConfEO.setModifyTime(new Date());
+                System.out.println(personConfEOList.get(i));
+                personConfEOService.updateByPrimaryKeySelective(personConfEOList.get(i));
+                personConfEOService.insert1(personConfEOList.get(i));
+            }
+        }else {
+            return Result.error("操作失败");
+        }
+        return Result.success("","操作成功",personConfEOList);
+    }
 
 
     @ApiOperation(value = "|PersonConfEO|删除")

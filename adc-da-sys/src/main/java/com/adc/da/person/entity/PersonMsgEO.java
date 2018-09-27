@@ -127,12 +127,10 @@ public class PersonMsgEO extends BaseEntity {
         this.msgContent = msgContent;
     }
 
-    /**  **/
     public String getMsgTitle() {
-        return this.msgTitle;
+        return msgTitle;
     }
 
-    /**  **/
     public void setMsgTitle(String msgTitle) {
         this.msgTitle = msgTitle;
     }

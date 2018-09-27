@@ -3,14 +3,10 @@ package com.adc.da.person.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.List;
-import java.util.Map;
 
-
-import com.adc.da.sys.entity.UserEO;
+import com.adc.da.sys.util.LoginUserUtil;
 import com.adc.da.sys.util.UUIDUtils;
-import com.adc.da.util.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,7 +130,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
     @ApiOperation(value = "|UserInfoEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     //@RequiresPermissions("person:userInfo:update")
-    public ResponseMessage update(@RequestBody UserInfoEO userInfoEO, @PathVariable("restPath") String restPath) throws Exception {
+    public ResponseMessage update(@RequestBody UserInfoEO userInfoEO) throws Exception {
         if(StringUtils.isBlank(userInfoEO.getOfficePhone())){
             return Result.error("r0018","电话号码不能为空");
         }
