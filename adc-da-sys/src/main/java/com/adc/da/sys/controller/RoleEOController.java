@@ -41,7 +41,6 @@ public class RoleEOController extends BaseController<RoleEO> {
 
 	@Autowired
 	private RoleEOService roleEOService;
-
 	@Autowired
 	BeanMapper beanMapper;
 	@Autowired
@@ -124,26 +123,37 @@ public class RoleEOController extends BaseController<RoleEO> {
 	@ApiOperation(value = "|RoleEO|新增")
 	@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:role:save")
-	public ResponseMessage<RoleVO> create(@RequestBody RoleVO roleVO) throws Exception {
+	public ResponseMessage<Integer> create(@RequestBody RoleVO roleVO) throws Exception {
 		//TODO 此处调用了登录接口数据 暂时注销
 //		roleVO.setOprUser(LoginUserUtil.getUserId());
+		if(StringUtils.isEmpty(roleVO.getName())){
+			return Result.error("角色名称不能为空");
+		}
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
 		logger.info("获取角色相关信息:"+map.getName());
-		map.setRemarks(roleVO.getRemarks());
-		RoleEO roleEO = roleEOService.save(map);
-		roleVO.setRid(roleEO.getId());
-		return Result.success(roleVO);
+		//判断角色名称不能重复，返回0代表角色名称已经存在,否则进行插入操作返回1
+		int i = roleEOService.save(map);
+		if(i<=0){
+			return  Result.error("角色名称已经存在");
+		}
+		return Result.success("","新增成功",1);
 	}
 
 	@ApiOperation(value = "|RoleEO|修改")
 	@PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:role:update")
-	public ResponseMessage<RoleVO> update(@RequestBody RoleVO roleVO) throws Exception {
-		roleVO.setModifyTime(new Date());
+	public ResponseMessage<Integer> update(@RequestBody RoleVO roleVO) throws Exception {
+		if(StringUtils.isEmpty(roleVO.getName())){
+			return Result.error("角色名称不能为空");
+		}
 		RoleEO map = beanMapper.map(roleVO, RoleEO.class);
-		map.setRemarks(roleVO.getRemarks());
-		roleEOService.updateByPrimaryKeySelective(map);
-		return Result.success(roleVO);
+		//判断角色名称不能重复，返回0代表角色名称已经存在,否则进行修改操作返回1
+		int i = roleEOService.updateByPrimaryKeySelective(map);
+		if(i<=0){
+			return  Result.error("角色名称已经存在");
+		}
+		return Result.success("","操作成功",1);
+
 	}
 
 	@ApiOperation(value = "|RoleEO|删除")
@@ -153,10 +163,10 @@ public class RoleEOController extends BaseController<RoleEO> {
 		List<UserRoleEO> list = roleEOService.getUserRoleListByRoleId(id);
 		// 如果角色有对应用户，则不允许删除
 		if (list != null && list.size() > 0) {
-			return Result.error("r0031", "该角色有对应用户，不能删除");
+			return Result.error( "该角色有对应用户，不能删除");
 		}
 		roleEOService.delete(id);
-		return Result.success();
+		return Result.success("true","操作成功","");
 	}
 	/**
 	 * @Author liwenxuan
@@ -175,7 +185,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 				List<UserRoleEO> list = roleEOService.getUserRoleListByRoleId(id);
 				// 如果角色有对应用户，则不允许删除
 				if (list != null && list.size() > 0) {
-					return Result.error("r0031", "该角色有对应用户，不能删除");
+					return Result.error("该角色有对应用户，不能删除");
 				}
 			/*	String loginUserId = SecurityUtils.getSubject().getSession().getAttribute(RequestUtils.LOGIN_USER_ID).toString();
 				if(loginUserId != null || loginUserId != ""){
@@ -193,7 +203,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 				roleEOService.delete(id);
 			}
 		}
-		return Result.success();
+		return Result.success("true","操作成功","");
 	}
 	
 	
@@ -213,7 +223,7 @@ public class RoleEOController extends BaseController<RoleEO> {
 		}else{
 			return Result.error("r00100","未设置角色信息");
 		}
-		return Result.success(roleVO);
+		return Result.success("true","操作成功",roleVO);
 	}
 	
 	@ApiOperation(value = "|RoleEO|全部")

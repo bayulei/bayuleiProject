@@ -29,10 +29,12 @@
         <Button type="info" size="small" @click="exportLawsInfo">导出</Button>
         <Button type="primary" @click="openLawsModal">新增</Button>
         <Button type="primary" @click="modal2 = true">导入</Button>
+        <Button type="primary" @click="convertModal = true">在线转换</Button>
+        <Button type="primary" @click="showDocOnline">在线查看</Button>
       </div>
 
-      <div class="content-detail" v-if="infoListData.length > 0">
-        <div class="card domBtn" v-for="(item, index) in infoListData" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
+      <div class="content-detail" v-if="browseList.length > 0">
+        <div class="card domBtn" v-for="(item, index) in browseList" :key="index" :class="{ 'selected': item.checked }" @click="handleCardClick(item, $event)">
           <Row>
             <Col span="5">
             <Checkbox v-model="item.checked" size="large"></Checkbox>
@@ -88,9 +90,11 @@
          <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
          <Row>
            <Col span="12">
-             <FormItem label="国家/地区" prop="country" class="laws-info-item">
-               <Input v-model="SarLawsInfoEO.country" disabled="disabled"></Input>
-             </FormItem>
+           <FormItem label="国家/地区" prop="country" class="laws-info-item">
+             <Select v-model="SarLawsInfoEO.country" disabled>
+               <Option v-for="opt in countryOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+             </Select>
+           </FormItem>
            </Col>
            <Col span="12">
              <FormItem label="文件性质" prop="lawsProperty" class="laws-info-item">
@@ -195,6 +199,14 @@
        </FormItem>
      </Form>
    </Modal>
+
+     <Modal v-model="convertModal" title="在线查看" @on-ok="convertDocOnline" @on-cancel="convertModal = false">
+       <Form ref="lawsInfoConvert" :model="lawsInfoConvert" :label-width="80">
+         <FormItem label="文件" prop="fileName" class="laws-info-item">
+           <input type="file" ref="convertFile" id="convertFile">
+         </FormItem>
+       </Form>
+     </Modal>
 
    <!--查看分解单模态框-->
    <Drawer title="查看分解单" v-model="showLawsItemsModal" width="900">

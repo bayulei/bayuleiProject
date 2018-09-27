@@ -67,7 +67,7 @@
       <Divider></Divider>
       <div class="content">
         <loading :loading="loading">正在获取用户列表</loading>
-        <Table border ref="selection" :columns="deptEmpColumns" :data="deptEmpData" v-if="deptEmpData.length > 0"></Table>
+        <Table border ref="selection" :height="tableHeight" :columns="deptEmpColumns" :data="deptEmpData" v-if="deptEmpData.length > 0"></Table>
         <hasNoData pClass="content" tips="未获取到组织机构" v-else></hasNoData>
       </div>
       <pagination :total="total"></pagination>
@@ -160,75 +160,174 @@ export default {
           title: '组织机构类型',
           key: 'orgName',
           width: 150,
-          align: 'center'
+          align: 'center',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.orgName
+              }
+            }, params.row.orgName)
+          }
         },
         {
           title: '用户名称',
           key: 'uname',
           width: 100,
-          align: 'center'
+          align: 'center',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.uname
+              }
+            }, params.row.uname)
+          }
         },
         {
           title: '账号',
           key: 'account',
           width: 120,
-          align: 'center'
+          align: 'center',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.account
+              }
+            }, params.row.account)
+          }
         },
         {
           title: '工号',
           key: 'workNum',
           align: 'center',
-          width: 80
+          width: 100,
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.workNum
+              }
+            }, params.row.workNum)
+          }
         },
         {
           title: '角色名称',
           key: 'roleName',
-          width: 100
+          width: 100,
+          align: 'center'
         },
         {
           title: '部门',
           key: 'orgName',
-          width: 140
+          width: 140,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.orgName
+              }
+            }, params.row.orgName)
+          }
         },
         {
           title: '邮箱',
           key: 'email',
-          width: 130
+          width: 130,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.email
+              }
+            }, params.row.email)
+          }
         },
         {
           title: '电话',
           key: 'officePhone',
-          width: 100
+          width: 100,
+          align: 'center'
         },
         {
           title: '手机',
           key: 'mobilePhone',
-          width: 100
+          width: 100,
+          align: 'center'
         },
         {
           title: '传真',
           key: 'fax-address',
-          width: 100
+          width: 100,
+          align: 'center'
         },
         {
           title: '通讯地址',
           key: 'address',
-          width: 100
+          width: 150,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', {
+              class: {
+                'text-overflow-hidden': true
+              },
+              attrs: {
+                title: params.row.address
+              }
+            }, params.row.address)
+          }
         },
         {
           title: '用户状态',
           key: 'disableFlag',
-          width: 100
+          width: 150,
+          align: 'center',
+          render: (h, params) => {
+            if (params.row.disableFlag === 0) {
+              return h('Tag', {
+                props: {
+                  type: 'dot',
+                  color: 'primary',
+                  name: '已启用'
+                }
+              }, '已启用')
+            } else {
+              return h('Tag', {
+                props: {
+                  type: 'dot',
+                  name: '已停用'
+                }
+              })
+            }
+          }
         },
         {
           title: '修改时间',
           key: 'modifyTime',
-          width: 150
+          width: 150,
+          align: 'center'
         },
         {
           title: '操作',
           key: 'Action',
           width: 150,
+          align: 'center',
+          fixed: 'right',
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -253,8 +352,7 @@ export default {
                 }
               }, '删除')
             ])
-          },
-          fixed: 'right'
+          }
         }
       ],
       deptEmpData: [], // 组织下的员工列表
@@ -264,7 +362,8 @@ export default {
       orgId: '', // 组织机构id
       page: 1,
       rows: 10,
-      total: 0
+      total: 0,
+      tableHeight: 600
     }
   },
   methods: {
@@ -383,6 +482,16 @@ export default {
   },
   mounted () {
     let _this = this
+    this.$nextTick(() => {
+      let tableHeight = $('.content').css('height')
+      let height = parseInt(tableHeight.substring(0, tableHeight.indexOf('p'))) - 130
+      this.tableHeight = height
+      window.onresize = function () {
+        let tableHeight = $('.content').css('height')
+        let height = parseInt(tableHeight.substring(0, tableHeight.indexOf('p'))) - 130
+        _this.tableHeight = height
+      }
+    })
     // 获取组织结构树
     this.getTree()
     var setting = {
@@ -612,13 +721,17 @@ export default {
         }
       }
     }
-    .text-overflow-hidden{
-      .ellipsis()
-    }
     .hasNoData{
       background: #FFF;
       .no-data-icon{
         width: 85px;
+      }
+    }
+    .ivu-table-fixed,
+    .ivu-table-fixed-right{
+      height: 100%;
+      .ivu-table-fixed-body{
+        height: calc(~'100% - 41px');
       }
     }
   }

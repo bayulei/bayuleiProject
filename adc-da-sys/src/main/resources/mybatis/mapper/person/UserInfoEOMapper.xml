@@ -1,153 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adc.da.person.dao.UserInfoEODao" >
-  <!-- Result Map-->
-  <resultMap id="BaseResultMap" type="com.adc.da.person.entity.UserInfoEO" >
-    <id column="id" property="id" />
-    <result column="modify_time" property="modifyTime" />
-    <result column="creation_time" property="creationTime" />
-    <result column="valid_flag" property="validFlag" />
-    <result column="signature" property="signature" />
-    <result column="fax_address" property="faxAddress" />
-    <result column="address" property="address" />
-    <result column="gender" property="gender" />
-    <result column="part_post" property="partPost" />
-    <result column="assistant_post" property="assistantPost" />
-    <result column="main_post" property="mainPost" />
-    <result column="mobile_phone" property="mobilePhone" />
-    <result column="office_phone" property="officePhone" />
-    <result column="user_pic" property="userPic" />
-    <result column="duty" property="duty" />
-    <result column="user_id" property="userId" />
-  </resultMap>
+<mapper namespace="com.adc.da.person.dao.UserInfoEODao">
 
-  <!-- TS_USER_INFO table all fields -->
-  <sql id="Base_Column_List" >
-     modify_time, creation_time, valid_flag, signature, fax_address, address, gender, part_post, assistant_post, main_post, mobile_phone, office_phone, user_pic, duty, user_id, id
-  </sql>
+    <resultMap id="UserMap" type="com.adc.da.sys.entity.UserEO">
+        <id column="usId" property="usid"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="uname" property="uname"/>
+        <result column="user_source" property="userSource"/>
+        <result column="email" property="email"/>
+        <result column="work_num" property="workNum"/>
+        <result column="ext_info" property="extInfo"/>
+        <result column="oper_user" property="operUser"/>
+        <result column="creation_time" property="creationTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="valid_flag" property="validFlag"/>
+        <result column="disable_flag" property="disableFlag"/>
+        <result column="unlock_flag" property="unlockFlag"/>
+        <result column="user_type" property="userType"/>
+    </resultMap>
 
-  <!-- 查询条件 -->
-  <sql id="Base_Where_Clause">
-    where 1=1
-    <trim suffixOverrides="," >
-      <if test="modifyTime != null" >
-        and modify_time ${modifyTimeOperator} #{modifyTime}
-      </if>
-      <if test="modifyTime1 != null" >
-        and modify_time &gt;= #{modifyTime1}
-      </if>
-      <if test="modifyTime2 != null" >
-        and modify_time &lt;= #{modifyTime2}
-      </if>
-      <if test="creationTime != null" >
-        and creation_time ${creationTimeOperator} #{creationTime}
-      </if>
-      <if test="creationTime1 != null" >
-        and creation_time &gt;= #{creationTime1}
-      </if>
-      <if test="creationTime2 != null" >
-        and creation_time &lt;= #{creationTime2}
-      </if>
-      <if test="validFlag != null" >
-        and valid_flag ${validFlagOperator} #{validFlag}
-      </if>
-      <if test="signature != null" >
-        and signature ${signatureOperator} #{signature}
-      </if>
-      <if test="faxAddress != null" >
-        and fax_address ${faxAddressOperator} #{faxAddress}
-      </if>
-      <if test="address != null" >
-        and address ${addressOperator} #{address}
-      </if>
-      <if test="gender != null" >
-        and gender ${genderOperator} #{gender}
-      </if>
-      <if test="partPost != null" >
-        and part_post ${partPostOperator} #{partPost}
-      </if>
-      <if test="assistantPost != null" >
-        and assistant_post ${assistantPostOperator} #{assistantPost}
-      </if>
-      <if test="mainPost != null" >
-        and main_post ${mainPostOperator} #{mainPost}
-      </if>
-      <if test="mobilePhone != null" >
-        and mobile_phone ${mobilePhoneOperator} #{mobilePhone}
-      </if>
-      <if test="officePhone != null" >
-        and office_phone ${officePhoneOperator} #{officePhone}
-      </if>
-      <if test="userPic != null" >
-        and user_pic ${userPicOperator} #{userPic}
-      </if>
-      <if test="duty != null" >
-        and duty ${dutyOperator} #{duty}
-      </if>
-      <if test="userId != null" >
-        and user_id ${userIdOperator} #{userId}
-      </if>
-      <if test="id != null" >
-        and id ${idOperator} #{id}
-      </if>
-    </trim>
-  </sql>
+    <!-- TS_DICTYPE table all fields -->
+    <sql id="Base_Column_List">
+		 modify_time, creation_time, valid_flag, signature, fax_address, address, gender, part_post, assistant_post, main_post, mobile_phone, office_phone, user_pic, duty, user_id, id
+	</sql>
 
-  <!-- 插入记录 -->
-  <insert id="insert" parameterType="com.adc.da.person.entity.UserInfoEO" >
-    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_TS_USER_INFO.NEXTVAL FROM DUAL
-    </selectKey> -->
-    insert into TS_USER_INFO(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{signature, jdbcType=VARCHAR}, #{faxAddress, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR}, #{gender, jdbcType=INTEGER}, #{partPost, jdbcType=VARCHAR}, #{assistantPost, jdbcType=VARCHAR}, #{mainPost, jdbcType=VARCHAR}, #{mobilePhone, jdbcType=VARCHAR}, #{officePhone, jdbcType=VARCHAR}, #{userPic, jdbcType=VARCHAR}, #{duty, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
-  </insert>
+    <!-- TS_DICTYPE table all fields -->
+    <sql id="Base_Column_List_2">
+		usId,account,password,uname,user_source,email,work_num,ext_info,oper_user,creation_time,modify_time,valid_flag,disable_flag,unlock_flag,user_type
+	</sql>
 
-  <!-- 动态插入记录 主键是序列 -->
-  <insert id="insertSelective" parameterType="com.adc.da.person.entity.UserInfoEO" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" extends="UserMap" type="com.adc.da.sys.entity.UserEO">
+        <collection property="UserEOList" ofType="com.adc.da.person.entity.UserInfoEO">
+            <id column="id" property="id"/>
+            <result column="modify_time" property="modifyTime"/>
+            <result column="creation_time" property="creationTime"/>
+            <result column="valid_flag" property="validFlag"/>
+            <result column="signature" property="signature"/>
+            <result column="fax_address" property="faxAddress"/>
+            <result column="address" property="address"/>
+            <result column="gender" property="gender"/>
+            <result column="part_post" property="partPost"/>
+            <result column="assistant_post" property="assistantPost"/>
+            <result column="main_post" property="mainPost"/>
+            <result column="mobile_phone" property="mobilePhone"/>
+            <result column="office_phone" property="officePhone"/>
+            <result column="user_pic" property="userPic"/>
+            <result column="duty" property="duty"/>
+            <result column="user_id" property="userId"/>
+        </collection>
+    </resultMap>
+
+    <sql id="UserEO_List">
+		u.account as account,
+		u.uname as uname,
+		u.email as email,
+		ur.user_id as userId,
+		ur.duty as duty,
+		ur.office_phone as officePhone,
+		ur.mobile_phone as mobilePhone,
+		ur.fax_address as faxAddress,
+		ur.signature as signature,
+	</sql>
+
+
+    <!--&lt;!&ndash; TS_USER_INFO table all fields &ndash;&gt;-->
+    <!--<sql id="Base_Column_List">-->
+     <!--modify_time, creation_time, valid_flag, signature, fax_address, address, gender, part_post, assistant_post, main_post, mobile_phone, office_phone, user_pic, duty, user_id, id-->
+  <!--</sql>-->
+
+
+    <!-- 查询条件 -->
+    <sql id="Base_Where_Clause">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="modifyTime != null">
+                and modify_time ${modifyTimeOperator} #{modifyTime}
+            </if>
+            <if test="modifyTime1 != null">
+                and modify_time &gt;= #{modifyTime1}
+            </if>
+            <if test="modifyTime2 != null">
+                and modify_time &lt;= #{modifyTime2}
+            </if>
+            <if test="creationTime != null">
+                and creation_time ${creationTimeOperator} #{creationTime}
+            </if>
+            <if test="creationTime1 != null">
+                and creation_time &gt;= #{creationTime1}
+            </if>
+            <if test="creationTime2 != null">
+                and creation_time &lt;= #{creationTime2}
+            </if>
+            <if test="validFlag != null">
+                and valid_flag ${validFlagOperator} #{validFlag}
+            </if>
+            <if test="signature != null">
+                and signature ${signatureOperator} #{signature}
+            </if>
+            <if test="faxAddress != null">
+                and fax_address ${faxAddressOperator} #{faxAddress}
+            </if>
+            <if test="address != null">
+                and address ${addressOperator} #{address}
+            </if>
+            <if test="gender != null">
+                and gender ${genderOperator} #{gender}
+            </if>
+            <if test="partPost != null">
+                and part_post ${partPostOperator} #{partPost}
+            </if>
+            <if test="assistantPost != null">
+                and assistant_post ${assistantPostOperator} #{assistantPost}
+            </if>
+            <if test="mainPost != null">
+                and main_post ${mainPostOperator} #{mainPost}
+            </if>
+            <if test="mobilePhone != null">
+                and mobile_phone ${mobilePhoneOperator} #{mobilePhone}
+            </if>
+            <if test="officePhone != null">
+                and office_phone ${officePhoneOperator} #{officePhone}
+            </if>
+            <if test="userPic != null">
+                and user_pic ${userPicOperator} #{userPic}
+            </if>
+            <if test="duty != null">
+                and duty ${dutyOperator} #{duty}
+            </if>
+            <if test="userId != null">
+                and user_id ${userIdOperator} #{userId}
+            </if>
+            <if test="id != null">
+                and id ${idOperator} #{id}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="insert" parameterType="com.adc.da.person.entity.UserInfoEO">
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+            SELECT SEQ_TS_USER_INFO.NEXTVAL FROM DUAL
+        </selectKey> -->
+        insert into TS_USER_INFO(<include refid="Base_Column_List"/>)
+        values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER},
+        #{signature, jdbcType=VARCHAR}, #{faxAddress, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
+        #{gender, jdbcType=INTEGER}, #{partPost, jdbcType=VARCHAR}, #{assistantPost, jdbcType=VARCHAR},
+        #{mainPost, jdbcType=VARCHAR}, #{mobilePhone, jdbcType=VARCHAR}, #{officePhone, jdbcType=VARCHAR},
+        #{userPic, jdbcType=VARCHAR}, #{duty, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 动态插入记录 主键是序列 -->
+    <insert id="insertSelective" parameterType="com.adc.da.person.entity.UserInfoEO">
         <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_TS_USER_INFO.NEXTVAL FROM DUAL
     </selectKey> -->
         insert into TS_USER_INFO
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-                <if test="modifyTime != null" >modify_time,</if>
-                <if test="creationTime != null" >creation_time,</if>
-                <if test="validFlag != null" >valid_flag,</if>
-                <if test="signature != null" >signature,</if>
-                <if test="faxAddress != null" >fax_address,</if>
-                <if test="address != null" >address,</if>
-                <if test="gender != null" >gender,</if>
-                <if test="partPost != null" >part_post,</if>
-                <if test="assistantPost != null" >assistant_post,</if>
-                <if test="mainPost != null" >main_post,</if>
-                <if test="mobilePhone != null" >mobile_phone,</if>
-                <if test="officePhone != null" >office_phone,</if>
-                <if test="userPic != null" >user_pic,</if>
-                <if test="duty != null" >duty,</if>
-                <if test="userId != null" >user_id,</if>
-                <if test="id != null" >id,</if>
-            </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
-                <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
-                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
-                <if test="signature != null" >#{signature, jdbcType=VARCHAR},</if>
-                <if test="faxAddress != null" >#{faxAddress, jdbcType=VARCHAR},</if>
-                <if test="address != null" >#{address, jdbcType=VARCHAR},</if>
-                <if test="gender != null" >#{gender, jdbcType=INTEGER},</if>
-                <if test="partPost != null" >#{partPost, jdbcType=VARCHAR},</if>
-                <if test="assistantPost != null" >#{assistantPost, jdbcType=VARCHAR},</if>
-                <if test="mainPost != null" >#{mainPost, jdbcType=VARCHAR},</if>
-                <if test="mobilePhone != null" >#{mobilePhone, jdbcType=VARCHAR},</if>
-                <if test="officePhone != null" >#{officePhone, jdbcType=VARCHAR},</if>
-                <if test="userPic != null" >#{userPic, jdbcType=VARCHAR},</if>
-                <if test="duty != null" >#{duty, jdbcType=VARCHAR},</if>
-                <if test="userId != null" >#{userId, jdbcType=VARCHAR},</if>
-                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
-            </trim>
-  </insert>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modifyTime != null">modify_time,</if>
+            <if test="creationTime != null">creation_time,</if>
+            <if test="validFlag != null">valid_flag,</if>
+            <if test="signature != null">signature,</if>
+            <if test="faxAddress != null">fax_address,</if>
+            <if test="address != null">address,</if>
+            <if test="gender != null">gender,</if>
+            <if test="partPost != null">part_post,</if>
+            <if test="assistantPost != null">assistant_post,</if>
+            <if test="mainPost != null">main_post,</if>
+            <if test="mobilePhone != null">mobile_phone,</if>
+            <if test="officePhone != null">office_phone,</if>
+            <if test="userPic != null">user_pic,</if>
+            <if test="duty != null">duty,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="id != null">id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modifyTime != null">#{modifyTime, jdbcType=TIMESTAMP},</if>
+            <if test="creationTime != null">#{creationTime, jdbcType=TIMESTAMP},</if>
+            <if test="validFlag != null">#{validFlag, jdbcType=INTEGER},</if>
+            <if test="signature != null">#{signature, jdbcType=VARCHAR},</if>
+            <if test="faxAddress != null">#{faxAddress, jdbcType=VARCHAR},</if>
+            <if test="address != null">#{address, jdbcType=VARCHAR},</if>
+            <if test="gender != null">#{gender, jdbcType=INTEGER},</if>
+            <if test="partPost != null">#{partPost, jdbcType=VARCHAR},</if>
+            <if test="assistantPost != null">#{assistantPost, jdbcType=VARCHAR},</if>
+            <if test="mainPost != null">#{mainPost, jdbcType=VARCHAR},</if>
+            <if test="mobilePhone != null">#{mobilePhone, jdbcType=VARCHAR},</if>
+            <if test="officePhone != null">#{officePhone, jdbcType=VARCHAR},</if>
+            <if test="userPic != null">#{userPic, jdbcType=VARCHAR},</if>
+            <if test="duty != null">#{duty, jdbcType=VARCHAR},</if>
+            <if test="userId != null">#{userId, jdbcType=VARCHAR},</if>
+            <if test="id != null">#{id, jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
 
-  <!-- 根据pk，修改记录-->
-  <update id="updateByPrimaryKey" parameterType="com.adc.da.person.entity.UserInfoEO" >
+    <!-- 根据pk，修改记录-->
+    <update id="updateByPrimaryKey" parameterType="com.adc.da.person.entity.UserInfoEO">
     update TS_USER_INFO
        set  modify_time = #{modifyTime},
             creation_time = #{creationTime},
@@ -167,100 +216,113 @@
      where  id = #{id}
   </update>
 
-  <!-- 修改记录，只修改只不为空的字段 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.person.entity.UserInfoEO" >
-    update TS_USER_INFO
-    <set >
-      <if test="modifyTime != null" >
-        modify_time = #{modifyTime},
-      </if>
-      <if test="creationTime != null" >
-        creation_time = #{creationTime},
-      </if>
-      <if test="validFlag != null" >
-        valid_flag = #{validFlag},
-      </if>
-      <if test="signature != null" >
-        signature = #{signature},
-      </if>
-      <if test="faxAddress != null" >
-        fax_address = #{faxAddress},
-      </if>
-      <if test="address != null" >
-        address = #{address},
-      </if>
-      <if test="gender != null" >
-        gender = #{gender},
-      </if>
-      <if test="partPost != null" >
-        part_post = #{partPost},
-      </if>
-      <if test="assistantPost != null" >
-        assistant_post = #{assistantPost},
-      </if>
-      <if test="mainPost != null" >
-        main_post = #{mainPost},
-      </if>
-      <if test="mobilePhone != null" >
-        mobile_phone = #{mobilePhone},
-      </if>
-      <if test="officePhone != null" >
-        office_phone = #{officePhone},
-      </if>
-      <if test="userPic != null" >
-        user_pic = #{userPic},
-      </if>
-      <if test="duty != null" >
-        duty = #{duty},
-      </if>
-      <if test="userId != null" >
-        user_id = #{userId},
-      </if>
-    </set>
-     where id = #{id}
-  </update>
+    <!-- 修改记录，只修改只不为空的字段 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.person.entity.UserInfoEO">
+        update TS_USER_INFO
+        <set>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="creationTime != null">
+                creation_time = #{creationTime},
+            </if>
+            <if test="validFlag != null">
+                valid_flag = #{validFlag},
+            </if>
+            <if test="signature != null">
+                signature = #{signature},
+            </if>
+            <if test="faxAddress != null">
+                fax_address = #{faxAddress},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="partPost != null">
+                part_post = #{partPost},
+            </if>
+            <if test="assistantPost != null">
+                assistant_post = #{assistantPost},
+            </if>
+            <if test="mainPost != null">
+                main_post = #{mainPost},
+            </if>
+            <if test="mobilePhone != null">
+                mobile_phone = #{mobilePhone},
+            </if>
+            <if test="officePhone != null">
+                office_phone = #{officePhone},
+            </if>
+            <if test="userPic != null">
+                user_pic = #{userPic},
+            </if>
+            <if test="duty != null">
+                duty = #{duty},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 
-  <!-- 根据id查询 TS_USER_INFO -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List" /> 
-      from TS_USER_INFO
-     where id = #{value}
+    <!-- 根据id查询 TS_USER_INFO -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from TS_USER_INFO
+        where id = #{value}
 
-  </select>
+    </select>
 
-  <!-- 删除记录 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <select id="getUserInfoByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select <include refid="Base_Column_List" />
+        from TS_USER_INFO
+        where user_id = #{value} AND valid_flag =0
+    </select>
+
+    <!-- 删除记录 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from TS_USER_INFO
      where id = #{value}
-
   </delete>
 
-  <!-- TS_USER_INFO 列表总数-->
-  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
-    select count(1) from TS_USER_INFO
-    <include refid="Base_Where_Clause"/>
-  </select>
+    <!-- TS_USER_INFO 列表总数-->
+    <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+        select count(1) from TS_USER_INFO
+        <include refid="Base_Where_Clause"/>
+    </select>
 
-  <!-- 查询TS_USER_INFO列表 -->
-  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-	select <include refid="Base_Column_List" /> from
-		(select tmp_tb.* , rownum rn from
-			(select <include refid="Base_Column_List" /> from TS_USER_INFO
-			 <include refid="Base_Where_Clause"/>
-			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-			 	${pager.orderCondition}
-			 </if>
-			) tmp_tb where rownum &lt;= ${pager.endIndex})
-			where rn &gt;= ${pager.startIndex}
-  </select>
+    <!-- 查询TS_USER_INFO列表 -->
+    <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        (select tmp_tb.* , rownum rn from
+        (select
+        <include refid="Base_Column_List"/>
+        from TS_USER_INFO
+        <include refid="Base_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''">
+            ${pager.orderCondition}
+        </if>
+        ) tmp_tb where rownum &lt;= ${pager.endIndex})
+        where rn &gt;= ${pager.startIndex}
+    </select>
 
-  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-    select <include refid="Base_Column_List"/> from TS_USER_INFO
-    <include refid="Base_Where_Clause"/>
-    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-       ${pager.orderCondition}
-    </if>
-  </select>
+    <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select
+        <include refid="Base_Column_List"/>
+        from TS_USER_INFO
+        <include refid="Base_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''">
+            ${pager.orderCondition}
+        </if>
+    </select>
+
 
     <select id="getUserEOAndInfoEOByUserCode" resultMap="UserMap" parameterType="java.lang.String">
     select
@@ -275,4 +337,28 @@
       ur.signature as signature
       from TS_USER u left join TS_USER_INFO ur on u.USID=ur.USER_ID where user_id=#{userId}
     </select>
+
+
+
+    <!-- 个人信息保存修改-->
+
+    <update id="updateByUserId" parameterType="com.adc.da.person.entity.UserInfoEO">
+        update TS_USER_INFO
+        set office_phone=#{officePhone},
+            email=#{email},
+            mobile_phone=#{mobilePhone},
+            fax_address=#{faxAdress},
+            signature=#{signature},
+            user_pic=#{userPic},
+            valid_flag=0
+        where user_id=#{userId}
+    </update>
+
+
+    <!--&lt;!&ndash; 根据用户id更新个人信息&ndash;&gt;-->
+    <!--<update id="queryByUserId" parameterType="com.adc.da.person.entity.UserInfoEO">-->
+        <!--update TS_USER_INFO-->
+        <!--set duty=#{duty},user_pic=#{userPic},office_phone=#{officePhone}-->
+    <!--</update>-->
+
 </mapper>

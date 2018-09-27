@@ -90,9 +90,9 @@ public class UserEOController extends BaseController<UserEO> {
 //	@RequiresPermissions("sys:user:save")
     public ResponseMessage<UserVO> create(@RequestBody UserVO userVO) throws Exception {
         if (StringUtils.isBlank(userVO.getAccount())) {
-            return Result.error("r0014", "登录名不能为空");
+            return Result.error("登录名不能为空");
         } else if (userEOService.getUserByLoginName(userVO.getAccount()) != null) {
-            return Result.error("r0015", "账号已存在");
+            return Result.error("账号已存在");
         }
         // 前台如果base64传输密文，则需要解码
         // userVO.setPassword(new String(Encodes.decodeBase64(userVO.getPassword())));
@@ -103,28 +103,30 @@ public class UserEOController extends BaseController<UserEO> {
             return Result.error("操作失败");
         }
         return Result.success("true","操作成功",beanMapper.map(userEO, UserVO.class));
-
     }
-
+/**
+ * @Author liwenxuan
+ * @Description 修改时同时对用户表、用户角色表关联表、用户组织机构关联表信息修改
+ * @Date Administrator 2018/9/26
+ * @Param [userVO]
+ * @return com.adc.da.util.http.ResponseMessage<com.adc.da.sys.vo.UserVO>
+ **/
     @ApiOperation(value = "|UserEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
 //	@RequiresPermissions("sys:user:update")
     public ResponseMessage<UserVO> update(@RequestBody UserVO userVO) throws Exception {
         UserEO userEO = beanMapper.map(userVO, UserEO.class);
         userEO.setModifyTime(new Date());
-/*		if(userEOService.getUserWithRoles(userVO.getUsid()).getWorkNum() !=null){
-			return  Result.error("r0016", "员工编号已存在");
-		}*/
-
+//        修改用户表信息
         int i = userEOService.updateByPrimaryKeySelective(userEO);
-//		注：角色管理需要在这里进行修改用户权限
+//		  修改用户权限
         int i1 = userEOService.saveUserRole(userEO);
+//        更新组织机构
         int i2 = userEOService.updateUserOrg(userEO);
         if(i>0 && i1>0 && i2>0){
             return Result.success("true","操作成功",userVO);
         }
         return Result.error("操作失败");
-
     }
 
     @ApiOperation(value = "|UserEO|删除")

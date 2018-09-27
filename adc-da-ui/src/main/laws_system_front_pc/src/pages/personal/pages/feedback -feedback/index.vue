@@ -1,13 +1,13 @@
 <template>
- <div id="index">
+ <div id="feedback-feedback">
    <UEditor :config=config ref="ueditor"></UEditor>
-   <Button type="primary" style="margin: 1rem 9rem">提交</Button>
+   <Button type="primary" style="margin: 1rem 9rem" @click="saveFeedback">提交</Button>
  </div>
 </template>
 
 <script>
 export default {
-  name: 'index',
+  name: 'feedback-feedback',
   data () {
     return {
       config: {
@@ -29,15 +29,16 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    saveFeedback () {
+      console.log(this.$refs.ueditor.getUEContent())
+    }
+  },
   components: {},
-  props: {},
-  computed: {},
-  watch: {},
   mounted () {}
 }
 </script>
 
 <style lang="less">
-   #index{}
+   #feedback-feedback{}
 </style>

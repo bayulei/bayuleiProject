@@ -1,13 +1,13 @@
 <!-- 动态信息新增编辑 -->
 <template>
   <div id="dynamicInfo">
-    <div style="overflow:auto;height: 100%;" >
+    <div style="overflow:auto;height: 100%; padding: 0.2rem 0.3rem;" >
     <Form ref="msgDynamicInfoVO" :model="msgDynamicInfoVO" :rules="msgDynamicInfoVOFormRules" label-position="right" class="label-input-form">
       <input v-model="msgDynamicInfoVO.id" v-show="false">
       <Row>
         <Col span="8" >
           <FormItem label="动态标题" prop="title" class="laws-info-item">
-            <Input  v-model="msgDynamicInfoVO.title" />
+            <Input v-model="msgDynamicInfoVO.title" style="width: 200px"></Input>
           </FormItem>
         </Col>
         <Col span="8" >
@@ -29,7 +29,7 @@
         </Col>
         <Col span="8" >
           <FormItem label="发布机构" prop="pubOrg" class="laws-info-item">
-            <Input  v-model="msgDynamicInfoVO.pubOrg" />
+            <Input  v-model="msgDynamicInfoVO.pubOrg" style="width: 200px"/>
           </FormItem>
         </Col>
       </Row>
@@ -44,7 +44,7 @@
         <Col>
           <FormItem label="相关附件" prop="attInfo" class="laws-info-item">
             <Upload multiple type="drag" ref="attInfo" :action="uploadFileListPath" :default-file-list="fileInfoList" name="files" :on-remove="delFileInfo" :on-success="uploadBackSuccess" :on-error="uploadBackError" >
-              <div style="padding: 20px 0">
+              <div style="padding: 0 100px">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或拖拽文件到此处</p>
               </div>
@@ -63,7 +63,7 @@
         <Col>
           <FormItem label="新闻图片" prop="picFile" class="laws-info-item">
             <Upload type="drag" ref="picFile" accept="image/*" :action="uploadFilePath" :default-file-list="picFIleList" name="file" :before-upload="clickPicFile" :on-remove="delPicFileInfo" :on-success="uploadPicBackSuccess" :on-error="uploadBackError" >
-              <div :v-if="showPicUpload" style="padding: 20px 0">
+              <div :v-if="showPicUpload" style="padding: 0 100px">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或拖拽文件到此处</p>
               </div>
@@ -152,9 +152,9 @@ export default {
       }
     },
     loadMsgInfo () {
-      let msgId = this.$route.params.id
-      console.log(this.$route.params.id)
-      if (msgId !== undefined || msgId !== '') {
+      let msgId = this.$route.params.id || ''
+      // console.log(this.$route.params.id)
+      if (msgId !== '') {
         this.$http.get('lawss/msgDynamicInfo/' + msgId, {}, {_this: this}, res => {
           this.msgDynamicInfoVO = res.data
           // 此处增加判断标签显示效果

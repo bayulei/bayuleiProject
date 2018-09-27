@@ -46,6 +46,7 @@ const routes = [
   {
     path: '/',
     component: Home,
+    name: 'Home',
     meta: {
       requireAuth: true,
       title: '首页'
@@ -338,6 +339,22 @@ const routes = [
       // }
     ]
   }
+  // **************************   搜索中心   ******************************* //
+  // {
+  //   path: '/searchCenter/:selectKey/:selectValue',
+  //   name: 'SearchCenter',
+  //   component: resolve => require(['pages/searchCenter'], resolve)
+  // },
+  // **************************   pdf   ******************************* //
+  // {
+  //   path: '/ssssspdf',
+  //   name: 'Pdf',
+  //   component: resolve => require(['@/common/components/pdf'], resolve),
+  //   meta: {
+  //     requireAuth: true,
+  //     title: 'pdf'
+  //   }
+  // }
 ]
 
 const router = new VueRouter({

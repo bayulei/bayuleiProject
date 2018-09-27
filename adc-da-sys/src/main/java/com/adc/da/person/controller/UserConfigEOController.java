@@ -34,7 +34,7 @@ public class UserConfigEOController extends BaseController<UserConfigEO>{
 
 	@ApiOperation(value = "|UserConfigEO|分页查询")
     @GetMapping("/page")
-    @RequiresPermissions("person:userConfig:page")
+    //@RequiresPermissions("person:userConfig:page")
     public ResponseMessage<PageInfo<UserConfigEO>> page(UserConfigEOPage page) throws Exception {
         List<UserConfigEO> rows = userConfigEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
@@ -42,21 +42,21 @@ public class UserConfigEOController extends BaseController<UserConfigEO>{
 
 	@ApiOperation(value = "|UserConfigEO|查询")
     @GetMapping("")
-    @RequiresPermissions("person:userConfig:list")
+    //@RequiresPermissions("person:userConfig:list")
     public ResponseMessage<List<UserConfigEO>> list(UserConfigEOPage page) throws Exception {
         return Result.success(userConfigEOService.queryByList(page));
 	}
 
     @ApiOperation(value = "|UserConfigEO|详情")
     @GetMapping("/{id}")
-    @RequiresPermissions("person:userConfig:get")
+    //@RequiresPermissions("person:userConfig:get")
     public ResponseMessage<UserConfigEO> find(@PathVariable String id) throws Exception {
         return Result.success(userConfigEOService.selectByPrimaryKey(id));
     }
 
     @ApiOperation(value = "|UserConfigEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("person:userConfig:save")
+    //@RequiresPermissions("person:userConfig:save")
     public ResponseMessage<UserConfigEO> create(@RequestBody UserConfigEO userConfigEO) throws Exception {
         userConfigEOService.insertSelective(userConfigEO);
         return Result.success(userConfigEO);
@@ -64,7 +64,7 @@ public class UserConfigEOController extends BaseController<UserConfigEO>{
 
     @ApiOperation(value = "|UserConfigEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("person:userConfig:update")
+    //@RequiresPermissions("person:userConfig:update")
     public ResponseMessage<UserConfigEO> update(@RequestBody UserConfigEO userConfigEO) throws Exception {
         userConfigEOService.updateByPrimaryKeySelective(userConfigEO);
         return Result.success(userConfigEO);
@@ -72,7 +72,7 @@ public class UserConfigEOController extends BaseController<UserConfigEO>{
 
     @ApiOperation(value = "|UserConfigEO|删除")
     @DeleteMapping("/{id}")
-    @RequiresPermissions("person:userConfig:delete")
+    //@RequiresPermissions("person:userConfig:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         userConfigEOService.deleteByPrimaryKey(id);
         logger.info("delete from TS_USER_CONFIG where id = {}", id);

@@ -62,6 +62,11 @@
     </dependency>
     <dependency>
         <groupId>com.adc</groupId>
+        <artifactId>adc-da-sys</artifactId>
+        <version>2.2.02</version>
+    </dependency>
+    <dependency>
+        <groupId>com.adc</groupId>
         <artifactId>adc-da-util</artifactId>
         <version>2.2.4</version>
     </dependency>

@@ -5,6 +5,9 @@ export default {
   name: 'DomesticRegulationsDatabase',
   data () {
     return {
+      // 可能去掉的
+      convertModal: false,
+      saveConvertId: '',
       setting: '',
       MoveTest: '',
       zNodes: [],
@@ -44,7 +47,7 @@ export default {
       },
       SarLawsInfoEO: {
         editLawsId: '',
-        country: '中国',
+        country: 'CN',
         lawsProperty: '',
         lawsNumber: '',
         lawsName: '',
@@ -175,14 +178,18 @@ export default {
         }
       ],
       itemsData: [],
-      infoListData: [],
+      browseList: [],
       lawsInfoImport: {},
+      lawsInfoConvert: {},
       lawsItemsImport: {},
       lawsPropertyOptions: '',
       lawsStatusOptions: '',
       applyArcticOptions: '',
       energyKindOptions: '',
       applyAuthOptions: '',
+      countryOptions: [
+        {label: '中国', value: 'CN'}
+      ],
       SarMenuEOFormRules: {},
       lawsInfoRules: {},
       lawsInfoFormRules: {
@@ -343,7 +350,7 @@ export default {
       let SarLawsInfoEOPage = this.lawsInfo
       SarLawsInfoEOPage.page = this.page
       SarLawsInfoEOPage.pageSize = this.rows
-      SarLawsInfoEOPage.lawsType = '1'
+      SarLawsInfoEOPage.lawsType = 'INLAND'
       if (this.saveSelectedNodes.pId == null || this.saveSelectedNodes.pId === '') {
         SarLawsInfoEOPage.menuId = ''
       } else {
@@ -359,8 +366,9 @@ export default {
         for (let i = 0; i < res.data.list.length; i++) {
           res.data.list[i].checked = false
         }
-        this.infoListData = res.data.list
+        this.browseList = res.data.list
         this.total = res.data.count
+        // window.open('/static/pdfjs-1.9.426-dist/viewer.html?file=E:/1.pdf')
       }, e => {
 
       })
@@ -407,7 +415,7 @@ export default {
           this.SarLawsInfoEO.applyAuth = this.breakMultiSelect(this.SarLawsInfoEO.applyAuth)
           this.SarLawsInfoEO.issueTime = this.$dateFormat(this.SarLawsInfoEO.issueTime, 'yyyy-MM-dd')
           this.SarLawsInfoEO.putTime = this.$dateFormat(this.SarLawsInfoEO.putTime, 'yyyy-MM-dd')
-          this.SarLawsInfoEO.lawsType = '1'
+          this.SarLawsInfoEO.lawsType = 'INLAND'
           if (this.SarLawsInfoEO.editLawsId == null || this.SarLawsInfoEO.editLawsId === '') {
             if (this.saveSelectedNodes.pId != null && this.saveSelectedNodes.pId !== '') {
               this.SarLawsInfoEO.menuId = this.saveSelectedNodes.id
@@ -437,7 +445,7 @@ export default {
       this.showLawsInfoModal = false
     },
     // 删除法规信息
-    removeLawsInfo (id) {
+    indeterminateremoveLawsInfo (id) {
       this.$Modal.confirm({
         title: '确认删除',
         content: '<p>确认删除该条数据？</p>',
@@ -458,7 +466,7 @@ export default {
     // 导入法规信息
     importLawsInfo () {
       let file = this.$refs.lawsInfoFile.files[0]
-      let pageType = '1'
+      let pageType = 'INLAND'
       this.$http.post('lawss/sarLawsInfo/importLawsInfos', {
         file: file,
         pageType: pageType
@@ -588,6 +596,30 @@ export default {
       }, e => {
       })
     },
+    // 在线转换
+    convertDocOnline () {
+      let file = this.$refs.convertFile.files[0]
+      this.$http.post('convert/otConvertMq/docUploadConvert', {
+        file: file
+      }, {
+        _this: this
+      }, res => {
+        this.saveConvertId = res.data
+      }, e => {
+      })
+    },
+    // 在线查看
+    showDocOnline () {
+      this.$http.get('convert/otConvertMq/getConvertDetail', {
+        convertId: this.saveConvertId
+      }, {
+        _this: this
+      }, res => {
+        alert(res.data.filePath)
+        // window.open('/static/pdf/web/viewer.html?file=http://localhost:9999/uploadPath/getMe.pdf')
+      }, e => {
+      })
+    },
     // 分解多选下拉
     breakMultiSelect (value) {
       if (value != null && value !== '' && value !== undefined) {
@@ -677,16 +709,16 @@ export default {
       if (checked) {
         // 1.遍历数据,把每一项的checkbox置为选中状态
         this.selectedList = []
-        for (let i = 0; i < this.infoListData.length; i++) {
-          this.$set(this.infoListData[i], 'checked', true)
+        for (let i = 0; i < this.browseList.length; i++) {
+          this.$set(this.browseList[i], 'checked', true)
           // 2.把每一项的id都放入selectedList数组中
-          this.selectedList.push(this.infoListData[i].id)
+          this.selectedList.push(this.browseList[i].id)
         }
         // 全部取消选中
       } else {
         // 1.遍历数据,把每一项的checkbox置为取消选中状态
-        for (let i = 0; i < this.infoListData.length; i++) {
-          this.$set(this.infoListData[i], 'checked', false)
+        for (let i = 0; i < this.browseList.length; i++) {
+          this.$set(this.browseList[i], 'checked', false)
           // 2.清空selectedList数组
           this.selectedList = []
         }
@@ -700,7 +732,7 @@ export default {
   props: {},
   computed: {},
   watch: {
-    infoListData: {
+    browseList: {
       deep: true,
       handler (newVal, oldVal) {
         this.selectedList = []
@@ -722,7 +754,7 @@ export default {
     },
     // 已选择的列表
     selectedList (newVal, oldVal) {
-      if (oldVal.length === this.infoListData.length && newVal.length !== 0) {
+      if (oldVal.length === this.browseList.length && newVal.length !== 0) {
         this.checkAll = false
         this.indeterminate = true
       } else if (newVal.length === 0) {

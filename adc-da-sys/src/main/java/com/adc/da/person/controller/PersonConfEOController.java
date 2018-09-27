@@ -41,7 +41,7 @@ public class PersonConfEOController extends BaseController<PersonConfEO> {
 
     @ApiOperation(value = "|PersonConfEO|分页查询")
     @GetMapping("/page")
-    @RequiresPermissions("person:personConf:page")
+    //@RequiresPermissions("person:personConf:page")
     public ResponseMessage<PageInfo<PersonConfEO>> page(PersonConfEOPage page) throws Exception {
         List<PersonConfEO> rows = personConfEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
@@ -49,20 +49,20 @@ public class PersonConfEOController extends BaseController<PersonConfEO> {
 
     @ApiOperation(value = "|PersonConfEO|查询")
     @GetMapping("")
-    @RequiresPermissions("person:personConf:list")
+    //@RequiresPermissions("person:personConf:list")
     public ResponseMessage<List<PersonConfEO>> list(PersonConfEOPage page) throws Exception {
         return Result.success(personConfEOService.queryByList(page));
     }
 
     @ApiOperation(value = "|PersonConfEO|详情")
     @GetMapping("/{id}")
-    @RequiresPermissions("person:personConf:get")
+    //@RequiresPermissions("person:personConf:get")
     public ResponseMessage<PersonConfEO> find(@PathVariable String id) throws Exception {
         return Result.success(personConfEOService.selectByPrimaryKey(id));
     }
 
     @ApiOperation(value = "|PersonConfEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    //@PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     // @RequiresPermissions("person:personConf:save")
     public ResponseMessage<PersonConfEO> create(@RequestBody PersonConfEO personConfEO) throws Exception {
         personConfEO.setId(UUIDUtils.randomUUID20());
@@ -79,7 +79,7 @@ public class PersonConfEOController extends BaseController<PersonConfEO> {
      **/
     @ApiOperation(value = "|PersonConfEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("person:personConf:update")
+    //@RequiresPermissions("person:personConf:update")
     public ResponseMessage<PersonConfEO> update(@RequestBody PersonConfEO personConfEO) throws Exception {
         personConfEOService.updateByPrimaryKeySelective(personConfEO);
         personConfEO.setCreationTime(new Date());
@@ -101,31 +101,32 @@ public class PersonConfEOController extends BaseController<PersonConfEO> {
 //    }
 
 
-//    @ApiOperation(value = "根据前台传来的对象保存")
-//    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-//    public ResponseMessage<PersonConfEO> insertByList(@RequestBody List<PersonConfEO> personConfEOList) throws Exception {
-//        if (personConfEOList != null && personConfEOList.size() > 0) {
-////           String[] personConfEO=personConfEO.split(",");
-//            for (int i = 0; i < personConfEOList.size(); i++) {
-//                PersonConfEO personConfEO = personConfEOList.get(i);
-//                personConfEO.setUserId("从session取");
-//                personConfEO.setDisplaySeq(i+1);
-//                personConfEO.setCreationTime(new Date());
-//                personConfEO.setModifyTime(new Date());
-//                System.out.println(personConfEOList.get(i));
-//                personConfEOService.updateByPrimaryKeySelective(personConfEOList.get(i));
-//                personConfEOService.insert1(personConfEOList.get(i));
-//            }
-//        }else {
-//
-//        }
-//        return Result.success();
-//    }
+    @ApiOperation(value = "根据前台传来的对象保存")
+    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseMessage insertByList(@RequestBody List<PersonConfEO> personConfEOList) throws Exception {
+        if (personConfEOList != null && personConfEOList.size() > 0) {
+
+            // String[] personConfEO=personConfEO.split(",");
+            for (int i = 0; i < personConfEOList.size(); i++) {
+                PersonConfEO personConfEO = personConfEOList.get(i);
+                personConfEO.setUserId("1");
+                personConfEO.setDisplaySeq(i+1);
+                personConfEO.setCreationTime(new Date());
+                personConfEO.setModifyTime(new Date());
+                System.out.println(personConfEOList.get(i));
+                personConfEOService.updateByPrimaryKeySelective(personConfEOList.get(i));
+                personConfEOService.insert1(personConfEOList.get(i));
+            }
+        }else {
+            return Result.error("操作失败");
+        }
+        return Result.success("","操作成功",personConfEOList);
+    }
 
 
     @ApiOperation(value = "|PersonConfEO|删除")
     @DeleteMapping("/{id}")
-    @RequiresPermissions("person:personConf:delete")
+    //@RequiresPermissions("person:personConf:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         personConfEOService.deleteByPrimaryKey(id);
         logger.info("delete from TS_PERSON_CONF where id = {}", id);

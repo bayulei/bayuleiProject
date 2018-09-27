@@ -76,10 +76,18 @@
             <Row>
               <Col span="12">
                 <FormItem label="角色类型" prop="roleType" class="laws-info-item">
+                  <!--<Select v-model="roleVO.roleType" multiple style="width:260px">-->
+                    <!--<Option v-for="item in roleTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+                  <!--</Select>-->
                   <Select v-model="roleVO.roleType" clearable  disabled>
                     <Option v-for="item in roleTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
                 </FormItem>
+                <!--<FormItem label="角色类型" prop="roleType" class="laws-info-item">-->
+                  <!--<Select v-model="roleVO.roleType" multiple  >-->
+                    <!--<Option v-for="item in roleTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+                  <!--</Select>-->
+                <!--</FormItem>-->
                 <!--角色类型:{{roleVO.roleType === 'AUTHBODY'? '认证机构':roleVO.roleType ==='CITEK' ? '检测机构':roleVO.roleType === 'CONADMIN' ? '配置管理员':'暂无'}}-->
               </Col>
             </Row>
@@ -161,6 +169,7 @@ export default {
         align: 'center'
       }, {
         title: '状态',
+        width: 80,
         key: 'useFlag',
         align: 'center',
         render: (h, params) => {
@@ -199,15 +208,18 @@ export default {
       }, {
         title: '操作时间',
         key: 'modifyTime',
-        align: 'center'
+        align: 'center',
+        width: 150
       }, {
         title: '操作人',
+        width: 100,
         key: 'operUserName',
         align: 'center'
       }, {
         title: '操作',
         key: 'action',
         align: 'center',
+        width: 200,
         render: (h, params) => {
           return h('div', [
             h('Button', {

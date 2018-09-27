@@ -31,9 +31,10 @@ public class UserInfoEO extends BaseEntity {
     private String userId;
     private String id;
 //    追加字段
-    private String acount;
+    private String account;
     private String uName;
     private String email;
+    private String orgName;
 
     //刘寅楠
 //    protected List<UserEO> userEOList=new ArrayList<>();
@@ -285,12 +286,12 @@ public class UserInfoEO extends BaseEntity {
         this.id = id;
     }
 
-    public String getAcount() {
-        return acount;
+    public String getAccount() {
+        return account;
     }
 
-    public void setAcount(String acount) {
-        this.acount = acount;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getuName() {
@@ -309,7 +310,16 @@ public class UserInfoEO extends BaseEntity {
         this.email = email;
     }
 
-//    public List<UserEO> getUserEOList() {
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+
+    //    public List<UserEO> getUserEOList() {
 //        return userEOList;
 //    }
 //
