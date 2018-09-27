@@ -21,9 +21,8 @@ public class DicTypeEO extends BaseEntity {
     private String dicId;
     private String id;
 
-//    private List<dicTypeEO> dicTypeEOList;
-    private DictionaryEO dictionaryEO = new DictionaryEO();
-
+//    新增字段
+    private String creationTime;
 
 
     /**
@@ -133,11 +132,11 @@ public class DicTypeEO extends BaseEntity {
     }
 
 
-    public DictionaryEO getDictionaryEO() {
-        return dictionaryEO;
+    public String getCreationTime() {
+        return creationTime;
     }
 
-    public void setDictionaryEO(DictionaryEO dictionaryEO) {
-        this.dictionaryEO = dictionaryEO;
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
     }
 }

@@ -1,15 +1,16 @@
 package com.adc.da.sys.vo;
 
 import com.adc.da.sys.entity.MenuEO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class RoleVO {
-	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date modifyTime;
-	@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date creationTime;
 	private Integer validFlag;
 	private String operUser;

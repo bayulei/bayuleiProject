@@ -4,7 +4,7 @@
  * @date: 2018-09-04 17:47:46
  */
 // 开发环境配置
-const devIp = '127.0.0.1'
+const devIp = '192.168.1.132'
 const devInterfacePORT = '8888'
 const simpleFilePath = 'att/attFile/upload'
 const multipleFilePath = 'att/attFile/uploadFiles'

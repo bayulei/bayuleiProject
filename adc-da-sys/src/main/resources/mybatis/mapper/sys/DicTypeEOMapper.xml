@@ -9,14 +9,9 @@
         <result column="parent_id" property="parentId"/>
         <result column="dic_id" property="dicId"/>
         <result column="valid_flag" property="validFlag"/>
-        <association property="dictionaryEO" resultMap="BaseResultMapOne">
-        </association>
-    </resultMap>
-    <!--liwenxuan:映射DictionaryEO中的新增时间字段在字典类型明细管理中显示-->
-    <resultMap id="BaseResultMapOne" type="com.adc.da.sys.entity.DictionaryEO">
-        <id column="dic_id" property="id"/>
         <result column="creation_time" property="creationTime"/>
     </resultMap>
+
     <!-- TS_DICTYPE table all fields -->
     <sql id="Base_Column_List">
         id,parent_id, dic_type_code, dic_type_name, dic_id,valid_flag
@@ -24,12 +19,12 @@
 
     <!--分页显示A-->
     <sql id="Base_Column_ListPageA">
-		TS_DICTYPE.id,TS_DICTYPE.parent_id, TS_DICTYPE.dic_type_code, TS_DICTYPE.dic_type_name, TS_DICTYPE.dic_id,TS_DICTYPE.valid_flag,td.creation_time
+		TS_DICTYPE.id,TS_DICTYPE.parent_id, TS_DICTYPE.dic_type_code, TS_DICTYPE.dic_type_name, TS_DICTYPE.dic_id,TS_DICTYPE.valid_flag,td.creation_time as creation_time
 	</sql>
 
     <!--分页显示B-->
     <sql id="Base_Column_ListPageB">
-		a.id,a.parent_id, a.dic_type_code, a.dic_type_name, a.dic_id,a.valid_flag,a.creation_time
+		a.id,a.parent_id, a.dic_type_code, a.dic_type_name, a.dic_id,a.valid_flag,a.creation_time as creation_time
 	</sql>
 
     <sql id="Dic_Type_List">
@@ -195,7 +190,6 @@
         </if>
         ) tmp_tb where rownum &lt;= ${pager.endIndex}) a
         where rn &gt;= ${pager.startIndex}
-
     </select>
 
     <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">

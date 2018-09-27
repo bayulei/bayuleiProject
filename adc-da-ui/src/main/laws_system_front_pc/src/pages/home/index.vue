@@ -6,29 +6,29 @@
       <!-- 搜索框 -->
       <div class="search-box">
         <div class="search-option">
-          <Select v-model="searchType">
-            <Option :value="1">标准编号</Option>
-            <Option :value="2">标准名称</Option>
-            <Option :value="3">标准状态</Option>
-            <Option :value="4">标准正文内容</Option>
-            <Option :value="5">适用车型</Option>
-            <Option :value="6">发布日期</Option>
-            <Option :value="7">实施日期</Option>
-            <Option :value="2">起草人</Option>
-            <Option :value="2">起草部门</Option>
-            <Option :value="2">代替标准</Option>
-            <Option :value="2">被代替标准</Option>
-            <Option :value="2">文件名称</Option>
-            <Option :value="2">动态标题</Option>
+          <Select v-model="selectKey">
+            <Option value="standNumber">标准编号</Option>
+            <Option value="standName">标准名称</Option>
+            <Option value="standState">标准状态</Option>
+            <Option value="standFile">标准正文内容</Option>
+            <Option value="applyArctic">适用车型</Option>
+            <Option value="issueTime">发布日期</Option>
+            <Option value="putTime">实施日期</Option>
+            <Option value="draftUser">起草人</Option>
+            <Option value="draftingUnit">起草部门</Option>
+            <Option value="replaceStandNum">代替标准</Option>
+            <Option value="replacedStandNum">被代替标准</Option>
+            <Option value="lawsName">文件名称</Option>
+            <Option value="2">动态标题</Option>
           </Select>
         </div>
         <div class="search-input">
-          <Input type="text" v-model="keywords" autofocus id="search-input" :placeholder="searchRecommend" clearable></Input>
+          <Input type="text" v-model="selectValue" autofocus id="search-input" :placeholder="searchRecommend" clearable></Input>
         </div>
         <div class="search-btn">
-          <Icon type="ios-search" :size="34" color="rgba(0,0,0,.8)" />
+          <Icon type="ios-search" :size="34" color="rgba(0,0,0,.8)" @click.native="searchCenteric"/>
         </div>
-        <div class="search-text">{{ searchText }}</div>
+        <div class="search-text" >{{ searchText }}</div>
       </div>
       <nav class="section-nav">
         <div class="nav-content">
@@ -129,8 +129,8 @@ export default {
   name: 'index',
   data () {
     return {
-      searchType: 1, // 搜索类型
-      keywords: '',
+      selectKey: 'standNumber', // 搜索类型
+      selectValue: '',
       searchText: '标准高级检索',
       searchRecommend: '请输入关键词',
       todoList: [
@@ -281,7 +281,17 @@ export default {
       logoSm: require('assets/images/home/logo_sm.png')
     }
   },
-  methods: {},
+  methods: {
+    searchCenteric () {
+      this.$router.push({
+        name: 'SearchCenter',
+        params: {
+          selectKey: this.selectKey,
+          selectValue: this.selectValue
+        }
+      })
+    }
+  },
   components: {
     ComHeader
   },
