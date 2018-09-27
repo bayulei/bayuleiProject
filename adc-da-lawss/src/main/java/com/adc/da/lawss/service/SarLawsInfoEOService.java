@@ -105,7 +105,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
                 SarLawsValEO sarLawsValEO = new SarLawsValEO();
                 sarLawsValEO.setId(UUID.randomUUID(20));
                 sarLawsValEO.setLawsId(infoId);
-                sarLawsValEO.setPropertyType("PRODUCTTYPE");
+                sarLawsValEO.setPropertyType("APPLY_ARCTIC");
                 sarLawsValEO.setPropertyVal(applyArctic[a]);
                 sarLawsValEO.setValidFlag(0);
                 sarLawsValEO.setCreationTime(new Date());
@@ -122,7 +122,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
                 SarLawsValEO sarLawsValEO = new SarLawsValEO();
                 sarLawsValEO.setId(UUID.randomUUID(20));
                 sarLawsValEO.setLawsId(infoId);
-                sarLawsValEO.setPropertyType("ENERGYTYPES");
+                sarLawsValEO.setPropertyType("ENERGY_KIND");
                 sarLawsValEO.setPropertyVal(energyKind[e]);
                 sarLawsValEO.setValidFlag(0);
                 sarLawsValEO.setCreationTime(new Date());
@@ -139,7 +139,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
                 SarLawsValEO sarLawsValEO = new SarLawsValEO();
                 sarLawsValEO.setId(UUID.randomUUID(20));
                 sarLawsValEO.setLawsId(infoId);
-                sarLawsValEO.setPropertyType("PROVETYPE");
+                sarLawsValEO.setPropertyType("APPLY_AUTH");
                 sarLawsValEO.setPropertyVal(applyAuth[p]);
                 sarLawsValEO.setValidFlag(0);
                 sarLawsValEO.setCreationTime(new Date());
@@ -169,7 +169,7 @@ public class SarLawsInfoEOService extends BaseService<SarLawsInfoEO, String> {
             //判断法规关联表是否包含该条法规
             if(listLawsVal != null){
                 if(!listLawsVal.isEmpty()){
-                    //法规关联表修改有效标识（删除旧关联表信息）
+                    //删除旧关联表信息
                     for(int i=0;i<listLawsVal.size();i++){
                         String lawsValId = listLawsVal.get(i).getId();
                         sarLawsValEODao.deleteByValId(lawsValId);

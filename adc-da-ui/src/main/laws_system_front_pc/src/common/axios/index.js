@@ -43,7 +43,11 @@ module.exports = {
       if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
-        if (_this) { if (res.data.message !== '') { _this.$Message[type](res.data.message) } }
+        if (_this) {
+          if (res.data.message !== '') {
+            _this.$Message[type](res.data.message)
+          }
+        }
         if (res.data.ok) {
           thenFun.call(this, res.data)
         }
@@ -81,10 +85,12 @@ module.exports = {
       if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
-        if (_this) { if (res.data.message !== '') { _this.$Message[type](res.data.message) } }
-        if (res.data.ok) {
-          thenFun.call(this, res.data)
+        if (_this && res.data.message !== '') {
+          _this.$Message[type](res.data.message)
         }
+      }
+      if (res.data.ok) {
+        thenFun.call(this, res.data)
       }
     }).catch(err => {
       if (_this && loading) {
@@ -223,7 +229,9 @@ module.exports = {
       if (_this && loading) { _this[loading] = false }
       if (res.data.ok !== undefined) {
         let type = res.data.ok ? 'success' : 'warning'
-        if (_this) { if (res.data.message !== '') { _this.$Message[type](res.data.message) } }
+        if (_this && res.data.message !== '') {
+          _this.$Message[type](res.data.message)
+        }
         if (res.data.ok) {
           thenFun.call(this, res.data)
         }

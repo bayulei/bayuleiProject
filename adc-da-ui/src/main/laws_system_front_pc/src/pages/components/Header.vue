@@ -2,7 +2,7 @@
 <template>
   <header class="home-header">
     <router-link tag="div" class="logo" to="/" title="回到首页"></router-link>
-    <Icon @click.native="collapsedSider" class="menu-icon" :class="rotateIcon" :style="{marginLeft: '20px',cursor: 'pointer'}" type="md-menu" size="24"></Icon>
+    <Icon @click.native="collapsedSider" class="menu-icon" :class="rotateIcon" :style="{marginLeft: '20px',cursor: 'pointer'}" type="md-menu" size="24" v-show="$route.name !== 'Home'"></Icon>
     <ul class="home-nav">
       <router-link tag="li" v-for="topNav in topNavList" :key="topNav.name" :to="topNav.path">
         <span>{{ topNav.title }}</span>
@@ -89,14 +89,14 @@ export default {
           this.$router.push('/personal')
           break
         case 'logout':
-          this.$confirm({
-            title: '登出',
-            tips: '您确认要退出吗？',
-            confirm: () => {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '您确认要退出吗？',
+            onOk: () => {
               this.$store.commit('logout')
-              this.$Modal.remove()
               this.$router.push('/sign_in')
-            }
+            },
+            onCancel: () => {}
           })
           break
       }
@@ -158,7 +158,7 @@ export default {
         margin-right: 80px;
         text-align: center;
         transition: transform 0.3s linear;
-        font-weight: normal;
+        font-weight: 600;
         .un-select();
         .flex();
         justify-content: center;

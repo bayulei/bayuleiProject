@@ -46,6 +46,7 @@ const routes = [
   {
     path: '/',
     component: Home,
+    name: 'Home',
     meta: {
       requireAuth: true,
       title: '首页'

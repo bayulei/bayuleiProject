@@ -42,7 +42,7 @@
         and valid_flag ${validFlagOperator} #{validFlag}
       </if>
       <if test="searchContent != null" >
-        and search_content ${searchContentOperator} #{searchContent}
+        and search_content ${searchContentOperator} concat(concat('%',#{searchContent}),'%')
       </if>
       <if test="userId != null" >
         and user_id ${userIdOperator} #{userId}

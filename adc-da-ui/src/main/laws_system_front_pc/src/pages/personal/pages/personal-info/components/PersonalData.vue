@@ -49,6 +49,7 @@ export default {
     return {
       avator: require('assets/images/user-big-avator.png'),
       userInfo: {
+        id: '', // 数据ID
         account: '', // 用户名
         uName: '', // 姓名
         duty: '', // 任职部门
@@ -107,7 +108,18 @@ export default {
     },
     // 保存用户信息
     saveUserInfo () {
-
+      this.$http.putData('person/userInfo',
+        {
+          id: this.userInfo.id,
+          officePhone: this.userInfo.officePhone,
+          email: this.userInfo.email,
+          mobilePhone: this.userInfo.mobilePhone,
+          faxAddress: this.userInfo.faxAddress,
+          signature: this.userInfo.signature,
+          userPic: this.userInfo.userPic
+        }, {_this: this}, res => {
+          console.log(res)
+        })
     },
     searchPersonal () {
       this.$http.get('person/userInfo/getByUserInfoCode', {
