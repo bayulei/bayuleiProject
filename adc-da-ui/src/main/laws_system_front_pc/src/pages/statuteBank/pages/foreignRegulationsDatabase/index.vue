@@ -88,9 +88,11 @@
           <input v-model="SarLawsInfoEO.editLawsId" v-show="false">
           <Row>
             <Col span="12">
-            <FormItem label="国家/地区" prop="country" class="laws-info-item">
-              <Input v-model="SarLawsInfoEO.country" disabled="disabled"></Input>
-            </FormItem>
+              <FormItem label="国家/地区" prop="country" class="laws-info-item">
+                <Select v-model="SarLawsInfoEO.country">
+                  <Option v-for="opt in countryOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</Option>
+                </Select>
+              </FormItem>
             </Col>
             <Col span="12">
             <FormItem label="文件性质" prop="lawsProperty" class="laws-info-item">

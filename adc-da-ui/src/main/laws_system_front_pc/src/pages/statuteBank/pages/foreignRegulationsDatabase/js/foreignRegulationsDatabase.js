@@ -44,7 +44,7 @@ export default {
       },
       SarLawsInfoEO: {
         editLawsId: '',
-        country: '中国',
+        country: '',
         lawsProperty: '',
         lawsNumber: '',
         lawsName: '',
@@ -183,6 +183,7 @@ export default {
       applyArcticOptions: '',
       energyKindOptions: '',
       applyAuthOptions: '',
+      countryOptions: '',
       SarMenuEOFormRules: {},
       lawsInfoRules: {},
       lawsInfoFormRules: {
@@ -277,6 +278,9 @@ export default {
       if (name === 'addMenu') {
         this.showMenuModal = true
         this.showMenuTitle = '新增菜单'
+        this.SarMenuEO.id = ''
+        this.SarMenuEO.menuName = ''
+        this.SarMenuEO.displaySeq = ''
         this.SarMenuEO.sorDivide = 'FOREIGN_LAWS'
       } else if (name === 'editMenu') {
         this.showMenuModal = true
@@ -672,6 +676,18 @@ export default {
       }, e => {
       })
     },
+    loadDicTypeDatas6 () {
+      this.$http.get('sys/dictype/getDicTypeByDicCode', {
+        dicCode: 'COUNTRY'
+      }, {
+        _this: this
+      }, res => {
+        if (res.data != null) {
+          this.countryOptions = res.data
+        }
+      }, e => {
+      })
+    },
     // 列表相关方法
     handleSelectAll (checked) {
       // 全部选中
@@ -766,6 +782,7 @@ export default {
     }
     this.searchLawsInfo()
     this.loadInfoTree()
+    this.loadDicTypeDatas6()
     this.loadDicTypeDatas1()
     this.loadDicTypeDatas2()
     this.loadDicTypeDatas3()

@@ -44,7 +44,7 @@ export default {
       },
       SarLawsInfoEO: {
         editLawsId: '',
-        country: '中国',
+        country: 'CN',
         lawsProperty: '',
         lawsNumber: '',
         lawsName: '',
@@ -183,6 +183,9 @@ export default {
       applyArcticOptions: '',
       energyKindOptions: '',
       applyAuthOptions: '',
+      countryOptions: [
+        {label: '中国', value: 'CN'}
+      ],
       SarMenuEOFormRules: {},
       lawsInfoRules: {},
       lawsInfoFormRules: {
