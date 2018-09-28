@@ -88,6 +88,7 @@ public class AttFileEOController extends BaseController<AttFileEO>{
 
     @ApiOperation(value="|File|上传文件")
     @PostMapping(value="/upload",consumes="multipart/*",headers="content-type=multipart/form-data" )
+    @CrossOrigin(origins = "*", maxAge = 3600)
     public ResponseMessage<AttFileVo> uploadFile(@RequestParam("file") @ApiParam(value="上传文件",required=true) MultipartFile file) throws Exception{
     	
     	AttFileVo fileInfo = attFileEOService.saveFileInfo(file);
@@ -96,9 +97,10 @@ public class AttFileEOController extends BaseController<AttFileEO>{
 
     @ApiOperation(value="|File|上传文件")
     @PostMapping(value="/uploadFiles",consumes="multipart/*",headers="content-type=multipart/form-data" )
+    @CrossOrigin(origins = "*", maxAge = 3600)
     public ResponseMessage<List<AttFileVo>> uploadFile(@RequestParam("files") @ApiParam(value="上传文件",required=true) MultipartFile[] files) throws Exception{
        List<AttFileVo> fileInfoList= attFileEOService.saveFilesInfo(files);
         return Result.success(fileInfoList);
     }
-    
+
 }

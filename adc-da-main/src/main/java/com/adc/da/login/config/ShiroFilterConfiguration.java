@@ -52,6 +52,8 @@ public class ShiroFilterConfiguration {
         filterChainDefinitionMap.put(restPath + "/updateUserInfo", "anon");
         filterChainDefinitionMap.put(restPath + "/updatePassword", "anon");
         filterChainDefinitionMap.put(restPath + "/user/supplierRegistry/*", "anon");
+        filterChainDefinitionMap.put(restPath + "/att/attFile/upload", "anon");
+        filterChainDefinitionMap.put(restPath + "/att/attFile/uploadFiles", "anon");
         filterChainDefinitionMap.put("/api/**", "authc");
         filterChainDefinitionMap.put("/app/**", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
