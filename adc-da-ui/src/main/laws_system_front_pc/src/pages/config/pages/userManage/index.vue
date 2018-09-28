@@ -401,7 +401,13 @@ export default {
         {_this: this, loading: 'loading'},
         res => {
           if (res.ok) {
-            this.userList = res.data.list
+            let userList = []
+            for (let i = 0; i < res.data.list.length; i++) {
+              if (res.data.list[i].account !== 'admin') {
+                userList.push(res.data.list[i])
+              }
+            }
+            this.userList = userList
             this.pageNo = res.data.pageNo
             this.total = res.data.count
           }
