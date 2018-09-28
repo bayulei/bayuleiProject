@@ -67,7 +67,7 @@
       <Divider></Divider>
       <div class="content">
         <loading :loading="loading">正在获取用户列表</loading>
-        <Table border ref="selection" :columns="deptEmpColumns" :data="deptEmpData" v-if="deptEmpData.length > 0"></Table>
+        <Table border ref="selection" :height="tableHeight" :columns="deptEmpColumns" :data="deptEmpData" v-if="deptEmpData.length > 0"></Table>
         <hasNoData pClass="content" tips="未获取到组织机构" v-else></hasNoData>
       </div>
       <pagination :total="total"></pagination>
@@ -362,7 +362,8 @@ export default {
       orgId: '', // 组织机构id
       page: 1,
       rows: 10,
-      total: 0
+      total: 0,
+      tableHeight: 600
     }
   },
   methods: {
@@ -395,6 +396,14 @@ export default {
               zNodes[i] = zObj
             }
           }
+          zNodes.push({
+            id: '404',
+            pId: null,
+            name: '未分配人员',
+            shotName: '',
+            remarks: '',
+            isParent: true
+          })
           this.zNodes = zNodes
         }
       }, e => {})
@@ -442,6 +451,8 @@ export default {
      * @date: 2018-09-25 15:59:40
      */
     findByOrg () {
+      this.deptEmpData = []
+      this.total = 0
       this.$http.get('sys/user/findByOrg', {
         id: this.orgId,
         page: this.page,
@@ -481,6 +492,16 @@ export default {
   },
   mounted () {
     let _this = this
+    this.$nextTick(() => {
+      let tableHeight = $('.content').css('height')
+      let height = parseInt(tableHeight.substring(0, tableHeight.indexOf('p'))) - 130
+      this.tableHeight = height
+      window.onresize = function () {
+        let tableHeight = $('.content').css('height')
+        let height = parseInt(tableHeight.substring(0, tableHeight.indexOf('p'))) - 130
+        _this.tableHeight = height
+      }
+    })
     // 获取组织结构树
     this.getTree()
     var setting = {
@@ -575,7 +596,7 @@ export default {
     }
     function addHoverDom (treeId, treeNode) {
       var sObj = $('#' + treeNode.tId + '_span')
-      if (treeNode.editNameFlag || $('#addBtn_' + treeNode.tId).length > 0) return
+      if (treeNode.editNameFlag || $('#addBtn_' + treeNode.tId).length > 0 || treeNode.id === '404') return
       var addStr = "<span class='button add' id='addBtn_" + treeNode.tId +
         "' title='节点新增' onfocus='this.blur();'></span>"
       sObj.after(addStr)

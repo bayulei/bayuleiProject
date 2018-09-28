@@ -30,6 +30,15 @@ public class TakeAdviceVO extends ApprovalProcessVO {
 
     Map<String, List<TakeAdviceEngineersOpinionVO>> suggestMap = new HashMap<>();
 
+    private  List<String> commentList = new ArrayList<>();
+
+    public List<String> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<String> commentList) {
+        this.commentList = commentList;
+    }
 
     public String getComment() {
         return comment;

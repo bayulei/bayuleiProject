@@ -89,7 +89,7 @@ public class TakeAdviceController {
 
     @ApiOperation(value = "根据任务id查询流程变量")
     @PostMapping ("/queryProcessVariable")
-    public ResponseMessage<Map<String,Object>> queryProcessVariable(String taskId) throws Exception {
+    public ResponseMessage<TakeAdviceVO> queryProcessVariable(String taskId) throws Exception {
         return takeAdviceService.queryProcessVariable(taskId);
     }
 }

@@ -2,7 +2,10 @@ package com.adc.da.person.service;
 
 import com.adc.da.base.page.BasePage;
 import com.adc.da.sys.dao.UserEODao;
+import com.adc.da.sys.dao.UserRoleEODao;
 import com.adc.da.sys.entity.UserEO;
+import com.adc.da.util.http.ResponseMessage;
+import com.adc.da.util.http.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.person.dao.UserInfoEODao;
 import com.adc.da.person.entity.UserInfoEO;
+
+import java.util.List;
 
 
 /**
@@ -43,9 +48,16 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
         return userEODao;
     }
 
+    /**
+     * @Author liuyinnan
+     * @Description 根据用户ID获取用户信息
+     * @Date 19:19 2018/9/26
+     * @Param [userId]
+     * @return com.adc.da.person.entity.UserInfoEO
+     **/
     public UserInfoEO getUserEOAndInfoEOByUserCode(String userId){
         UserInfoEO userInfoEO= dao.getUserInfoByUserId(userId);
-        UserEO userEO= userEODao.selectByPrimaryKey(userId);
+        UserEO userEO= userEODao.selectOrgByPrimaryKey(userId);
         if(userInfoEO ==null){
             userInfoEO=new UserInfoEO();
         }
@@ -56,6 +68,7 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
         }
         return userInfoEO;
     }
+
 
     public UserInfoEO getUserInfoEOByUserInfoId(String userId){
         return null;
@@ -70,4 +83,16 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
         return null;
     }
 
+
+
+    public ResponseMessage updateByUserId(UserInfoEO userInfo){
+        int userInfoEO=dao.updateByPrimaryKeySelective(userInfo);
+        UserEO userEO = new UserEO();
+        userEO.setUsid(userInfo.getUserId());
+        userEO.setEmail(userInfo.getEmail());
+        int userEO1=userEODao.updateByPrimaryKeySelective(userEO);
+        return Result.success();
+    }
 }
+
+

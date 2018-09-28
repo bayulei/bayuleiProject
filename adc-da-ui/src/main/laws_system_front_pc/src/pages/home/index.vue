@@ -41,12 +41,12 @@
               </dl>
             </router-link>
             <!-- 企业标准库 -->
-            <div class="nav-left-top nav-item" id="enterpriseStandardLaw">
+            <router-link tag="div" class="nav-left-top nav-item" id="enterpriseStandardLaw" to="/enterpriseStandardDatabase">
               <dl>
                 <dt class="nav-icon iconfont">&#xe6ee;</dt>
                 <dd>企业标准库</dd>
               </dl>
-            </div>
+            </router-link>
             <!-- 流程中心 -->
             <router-link tag="div" class="nav-left-top nav-item" id="processCenter" to="/processCenter">
               <dl>

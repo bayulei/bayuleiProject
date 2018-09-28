@@ -5,19 +5,19 @@
     <Form ref="msgDynamicInfoVO" :model="msgDynamicInfoVO" :rules="msgDynamicInfoVOFormRules" label-position="right" class="label-input-form">
       <input v-model="msgDynamicInfoVO.id" v-show="false">
       <Row>
-        <Col span="8" >
+        <Col span="12" >
           <FormItem label="动态标题" prop="title" class="laws-info-item">
             <Input v-model="msgDynamicInfoVO.title" style="width: 200px"></Input>
           </FormItem>
         </Col>
-        <Col span="8" >
+        <Col span="12" >
           <FormItem label="发布时间" prop="pubTime" class="laws-info-item">
             <DatePicker v-model="msgDynamicInfoVO.pubTime"  type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="请选择" style="width: 200px"></DatePicker>
           </FormItem>
         </Col>
       </Row>
       <Row>
-        <Col span="8" >
+        <Col span="12" >
           <FormItem label="消息模块" prop="msgType" class="laws-info-item">
             <Select v-model="msgDynamicInfoVO.msgType" @on-change="msgTypeChange" style="width:200px">
               <Option v-for="item in msgTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -27,7 +27,7 @@
             </Select>
           </FormItem>
         </Col>
-        <Col span="8" >
+        <Col span="12" >
           <FormItem label="发布机构" prop="pubOrg" class="laws-info-item">
             <Input  v-model="msgDynamicInfoVO.pubOrg" style="width: 200px"/>
           </FormItem>

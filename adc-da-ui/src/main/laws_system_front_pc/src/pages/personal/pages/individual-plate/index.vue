@@ -12,12 +12,12 @@
         @on-selected-change="selectedChange"
         filterable>
       </Transfer>
-    </div>
     <div class="btn-group">
       <Button type="primary" @click="reloadMockData()">上移</Button>
       <Button type="primary" @click="reloadMockData" style="margin-left: 0.5rem;">下移</Button>
     </div>
       <Button type="primary" class="saveBtn" @click="savePersonal">保存修改</Button>
+    </div>
   </div>
 </template>
 
@@ -40,8 +40,8 @@ export default {
       targetKeys: [],
       // list-style两个穿梭框的自定义样式
       listStyle: {
-        width: '6rem',
-        height: '11rem'
+        width: '5rem',
+        height: '8rem'
       }
     }
   },
@@ -69,25 +69,26 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   .individual-plate{
     background: #FFF;
     padding: 0.2rem 0.3rem;
     .container{
-      margin: 1rem 7rem;
+      margin: 0.4rem 3rem;
       }
   }
     .btn-group{
-      float: right;
-      position: absolute;
-      /*margin:0rem 12rem;*/
-      left: 15rem;
+      width: 100%;
+      /*float: right;*/
+      /*position: absolute;*/
+      margin:1rem 6.5rem;
+      /*left: 15rem;*/
     }
     .btn-group Button{
-      width: 2.5rem;
+      width: 2rem;
       }
     .saveBtn{
-      margin: 1rem 12rem;
+      margin: 0 4rem;
       width: 4rem;
     }
 

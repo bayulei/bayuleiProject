@@ -20,8 +20,8 @@ public class SarBussionessStandEOPage extends BasePage {
     private String creationTime1;
     private String creationTime2;
     private String creationTimeOperator = "=";
-    private String validTime;
-    private String validTimeOperator = "=";
+    private String validFlag;
+    private String validFlagOperator = "=";
     private String putUser;
     private String putUserOperator = "=";
     private String citationUser;
@@ -139,20 +139,20 @@ public class SarBussionessStandEOPage extends BasePage {
         this.creationTimeOperator = creationTimeOperator;
     }
 
-    public String getValidTime() {
-        return this.validTime;
+    public String getValidFlag() {
+        return this.validFlag;
     }
 
-    public void setValidTime(String validTime) {
-        this.validTime = validTime;
+    public void setValidFlag(String validFlag) {
+        this.validFlag = validFlag;
     }
 
-    public String getValidTimeOperator() {
-        return this.validTimeOperator;
+    public String getValidFlagOperator() {
+        return this.validFlagOperator;
     }
 
-    public void setValidTimeOperator(String validTimeOperator) {
-        this.validTimeOperator = validTimeOperator;
+    public void setValidFlagOperator(String validFlagOperator) {
+        this.validFlagOperator = validFlagOperator;
     }
 
     public String getPutUser() {

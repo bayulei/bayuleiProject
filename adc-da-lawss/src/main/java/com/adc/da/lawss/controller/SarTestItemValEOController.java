@@ -34,7 +34,7 @@ public class SarTestItemValEOController extends BaseController<SarTestItemValEO>
 
 	@ApiOperation(value = "|SarTestItemValEO|分页查询")
     @GetMapping("/page")
-    @RequiresPermissions("lawss:sarTestItemVal:page")
+//    @RequiresPermissions("lawss:sarTestItemVal:page")
     public ResponseMessage<PageInfo<SarTestItemValEO>> page(SarTestItemValEOPage page) throws Exception {
         List<SarTestItemValEO> rows = sarTestItemValEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
@@ -42,21 +42,21 @@ public class SarTestItemValEOController extends BaseController<SarTestItemValEO>
 
 	@ApiOperation(value = "|SarTestItemValEO|查询")
     @GetMapping("")
-    @RequiresPermissions("lawss:sarTestItemVal:list")
+//    @RequiresPermissions("lawss:sarTestItemVal:list")
     public ResponseMessage<List<SarTestItemValEO>> list(SarTestItemValEOPage page) throws Exception {
         return Result.success(sarTestItemValEOService.queryByList(page));
 	}
 
     @ApiOperation(value = "|SarTestItemValEO|详情")
     @GetMapping("/{id}")
-    @RequiresPermissions("lawss:sarTestItemVal:get")
+//    @RequiresPermissions("lawss:sarTestItemVal:get")
     public ResponseMessage<SarTestItemValEO> find(@PathVariable String id) throws Exception {
         return Result.success(sarTestItemValEOService.selectByPrimaryKey(id));
     }
 
     @ApiOperation(value = "|SarTestItemValEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("lawss:sarTestItemVal:save")
+//    @RequiresPermissions("lawss:sarTestItemVal:save")
     public ResponseMessage<SarTestItemValEO> create(@RequestBody SarTestItemValEO sarTestItemValEO) throws Exception {
         sarTestItemValEOService.insertSelective(sarTestItemValEO);
         return Result.success(sarTestItemValEO);
@@ -64,7 +64,7 @@ public class SarTestItemValEOController extends BaseController<SarTestItemValEO>
 
     @ApiOperation(value = "|SarTestItemValEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("lawss:sarTestItemVal:update")
+//    @RequiresPermissions("lawss:sarTestItemVal:update")
     public ResponseMessage<SarTestItemValEO> update(@RequestBody SarTestItemValEO sarTestItemValEO) throws Exception {
         sarTestItemValEOService.updateByPrimaryKeySelective(sarTestItemValEO);
         return Result.success(sarTestItemValEO);

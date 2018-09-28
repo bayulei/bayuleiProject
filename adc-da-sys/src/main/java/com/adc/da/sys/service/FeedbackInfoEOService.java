@@ -13,7 +13,6 @@ import com.adc.da.sys.entity.FeedbackInfoEO;
 
 
 /**
- *
  * <br>
  * <b>功能：</b>TS_FEEDBACK_INFO FeedbackInfoEOService<br>
  * <b>作者：</b>code generator<br>
@@ -32,5 +31,6 @@ public class FeedbackInfoEOService extends BaseService<FeedbackInfoEO, String> {
     public FeedbackInfoEODao getDao() {
         return dao;
     }
+
 
 }

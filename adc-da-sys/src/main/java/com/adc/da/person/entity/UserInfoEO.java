@@ -1,8 +1,12 @@
 package com.adc.da.person.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import com.adc.da.sys.entity.UserEO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <b>功能：</b>TS_USER_INFO UserInfoEOEntity<br>
@@ -12,12 +16,15 @@ import java.util.Date;
  */
 public class UserInfoEO extends BaseEntity {
 
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    //@org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    //@org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+
     private Date creationTime;
     private Integer validFlag;
-    private Object signature;
+    private String signature;
     private String faxAddress;
     private String address;
     private Integer gender;
@@ -30,14 +37,12 @@ public class UserInfoEO extends BaseEntity {
     private String duty;
     private String userId;
     private String id;
-//    追加字段
+    //    追加字段
     private String account;
     private String uName;
     private String email;
 
-    //刘寅楠
-//    protected List<UserEO> userEOList=new ArrayList<>();
-//    public UserEO userEO = new UserEO();
+
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -62,23 +67,40 @@ public class UserInfoEO extends BaseEntity {
     public static String fieldToColumn(String fieldName) {
         if (fieldName == null) return null;
         switch (fieldName) {
-            case "modifyTime": return "modify_time";
-            case "creationTime": return "creation_time";
-            case "validFlag": return "valid_flag";
-            case "signature": return "signature";
-            case "faxAddress": return "fax_address";
-            case "address": return "address";
-            case "gender": return "gender";
-            case "partPost": return "part_post";
-            case "assistantPost": return "assistant_post";
-            case "mainPost": return "main_post";
-            case "mobilePhone": return "mobile_phone";
-            case "officePhone": return "office_phone";
-            case "userPic": return "user_pic";
-            case "duty": return "duty";
-            case "userId": return "user_id";
-            case "id": return "id";
-            default: return null;
+            case "modifyTime":
+                return "modify_time";
+            case "creationTime":
+                return "creation_time";
+            case "validFlag":
+                return "valid_flag";
+            case "signature":
+                return "signature";
+            case "faxAddress":
+                return "fax_address";
+            case "address":
+                return "address";
+            case "gender":
+                return "gender";
+            case "partPost":
+                return "part_post";
+            case "assistantPost":
+                return "assistant_post";
+            case "mainPost":
+                return "main_post";
+            case "mobilePhone":
+                return "mobile_phone";
+            case "officePhone":
+                return "office_phone";
+            case "userPic":
+                return "user_pic";
+            case "duty":
+                return "duty";
+            case "userId":
+                return "user_id";
+            case "id":
+                return "id";
+            default:
+                return null;
         }
     }
 
@@ -105,26 +127,43 @@ public class UserInfoEO extends BaseEntity {
     public static String columnToField(String columnName) {
         if (columnName == null) return null;
         switch (columnName) {
-            case "modify_time": return "modifyTime";
-            case "creation_time": return "creationTime";
-            case "valid_flag": return "validFlag";
-            case "signature": return "signature";
-            case "fax_address": return "faxAddress";
-            case "address": return "address";
-            case "gender": return "gender";
-            case "part_post": return "partPost";
-            case "assistant_post": return "assistantPost";
-            case "main_post": return "mainPost";
-            case "mobile_phone": return "mobilePhone";
-            case "office_phone": return "officePhone";
-            case "user_pic": return "userPic";
-            case "duty": return "duty";
-            case "user_id": return "userId";
-            case "id": return "id";
-            default: return null;
+            case "modify_time":
+                return "modifyTime";
+            case "creation_time":
+                return "creationTime";
+            case "valid_flag":
+                return "validFlag";
+            case "signature":
+                return "signature";
+            case "fax_address":
+                return "faxAddress";
+            case "address":
+                return "address";
+            case "gender":
+                return "gender";
+            case "part_post":
+                return "partPost";
+            case "assistant_post":
+                return "assistantPost";
+            case "main_post":
+                return "mainPost";
+            case "mobile_phone":
+                return "mobilePhone";
+            case "office_phone":
+                return "officePhone";
+            case "user_pic":
+                return "userPic";
+            case "duty":
+                return "duty";
+            case "user_id":
+                return "userId";
+            case "id":
+                return "id";
+            default:
+                return null;
         }
     }
-    
+
     /**  **/
     public Date getModifyTime() {
         return this.modifyTime;
@@ -155,13 +194,11 @@ public class UserInfoEO extends BaseEntity {
         this.validFlag = validFlag;
     }
 
-    /**  **/
-    public Object getSignature() {
-        return this.signature;
+    public String getSignature() {
+        return signature;
     }
 
-    /**  **/
-    public void setSignature(Object signature) {
+    public void setSignature(String signature) {
         this.signature = signature;
     }
 
@@ -309,19 +346,6 @@ public class UserInfoEO extends BaseEntity {
         this.email = email;
     }
 
-//    public List<UserEO> getUserEOList() {
-//        return userEOList;
-//    }
-//
-//    public void setUserEOList(List<UserEO> userEOList) {
-//        this.userEOList = userEOList;
-//    }
 
-//    public UserEO getUserEO() {
-//        return userEO;
-//    }
-//
-//    public void setUserEO(UserEO userEO) {
-//        this.userEO = userEO;
-//    }
+
 }

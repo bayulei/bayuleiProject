@@ -63,10 +63,10 @@ public class OtConvertMqEOController extends BaseController<OtConvertMqEO>{
 	}
 
     @ApiOperation(value = "|OtConvertMqEO|详情")
-    @GetMapping("/{id}")
+    @GetMapping("/getConvertDetail")
     /*@RequiresPermissions("convert:otConvertMq:get")*/
-    public ResponseMessage<OtConvertMqEO> find(@PathVariable String id) throws Exception {
-        OtConvertMqEO convertMqEO = otConvertMqEOService.selectByPrimaryKey(id);
+    public ResponseMessage<OtConvertMqEO> find(@RequestParam("convertId") String convertId) throws Exception {
+        OtConvertMqEO convertMqEO = otConvertMqEOService.selectByPrimaryKey(convertId);
         if(convertMqEO.getMqState() == 0){
             return Result.error("正在转换，请稍后再试！");
         } else if(convertMqEO.getMqState() == 1){

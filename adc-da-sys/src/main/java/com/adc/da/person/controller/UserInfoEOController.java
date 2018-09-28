@@ -3,15 +3,10 @@ package com.adc.da.person.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.List;
-import java.util.Map;
 
-
-import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.util.LoginUserUtil;
 import com.adc.da.sys.util.UUIDUtils;
-import com.adc.da.util.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +58,9 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
      */
     @ApiOperation(value = "查找用户信息接口")
     @GetMapping("/getByUserInfoCode")
-    public ResponseMessage<UserInfoEO> getByUserInfoCode() throws Exception {
-        String userId= LoginUserUtil.getUserId();
+    public ResponseMessage<UserInfoEO> getByUserInfoCode(String userId) throws Exception {
+        //获取当前登录人
+        //String userId= LoginUserUtil.getUserId();
         UserInfoEO userInfoEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
         return Result.success(userInfoEO);
     }
@@ -84,13 +80,6 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
         }
         return Result.success(userInfoEOByUserInfoId);
     }
-
-/*    @ApiOperation(value = "|UserInfoEO|详情")
-    @GetMapping("/{id}")
-    @RequiresPermissions("person:userInfo:get")
-    public ResponseMessage<UserInfoEO> find(@PathVariable String id) throws Exception {
-        return Result.success(userInfoEOService.selectByPrimaryKey(id));
-    }*/
 
 
     /**
@@ -132,15 +121,16 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
      * @Param [userInfoEO, restPath]
      * @return com.adc.da.util.http.ResponseMessage
      **/
-    @ApiOperation(value = "|UserInfoEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "保存修改用户信息")
+    @PostMapping(value = "/updatePersonInfo")
     //@RequiresPermissions("person:userInfo:update")
-    public ResponseMessage update(@RequestBody UserInfoEO userInfoEO, @PathVariable("restPath") String restPath) throws Exception {
+    public ResponseMessage update(UserInfoEO userInfoEO) throws Exception {
+        userInfoEO.setUserId(LoginUserUtil.getUserId());
         if(StringUtils.isBlank(userInfoEO.getOfficePhone())){
             return Result.error("r0018","电话号码不能为空");
         }
-        if(StringUtils.isBlank(userInfoEO.getAddress())){
-            return Result.error("r0019","个人邮箱地址不能为空");
+        if(StringUtils.isBlank(userInfoEO.getEmail())){
+            return Result.error("r0019","个人邮箱不能为空");
         }
         if(StringUtils.isBlank(userInfoEO.getMobilePhone())){
             return Result.error("r0020","手机号码不能为空");
@@ -148,8 +138,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
         if(StringUtils.isBlank(userInfoEO.getFaxAddress())){
             return Result.error("r0021","传真地址不能为空");
         }
-
-        return Result.success(userInfoEOService.updateById(userInfoEO));
+        return Result.success(userInfoEOService.updateByUserId(userInfoEO));
     }
 
 
@@ -161,6 +150,16 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
         userInfoEOService.deleteByPrimaryKey(id);
         logger.info("delete from TS_USER_INFO where id = {}", id);
         return Result.success();
+    }
+
+
+
+
+    @ApiOperation(value = "保存用户信息")
+    @PutMapping("/updateByUserInfo")
+    public ResponseMessage updateByUserInfo(UserInfoEO userInfoEO)throws Exception{
+        String userId= LoginUserUtil.getUserId();
+        return userInfoEOService.updateByUserId(userInfoEO);
     }
 
 }

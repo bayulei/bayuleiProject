@@ -68,7 +68,4 @@ public class PersonNoteEOService extends BaseService<PersonNoteEO, String> {
     }
 
 
-    public Integer deleteByCollectId(String collectId){
-        return  dao.deleteByCollectId(collectId);
-    }
 }

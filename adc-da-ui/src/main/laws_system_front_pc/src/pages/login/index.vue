@@ -24,6 +24,7 @@
       <div class="login-btn" @click="signin">
         <img src="../../assets/images/login/login-btn.png" alt="">
       </div>
+      <loading :loading="loading">正在登录...</loading>
     </div>
     <div class="login-footer">
       <div class="comp">
@@ -49,7 +50,8 @@ export default {
       loginBtn: require('assets/images/login/login-btn.png'), // 登录按钮,
       logoSm: require('assets/images/home/logo_sm.png'),
       username: '',
-      password: ''
+      password: '',
+      loading: false
     }
   },
   methods: {
@@ -68,11 +70,16 @@ export default {
       }
     },
     loginUser (userName, PWD) {
-      this.$http.post('/login',
+      this.loading = true
+      this.$http.post('login',
         {
           username: userName,
           password: PWD
-        }, {_this: this}, res => {
+        }, {
+          _this: this,
+          loading: 'loading'
+        }, res => {
+          this.loading = false
           if (res.ok) {
             this.setToken(res.data.usid)
             this.$router.push('/')
@@ -81,7 +88,7 @@ export default {
           } else {
             this.$Message.error(res.message)
           }
-        })
+        }, e => {})
     },
     /**
      * @description: vuex拓展方法

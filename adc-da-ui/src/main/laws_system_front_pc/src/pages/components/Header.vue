@@ -45,8 +45,8 @@ export default {
         // },
         {
           title: '本地资源库',
-          path: '/bendiziyuanku',
-          name: 'bendiziyuanku'
+          path: '/statuteBank',
+          name: 'StatuteBank'
         },
         {
           title: '数据报表',
@@ -57,6 +57,11 @@ export default {
           title: '分析工具',
           path: '/fenxigongju',
           name: 'fenxigongju'
+        },
+        {
+          title: '标准团队',
+          path: '/standardTeam',
+          name: 'StandardTeam'
         },
         {
           title: '配置管理',
@@ -89,14 +94,14 @@ export default {
           this.$router.push('/personal')
           break
         case 'logout':
-          this.$confirm({
-            title: '登出',
-            tips: '您确认要退出吗？',
-            confirm: () => {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '您确认要退出吗？',
+            onOk: () => {
               this.$store.commit('logout')
-              this.$Modal.remove()
               this.$router.push('/sign_in')
-            }
+            },
+            onCancel: () => {}
           })
           break
       }
@@ -150,15 +155,15 @@ export default {
     .home-nav{
       flex: 1;
       .flex();
-      padding: 0 5% 0 7%;
+      padding-left: 30px;
       height: 86.6%;
       li{
         color: #FFF;
         font-size: 16px;
-        margin-right: 80px;
+        margin-right: 65px;
         text-align: center;
         transition: transform 0.3s linear;
-        font-weight: normal;
+        font-weight: 600;
         .un-select();
         .flex();
         justify-content: center;
@@ -189,9 +194,9 @@ export default {
     }
     @media screen and (max-width: 1366px) {
       .home-nav{
-        padding: 0 2.5% 0 6% !important;
+        padding-left: 30px;
         li{
-          margin-right: 45px !important;
+          margin-right: 25px !important;
         }
       }
       .header-right{
