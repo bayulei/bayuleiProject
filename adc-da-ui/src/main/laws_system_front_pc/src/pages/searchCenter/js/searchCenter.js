@@ -4,8 +4,6 @@ export default {
   name: 'index',
   data () {
     return {
-      selectKey: '',
-      selectValue: '',
       selectinfoList: [], // 记录查询出来的结果
       searchInfoEO: {
         page: 1,
@@ -39,6 +37,10 @@ export default {
       this.searchInfoEO.pageSize = pageSize
       this.getStandardLawsTable()
       // 此处需要调用接口，修改个人配置
+    },
+    // 点击查询按钮
+    searchCenteric () {
+      this.getStandardLawsTable()
     }
   },
   components: {

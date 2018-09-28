@@ -312,7 +312,7 @@
   </select>
 
     <select id="selectStandLawsByKey" resultMap="BaseStandResultMap" parameterType="com.adc.da.lawss.page.SarProductInfoEOPage">
-        SELECT
+    SELECT
 	sps.*,
 	ssi.STAND_SORT || ' ' || ssi.STAND_NUMBER || '-' || ssi.STAND_YEAR AS shownumber,
 	ssi.country,

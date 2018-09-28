@@ -108,21 +108,23 @@ export default {
     },
     // 保存用户信息
     saveUserInfo () {
-        this.$http.putData('person/userInfo',
-          {
-            id:this.userInfo.id,
-            officePhone: this.userInfo.officePhone,
-            email: this.userInfo.email,
-            mobilePhone: this.userInfo.mobilePhone,
-            faxAddress: this.userInfo.faxAddress,
-            signature: this.userInfo.signature,
-            userPic: this.userInfo.userPic
-          },{_this:this},res =>{
-              console.log(res)
-          })
+      this.$http.putData('person/userInfo',
+        {
+          id: this.userInfo.id,
+          officePhone: this.userInfo.officePhone,
+          email: this.userInfo.email,
+          mobilePhone: this.userInfo.mobilePhone,
+          faxAddress: this.userInfo.faxAddress,
+          signature: this.userInfo.signature,
+          userPic: this.userInfo.userPic
+        }, {_this: this}, res => {
+          console.log(res)
+        })
     },
     searchPersonal () {
-      this.$http.get('person/userInfo/getByUserInfoCode', {}, {
+      this.$http.get('person/userInfo/getByUserInfoCode', {
+        userId: 'QJX2Z8E678'
+      }, {
         _this: this,
         loading: 'loading'
       }, res => {
@@ -171,7 +173,7 @@ export default {
       width: 16.28rem;
       float: left;
       min-height: 400px;
-      margin: -5.6rem 0 0 6.75rem;
+      margin: -5.6rem 0 0 7.75rem;
       .save{
         width: 4.24rem;
         height: 0.72rem;

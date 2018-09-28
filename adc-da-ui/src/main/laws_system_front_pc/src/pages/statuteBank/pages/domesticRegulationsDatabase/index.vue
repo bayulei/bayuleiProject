@@ -29,6 +29,8 @@
         <Button type="info" size="small" @click="exportLawsInfo">导出</Button>
         <Button type="primary" @click="openLawsModal">新增</Button>
         <Button type="primary" @click="modal2 = true">导入</Button>
+        <Button type="primary" @click="convertModal = true">在线转换</Button>
+        <Button type="primary" @click="showDocOnline">在线查看</Button>
       </div>
 
       <div class="content-detail" v-if="browseList.length > 0">
@@ -197,6 +199,14 @@
        </FormItem>
      </Form>
    </Modal>
+
+     <Modal v-model="convertModal" title="在线查看" @on-ok="convertDocOnline" @on-cancel="convertModal = false">
+       <Form ref="lawsInfoConvert" :model="lawsInfoConvert" :label-width="80">
+         <FormItem label="文件" prop="fileName" class="laws-info-item">
+           <input type="file" ref="convertFile" id="convertFile">
+         </FormItem>
+       </Form>
+     </Modal>
 
    <!--查看分解单模态框-->
    <Drawer title="查看分解单" v-model="showLawsItemsModal" width="900">

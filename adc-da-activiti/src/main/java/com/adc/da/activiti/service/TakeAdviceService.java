@@ -164,6 +164,15 @@ public class TakeAdviceService {
             runtimeService.setVariableLocal(task.getExecutionId(), "childrenExecutionId", task.getExecutionId());
 
             taskService.complete(taskId);
+            //查询此时任务
+            List<Task> taskList = taskService.createTaskQuery().processInstanceId(task.getProcessInstanceId())
+                    .taskDescription(task.getExecutionId()).list();
+
+            //为此时的 任务设置parentTaskId
+            for (Task taskNow : taskList){
+                taskNow.setParentTaskId(taskId);
+                taskService.saveTask(taskNow);
+            }
 
             //更新业务流程主表
             BusProcessEO busProcessEO = new BusProcessEO();
@@ -183,6 +192,7 @@ public class TakeAdviceService {
                 //判断此任务是否被委托，是则确认委托结果
                 taskService.resolveTask(taskId);
             }
+            runtimeService.setVariableLocal(task.getExecutionId(), "engineerTotal", -1);
 
             //此流程默认驳回到起点
             String destTaskKey = "usertask1";
@@ -320,12 +330,18 @@ public class TakeAdviceService {
         String taskId = task.getId();
 
         //设置流程变量(已有则覆盖)
+        List<TakeAdviceEngineersOpinionVO>  adviceEngineersOpinionVOList = new ArrayList<>();
         for (Map.Entry<String,List<TakeAdviceEngineersOpinionVO>> entry :analyMap.entrySet()) {
             taskService.setVariableLocal(entry.getKey(), "符合性分析", entry.getValue());
+            adviceEngineersOpinionVOList.addAll(entry.getValue());
         }
+        taskService.setVariableLocal(taskId, "符合性分析", adviceEngineersOpinionVOList);
+        List<TakeAdviceEngineersOpinionVO>  adviceEngineersOpinionVOList2 = new ArrayList<>();
         for (Map.Entry<String,List<TakeAdviceEngineersOpinionVO>> entry :suggestMap.entrySet()) {
             taskService.setVariableLocal(entry.getKey(), "工程师反馈意见", entry.getValue());
+            adviceEngineersOpinionVOList2.addAll(entry.getValue());
         }
+        taskService.setVariableLocal(taskId, "工程师反馈意见", adviceEngineersOpinionVOList2);
 
         if ("2".equals(flag)) {
             //提交按钮则完成当前任务
@@ -419,8 +435,8 @@ public class TakeAdviceService {
                 //判断此任务是否被委托，是则确认委托结果
                 taskService.resolveTask(taskId);
             }
-            //此流程默认驳回到法规接口人分发
-            String destTaskKey = "usertask2";
+            //此流程默认驳回到法规接口人汇总反馈意见
+            String destTaskKey = "usertask4";
             flowProcessUtil.rejectTask(task.getProcessInstanceId(), task.getAssignee(), destTaskKey, "");
             //更新业务流程主表
             BusProcessEO busProcessEO = new BusProcessEO();
@@ -469,87 +485,117 @@ public class TakeAdviceService {
     }
 
 
-    public ResponseMessage<Map<String, Object>> queryProcessVariable(String taskId) {
+    public ResponseMessage<TakeAdviceVO> queryProcessVariable(String taskId) {
 
         HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
 
         //查询流程实例绑定的流程变量
-        List<HistoricVariableInstance> historicVariableInstanceList = historyService.createHistoricVariableInstanceQuery()
-                .executionId(task.getProcessInstanceId()).list();
-        StandardReleaseVO standardReleaseVO = null;
-        for (HistoricVariableInstance variableInstance : historicVariableInstanceList) {
-            if ("起草部门标准化员发起流程表单".equals(variableInstance.getVariableName())) {
-                standardReleaseVO =(StandardReleaseVO) variableInstance.getValue();
-            }
-        }
-
-        //查询当前任务之前有多少任务
-        List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().processInstanceId(task.getProcessInstanceId())
-                .orderByHistoricTaskInstanceEndTime().asc().list();
-
-        //查询每个任务节点之前的历史意见
-        List<Comment> commentHistory = new LinkedList<>();
-        for (HistoricTaskInstance taskInstance : historicTaskInstanceList) {
-            //查询该任务的审批意见
-            List<Comment> commentList = taskService.getTaskComments(taskInstance.getId());
-            commentHistory.addAll(commentList);
-        }
-
-        Map<String, Object> map = new HashMap<>();
+        HistoricVariableInstance historicVariableInstance = historyService.createHistoricVariableInstanceQuery()
+                .executionId(task.getProcessInstanceId()).variableName("法规管理工程师发起流程表单").singleResult();
+        TakeAdviceVO takeAdviceVO  = (TakeAdviceVO) historicVariableInstance.getValue();
 
         switch (task.getName()){
-            case "起草部门标准化员发起流程":
-                map.put("历史审批意见", commentHistory);
-                map.put("起草部门标准化员发起流程表单", standardReleaseVO);
-                break;
+            case "法规管理工程师发起流程":{
+                return Result.success(takeAdviceVO);
+            }
 
-            case "编制部门部长审核":
-                map.put("历史审批意见", commentHistory);
-                //编制部门部长审核不需要展示相关部门和选择的归口工程师
-                standardReleaseVO.setReleativeDepatmentIds("");
-                standardReleaseVO.setStandardEngineerId("");
-                map.put("起草部门标准化员发起流程表单", standardReleaseVO);
-                break;
+            case "法规接口人分发":{
+                takeAdviceVO.setCopyPersonIdList(null);
+                takeAdviceVO.setInterfacePersonList(null);
+                HistoricVariableInstance variableInstance = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("engineerIdList").singleResult();
+                takeAdviceVO.setEngineerIdList((List<String>) variableInstance.getValue());
+                return Result.success(takeAdviceVO);
+            }
 
-            case "相关部门负责人审核":
-                /* 此任务不允许看到同级其他人的审核意见
-                   取得当前任务的同级任务
-                 */
-                List<HistoricTaskInstance> taskList = historyService.createHistoricTaskInstanceQuery()
-                        .processInstanceId(task.getProcessInstanceId()).taskName("相关部门负责人审核").list();
-                List<String> stringList = new ArrayList<>();
-                for (HistoricTaskInstance taskInstance : taskList){
-                    if(!taskInstance.getId().equals(taskId)){
-                        stringList.add(taskInstance.getId());
+            case "工程师填写反馈意见":{
+                takeAdviceVO.setCopyPersonIdList(null);
+                takeAdviceVO.setInterfacePersonList(null);
+                HistoricVariableInstance variableInstance = historyService.createHistoricVariableInstanceQuery()
+                        .taskId(taskId).variableName("符合性分析").singleResult();
+                HistoricVariableInstance variableInstance2 = historyService.createHistoricVariableInstanceQuery()
+                        .taskId(taskId).variableName("意见反馈").singleResult();
+                takeAdviceVO.setAnalyList((List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue());
+                takeAdviceVO.setSuggestList((List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue());
+                return Result.success(takeAdviceVO);
+            }
+
+            case "法规接口人汇总反馈意见":{
+                takeAdviceVO.setCopyPersonIdList(null);
+                takeAdviceVO.setInterfacePersonList(null);
+                List<HistoricTaskInstance> taskInstanceList = historyService.createHistoricTaskInstanceQuery()
+                        .processInstanceId(task.getProcessInstanceId()).taskDescription(task.getExecutionId()).list();
+                for (HistoricTaskInstance taskInstance : taskInstanceList){
+                    HistoricVariableInstance variableInstance = historyService.createHistoricVariableInstanceQuery()
+                            .taskId(taskInstance.getId()).variableName("符合性分析").singleResult();
+                    HistoricVariableInstance variableInstance2 = historyService.createHistoricVariableInstanceQuery()
+                            .taskId(taskInstance.getId()).variableName("意见反馈").singleResult();
+                    if(variableInstance!= null && variableInstance.getValue()!= null){
+                        List<TakeAdviceEngineersOpinionVO> list1 = (List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue();
+                        takeAdviceVO.getAnalyList().addAll(list1);
                     }
-                }
-                List<String>  taskIdList = new ArrayList<>();
-                for (HistoricTaskInstance taskInstanceList : historicTaskInstanceList){
-                    if (!stringList.contains(taskInstanceList.getId())){
-                        taskIdList.add(taskInstanceList.getId());
-                    };
-                }
-                commentHistory.clear();
-                for (String taskid : taskIdList) {
-                    //查询该任务的审批意见
-                    List<Comment> commentList = taskService.getTaskComments(taskid);
-                    commentHistory.addAll(commentList);
-                }
+                    if(variableInstance2!= null && variableInstance2.getValue()!= null){
+                        List<TakeAdviceEngineersOpinionVO> list2 = (List<TakeAdviceEngineersOpinionVO>) variableInstance2.getValue();
+                        takeAdviceVO.getSuggestList().addAll(list2);
+                    }
 
-                map.put("历史审批意见", commentHistory);
-                //相关部门负责人审核审核不需要展示选择的归口工程师
-                standardReleaseVO.setStandardEngineerId("");
-                map.put("起草部门标准化员发起流程表单", standardReleaseVO);
-                break;
+                }
+                return Result.success(takeAdviceVO);
+            }
 
-            default:
-                map.put("历史审批意见", commentHistory);
-                //审核不需要展示选择的归口工程师的任务
-                standardReleaseVO.setStandardEngineerId("");
-                map.put("起草部门标准化员发起流程表单", standardReleaseVO);
-                break;
+            case "法规接口人科长审核":{
+                takeAdviceVO.setCopyPersonIdList(null);
+                takeAdviceVO.setInterfacePersonList(null);
+                HistoricVariableInstance variableInstance = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("符合性分析").singleResult();
+                HistoricVariableInstance variableInstance2 = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("意见反馈").singleResult();
+                takeAdviceVO.setAnalyList((List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue());
+                takeAdviceVO.setSuggestList((List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue());
+                List<HistoricVariableInstance> variableInstanceList = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("审批意见").list();
+                for (HistoricVariableInstance variableInstances :variableInstanceList){
+                    takeAdviceVO.getCommentList().add((String) variableInstances.getValue());
+                }
+                return Result.success(takeAdviceVO);
+            }
+
+            case "部门负责人审批":{
+                takeAdviceVO.setCopyPersonIdList(null);
+                takeAdviceVO.setInterfacePersonList(null);
+                HistoricVariableInstance variableInstance = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("符合性分析").singleResult();
+                HistoricVariableInstance variableInstance2 = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("意见反馈").singleResult();
+                takeAdviceVO.setAnalyList((List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue());
+                takeAdviceVO.setSuggestList((List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue());
+                List<HistoricVariableInstance> variableInstanceList = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("审批意见").list();
+                for (HistoricVariableInstance variableInstances :variableInstanceList){
+                    takeAdviceVO.getCommentList().add((String) variableInstances.getValue());
+                }
+                return Result.success(takeAdviceVO);
+            }
+
+            case "法规管理工程师汇总":{
+                takeAdviceVO.setCopyPersonIdList(null);
+                takeAdviceVO.setInterfacePersonList(null);
+                HistoricVariableInstance variableInstance = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("符合性分析").singleResult();
+                HistoricVariableInstance variableInstance2 = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("意见反馈").singleResult();
+                takeAdviceVO.setAnalyList((List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue());
+                takeAdviceVO.setSuggestList((List<TakeAdviceEngineersOpinionVO>) variableInstance.getValue());
+                List<HistoricVariableInstance> variableInstanceList = historyService.createHistoricVariableInstanceQuery()
+                        .executionId(task.getExecutionId()).variableName("审批意见").list();
+                for (HistoricVariableInstance variableInstances :variableInstanceList){
+                    takeAdviceVO.getCommentList().add((String) variableInstances.getValue());
+                }
+                return Result.success(takeAdviceVO);
+            }
+
+            default:return null;
         }
 
-        return Result.success(map);
     }
 }

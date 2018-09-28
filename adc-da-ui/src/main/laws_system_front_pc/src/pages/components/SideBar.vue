@@ -188,6 +188,8 @@ export default {
               padding-left: 27px;
               border-bottom: 1px solid #4D8CC0;
               position: relative;
+              font-size: 15px;
+              font-weight: 600;
               &:first-child{
                 border-top: 1px solid #4D8CC0;
               }
@@ -203,8 +205,7 @@ export default {
                 background: @homeHeaderBgColor;
                 position: absolute;
                 top: 0;
-                left: 50%;
-                transform: translateX(-50%);
+                left: 0;
               }
               &.active{
                 /*padding-left: 14px;*/
@@ -217,15 +218,16 @@ export default {
                   /*}*/
                 /*}*/
                 background: transparent;
-                &:hover{
-                  background: transparent !important;
-                }
                 &::before{
                   width: 100%;
-                  transition: all linear .2s;
                 }
               }
               &:hover{
+                background: transparent;
+                &::before{
+                  transition: all linear .3s;
+                  width: 100%;
+                }
                 span{
                   &::before{
                     left: 0;

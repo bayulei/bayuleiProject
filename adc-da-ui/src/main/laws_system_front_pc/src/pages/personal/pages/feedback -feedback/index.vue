@@ -1,7 +1,7 @@
 <template>
  <div id="feedback-feedback">
    <UEditor :config=config ref="ueditor"></UEditor>
-   <Button type="primary" style="margin: 1rem 9rem" @click="saveFeedback">提交</Button>
+   <Button type="primary" style="margin: 0.5rem 9rem" @click="saveFeedback">提交</Button>
  </div>
 </template>
 
@@ -32,6 +32,14 @@ export default {
   methods: {
     saveFeedback () {
       console.log(this.$refs.ueditor.getUEContent())
+      let feedBackInfo = this.$refs.ueditor.getUEContent()
+      this.$http.post('sys/feedbackInfo/save', {
+        feedBackInfo: feedBackInfo
+      }, {
+        _this: this
+      }, res => {
+      }, e => {
+      })
     }
   },
   components: {},
