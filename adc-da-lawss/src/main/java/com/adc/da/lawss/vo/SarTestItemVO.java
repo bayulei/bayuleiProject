@@ -1,17 +1,17 @@
-package com.adc.da.lawss.entity;
-
-import com.adc.da.base.entity.BaseEntity;
+package com.adc.da.lawss.vo;/**
+ * Created by Administrator on 2018/9/27 16:37
+ */
 
 import java.util.Date;
 
 /**
- * <b>功能：</b>SAR_TEST_ITEM SarTestItemEOEntity<br>
- * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2018-09-03 <br>
- * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
- */
-public class SarTestItemEO extends BaseEntity {
-
+ * @Author Administrator
+ * @Description TODO
+ * Date 2018/9/27 16:37
+ * @Param
+ * @return
+ **/
+public class SarTestItemVO {
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -27,6 +27,9 @@ public class SarTestItemEO extends BaseEntity {
     private String testItemCode;
     private String id;
     private Integer validFlag;
+    //新增字段
+    private String propertyValue;
+    private String propertyType;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -97,7 +100,7 @@ public class SarTestItemEO extends BaseEntity {
             default: return null;
         }
     }
-    
+
     /**  **/
     public Date getModifyTime() {
         return this.modifyTime;
@@ -224,5 +227,21 @@ public class SarTestItemEO extends BaseEntity {
 
     public void setValidFlag(Integer validFlag) {
         this.validFlag = validFlag;
+    }
+
+    public String getPropertyValue() {
+        return propertyValue;
+    }
+
+    public void setPropertyValue(String propertyValue) {
+        this.propertyValue = propertyValue;
+    }
+
+    public String getPropertyType() {
+        return propertyType;
+    }
+
+    public void setPropertyType(String propertyType) {
+        this.propertyType = propertyType;
     }
 }

@@ -272,9 +272,11 @@ public class FlowProcessUtil {
             //为当前活动节点新的流出目标指定流程目标
             newTransitionImpl.setDestination(destActiviti);
             //保存驳回意见
+            if(StringUtils.isNotEmpty(rejectMessage)) {
+                taskEntity.setDescription(rejectMessage);//设置驳回意见
+                taskService.saveTask(taskEntity);
+            }
 
-            taskEntity.setDescription(rejectMessage);//设置驳回意见
-            taskService.saveTask(taskEntity);
             //设定驳回标志
 
 //        Map<String, Object> variables = new HashMap<String, Object>(0);

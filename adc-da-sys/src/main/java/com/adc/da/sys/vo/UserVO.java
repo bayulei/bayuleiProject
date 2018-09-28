@@ -27,7 +27,6 @@ public class UserVO {
 	// 扩展字段
 	private List<String> rolesstr = new ArrayList<>();
 	private List<RoleEO> roles = new ArrayList<>();
-
 	private List<String> orgsstr = new ArrayList<>();
 	private List<OrgEO> orgs = new ArrayList<>();
 	private String orgId;
@@ -36,10 +35,12 @@ public class UserVO {
 	private String roleId;
 	private String roleName;
 	private Integer disableFlag;
-
 	private Integer unlockFlag;
-
 	private String userType;
+	private String mobilePhone;
+	private String officePhone;
+	private String address;
+	private String faxAddress;
 
 	public Integer getValidFlag() {
 		return validFlag;
@@ -232,4 +233,35 @@ public class UserVO {
 
 	public void setRoleName(String roleName){this.roleName=roleName;}
 
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	public String getOfficePhone() {
+		return officePhone;
+	}
+
+	public void setOfficePhone(String officePhone) {
+		this.officePhone = officePhone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getFaxAddress() {
+		return faxAddress;
+	}
+
+	public void setFaxAddress(String faxAddress) {
+		this.faxAddress = faxAddress;
+	}
 }

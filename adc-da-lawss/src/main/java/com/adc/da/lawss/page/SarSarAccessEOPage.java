@@ -15,21 +15,21 @@ public class SarSarAccessEOPage extends BasePage {
     private String modifyTime;
     private String modifyTime1;
     private String modifyTime2;
-    private String modifyTimeOperator = "=";
+    private String modifyTimeOperator = "LIKE";
     private String creationTime;
     private String creationTime1;
     private String creationTime2;
-    private String creationTimeOperator = "=";
+    private String creationTimeOperator = "LIKE";
     private String creationUser;
-    private String creationUserOperator = "=";
+    private String creationUserOperator = "LIKE";
     private String validFlag;
-    private String validFlagOperator = "=";
+    private String validFlagOperator = "LIKE";
     private String accessContent;
-    private String accessContentOperator = "=";
+    private String accessContentOperator = "LIKE";
     private String country;
-    private String countryOperator = "=";
+    private String countryOperator = "LIKE";
     private String id;
-    private String idOperator = "=";
+    private String idOperator = "LIKE";
 
     public String getModifyTime() {
         return this.modifyTime;

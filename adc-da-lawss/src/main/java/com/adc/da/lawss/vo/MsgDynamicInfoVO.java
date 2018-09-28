@@ -29,7 +29,6 @@ public class MsgDynamicInfoVO extends BaseEntity {
     private String msgMode;
     private String msgType;
     private String id;
-
     private Integer isPicMsg;
 //新填字段
 //    文件ID

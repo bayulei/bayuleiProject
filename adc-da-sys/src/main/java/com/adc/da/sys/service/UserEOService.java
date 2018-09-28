@@ -155,11 +155,10 @@ public class UserEOService extends BaseService<UserEO, String> {
 	 * 设置用户角色关联
 	 */
 	public int saveUserRole(UserEO userEO) {
-		if (userEO.getRoleIdList() !=null) {
+		if (userEO.getRoleId() !=null) {
 			dao.deleteUserRoleByUsid(userEO.getUsid());
-			for (String roleId : userEO.getRoleIdList()) {
-				dao.saveUserRole(userEO.getUsid(), roleId);
-			}
+			dao.saveUserRole(userEO.getUsid(),userEO.getRoleId());
+
 		}
 		return 1;
 	}
@@ -182,15 +181,12 @@ public class UserEOService extends BaseService<UserEO, String> {
 		UserOrgEO userOrgEO = new UserOrgEO();
 		userOrgEO.setUserId(userEO.getUsid());
 		userOrgEO.setOrgId(userEO.getOrgId());
-		if(StringUtils.isNotBlank(userEO.getOrgName())) {
 			//如果编辑之前此用户有组织机构，则进行修改，没有组织机构进行新增
 			int i = dao.selectOrgCountByPrimaryKey(userEO.getUsid());
 			if(i>0){
 			return orgEODao.updateUserOrg(userOrgEO);
 			}
 			return orgEODao.addOrgRelatedUser(userOrgEO);
-		}
-		   return 0;
 	}
 
 	/**

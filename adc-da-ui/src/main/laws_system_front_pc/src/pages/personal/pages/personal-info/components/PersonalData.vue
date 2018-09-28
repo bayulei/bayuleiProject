@@ -122,7 +122,9 @@ export default {
         })
     },
     searchPersonal () {
-      this.$http.get('person/userInfo/getByUserInfoCode', {}, {
+      this.$http.get('person/userInfo/getByUserInfoCode', {
+        userId: 'QJX2Z8E678'
+      }, {
         _this: this,
         loading: 'loading'
       }, res => {
@@ -171,7 +173,7 @@ export default {
       width: 16.28rem;
       float: left;
       min-height: 400px;
-      margin: -5.6rem 0 0 6.75rem;
+      margin: -5.6rem 0 0 7.75rem;
       .save{
         width: 4.24rem;
         height: 0.72rem;

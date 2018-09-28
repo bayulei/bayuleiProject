@@ -24,7 +24,7 @@
 
   <!-- 查询条件 -->
   <sql id="Base_Where_Clause">
-    where 1=1
+    where 1=1 and valid_flag =0
     <trim suffixOverrides="," >
       <if test="modifyTime != null" >
         and modify_time ${modifyTimeOperator} #{modifyTime}
@@ -60,16 +60,16 @@
         and stand_code ${standCodeOperator} #{standCode}
       </if>
       <if test="authType != null" >
-        and auth_type ${authTypeOperator} #{authType}
+        and auth_type ${authTypeOperator} concat(concat('%',#{authType}),'%')
       </if>
       <if test="testItemName != null" >
         and test_item_name ${testItemNameOperator} #{testItemName}
       </if>
       <if test="testObj != null" >
-        and test_obj ${testObjOperator} #{testObj}
+        and test_obj ${testObjOperator} concat(concat('%',#{testObj}),'%')
       </if>
       <if test="testItemCode != null" >
-        and test_item_code ${testItemCodeOperator} #{testItemCode}
+        and test_item_code ${testItemCodeOperator} concat(concat('%',#{testItemCode}),'%')
       </if>
       <if test="id != null" >
         and id ${idOperator} #{id}
@@ -177,14 +177,14 @@
         test_item_code = #{testItemCode},
       </if>
     </set>
-     where id = #{id}
+     where id = #{id} and valid_flag = 0
   </update>
 
   <!-- 根据id查询 SAR_TEST_ITEM -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List" /> 
       from SAR_TEST_ITEM
-     where id = #{value}
+     where id = #{value} and valid_flag = 0
 
   </select>
 
@@ -194,6 +194,18 @@
      where id = #{value}
 
   </delete>
+    <!-- liwenxuan:删除多条记录 -->
+    <update id="deleteByPrimaryKeyList" parameterType="java.util.List">
+        UPDATE SAR_TEST_ITEM
+        set SAR_TEST_ITEM.valid_flag = 1
+        WHERE id IN
+        <foreach collection="list" index="index" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+
+
+    </update>
+
 
   <!-- SAR_TEST_ITEM 列表总数-->
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">

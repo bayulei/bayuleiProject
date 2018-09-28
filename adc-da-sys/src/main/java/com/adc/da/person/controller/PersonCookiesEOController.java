@@ -4,6 +4,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 
 import java.util.List;
+
+import com.adc.da.sys.util.LoginUserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO> {
     @GetMapping("/page")
     //@RequiresPermissions("person:personCookies:page")
     public ResponseMessage<PageInfo<PersonCookiesEO>> page(PersonCookiesEOPage page) throws Exception {
+        page.setValidFlag("0");
+        String userId= LoginUserUtil.getUserId();
         List<PersonCookiesEO> rows = personCookiesEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
@@ -68,18 +72,21 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO> {
      * @Param [ids]
      * @return com.adc.da.util.http.ResponseMessage
      **/
-//    @ApiOperation(value = "|PersonCookiesEO|修改")
-//    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-//    //@RequiresPermissions("person:personCookies:update")
-//    public ResponseMessage update(@RequestBody String ids) throws Exception {
-//        String[] idList = ids.split(",");
-//        if(idList!=null && idList.length>0){
-//            for(String id:idList){
-//                personCookiesEOService.update(id);
-//            }
-//        }
-//        return Result.success();
-//    }
+    @ApiOperation(value = "|PersonCookiesEO|批量删除")
+    @PutMapping("/deleteBacth")
+    //@RequiresPermissions("person:personCookies:update")
+    public ResponseMessage update(String[] idList) throws Exception {
+        PersonCookiesEO aa = new PersonCookiesEO();
+        /*String[] idList = ids.split(",");*/
+        if(idList!=null && idList.length>0){
+            for(String id:idList){
+                aa.setId(id);
+                aa.setValidFlag(1);
+                personCookiesEOService.updateByPrimaryKeySelective(aa);
+            }
+        }
+        return Result.success("true","删除成功",1);
+    }
 
     @ApiOperation(value = "|PersonCookiesEO|删除")
     @DeleteMapping("/{id}")
@@ -98,15 +105,12 @@ public class PersonCookiesEOController extends BaseController<PersonCookiesEO> {
      * @Param [personCookiesEO]
      * @return com.adc.da.util.http.ResponseMessage<com.adc.da.person.entity.PersonCookiesEO>
      **/
-//    @ApiOperation(value = "根据用户id删除浏览记录")
-//    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-//    public ResponseMessage<PersonCookiesEO> updateByUserId(@RequestBody PersonCookiesEO personCookiesEO) throws Exception {
-//        PersonCookiesEO personCookiesEO1=personCookiesEOService.updateByUserId(personCookiesEO);
-//        if(personCookiesEO1 != null){
-//            return Result.error("删除失败");
-//        }
-//        return Result.success("true","删除成功",personCookiesEO1);
-//    }
+    @ApiOperation(value = "根据用户id删除浏览记录")
+    @PutMapping("/deleteBySimple")
+    public ResponseMessage<Integer> updateByUserId(PersonCookiesEO personCookiesEO) throws Exception {
+        int personCookiesEO1=personCookiesEOService.updateByUserId(personCookiesEO);
+        return Result.success("true","删除成功",1);
+    }
 
 
 

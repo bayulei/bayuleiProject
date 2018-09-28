@@ -6,7 +6,7 @@
     <id column="id" property="id" />
     <result column="modify_time" property="modifyTime" />
     <result column="creation_time" property="creationTime" />
-    <result column="valid_time" property="validTime" />
+    <result column="valid_flag" property="validFlag" />
     <result column="put_user" property="putUser" />
     <result column="citation_user" property="citationUser" />
     <result column="responsible_unit" property="responsibleUnit" />
@@ -55,10 +55,10 @@
 
   <!-- SAR_BUSSIONESS_STAND table all fields -->
   <sql id="Base_Column_List" >
-     modify_time, creation_time, valid_time, put_user, citation_user, responsible_unit, stand_file, tags, stand_status, replaced_stand_num, replace_stand_num, quote_stand, first_put_time, put_year, put_time, issue_time, energy_kind, apply_arctic, stand_en_name, stand_name, stand_code, classify_code, stand_subclass, stand_genera, id
+     modify_time, creation_time, valid_flag, put_user, citation_user, responsible_unit, stand_file, tags, stand_status, replaced_stand_num, replace_stand_num, quote_stand, first_put_time, put_year, put_time, issue_time, energy_kind, apply_arctic, stand_en_name, stand_name, stand_code, classify_code, stand_subclass, stand_genera, id
   </sql>
   <sql id="Base_Column_List_show" >
-     SAR_BUSSIONESS_STAND.modify_time, SAR_BUSSIONESS_STAND.creation_time, SAR_BUSSIONESS_STAND.valid_time, SAR_BUSSIONESS_STAND.put_user, SAR_BUSSIONESS_STAND.citation_user, responsible_unit, stand_file, tags, stand_status, replaced_stand_num, replace_stand_num, quote_stand, first_put_time, put_year, put_time, issue_time, energy_kind, apply_arctic, stand_en_name, stand_name, stand_code, classify_code, stand_subclass, stand_genera,
+     SAR_BUSSIONESS_STAND.modify_time, SAR_BUSSIONESS_STAND.creation_time, SAR_BUSSIONESS_STAND.valid_flag, SAR_BUSSIONESS_STAND.put_user, SAR_BUSSIONESS_STAND.citation_user, responsible_unit, stand_file, tags, stand_status, replaced_stand_num, replace_stand_num, quote_stand, first_put_time, put_year, put_time, issue_time, energy_kind, apply_arctic, stand_en_name, stand_name, stand_code, classify_code, stand_subclass, stand_genera,
      SAR_BUSSIONESS_STAND.id,dicstandStatus.DIC_TYPE_NAME as standStatusShow
   </sql>
 
@@ -85,8 +85,8 @@
       <if test="creationTime2 != null" >
         and creation_time &lt;= #{creationTime2}
       </if>
-      <if test="validTime != null" >
-        and valid_time ${validTimeOperator} #{validTime}
+      <if test="validFlag != null" >
+        and valid_flag ${validFlagOperator} #{validFlag}
       </if>
       <if test="putUser != null" >
         and put_user ${putUserOperator} #{putUser}
@@ -187,7 +187,7 @@
         SELECT SEQ_SAR_BUSSIONESS_STAND.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into SAR_BUSSIONESS_STAND(<include refid="Base_Column_List" />)
-    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validTime, jdbcType=INTEGER}, #{putUser, jdbcType=VARCHAR}, #{citationUser, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{standFile, jdbcType=VARCHAR}, #{tags, jdbcType=VARCHAR}, #{standStatus, jdbcType=VARCHAR}, #{replacedStandNum, jdbcType=VARCHAR}, #{replaceStandNum, jdbcType=VARCHAR}, #{quoteStand, jdbcType=VARCHAR}, #{firstPutTime, jdbcType=TIMESTAMP}, #{putYear, jdbcType=TIMESTAMP}, #{putTime, jdbcType=TIMESTAMP}, #{issueTime, jdbcType=TIMESTAMP}, #{energyKind, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{standEnName, jdbcType=VARCHAR}, #{standName, jdbcType=VARCHAR}, #{standCode, jdbcType=VARCHAR}, #{classifyCode, jdbcType=VARCHAR}, #{standSubclass, jdbcType=VARCHAR}, #{standGenera, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+    values (#{modifyTime, jdbcType=TIMESTAMP}, #{creationTime, jdbcType=TIMESTAMP}, #{validFlag, jdbcType=INTEGER}, #{putUser, jdbcType=VARCHAR}, #{citationUser, jdbcType=VARCHAR}, #{responsibleUnit, jdbcType=VARCHAR}, #{standFile, jdbcType=VARCHAR}, #{tags, jdbcType=VARCHAR}, #{standStatus, jdbcType=VARCHAR}, #{replacedStandNum, jdbcType=VARCHAR}, #{replaceStandNum, jdbcType=VARCHAR}, #{quoteStand, jdbcType=VARCHAR}, #{firstPutTime, jdbcType=TIMESTAMP}, #{putYear, jdbcType=TIMESTAMP}, #{putTime, jdbcType=TIMESTAMP}, #{issueTime, jdbcType=TIMESTAMP}, #{energyKind, jdbcType=VARCHAR}, #{applyArctic, jdbcType=VARCHAR}, #{standEnName, jdbcType=VARCHAR}, #{standName, jdbcType=VARCHAR}, #{standCode, jdbcType=VARCHAR}, #{classifyCode, jdbcType=VARCHAR}, #{standSubclass, jdbcType=VARCHAR}, #{standGenera, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -199,7 +199,7 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
                 <if test="modifyTime != null" >modify_time,</if>
                 <if test="creationTime != null" >creation_time,</if>
-                <if test="validTime != null" >valid_time,</if>
+                <if test="validFlag != null" >valid_flag,</if>
                 <if test="putUser != null" >put_user,</if>
                 <if test="citationUser != null" >citation_user,</if>
                 <if test="responsibleUnit != null" >responsible_unit,</if>
@@ -226,7 +226,7 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
                 <if test="modifyTime != null" >#{modifyTime, jdbcType=TIMESTAMP},</if>
                 <if test="creationTime != null" >#{creationTime, jdbcType=TIMESTAMP},</if>
-                <if test="validTime != null" >#{validTime, jdbcType=INTEGER},</if>
+                <if test="validFlag != null" >#{validFlag, jdbcType=INTEGER},</if>
                 <if test="putUser != null" >#{putUser, jdbcType=VARCHAR},</if>
                 <if test="citationUser != null" >#{citationUser, jdbcType=VARCHAR},</if>
                 <if test="responsibleUnit != null" >#{responsibleUnit, jdbcType=VARCHAR},</if>
@@ -257,7 +257,7 @@
     update SAR_BUSSIONESS_STAND
        set  modify_time = #{modifyTime},
             creation_time = #{creationTime},
-            valid_time = #{validTime},
+            valid_flag = #{validFlag},
             put_user = #{putUser},
             citation_user = #{citationUser},
             responsible_unit = #{responsibleUnit},
@@ -292,8 +292,8 @@
       <if test="creationTime != null" >
         creation_time = #{creationTime},
       </if>
-      <if test="validTime != null" >
-        valid_time = #{validTime},
+      <if test="validFlag != null" >
+        valid_flag = #{validFlag},
       </if>
       <if test="putUser != null" >
         put_user = #{putUser},

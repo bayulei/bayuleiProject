@@ -4,6 +4,8 @@ import com.adc.da.base.page.BasePage;
 import com.adc.da.sys.dao.UserEODao;
 import com.adc.da.sys.dao.UserRoleEODao;
 import com.adc.da.sys.entity.UserEO;
+import com.adc.da.util.http.ResponseMessage;
+import com.adc.da.util.http.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,6 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
     public UserInfoEO getUserEOAndInfoEOByUserCode(String userId){
         UserInfoEO userInfoEO= dao.getUserInfoByUserId(userId);
         UserEO userEO= userEODao.selectOrgByPrimaryKey(userId);
-
         if(userInfoEO ==null){
             userInfoEO=new UserInfoEO();
         }
@@ -64,10 +65,10 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
             userInfoEO.setAccount(userEO.getAccount());
             userInfoEO.setEmail(userEO.getEmail());
             userInfoEO.setuName(userEO.getUname());
-            userInfoEO.setOrgName(userEO.getOrgName());
         }
         return userInfoEO;
     }
+
 
     public UserInfoEO getUserInfoEOByUserInfoId(String userId){
         return null;
@@ -83,18 +84,15 @@ public class UserInfoEOService extends BaseService<UserInfoEO, String> {
     }
 
 
-    public UserInfoEO updateByUserId(String userId){
-        UserInfoEO userInfoEO=dao.updateByUserId(userId);
-        UserEO userEO=userEODao.selectOrgByPrimaryKey(userId);
-        if(userInfoEO ==null){
-            userInfoEO=new UserInfoEO();
-        }
-        if(userEO !=null){
-            userInfoEO.setEmail(userEO.getEmail());
-        }
-        return userInfoEO;
-    }
 
+    public ResponseMessage updateByUserId(UserInfoEO userInfo){
+        int userInfoEO=dao.updateByPrimaryKeySelective(userInfo);
+        UserEO userEO = new UserEO();
+        userEO.setUsid(userInfo.getUserId());
+        userEO.setEmail(userInfo.getEmail());
+        int userEO1=userEODao.updateByPrimaryKeySelective(userEO);
+        return Result.success();
     }
+}
 
 

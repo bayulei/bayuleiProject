@@ -21,6 +21,10 @@
 		<result column="oper_user" property="operUser" />
 		<result column="disable_flag" property="disableFlag" />
 		<result column="unlock_flag" property="unlockFlag" />
+		<result column="mobile_phone" property="mobilePhone" />
+		<result column="office_phone" property="officePhone" />
+		<result column="ADDRESS" property="address" />
+		<result column="FAX_ADDRESS" property="faxAddress" />
 	</resultMap>
 
 	<resultMap id="UserRoleMap" extends="BaseResultMap" type="com.adc.da.sys.entity.UserEO">
@@ -87,10 +91,10 @@
 				and password ${passwordOperator} #{password}
 			</if>
 			<if test="uname != null">
-				and uname ${unameOperator} ${uname}
+				and uname ${unameOperator} #{uname}
 			</if>
 			<if test="workNum != null" >
-				and work_num ${workNumOperator} ${workNum}
+				and work_num ${workNumOperator} #{workNum}
 			</if>
 			<if test="validFlag != null">
 				and valid_flag ${validFlagOperator} #{validFlag}
@@ -108,8 +112,8 @@
 	</sql>
 	<!-- 查询条件 -->
 	<sql id="Base_Where_Clause_2">
-		where 1=1
-		<trim suffixOverrides=",">
+		where 1=1 AND TU.valid_flag=0
+		<trim suffixOverrides="and">
 			<if test="usid != null">
 				and TU.usid ${usidOperator} #{usid}
 			</if>
@@ -120,7 +124,7 @@
 				and TU.password ${passwordOperator} #{password}
 			</if>
 			<if test="uname != null">
-				and TU.uname ${unameOperator} ${uname}
+				and TU.uname ${unameOperator} concat(concat('%',#{uname}),'%')
 			</if>
 			<if test="workNum != null" >
 				and TU.work_num ${workNumOperator} ${workNum}
@@ -139,6 +143,9 @@
 			</if>
 			<if test="orgId != null" >
 				and TUO.ORG_ID ${orgIdOperator} #{orgId}
+			</if>
+			<if test="roleName != null" >
+				and tr.name ${roleNameOperator} concat(concat('%',#{roleName}),'%')
 			</if>
 		</trim>
 	</sql>
@@ -393,7 +400,7 @@
 			FROM(
 				SELECT
 				TU.usid,TU.USER_TYPE,TU."ACCOUNT",TU.UNAME,TU.EMAIL,TU.WORK_NUM,
-				tu.modify_time,tr.NAME AS ROLE_NAME,tui.mobile_phone,tui.office_phone,
+				tu.modify_time,tr.NAME AS ROLE_NAME,tui.mobile_phone,tui.office_phone,tui.ADDRESS,tui.FAX_ADDRESS,
 				tor.org_name,tuo.ORG_ID,tur.ROLE_ID
 				FROM TS_USER tu
 				LEFT JOIN TS_USER_ROLE tur ON TU.USID = TUR.USER_ID

@@ -2,6 +2,9 @@ package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.lawss.entity.SarTestItemEO;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -12,4 +15,6 @@ import com.adc.da.lawss.entity.SarTestItemEO;
  */
 public interface SarTestItemEODao extends BaseDao<SarTestItemEO> {
 
+    //liwenxuan:删除多条记录
+    int deleteByPrimaryKeyList(List<String> ids);
 }

@@ -6,7 +6,7 @@
      <!-- 搜索框 -->
      <div class="search-box">
        <div class="search-option">
-         <Select v-model="selectKey">
+         <Select v-model="searchInfoEO.selectKey">
            <Option value="standNumber">标准编号</Option>
            <Option value="standName">标准名称</Option>
            <Option value="standState">标准状态</Option>
@@ -23,7 +23,7 @@
          </Select>
        </div>
        <div class="search-input">
-         <Input type="text" v-model="selectValue" autofocus id="search-input" placeholder="请输入查询信息" clearable></Input>
+         <Input type="text" v-model="searchInfoEO.selectValue" autofocus id="search-input" placeholder="请输入查询信息" clearable></Input>
        </div>
        <div class="search-btn">
          <Icon type="ios-search" :size="34" color="rgba(0,0,0,.8)" @click.native="searchCenteric"/>
@@ -61,14 +61,15 @@
                <div class="card domBtn" v-for="(item, index) in selectinfoList" :key="index" :class="{ 'selected': item.checked }">
                  <!--  标准   -->
                  <Row v-if="item.type == 'stand'">
-                   <Col span="2">{{ (searchInfoEO.page-1)*searchInfoEO.pageSize + index+1}} <Tag checkable color="warning">标签四</Tag></Col>
-                   <Col span="5" size="large">标准编号: {{ item.stand_sort }} {{ item.stand_number }} - {{ item.stand_year }}</Col>
+                   <Col span="2" v-if="item.stand_type == 'INLAND'">{{ (searchInfoEO.page-1)*searchInfoEO.pageSize + index+1}} <Tag checkable color="warning">国内标准</Tag></Col>
+                   <Col span="2" v-else>{{ (searchInfoEO.page-1)*searchInfoEO.pageSize + index+1}} <Tag checkable color="warning">国外标准</Tag></Col>
+                   <Col span="5" size="large">标准编号: {{ item.standnumbershow }}</Col>
                    <Col span="5" >
                    <b>《{{ item.stand_name }}》</b>
                    </Col>
-                   <Col span="5">
+                   <Col span="5" push="1">
                    <Tag type="dot" :color="item.standStateShow === 0 ? '' : (item.standStateShow === 1 ? 'warning' : (item.standStateShow === 2 ? 'success' : 'error'))">
-                     {{ item.stand_state}}
+                     {{ item.standstateshow}}
                    </Tag>
                    </Col>
                    <Col span="5" >
@@ -80,14 +81,15 @@
                  </Row>
                  <!--  法规   -->
                  <Row v-if="item.type == 'laws'">
-                   <Col span="2">{{ (searchInfoEO.page-1)*searchInfoEO.pageSize + index+1}}</Col>
+                   <Col span="2" v-if="item.laws_type == 'INLAND'">{{ (searchInfoEO.page-1)*searchInfoEO.pageSize + index+1}} <Tag checkable color="warning">国内法规</Tag></Col>
+                   <Col span="2" v-else>{{ (searchInfoEO.page-1)*searchInfoEO.pageSize + index+1}} <Tag checkable color="warning">国外法规</Tag></Col>
                    <Col span="5" size="large">法规编号:{{ item.laws_number }}</Col>
                    <Col span="5" >
                    <b>《{{ item.laws_name }}》</b>
                    </Col>
                    <Col span="5">
                    <Tag type="dot" :color="item.standStateShow === 0 ? '' : (item.standStateShow === 1 ? 'warning' : (item.standStateShow === 2 ? 'success' : 'error'))">
-                     {{ item.laws_status }}
+                     {{ item.lawsstateshow }}
                    </Tag>
                    </Col>
                    <Col span="5" >
@@ -99,14 +101,14 @@
                  </Row>
                  <!--  企业标准   -->
                  <Row v-if="item.type == 'bussstand'">
-                   <Col span="2">{{ (searchInfoEO.page-1)*searchInfoEO.pageSize + index+1}}</Col>
+                   <Col span="2" >{{ (searchInfoEO.page-1)*searchInfoEO.pageSize + index+1}} <Tag checkable color="warning">企业标准</Tag></Col>
                    <Col span="5" size="large">标准编号: {{ item.stand_code }}</Col>
                    <Col span="5" >
                    <b>《{{ item.stand_name }}》</b>
                    </Col>
                    <Col span="5">
                    <Tag type="dot" :color="item.standStateShow === 0 ? '' : (item.standStateShow === 1 ? 'warning' : (item.standStateShow === 2 ? 'success' : 'error'))">
-                     {{ item.stand_status }}
+                     {{ item.standstateshow }}
                    </Tag>
                    </Col>
                    <Col span="5" >

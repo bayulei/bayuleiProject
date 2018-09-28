@@ -1,5 +1,6 @@
 package com.adc.da.lawss.service;
 
+import com.adc.da.sys.util.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adc.da.base.service.BaseService;
 import com.adc.da.lawss.dao.SarTestItemEODao;
 import com.adc.da.lawss.entity.SarTestItemEO;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -32,5 +36,24 @@ public class SarTestItemEOService extends BaseService<SarTestItemEO, String> {
     public SarTestItemEODao getDao() {
         return dao;
     }
-
+//liwenxuan:新增
+    public int insertSelective(SarTestItemEO sarTestItemEO) throws Exception {
+        //todo 创建人需要从session中获取
+        sarTestItemEO.setCreationUser("从session中获取");
+        sarTestItemEO.setModifyTime(new Date());
+        sarTestItemEO.setCreationTime(new Date());
+        sarTestItemEO.setId(UUIDUtils.randomUUID20());
+        sarTestItemEO.setValidFlag(0);
+        return dao.insertSelective(sarTestItemEO);
+    }
+    //liwenxuan:修改
+    public int updateByPrimaryKeySelective(SarTestItemEO sarTestItemEO) throws Exception {
+        sarTestItemEO.setCreationUser("从session中获取");
+        sarTestItemEO.setModifyTime(new Date());
+        return dao.updateByPrimaryKeySelective(sarTestItemEO);
+    }
+    //liwenxuan:删除多条记录
+    public int deleteByPrimaryKeyList(List<String> ids){
+        return dao.deleteByPrimaryKeyList(ids);
+    }
 }

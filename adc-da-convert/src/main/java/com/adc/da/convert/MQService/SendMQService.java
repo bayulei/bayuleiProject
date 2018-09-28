@@ -1,6 +1,6 @@
 package com.adc.da.convert.MQService;
 
-import com.adc.da.convert.common.DocConverter;
+import com.adc.da.convert.common.DocConverterPdf;
 import com.adc.da.convert.entity.OtConvertMqEO;
 import com.adc.da.convert.service.OtConvertMqEOService;
 import com.adc.da.file.store.IFileStore;
@@ -39,7 +39,7 @@ public class SendMQService {
      * @Param [convertInfo]
      * @return void
      **/
-/*    @RabbitListener(bindings = @QueueBinding(
+    /*@RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "createConvertMQ", durable = "true"),
             exchange = @Exchange(value = "convert-exchange", ignoreDeclarationExceptions = "true"),
             key = "convert-key"))*/
@@ -68,29 +68,29 @@ public class SendMQService {
             //转换结果路径
             String swfpath = "";
             if(!"".equals(path)){
-                String converfilename = path.replaceAll("\\\\", "/");
+                String converfilename = "E:"+path.replaceAll("\\\\", "/");
                 System.out.println("*****上传路径替换，加入文件名*******"+converfilename);
                 //截取文件类型
                 int index = converfilename.indexOf(".");
                 String fileType = converfilename.substring(index,converfilename.length());
                 //调用转换类DocConverter,并将需要转换的文件传递给该类的构造方法
-                DocConverter d = new DocConverter(converfilename,fileType);
+                DocConverterPdf d = new DocConverterPdf("E:/getMe.docx",fileType);
 
                 //调用conver方法开始转换，先执行doc2pdf()将office文件转换为pdf;再执行pdf2swf()将pdf转换为swf;
                 d.conver(fileType);
                 //调用getswfPath()方法，打印转换后的swf文件路径
-                swfpath = d.getswfPath();
-                System.out.println("*****转换后的swf文件路径*******"+swfpath);
+                String dPath = d.getpdfPath();
+                System.out.println("*****转换后的pdf文件路径*******"+dPath);
                 //生成swf相对路径，以便传递给flexpaper播放器
-                //int subIndex = dPath.indexOf("/upload");
-                //swfpath = dPath.substring(subIndex,dPath.length());
-                //System.out.println("*****转换后的文件相对路径*******"+swfpath);
+                /*int subIndex = dPath.indexOf("/upload");
+                swfpath = dPath.substring(subIndex,dPath.length());
+                System.out.println("*****转换后的文件相对路径*******"+swfpath);*/
                 //转换成功后修改数据状态
                 OtConvertMqEO convertMqEO = new OtConvertMqEO();
-                if(!swfpath.isEmpty()){
+                if(!dPath.isEmpty()){
                     convertMqEO.setId(convertId);
                     convertMqEO.setModifyTime(new Date());
-                    convertMqEO.setFilePath(swfpath);
+                    convertMqEO.setFilePath(dPath);
                     convertMqEO.setMqState(1);
                     convertMqEOService.updateByPrimaryKeySelective(convertMqEO);
                 } else {
@@ -99,7 +99,7 @@ public class SendMQService {
                     convertMqEO.setMqState(2);
                     convertMqEOService.updateByPrimaryKeySelective(convertMqEO);
                 }
-                return Result.success(swfpath);
+                return Result.success(dPath);
             } else {
                 return Result.error("文件存储失败，请重试");
             }

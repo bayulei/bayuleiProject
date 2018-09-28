@@ -5,10 +5,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
 import javax.validation.constraints.NotNull;
-
 import com.adc.da.sys.util.UUIDUtils;
 import com.adc.da.util.constant.DeleteFlagEnum;
 import org.apache.commons.lang.StringUtils;

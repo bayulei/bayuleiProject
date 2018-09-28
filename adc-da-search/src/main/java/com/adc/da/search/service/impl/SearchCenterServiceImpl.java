@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class SearchCenterServiceImpl implements SearchCenterService {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
             switch (searchInfoEO.getSelectKey()){
                 case "standNumber":
-                    boolQueryBuilder.should(QueryBuilders.matchQuery("stand_number",searchInfoEO.getSelectValue()));
+                    boolQueryBuilder.should(QueryBuilders.matchPhraseQuery("standnumbershow",searchInfoEO.getSelectValue()));
                     boolQueryBuilder.should(QueryBuilders.matchQuery("laws_number",searchInfoEO.getSelectValue()));
                     boolQueryBuilder.should(QueryBuilders.matchQuery("stand_code",searchInfoEO.getSelectValue()));
                     break;
@@ -52,18 +53,20 @@ public class SearchCenterServiceImpl implements SearchCenterService {
                     break;
                 case "standState":
                     // 需要修改
-                    boolQueryBuilder.should(QueryBuilders.matchQuery("stand_state",searchInfoEO.getSelectValue()));
-                    boolQueryBuilder.should(QueryBuilders.matchQuery("laws_status",searchInfoEO.getSelectValue()));
-                    boolQueryBuilder.should(QueryBuilders.matchQuery("stand_status",searchInfoEO.getSelectValue()));
+                    boolQueryBuilder.should(QueryBuilders.matchQuery("standstateshow",searchInfoEO.getSelectValue()));
+                    boolQueryBuilder.should(QueryBuilders.matchQuery("lawsstateshow",searchInfoEO.getSelectValue()));
+                    boolQueryBuilder.should(QueryBuilders.matchQuery("standstateshow",searchInfoEO.getSelectValue()));
                     break;
                 case "standFile":
                     //标准正文  暂缺
                     break;
                 case "applyArctic":
-                    boolQueryBuilder.should(QueryBuilders.matchQuery("apply_arctic",searchInfoEO.getSelectValue()));
+                    boolQueryBuilder.should(QueryBuilders.matchQuery("applyarcticshow",searchInfoEO.getSelectValue()));
                     break;
                 case "issueTime":
-                    boolQueryBuilder.should(QueryBuilders.matchQuery("issue_time",searchInfoEO.getSelectValue()));
+                    RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("balance").format("epoch_millis").from(20000).to(30000).includeLower(true).includeUpper(true);
+                    boolQueryBuilder.filter(rangeQueryBuilder);
+                    //boolQueryBuilder.should(QueryBuilders.matchQuery("issue_time",searchInfoEO.getSelectValue()));
                     break;
                 case "putTime":
                     boolQueryBuilder.should(QueryBuilders.matchQuery("put_time",searchInfoEO.getSelectValue()));
@@ -85,8 +88,8 @@ public class SearchCenterServiceImpl implements SearchCenterService {
             }
             SearchRequestBuilder searchRequestBuilder = client.prepareSearch(index)
                     .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                    .setFrom(0)
-                    .setSize(100);
+                    .setFrom((searchInfoEO.getPage()-1)*searchInfoEO.getPageSize())
+                    .setSize(searchInfoEO.getPageSize());
             searchRequestBuilder.setQuery(boolQueryBuilder);
             SearchResponse response = searchRequestBuilder.get();
             result = SearchResponseToList(response);
@@ -98,8 +101,8 @@ public class SearchCenterServiceImpl implements SearchCenterService {
             index[2]="bussstand";
             SearchRequestBuilder searchRequestBuilder = client.prepareSearch(index)
                     .setQuery(QueryBuilders.matchAllQuery())
-                    .setFrom(0)
-                    .setSize(100);
+                    .setFrom((searchInfoEO.getPage()-1)*searchInfoEO.getPageSize())
+                    .setSize(searchInfoEO.getPageSize());
             SearchResponse response = searchRequestBuilder.get();
             result = SearchResponseToList(response);
         }

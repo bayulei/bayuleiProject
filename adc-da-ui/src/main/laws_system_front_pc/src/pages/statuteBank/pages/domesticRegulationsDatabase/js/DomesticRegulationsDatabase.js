@@ -5,6 +5,9 @@ export default {
   name: 'DomesticRegulationsDatabase',
   data () {
     return {
+      // 可能去掉的
+      convertModal: false,
+      saveConvertId: '',
       setting: '',
       MoveTest: '',
       zNodes: [],
@@ -177,6 +180,7 @@ export default {
       itemsData: [],
       browseList: [],
       lawsInfoImport: {},
+      lawsInfoConvert: {},
       lawsItemsImport: {},
       lawsPropertyOptions: '',
       lawsStatusOptions: '',
@@ -589,6 +593,30 @@ export default {
         _this: this
       }, res => {
         this.searchLawsItems(this.saveLawsId)
+      }, e => {
+      })
+    },
+    // 在线转换
+    convertDocOnline () {
+      let file = this.$refs.convertFile.files[0]
+      this.$http.post('convert/otConvertMq/docUploadConvert', {
+        file: file
+      }, {
+        _this: this
+      }, res => {
+        this.saveConvertId = res.data
+      }, e => {
+      })
+    },
+    // 在线查看
+    showDocOnline () {
+      this.$http.get('convert/otConvertMq/getConvertDetail', {
+        convertId: this.saveConvertId
+      }, {
+        _this: this
+      }, res => {
+        alert(res.data.filePath)
+        // window.open('/static/pdf/web/viewer.html?file=http://localhost:9999/uploadPath/getMe.pdf')
       }, e => {
       })
     },

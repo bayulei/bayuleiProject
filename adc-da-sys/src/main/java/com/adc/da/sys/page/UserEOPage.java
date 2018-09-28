@@ -20,9 +20,9 @@ public class UserEOPage extends BasePage {
     private String password;
     private String passwordOperator = "=";
     private String uname;
-    private String unameOperator = "=";
+    private String unameOperator = "like";
     private String roleName;
-    private String roleNameOperator = "=";
+    private String roleNameOperator = "like";
     private String roleId;
     private String roleIdOperator = "=";
     private String orgName;
