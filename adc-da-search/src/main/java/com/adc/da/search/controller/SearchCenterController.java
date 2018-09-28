@@ -38,7 +38,7 @@ public class SearchCenterController extends BaseController<Map<String, Object>> 
     @PostMapping(value="/searchSarBykey")
     public ResponseMessage<PageInfo<Map<String, Object>>>  searchSarBykey(SearchInfoEO searchInfoEO){
       List<Map<String, Object>> result =  new ArrayList<>();
-        result = searchCenterService.searchSarBykey(searchInfoEO);
+      result = searchCenterService.searchSarBykey(searchInfoEO);
       return Result.success(getPageInfo(searchInfoEO.getPager(), result));
     }
 
