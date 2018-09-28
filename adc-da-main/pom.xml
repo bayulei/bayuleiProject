@@ -12,7 +12,7 @@
 	<artifactId>adc-da-main</artifactId>
 	<packaging>jar</packaging>
 
-	<name>web</name>
+	<name>adc-da-main</name>
 	<description>web project for Spring Boot</description>
 
 	<dependencies>

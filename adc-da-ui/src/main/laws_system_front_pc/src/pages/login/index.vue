@@ -68,7 +68,7 @@ export default {
       }
     },
     loginUser (userName, PWD) {
-      this.$http.post('/login',
+      this.$http.post('login',
         {
           username: userName,
           password: PWD

@@ -50,7 +50,7 @@
         and msg_content ${msgContentOperator} #{msgContent}
       </if>
       <if test="msgTitle != null" >
-        and msg_title ${msgTitleOperator} #{msgTitle}
+        and msg_title ${msgTitleOperator} concat(concat('%',#{msgTitle}),'%')
       </if>
       <if test="userId != null" >
         and user_id ${userIdOperator} #{userId}
