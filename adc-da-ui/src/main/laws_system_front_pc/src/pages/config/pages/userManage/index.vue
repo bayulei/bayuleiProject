@@ -56,8 +56,8 @@
                     </FormItem>
                   </Col>
                   <Col>
-                    <FormItem label="用户角色" prop="roleName" class="laws-info-item">
-                      <Select v-model="userVO.roleName" style="width:200px" :disabled="usersType">
+                    <FormItem label="用户角色" prop="roleId" class="laws-info-item">
+                      <Select v-model="userVO.roleId" style="width:200px" :disabled="usersType">
                         <Option v-for="item in search.roleOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                       </Select>
                     </FormItem>
@@ -345,6 +345,7 @@ export default {
         password: '',
         passwordCheck: '',
         uname: '',
+        roleId: '',
         roleName: '',
         userType: '',
         mobilePhone: '',
@@ -574,6 +575,7 @@ export default {
       this.showUserModal = false
       this.$nextTick(() => {
         this.$refs['userVO'].resetFields()
+        console.log(this.userVO)
       })
     },
     // 关闭弹窗

@@ -9,7 +9,7 @@
      <div slot="right"></div>
    </table-tools-bar>
      <div class="content">
-       <div class="content-detail" v-if="total >0">
+       <div class="content-detail">
          <div v-for="(item,index) in lawsList" :key="index" >
            <div class="card domBtn">
              <Row>
@@ -22,6 +22,7 @@
                </Col>
                <Col span="4">{{item.creationTime}}</Col>
                <Col span="4" offset="6">
+                 <span>{{ item.check }}</span>
                  <Button type="dashed"  @click="cancelCollection(item.id)">取消收藏</Button>
                  <Button type="dashed" @click="writeNotes(item)">书写笔记</Button>
                </Col>
@@ -32,6 +33,19 @@
        </div>
        <loading :loading="loading">数据获取中</loading>
      </div>
+   <Modal v-model="lawsModal" width="450">
+     <p slot="header">
+       <span>书写笔记</span>
+     </p>
+     <div style="text-align:center">
+       <Input v-model="lawsForm.textarea" type="textarea" :maxlength="200" :autosize="{minRows: 5,maxRows: 7}" placeholder="Enter something..." @input="descInput"></Input>
+       <P style="float: right; ">您还可以输入{{remnant}}/200</P>
+     </div>
+     <div slot="footer">
+       <Button v-if="flag" type="primary" size="large" @click="lawsAdd">添加笔记</Button>
+       <Button v-else type="primary" size="large" @click="saveLawsNotes">提交笔记</Button>
+     </div>
+   </Modal>
      <pagination :total="total" @pageChange="pageChange" @pageSizeChange="pageSizeChange"></pagination>
  </div>
 </template>
@@ -42,13 +56,17 @@ export default {
   data () {
     return {
       search: {
-        collectionLaws: '',
-        lawsList: []
+        collectionLaws: ''
       },
+      lawsForm: {
+        textarea: ''
+      },
+      lawsList: [],
       total: 0,
       page: 1,
       rows: 10,
-      loading: false
+      loading: false,
+      lawsModal: false
     }
   },
   methods: {
@@ -61,11 +79,22 @@ export default {
       this.rows = pageSize
       this.selectBrowsing()
     },
+    // 计算数字
+    descInput () {
+      let txtVal = this.lawsForm.textarea.length
+      this.remnant = 200 - txtVal
+    },
+    // 添加笔记
+    lawsAdd () {},
+    // 提交笔记
+    saveLawsNotes () {
+    },
     // 搜索
     selectLaws () {
       this.$http.get('person/personCollect/page', {
         pageNo: this.page,
         pageSize: this.rows,
+        id: 'WQJ8JT5XTC5MNK3WTKNN',
         collectTitle: this.search.collectType
       }, {
         _this: this,
@@ -74,24 +103,34 @@ export default {
         for (let i = 0; i < res.data.list.length; i++) {
           res.data.list[i].check = false
         }
-        console.log(res)
         this.lawsList = res.data.list
         this.total = res.data.count
       }, e => {})
     },
     //  取消收藏
     cancelCollection  (id) {
-      console.log(id)
+      this.$http.put('person/personCollect/updateByUserId ', {
+        id: id
+      }, {
+        _this: this
+      })
     },
     // 书写笔记
     writeNotes (item) {
-      console.log(item.check)
       item.check = !item.check
-      console.log(item.check)
     },
     // 添加笔记
     createNote (item) {
       console.log(item)
+    }
+  },
+  watch: {
+    lawsList: {
+      deep: true,
+      immediate: true,
+      handler (val) {
+        console.log('watch')
+      }
     }
   },
   mounted () {
@@ -123,23 +162,6 @@ export default {
       .un-select();
       &:hover{
         box-shadow: 0px 1px 13px 0px #DDD;
-      }
-      &.selected{
-        border: 1px solid @baseColor;
-      }
-      .card-btn{
-        margin-right: 2px;
-        &:last-child{
-          margin-right: 0;
-        }
-      }
-      .ivu-tag-dot{
-        height: 24px;
-        line-height: 24px;
-        border: 1px solid #e8eaec !important;
-        color: #515a6e !important;
-        background: #fff !important;
-        padding: 0 5px;
       }
     }
     /*.content .content-detail .top-add{*/
