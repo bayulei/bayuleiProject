@@ -396,6 +396,14 @@ export default {
               zNodes[i] = zObj
             }
           }
+          zNodes.push({
+            id: '404',
+            pId: null,
+            name: '未分配人员',
+            shotName: '',
+            remarks: '',
+            isParent: true
+          })
           this.zNodes = zNodes
         }
       }, e => {})
@@ -443,6 +451,8 @@ export default {
      * @date: 2018-09-25 15:59:40
      */
     findByOrg () {
+      this.deptEmpData = []
+      this.total = 0
       this.$http.get('sys/user/findByOrg', {
         id: this.orgId,
         page: this.page,
@@ -586,7 +596,7 @@ export default {
     }
     function addHoverDom (treeId, treeNode) {
       var sObj = $('#' + treeNode.tId + '_span')
-      if (treeNode.editNameFlag || $('#addBtn_' + treeNode.tId).length > 0) return
+      if (treeNode.editNameFlag || $('#addBtn_' + treeNode.tId).length > 0 || treeNode.id === '404') return
       var addStr = "<span class='button add' id='addBtn_" + treeNode.tId +
         "' title='节点新增' onfocus='this.blur();'></span>"
       sObj.after(addStr)

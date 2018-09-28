@@ -32,12 +32,11 @@
         <FormItem label="传 真" prop="faxAddress" class="user-info-item">
           <Input v-model="userInfo.faxAddress"></Input>
         </FormItem>
-        <FormItem label="个性签名" prop="extInfo" class="user-info-item">
-          <Input v-model="userInfo.extInfo"></Input>
+        <FormItem label="个性签名" prop="signature" class="user-info-item">
+          <Input v-model="userInfo.signature"></Input>
         </FormItem>
       </Form>
-
-      <input type="button" value="保存修改" class="save primary-btn" @click="savePersonal">
+      <input type="button" value="保存修改" class="save primary-btn" @click="saveUserInfo">
     </div>
   </div>
 </template>
@@ -57,7 +56,7 @@ export default {
         email: '', // 邮箱
         mobilePhone: '', // 手机
         faxAddress: '', // 传真
-        extInfo: '', // 个性签名
+        signature: '', // 个性签名
         userPic: ''// 用户头像
       },
       userInfoRules: {
@@ -108,7 +107,7 @@ export default {
     },
     // 保存用户信息
     saveUserInfo () {
-      this.$http.putData('person/userInfo',
+      this.$http.post('person/userInfo/updatePersonInfo',
         {
           id: this.userInfo.id,
           officePhone: this.userInfo.officePhone,
@@ -118,12 +117,15 @@ export default {
           signature: this.userInfo.signature,
           userPic: this.userInfo.userPic
         }, {_this: this}, res => {
-          console.log(res)
+          this.success()
+          this.searchPersonal()
+        }, e => {
+          this.error()
         })
     },
     searchPersonal () {
       this.$http.get('person/userInfo/getByUserInfoCode', {
-        userId: 'QJX2Z8E678'
+        userId: 'WY8J26MH23'
       }, {
         _this: this,
         loading: 'loading'
@@ -134,12 +136,11 @@ export default {
         }
       }, e => {})
     },
-    savePersonal () {
-      this.$http.post('', this.userInfo.userPicid, {
-        _this: this
-      }, res => {
-        this.searchPersonal()
-      }, e => {})
+    success () {
+      this.$Message.success('保存成功')
+    },
+    error () {
+      this.$Message.error('保存失败')
     }
   },
   mounted () {
@@ -181,7 +182,7 @@ export default {
         margin: 0.5rem 0 0 0.2rem;
       }
       .user-info-item{
-        margin-bottom: 12px;
+        margin-bottom: 20px;
         vertical-align: top;
         zoom: 1;
         .ivu-input{

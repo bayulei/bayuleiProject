@@ -56,8 +56,8 @@
                     </FormItem>
                   </Col>
                   <Col>
-                    <FormItem label="用户角色" prop="roleName" class="laws-info-item">
-                      <Select v-model="userVO.roleName" style="width:200px" :disabled="usersType">
+                    <FormItem label="用户角色" prop="roleId" class="laws-info-item">
+                      <Select v-model="userVO.roleId" style="width:200px" :disabled="usersType">
                         <Option v-for="item in search.roleOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                       </Select>
                     </FormItem>
@@ -345,6 +345,7 @@ export default {
         password: '',
         passwordCheck: '',
         uname: '',
+        roleId: '',
         roleName: '',
         userType: '',
         mobilePhone: '',
@@ -400,7 +401,13 @@ export default {
         {_this: this, loading: 'loading'},
         res => {
           if (res.ok) {
-            this.userList = res.data.list
+            let userList = []
+            for (let i = 0; i < res.data.list.length; i++) {
+              if (res.data.list[i].account !== 'admin') {
+                userList.push(res.data.list[i])
+              }
+            }
+            this.userList = userList
             this.pageNo = res.data.pageNo
             this.total = res.data.count
           }
@@ -574,6 +581,7 @@ export default {
       this.showUserModal = false
       this.$nextTick(() => {
         this.$refs['userVO'].resetFields()
+        console.log(this.userVO)
       })
     },
     // 关闭弹窗

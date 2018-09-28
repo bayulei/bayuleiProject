@@ -2,14 +2,11 @@ package com.adc.da.activiti.controller;
 
 import com.adc.da.activiti.common.FlowProcessUtil;
 import com.adc.da.activiti.service.StandardComplianceProcessService;
-import com.adc.da.activiti.vo.NoticeAndCheckApprovalVO;
 import com.adc.da.activiti.vo.StandardComplianceVO;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +24,6 @@ import java.util.Map;
 public class StandardComplianceProcessController {
 
     private static final Logger logger = LoggerFactory.getLogger(StandardComplianceProcessController.class);
-
-
-    @Autowired
-    private RuntimeService runtimeService;
-
-    @Autowired
-    private TaskService taskService;
 
     @Autowired
     private StandardComplianceProcessService standardComplianceProcessService;
@@ -81,12 +71,12 @@ public class StandardComplianceProcessController {
         try {
             processInstanceId = standardComplianceProcessService.startProcess(standardComplianceVO,nowUserId,processDefinitionKey,processInstanceId);
 
-//            Task task = standardComplianceProcessService.completeProcess(standardComplianceVO,processInstanceId,nowUserId);
-//
-//            processInstanceId = standardComplianceProcessService.addAssignee(task,standardComplianceVO,processInstanceId,nowUserId);
+            Task task = standardComplianceProcessService.completeProcess(standardComplianceVO,processInstanceId,nowUserId);
+
+            processInstanceId = standardComplianceProcessService.addAssignee(task,standardComplianceVO,processInstanceId,nowUserId);
             return Result.success(processInstanceId);
         }catch (Exception e){
-            logger.error(e.getMessage());
+            e.printStackTrace();
             return Result.error("审批失败");
         }
     }

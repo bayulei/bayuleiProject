@@ -2,11 +2,10 @@ package com.adc.da.activiti.service;
 
 import com.adc.da.activiti.common.FlowProcessUtil;
 import com.adc.da.activiti.entity.BusExecuProcessEO;
-import com.adc.da.activiti.entity.BusNoticecheckProcessEO;
 import com.adc.da.activiti.entity.BusProcessEO;
+import com.adc.da.activiti.entity.BusResAnalyProcessEO;
 import com.adc.da.activiti.page.BusExecuProcessEOPage;
-import com.adc.da.activiti.page.BusNoticecheckProcessEOPage;
-import com.adc.da.activiti.vo.NoticeAndCheckApprovalVO;
+import com.adc.da.activiti.page.BusResAnalyProcessEOPage;
 import com.adc.da.activiti.vo.StandardComplianceVO;
 import com.adc.da.sys.util.UUIDUtils;
 import org.activiti.engine.*;
@@ -45,9 +44,6 @@ public class StandardComplianceProcessService {
     private HistoryService historyService;
 
     @Autowired
-    private RepositoryService repositoryService;
-
-    @Autowired
     private IdentityService identityService;
 
     @Autowired
@@ -66,14 +62,14 @@ public class StandardComplianceProcessService {
     private BusProcessEOService busProcessEOService;
 
     @Autowired
-    private BusNoticecheckProcessEOService busNoticecheckProcessEOService;
+    private BusResAnalyProcessEOService busResAnalyProcessEOService;
 
     /**
      * 启动流程
      *
      * @MethodName:startProcess
      * @author: yuzhong
-     * @param:[standardApprovalVO,userId,processDefinitionKey,processInstanceId]
+     * @param:[standardComplianceVO,userId,processDefinitionKey,processInstanceId]
      * @return:void date: 2018年9月4日 10:24:08
      */
     public String startProcess(StandardComplianceVO standardComplianceVO,
@@ -86,7 +82,6 @@ public class StandardComplianceProcessService {
             map.put("processNumber", standardComplianceVO.getProcessNumber());
             map.put("processType", standardComplianceVO.getProcessType());
             map.put("processDescription", standardComplianceVO.getProcessDescription());
-            map.put("projectManagerList",standardComplianceVO.getProjectManagerList());
             map.put("endTime",standardComplianceVO.getEndTime());
             map.put("projectName",standardComplianceVO.getProjectName());
             if (!StringUtils.isEmpty(standardComplianceVO.getApprovalOpinion())) {
@@ -97,6 +92,24 @@ public class StandardComplianceProcessService {
             switch (task.getName()){
                 case "法规管理工程师发起流程":
                     map.put("applicat", userId);
+                    List<String> projectManagerList = new ArrayList<String>();
+                    BusResAnalyProcessEOPage page = new BusResAnalyProcessEOPage();
+                    page.setProcInstId(processInstanceId);
+                    List<BusResAnalyProcessEO> list = busResAnalyProcessEOService.queryByList(page);
+                    if(list!=null && !list.isEmpty()){
+                        busResAnalyProcessEOService.deleteAnalyInfo(processInstanceId);
+                    }
+                    List<BusResAnalyProcessEO> busResAnalyProcessEOList = standardComplianceVO.getBusResAnalyProcessEOList();
+                    if(busResAnalyProcessEOList!=null && !busResAnalyProcessEOList.isEmpty()){
+                        for(BusResAnalyProcessEO busResAnalyProcessEO : busResAnalyProcessEOList){
+                            if(busResAnalyProcessEO.getProjectManager()!=null) {
+                                projectManagerList.add(busResAnalyProcessEO.getProjectManager());
+                            }
+                            busResAnalyProcessEO.setId(UUIDUtils.randomUUID20());
+                            busResAnalyProcessEOService.insertSelective(busResAnalyProcessEO);
+                        }
+                    }
+                    map.put("projectManagerList",projectManagerList);
                     BusExecuProcessEOPage busExecuProcessEOPage = new BusExecuProcessEOPage();
                     busExecuProcessEOPage.setProcInstId(processInstanceId);
                     List<BusExecuProcessEO> busExecuProcessEOList = busExecuProcessEOService.queryByList(busExecuProcessEOPage);
@@ -117,52 +130,35 @@ public class StandardComplianceProcessService {
                         busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
                     }
                     break;
-                case "法规接口人分发":
+                case "项目经理分发":
                     List<String> engineerList = new ArrayList<String>();
-                    BusNoticecheckProcessEOPage page = new BusNoticecheckProcessEOPage();
-                    page.setTaskId(task.getId());
-                    List<BusNoticecheckProcessEO> list = busNoticecheckProcessEOService.queryByList(page);
-                    if(list!=null && !list.isEmpty()){
-                        busNoticecheckProcessEOService.deleteNoticeCheckInfo(task.getId());
+
+                    List<BusResAnalyProcessEO> busResAnalyProcessEOS = standardComplianceVO.getBusResAnalyProcessEOList();
+                    if (busResAnalyProcessEOS != null && !busResAnalyProcessEOS.isEmpty()) {
+                        for (BusResAnalyProcessEO busResAnalyProcessEO : busResAnalyProcessEOS) {
+                            if(busResAnalyProcessEO.getEngineer()!=null){
+                                engineerList.add(busResAnalyProcessEO.getEngineer());
+                            }
+                            busResAnalyProcessEOService.updateByPrimaryKeySelective(busResAnalyProcessEO);
+                        }
                     }
-//                    List<BusNoticecheckProcessEO> busNoticecheckProcessEOS = standardComplianceVO.getBusNoticecheckProcessEOList();
-//                    if (busNoticecheckProcessEOS != null && !busNoticecheckProcessEOS.isEmpty()) {
-//                        for (BusNoticecheckProcessEO busNoticecheckProcessEO : busNoticecheckProcessEOS) {
-//                            busNoticecheckProcessEO.setId(UUIDUtils.randomUUID20());
-//                            busNoticecheckProcessEO.setTaskId(task.getId());
-//                            busNoticecheckProcessEO.setProcInstId(processInstanceId);
-//                            busNoticecheckProcessEO.setResponsiblemanid(userId);
-//                            busNoticecheckProcessEOService.insertSelective(busNoticecheckProcessEO);
-//                            engineerList.add(busNoticecheckProcessEO.getEngineerid());
-//                        }
-//                    }
                     taskService.setVariable(task.getId(),"engineerList",engineerList);
-                    taskService.setVariable(task.getId(),"flag",0);
                     break;
-                case "工程师填写反馈意见":
-                    BusNoticecheckProcessEOPage busNoticecheckProcessEOPage = new BusNoticecheckProcessEOPage();
-                    busNoticecheckProcessEOPage.setEngineerid(userId);
-                    busNoticecheckProcessEOPage.setProcInstId(processInstanceId);
-                    busNoticecheckProcessEOPage.setTaskId(task.getParentTaskId());
-                    List<BusNoticecheckProcessEO> busNoticecheckProcessEOList = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage);
-                    if(busNoticecheckProcessEOList!=null && !busNoticecheckProcessEOList.isEmpty()){
-                        BusNoticecheckProcessEO busNoticecheckProcessEO = busNoticecheckProcessEOList.get(0);
-//                        busNoticecheckProcessEO.setClausenum(.getBusNoticecheckProcessEOList().get(0).getClausenum());
-//                        busnoticeAndCheckApprovalVONoticecheckProcessEO.setClausecontent(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getClausecontent());
-//                        busNoticecheckProcessEO.setIsqualified(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getIsqualified());
-//                        busNoticecheckProcessEO.setPlan(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getPlan());
-//                        busNoticecheckProcessEO.setProject(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getProject());
-//                        busNoticecheckProcessEO.setSolution(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getSolution());
-                        busNoticecheckProcessEOService.updateByPrimaryKeySelective(busNoticecheckProcessEO);
+                case "责任工程师填写反馈意见":
+                    List<BusResAnalyProcessEO> busResAnalyProcessEOS1 = standardComplianceVO.getBusResAnalyProcessEOList();
+                    if (busResAnalyProcessEOS1 != null && !busResAnalyProcessEOS1.isEmpty()) {
+                        for (BusResAnalyProcessEO busResAnalyProcessEO : busResAnalyProcessEOS1) {
+                            busResAnalyProcessEOService.updateByPrimaryKeySelective(busResAnalyProcessEO);
+                        }
                     }
                     break;
-                case "法规接口人汇总":
-//                    List<BusNoticecheckProcessEO> busNoticecheckProcessEOList1 = noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList();
-//                    if(busNoticecheckProcessEOList1!=null && !busNoticecheckProcessEOList1.isEmpty()){
-//                        for(BusNoticecheckProcessEO busNoticecheckProcessEO : busNoticecheckProcessEOList1){
-//                            busNoticecheckProcessEOService.updateByPrimaryKeySelective(busNoticecheckProcessEO);
-//                        }
-//                    }
+                case "项目经理审核":
+                    List<BusResAnalyProcessEO> busResAnalyProcessEOS2 = standardComplianceVO.getBusResAnalyProcessEOList();
+                    if(busResAnalyProcessEOS2!=null && !busResAnalyProcessEOS2.isEmpty()){
+                        for(BusResAnalyProcessEO busResAnalyProcessEO : busResAnalyProcessEOS2){
+                            busResAnalyProcessEOService.updateByPrimaryKeySelective(busResAnalyProcessEO);
+                        }
+                    }
                     break;
             }
             runtimeService.setVariables(processInstanceId,map);
@@ -174,9 +170,23 @@ public class StandardComplianceProcessService {
             map.put("processNumber", standardComplianceVO.getProcessNumber());
             map.put("processType", standardComplianceVO.getProcessType());
             map.put("processDescription", standardComplianceVO.getProcessDescription());
-            map.put("projectManagerList",standardComplianceVO.getProjectManagerList());
             map.put("endTime",standardComplianceVO.getEndTime());
             map.put("projectName",standardComplianceVO.getProjectName());
+            map.put("applicat", userId);
+            List<String> projectManagerList = new ArrayList<String>();
+            List<BusResAnalyProcessEO> busResAnalyProcessEOList = standardComplianceVO.getBusResAnalyProcessEOList();
+            if(busResAnalyProcessEOList!=null && !busResAnalyProcessEOList.isEmpty()){
+                for(BusResAnalyProcessEO busResAnalyProcessEO : busResAnalyProcessEOList){
+                    if(busResAnalyProcessEO.getProjectManager()!=null) {
+                        projectManagerList.add(busResAnalyProcessEO.getProjectManager());
+                    }
+                    busResAnalyProcessEO.setId(UUIDUtils.randomUUID20());
+                    busResAnalyProcessEOService.insertSelective(busResAnalyProcessEO);
+                }
+            }
+            projectManagerList = new ArrayList<>(new HashSet<>(projectManagerList));
+
+            map.put("projectManagerList",projectManagerList);
             //启动流程
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, map);
             processInstanceId = processInstance.getId();
@@ -216,17 +226,18 @@ public class StandardComplianceProcessService {
      * @param:[processInstanceId,nowUserId]
      * @return:String date: 2018年9月5日 16:40:26
      */
-    public String addAssignee(Task task,NoticeAndCheckApprovalVO noticeAndCheckApprovalVO,String processInstanceId, String nowUserId) throws Exception {
-        if("部门负责人审批".equals(task.getName())){
+    public String addAssignee(Task task,StandardComplianceVO standardComplianceVO,String processInstanceId, String nowUserId) throws Exception {
+        if("质量组项目经理审批".equals(task.getName())){
             //获取当前执行的任务(已经是第二步了)
             List<Task> taskList = taskService.createTaskQuery()
                     .processInstanceId(processInstanceId)
                     .list();
+            List<String> projectManagerList = (List<String>) runtimeService.getVariable(processInstanceId,"projectManagerList");
             if (taskList != null && !taskList.isEmpty()) {
                 //设置下一步的代办人
                 int i = 0;
                 for (Task taskNow : taskList) {
-                    taskService.setAssignee(taskNow.getId(), noticeAndCheckApprovalVO.getAssignerUserList().get(i));
+                    taskService.setAssignee(taskNow.getId(),projectManagerList.get(i));
                     i++;
                 }
                 //修改业务表的上一操作人
@@ -241,26 +252,7 @@ public class StandardComplianceProcessService {
                     busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
                 }
             }
-        }else if("法规接口人分发".equals(task.getName())){
-            List<String> engineerList = new ArrayList<String>();
-            BusNoticecheckProcessEOPage page = new BusNoticecheckProcessEOPage();
-            page.setProcInstId(processInstanceId);
-            List<BusNoticecheckProcessEO> list = busNoticecheckProcessEOService.queryByList(page);
-            if(list!=null && !list.isEmpty()){
-                busNoticecheckProcessEOService.deleteNoticeCheckInfo(task.getId());
-            }
-            List<BusNoticecheckProcessEO> busNoticecheckProcessEOS = noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList();
-            if (busNoticecheckProcessEOS != null && !busNoticecheckProcessEOS.isEmpty()) {
-                for (BusNoticecheckProcessEO busNoticecheckProcessEO : busNoticecheckProcessEOS) {
-                    busNoticecheckProcessEO.setId(UUIDUtils.randomUUID20());
-                    busNoticecheckProcessEO.setTaskId(task.getId());
-                    busNoticecheckProcessEO.setProcInstId(processInstanceId);
-                    busNoticecheckProcessEO.setResponsiblemanid(nowUserId);
-                    busNoticecheckProcessEOService.insertSelective(busNoticecheckProcessEO);
-                    engineerList.add(busNoticecheckProcessEO.getEngineerid());
-                }
-            }
-
+        }else if("项目经理分发".equals(task.getName())){
             //获取当前执行的任务(已经是第二步了)
             String parentTaskId = task.getId();
             String parentExecutionId = task.getExecutionId();
@@ -272,6 +264,7 @@ public class StandardComplianceProcessService {
                 int i = 0;
                 for(Execution ex : executionList){
                     Task t = taskService.createTaskQuery().executionId(ex.getId()).singleResult();
+                    List<String> engineerList = (List<String>) taskService.getVariable(t.getId(),"engineerList");
                     t.setAssignee(engineerList.get(i));
                     t.setParentTaskId(parentTaskId);
                     taskService.saveTask(t);
@@ -289,23 +282,7 @@ public class StandardComplianceProcessService {
                     busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
                 }
             }
-        }else if("工程师填写反馈意见".equals(task.getName())){
-            //变更工程师流程业务表
-            BusNoticecheckProcessEOPage busNoticecheckProcessEOPage = new BusNoticecheckProcessEOPage();
-            busNoticecheckProcessEOPage.setEngineerid(nowUserId);
-            busNoticecheckProcessEOPage.setProcInstId(processInstanceId);
-            busNoticecheckProcessEOPage.setTaskId(task.getParentTaskId());
-            List<BusNoticecheckProcessEO> busNoticecheckProcessEOList = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage);
-            if(busNoticecheckProcessEOList!=null && !busNoticecheckProcessEOList.isEmpty()){
-                BusNoticecheckProcessEO busNoticecheckProcessEO = busNoticecheckProcessEOList.get(0);
-                busNoticecheckProcessEO.setClausenum(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getClausenum());
-                busNoticecheckProcessEO.setClausecontent(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getClausecontent());
-                busNoticecheckProcessEO.setIsqualified(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getIsqualified());
-                busNoticecheckProcessEO.setPlan(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getPlan());
-                busNoticecheckProcessEO.setProject(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getProject());
-                busNoticecheckProcessEO.setSolution(noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList().get(0).getSolution());
-                busNoticecheckProcessEOService.updateByPrimaryKeySelective(busNoticecheckProcessEO);
-            }
+        }else if("责任工程师填写反馈意见".equals(task.getName())){
             List<HistoricTaskInstance> childTaskList = historyService.createHistoricTaskInstanceQuery().taskParentTaskId(task.getParentTaskId()).list();
             if(childTaskList!=null && !childTaskList.isEmpty()){
                 //用num来计算未完成的有多少个子任务
@@ -335,14 +312,6 @@ public class StandardComplianceProcessService {
                 busProcessEOService.updateByPrimaryKeySelective(busProcessEO);
             }
         }else {
-            if("法规接口人汇总".equals(task.getName())) {
-                List<BusNoticecheckProcessEO> busNoticecheckProcessEOList1 = noticeAndCheckApprovalVO.getBusNoticecheckProcessEOList();
-                if (busNoticecheckProcessEOList1 != null && !busNoticecheckProcessEOList1.isEmpty()) {
-                    for (BusNoticecheckProcessEO busNoticecheckProcessEO : busNoticecheckProcessEOList1) {
-                        busNoticecheckProcessEOService.updateByPrimaryKeySelective(busNoticecheckProcessEO);
-                    }
-                }
-            }
             Execution execution = runtimeService.createExecutionQuery().processInstanceId(processInstanceId)
                     .parentId(processInstanceId).singleResult();
             if (execution != null) {
@@ -364,9 +333,9 @@ public class StandardComplianceProcessService {
                     }
                 }
             } else {
-                Map map = runtimeService.getVariables(processInstanceId);
-                map.put("userId","下一个人");
-                runtimeService.setVariables(processInstanceId,map);
+//                Map map = runtimeService.getVariables(processInstanceId);
+//                map.put("userId","下一个人");
+//                runtimeService.setVariables(processInstanceId,map);
                 Task taskNow = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
                 if (taskNow != null) {
                     //设置下一步的代办人
@@ -410,7 +379,7 @@ public class StandardComplianceProcessService {
      * @param:[processInstanceId,nowUserId]
      * @return:String date: 2018年9月5日 16:40:26
      */
-    public Task completeProcess(NoticeAndCheckApprovalVO noticeAndCheckApprovalVO,String processInstanceId, String nowUserId) throws Exception {
+    public Task completeProcess(StandardComplianceVO standardComplianceVO,String processInstanceId, String nowUserId) throws Exception {
         //通过代办人，获取该人需要执行的任务
         Task task = taskService.createTaskQuery()
                 .processInstanceId(processInstanceId)
@@ -446,40 +415,37 @@ public class StandardComplianceProcessService {
 
         //获取工程师审批的列表（根据流程进行到哪一步，来判断需要展现列表数据）
         switch (task.getName()){
-            case "法规接口人汇总":
-                //获取接口人分发过的工程师的结果列表
-                BusNoticecheckProcessEOPage busNoticecheckProcessEOPage = new BusNoticecheckProcessEOPage();
-                busNoticecheckProcessEOPage.setResponsiblemanid(nowUserId);
-                busNoticecheckProcessEOPage.setProcInstId(processInstanceId);
-                busNoticecheckProcessEOPage.setTaskId(task.getId());
-                List<BusNoticecheckProcessEO> busNoticecheckProcessEOList = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage);
-                resultMap.put("engineerList",busNoticecheckProcessEOList);
+            case "质量组项目经理审批":
+                //获取法规管理工程师分发的项目经理
+                BusResAnalyProcessEOPage busResAnalyProcessEOPage = new BusResAnalyProcessEOPage();
+                busResAnalyProcessEOPage.setProcInstId(processInstanceId);
+                List<BusResAnalyProcessEO> busResAnalyProcessEOList = busResAnalyProcessEOService.queryByList(busResAnalyProcessEOPage);
+                resultMap.put("ApprovalList",busResAnalyProcessEOList);
                 break;
-            case "收文部门科室负责人审核":
-                /*获取当前登录人所在科室*/
-                BusNoticecheckProcessEOPage busNoticecheckProcessEOPage2 = new BusNoticecheckProcessEOPage();
-                busNoticecheckProcessEOPage2.setOffice("aa");
-                busNoticecheckProcessEOPage2.setProcInstId(processInstanceId);
-                busNoticecheckProcessEOPage2.setTaskId(task.getId());
-                List<BusNoticecheckProcessEO> busNoticecheckProcessEOList2 = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage2);
-                resultMap.put("engineerList",busNoticecheckProcessEOList2);
+            case "项目经理分发":
+            case "项目经理审核":
+                /*获取项目经理登录展现的数据*/
+                BusResAnalyProcessEOPage busResAnalyProcessEOPage1 = new BusResAnalyProcessEOPage();
+                busResAnalyProcessEOPage1.setProcInstId(processInstanceId);
+                busResAnalyProcessEOPage1.setProjectManager(nowUserId);
+                List<BusResAnalyProcessEO> busResAnalyProcessEOList1 = busResAnalyProcessEOService.queryByList(busResAnalyProcessEOPage1);
+                resultMap.put("ApprovalList",busResAnalyProcessEOList1);
                 break;
-            case "收文部门负责人审核":
-                /*获取当前登录人所在部门*/
-                BusNoticecheckProcessEOPage busNoticecheckProcessEOPage3 = new BusNoticecheckProcessEOPage();
-                busNoticecheckProcessEOPage3.setDept("aa");
-                busNoticecheckProcessEOPage3.setProcInstId(processInstanceId);
-                busNoticecheckProcessEOPage3.setTaskId(task.getId());
-                List<BusNoticecheckProcessEO> busNoticecheckProcessEOList3 = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage3);
-                resultMap.put("engineerList",busNoticecheckProcessEOList3);
+            case "责任工程师填写反馈意见":
+                /*获取工程师登录所展现的数据*/
+                BusResAnalyProcessEOPage busResAnalyProcessEOPage2 = new BusResAnalyProcessEOPage();
+                busResAnalyProcessEOPage2.setProcInstId(processInstanceId);
+                busResAnalyProcessEOPage2.setEngineer(nowUserId);
+                List<BusResAnalyProcessEO> busResAnalyProcessEOList2 = busResAnalyProcessEOService.queryByList(busResAnalyProcessEOPage2);
+                resultMap.put("ApprovalList",busResAnalyProcessEOList2);
                 break;
             case "发起人审批":
                 //此流程下所有的部门所选工程师所有结果
-                BusNoticecheckProcessEOPage busNoticecheckProcessEOPage4 = new BusNoticecheckProcessEOPage();
-                busNoticecheckProcessEOPage4.setProcInstId(processInstanceId);
-                busNoticecheckProcessEOPage4.setTaskId(task.getId());
-                List<BusNoticecheckProcessEO> busNoticecheckProcessEOList4 = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage4);
-                resultMap.put("engineerList",busNoticecheckProcessEOList4);
+//                BusNoticecheckProcessEOPage busNoticecheckProcessEOPage4 = new BusNoticecheckProcessEOPage();
+//                busNoticecheckProcessEOPage4.setProcInstId(processInstanceId);
+//                busNoticecheckProcessEOPage4.setTaskId(task.getId());
+//                List<BusNoticecheckProcessEO> busNoticecheckProcessEOList4 = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage4);
+//                resultMap.put("engineerList",busNoticecheckProcessEOList4);
                 break;
         }
 
@@ -545,20 +511,20 @@ public class StandardComplianceProcessService {
         case "usertask2":
             destTaskKey = "usertask1";
             break;
-        case "usertask3":
-            destTaskKey = "usertask1";
-            break;
-        case "usertask4":
-            break;
-        case "usertask5":
-            destTaskKey = "usertask4";
-            break;
-        case "usertask7":
-            destTaskKey = "usertask6";
-            break;
-        case "usertask8":
-            destTaskKey = "usertask6";
-            break;
+//        case "usertask3":
+//            destTaskKey = "usertask1";
+//            break;
+//        case "usertask4":
+//            break;
+//        case "usertask5":
+//            destTaskKey = "usertask4";
+//            break;
+//        case "usertask7":
+//            destTaskKey = "usertask6";
+//            break;
+//        case "usertask8":
+//            destTaskKey = "usertask6";
+//            break;
         default:
             message = "无需驳回";
         }
