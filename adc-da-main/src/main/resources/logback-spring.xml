@@ -8,7 +8,7 @@
 	<!-- 项目名称 -->
 	<property name="PROJECT_NAME" value="adc-da" />
 	<!-- 定义日志文件的存储地址,勿在 LogBack的配置中使用相对路径 -->
-    <property name="LOG_HOME" value="/home/testUser/autoQRCodeSystem/logs/saleslogs" />
+    <property name="LOG_HOME" value="D:/Logs/LAWSSystem/logs/saleslogs" />
     <!-- 定义系统日志文件的存储地址,勿在 LogBacDk的配置中使用相对路径 -->
     <property name="LOG_HOME_SYSTEM" value="system" />
     <!-- 定义Druid日志文件的存储地址,勿在 LogBack的配置中使用相对路径 -->
