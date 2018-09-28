@@ -155,11 +155,10 @@ public class UserEOService extends BaseService<UserEO, String> {
 	 * 设置用户角色关联
 	 */
 	public int saveUserRole(UserEO userEO) {
-		if (userEO.getRoleIdList() !=null) {
+		if (userEO.getRoleId() !=null) {
 			dao.deleteUserRoleByUsid(userEO.getUsid());
-			for (String roleId : userEO.getRoleIdList()) {
-				dao.saveUserRole(userEO.getUsid(), roleId);
-			}
+			dao.saveUserRole(userEO.getUsid(),userEO.getRoleId());
+
 		}
 		return 1;
 	}

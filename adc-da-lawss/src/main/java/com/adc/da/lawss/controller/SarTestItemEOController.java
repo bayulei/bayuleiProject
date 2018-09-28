@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import com.adc.da.lawss.entity.SarTestItemValEO;
 import com.adc.da.lawss.service.SarTestItemValEOService;
-import com.adc.da.lawss.vo.SarTestItemVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,16 +80,15 @@ public class SarTestItemEOController extends BaseController<SarTestItemEO>{
         SarTestItemValEO sarTestItemValEO = new SarTestItemValEO();
         String[] splitApplyArctic = sarTestItemEO.getApplyArctic().split(",");
         String[] splitEnergyKind = sarTestItemEO.getEnergyKind().split(",");
-
         //实验项目表新增
         int i = sarTestItemEOService.insertSelective(sarTestItemEO);
 
 //        适用车型多个值维护到实验项目关联表
         if(splitApplyArctic!=null && splitApplyArctic.length>0){
-            for(int i1=0;splitApplyArctic.length >=i1;i1++){
+            for(int i1=0;splitApplyArctic.length-1 >=i1;i1++){
                 sarTestItemValEO.setTestItemId(sarTestItemEO.getId());
                 sarTestItemValEO.setPropertyType("applyArctic");
-                sarTestItemValEO.setPropertyValue(splitApplyArctic[0]);
+                sarTestItemValEO.setPropertyValue(splitApplyArctic[i1]);
                 int i2 = sarTestItemValEOService.insertSelective(sarTestItemValEO);
                 if(i2<=0){
                     return  Result.error("参数类型插入操作失败");
@@ -99,10 +97,10 @@ public class SarTestItemEOController extends BaseController<SarTestItemEO>{
         }
         //        能源类型多个值维护到实验项目关联表
         if(splitEnergyKind!=null && splitEnergyKind.length>0){
-            for(int i1=0;splitApplyArctic.length >=i1;i1++){
+            for(int i1=0;splitApplyArctic.length-1 >=i1;i1++){
                 sarTestItemValEO.setTestItemId(sarTestItemEO.getId());
                 sarTestItemValEO.setPropertyType("energyKind");
-                sarTestItemValEO.setPropertyValue(splitEnergyKind[0]);
+                sarTestItemValEO.setPropertyValue(splitEnergyKind[i1]);
                 int i2 = sarTestItemValEOService.insertSelective(sarTestItemValEO);
                 if(i2<=0){
                     return  Result.error("参数类型插入操作失败");
