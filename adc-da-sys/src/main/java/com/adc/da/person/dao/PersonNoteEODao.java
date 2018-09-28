@@ -14,5 +14,5 @@ public interface PersonNoteEODao extends BaseDao<PersonNoteEO> {
 
      Integer updateByCollectId(PersonNoteEO personNoteEO);
      PersonNoteEO queryByCollectId(String collectId);
-     Integer deleteByCollectId(String collectId);
+
 }

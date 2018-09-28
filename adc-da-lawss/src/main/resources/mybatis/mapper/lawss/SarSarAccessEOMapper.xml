@@ -46,10 +46,10 @@
         and valid_flag ${validFlagOperator} #{validFlag}
       </if>
       <if test="accessContent != null" >
-        and access_content ${accessContentOperator} #{accessContent}
+        and access_content ${accessContentOperator} concat(concat('%',#{accessContent}),'%')
       </if>
       <if test="country != null" >
-        and country ${countryOperator} #{country}
+        and country ${countryOperator} concat(concat('%',#{country}),'%')
       </if>
       <if test="id != null" >
         and id ${idOperator} #{id}

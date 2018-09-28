@@ -17,7 +17,7 @@ public class SarBussionessStandEO extends BaseEntity {
     private Date modifyTime;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
-    private Integer validTime;
+    private Integer validFlag;
     private String putUser;
     private String citationUser;
     private String responsibleUnit;
@@ -59,7 +59,7 @@ public class SarBussionessStandEO extends BaseEntity {
      * <p>字段列表：</p>
      * <li>modifyTime -> modify_time</li>
      * <li>creationTime -> creation_time</li>
-     * <li>validTime -> valid_time</li>
+     * <li>validFlag -> valid_flag</li>
      * <li>putUser -> put_user</li>
      * <li>citationUser -> citation_user</li>
      * <li>responsibleUnit -> responsible_unit</li>
@@ -88,7 +88,7 @@ public class SarBussionessStandEO extends BaseEntity {
         switch (fieldName) {
             case "modifyTime": return "modify_time";
             case "creationTime": return "creation_time";
-            case "validTime": return "valid_time";
+            case "validFlag": return "valid_flag";
             case "putUser": return "put_user";
             case "citationUser": return "citation_user";
             case "responsibleUnit": return "responsible_unit";
@@ -120,7 +120,7 @@ public class SarBussionessStandEO extends BaseEntity {
      * <p>字段列表：</p>
      * <li>modify_time -> modifyTime</li>
      * <li>creation_time -> creationTime</li>
-     * <li>valid_time -> validTime</li>
+     * <li>valid_flag -> validFlag</li>
      * <li>put_user -> putUser</li>
      * <li>citation_user -> citationUser</li>
      * <li>responsible_unit -> responsibleUnit</li>
@@ -149,7 +149,7 @@ public class SarBussionessStandEO extends BaseEntity {
         switch (columnName) {
             case "modify_time": return "modifyTime";
             case "creation_time": return "creationTime";
-            case "valid_time": return "validTime";
+            case "valid_flag": return "validFlag";
             case "put_user": return "putUser";
             case "citation_user": return "citationUser";
             case "responsible_unit": return "responsibleUnit";
@@ -197,13 +197,13 @@ public class SarBussionessStandEO extends BaseEntity {
     }
 
     /**  **/
-    public Integer getValidTime() {
-        return this.validTime;
+    public Integer getValidFlag() {
+        return this.validFlag;
     }
 
     /**  **/
-    public void setValidTime(Integer validTime) {
-        this.validTime = validTime;
+    public void setValidFlag(Integer validFlag) {
+        this.validFlag = validFlag;
     }
 
     /**  **/

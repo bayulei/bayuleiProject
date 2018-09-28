@@ -188,7 +188,7 @@
             ${pager.orderCondition}
         </if>
         ) tmp_tb where rownum &lt;= ${pager.endIndex})
-        where rn &gt;= ${pager.startIndex} and user_id=#{userId}
+        where rn &gt;= ${pager.startIndex}
     </select>
 
 
@@ -223,10 +223,12 @@
     <!-- 根据用户id删除浏览记录-->
     <update id="updateByUserId" parameterType="com.adc.da.person.entity.PersonCookiesEO">
         update TS_PERSON_COOKIES
-        set res_title = #{resTitle},
-            valid_flag = #{validFlag}
-        where user_id=#{userId}
-
+        set
+            valid_flag = 1
+        where id=#{id}
+        <if test="userId != null">
+         and user_id=#{userId}
+        </if>
     </update>
 
 

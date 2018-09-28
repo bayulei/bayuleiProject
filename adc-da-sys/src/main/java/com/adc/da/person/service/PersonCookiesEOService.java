@@ -64,7 +64,7 @@ public class PersonCookiesEOService extends BaseService<PersonCookiesEO, String>
         return dao.queryByUserId(userId);
     }
 
-    public PersonCookiesEO updateByUserId(PersonCookiesEO personCookiesEO){
+    public int updateByUserId(PersonCookiesEO personCookiesEO){
         return dao.updateByUserId(personCookiesEO);
     }
 

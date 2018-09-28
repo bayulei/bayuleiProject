@@ -2,74 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.adc.da.person.dao.UserInfoEODao">
 
-    <resultMap id="UserMap" type="com.adc.da.sys.entity.UserEO">
-        <id column="usId" property="usid"/>
-        <result column="account" property="account"/>
-        <result column="password" property="password"/>
-        <result column="uname" property="uname"/>
-        <result column="user_source" property="userSource"/>
-        <result column="email" property="email"/>
-        <result column="work_num" property="workNum"/>
-        <result column="ext_info" property="extInfo"/>
-        <result column="oper_user" property="operUser"/>
-        <result column="creation_time" property="creationTime"/>
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.adc.da.person.entity.UserInfoEO">
+        <id column="id" property="id"/>
         <result column="modify_time" property="modifyTime"/>
+        <result column="creation_time" property="creationTime"/>
         <result column="valid_flag" property="validFlag"/>
-        <result column="disable_flag" property="disableFlag"/>
-        <result column="unlock_flag" property="unlockFlag"/>
-        <result column="user_type" property="userType"/>
+        <result column="signature" property="signature"/>
+        <result column="fax_address" property="faxAddress"/>
+        <result column="address" property="address"/>
+        <result column="gender" property="gender"/>
+        <result column="part_post" property="partPost"/>
+        <result column="assistant_post" property="assistantPost"/>
+        <result column="main_post" property="mainPost"/>
+        <result column="mobile_phone" property="mobilePhone"/>
+        <result column="office_phone" property="officePhone"/>
+        <result column="user_pic" property="userPic"/>
+        <result column="duty" property="duty"/>
+        <result column="user_id" property="userId"/>
+        <result column="account" property="account"/>
+        <result column="uname" property="uName"/>
     </resultMap>
+
 
     <!-- TS_DICTYPE table all fields -->
     <sql id="Base_Column_List">
-		 modify_time, creation_time, valid_flag, signature, fax_address, address, gender, part_post, assistant_post, main_post, mobile_phone, office_phone, user_pic, duty, user_id, id
+		 modify_time, creation_time, valid_flag, signature, fax_address, address, gender, part_post, assistant_post, main_post, mobile_phone,
+		 office_phone, user_pic, duty, user_id, id,account,uname
 	</sql>
-
-    <!-- TS_DICTYPE table all fields -->
-    <sql id="Base_Column_List_2">
-		usId,account,password,uname,user_source,email,work_num,ext_info,oper_user,creation_time,modify_time,valid_flag,disable_flag,unlock_flag,user_type
-	</sql>
-
-    <!-- Result Map-->
-    <resultMap id="BaseResultMap" extends="UserMap" type="com.adc.da.sys.entity.UserEO">
-        <collection property="UserEOList" ofType="com.adc.da.person.entity.UserInfoEO">
-            <id column="id" property="id"/>
-            <result column="modify_time" property="modifyTime"/>
-            <result column="creation_time" property="creationTime"/>
-            <result column="valid_flag" property="validFlag"/>
-            <result column="signature" property="signature"/>
-            <result column="fax_address" property="faxAddress"/>
-            <result column="address" property="address"/>
-            <result column="gender" property="gender"/>
-            <result column="part_post" property="partPost"/>
-            <result column="assistant_post" property="assistantPost"/>
-            <result column="main_post" property="mainPost"/>
-            <result column="mobile_phone" property="mobilePhone"/>
-            <result column="office_phone" property="officePhone"/>
-            <result column="user_pic" property="userPic"/>
-            <result column="duty" property="duty"/>
-            <result column="user_id" property="userId"/>
-        </collection>
-    </resultMap>
-
-    <sql id="UserEO_List">
-		u.account as account,
-		u.uname as uname,
-		u.email as email,
-		ur.user_id as userId,
-		ur.duty as duty,
-		ur.office_phone as officePhone,
-		ur.mobile_phone as mobilePhone,
-		ur.fax_address as faxAddress,
-		ur.signature as signature,
-	</sql>
-
-
-    <!--&lt;!&ndash; TS_USER_INFO table all fields &ndash;&gt;-->
-    <!--<sql id="Base_Column_List">-->
-     <!--modify_time, creation_time, valid_flag, signature, fax_address, address, gender, part_post, assistant_post, main_post, mobile_phone, office_phone, user_pic, duty, user_id, id-->
-  <!--</sql>-->
-
 
     <!-- 查询条件 -->
     <sql id="Base_Where_Clause">
@@ -278,11 +238,19 @@
 
     </select>
 
-    <select id="getUserInfoByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select <include refid="Base_Column_List" />
-        from TS_USER_INFO
-        where user_id = #{value} AND valid_flag =0
+
+    <!-- 查找用户信息-->
+    <select id="getUserInfoByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+      tui.modify_time, tui.creation_time, tui.valid_flag,
+      tui.signature, tui.fax_address, tui.address,
+      tui.gender, tui.part_post, tui.assistant_post, tui.main_post,
+      tui.mobile_phone, tui.office_phone, tui.user_pic, tui.duty,
+      tui.user_id, id ,tu.account,tu.uName
+      from TS_USER_INFO tui  left join  TS_USER tu ON tui.USER_ID = tu.USID
+      where tui.user_id = #{userId} AND tui.valid_flag =0
     </select>
+
 
     <!-- 删除记录 -->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -324,28 +292,10 @@
     </select>
 
 
-    <select id="getUserEOAndInfoEOByUserCode" resultMap="UserMap" parameterType="java.lang.String">
-    select
-      u.account as account,
-      u.uname as uname,
-      u.email as email,
-      ur.user_id as usid,
-      ur.duty as duty,
-      ur.office_phone as officePhone,
-      ur.mobile_phone as mobilePhone,
-      ur.fax_address as faxAddress,
-      ur.signature as signature
-      from TS_USER u left join TS_USER_INFO ur on u.USID=ur.USER_ID where user_id=#{userId}
-    </select>
-
-
-
     <!-- 个人信息保存修改-->
-
     <update id="updateByUserId" parameterType="com.adc.da.person.entity.UserInfoEO">
         update TS_USER_INFO
         set office_phone=#{officePhone},
-            email=#{email},
             mobile_phone=#{mobilePhone},
             fax_address=#{faxAdress},
             signature=#{signature},
@@ -353,12 +303,5 @@
             valid_flag=0
         where user_id=#{userId}
     </update>
-
-
-    <!--&lt;!&ndash; 根据用户id更新个人信息&ndash;&gt;-->
-    <!--<update id="queryByUserId" parameterType="com.adc.da.person.entity.UserInfoEO">-->
-        <!--update TS_USER_INFO-->
-        <!--set duty=#{duty},user_pic=#{userPic},office_phone=#{officePhone}-->
-    <!--</update>-->
 
 </mapper>

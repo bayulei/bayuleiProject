@@ -85,7 +85,7 @@ public class SarBussionessStandEOService extends BaseService<SarBussionessStandE
     public ResponseMessage<SarBussionessStandEO> createSarBussionessStand(SarBussionessStandEO sarBussionessStandEO){
         //标准信息表中插入一条数据
         sarBussionessStandEO.setPutUser("gaoyan");  //发布人
-        sarBussionessStandEO.setValidTime(ValueStateEnum.VALUE_TRUE.getValue());
+        sarBussionessStandEO.setValidFlag(ValueStateEnum.VALUE_TRUE.getValue());
         sarBussionessStandEO.setCreationTime(new Date());
         sarBussionessStandEO.setModifyTime(new Date());
         sarBussionessStandEO.setId(UUIDUtils.randomUUID20());
