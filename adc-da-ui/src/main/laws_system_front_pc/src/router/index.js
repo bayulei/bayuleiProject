@@ -210,16 +210,25 @@ const routes = [
       }
     ]
   },
-  // **************************   法规库   ******************************* //
+  // **************************   本地资源库   ******************************* //
   {
     path: '/statuteBank',
     name: 'StatuteBank',
-    redirect: '/domesticStandardDatabase',
+    redirect: '/dynamicInformation',
     component: resolve => require(['pages/statuteBank'], resolve),
     meta: {
-      title: '法规库'
+      title: '本地资源库'
     },
     children: [
+      {
+        path: '/dynamicInformation',
+        name: 'DynamicInformation',
+        component: resolve => require(['pages/statuteBank/pages/dynamicInformation'], resolve),
+        meta: {
+          requireAuth: true,
+          title: '动态信息'
+        }
+      },
       {
         path: '/domesticStandardDatabase',
         name: 'DomesticStandardDatabase',
@@ -293,6 +302,16 @@ const routes = [
         }
       }
     ]
+  },
+  // **************************   标准团队   ******************************* //
+  {
+    path: '/standardTeam',
+    name: 'StandardTeam',
+    component: resolve => require(['pages/standardTeam'], resolve),
+    meta: {
+      requireAuth: true,
+      title: '标准团队'
+    }
   },
   // **************************   流程中心   ******************************* //
   {
