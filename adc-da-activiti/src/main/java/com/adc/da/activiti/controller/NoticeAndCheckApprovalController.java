@@ -117,9 +117,9 @@ public class NoticeAndCheckApprovalController {
      */
     @ApiOperation(value = "无关联跳过任务节点")
     @PostMapping ("/NoRelationship")
-    public ResponseMessage<String> NoRelationship(String nowUserId,String processInstanceId,Integer flag) {
+    public ResponseMessage<String> NoRelationship(String nowUserId,String processInstanceId) {
 
-        String message = noticeAndCheckApprovalService.NoRelationship(nowUserId,processInstanceId,flag);
+        String message = noticeAndCheckApprovalService.NoRelationship(nowUserId,processInstanceId);
         return Result.success(message);
     }
 
