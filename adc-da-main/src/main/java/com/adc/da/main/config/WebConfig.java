@@ -1,5 +1,6 @@
 package com.adc.da.main.config;
 
+import com.adc.da.main.Filter.WebFilter;
 import com.adc.da.util.filter.CorsFilter;
 import com.adc.da.util.filter.CsrfFilter;
 import com.adc.da.util.filter.FakeJSessionIdFilter;
@@ -21,8 +22,9 @@ public class WebConfig {
     @Bean
     public FilterRegistrationBean xssFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new XssFilter());
-//        registration.setFilter(new XssSqlFilter());
+        registration.setFilter(new WebFilter());
+//        registration.setFilter(new XssFilter());
+//        registration.setFilter(new XssSqlFilter());s
         registration.addUrlPatterns("/*");
         registration.setName("xssFilter");
         registration.setOrder(10);

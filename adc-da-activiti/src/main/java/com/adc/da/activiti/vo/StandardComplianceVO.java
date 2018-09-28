@@ -1,5 +1,7 @@
 package com.adc.da.activiti.vo;
 
+import com.adc.da.activiti.entity.BusResAnalyProcessEO;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +40,32 @@ public class StandardComplianceVO extends ApprovalProcessVO implements Serializa
      *  审批意见
      */
     private String approvalOpinion;
+
+    /**
+     *  工程师集合
+     */
+    private List<String> engineerList;
+
+    /**
+     *  标准法规集合
+     */
+    private List<BusResAnalyProcessEO> busResAnalyProcessEOList;
+
+    public List<String> getEngineerList() {
+        return engineerList;
+    }
+
+    public void setEngineerList(List<String> engineerList) {
+        this.engineerList = engineerList;
+    }
+
+    public List<BusResAnalyProcessEO> getBusResAnalyProcessEOList() {
+        return busResAnalyProcessEOList;
+    }
+
+    public void setBusResAnalyProcessEOList(List<BusResAnalyProcessEO> busResAnalyProcessEOList) {
+        this.busResAnalyProcessEOList = busResAnalyProcessEOList;
+    }
 
     public String getApprovalOpinion() {
         return approvalOpinion;

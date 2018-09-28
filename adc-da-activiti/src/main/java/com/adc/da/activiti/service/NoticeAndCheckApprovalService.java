@@ -467,7 +467,7 @@ public class NoticeAndCheckApprovalService {
                 busNoticecheckProcessEOPage2.setProcInstId(processInstanceId);
                 busNoticecheckProcessEOPage2.setTaskId(task.getId());
                 List<BusNoticecheckProcessEO> busNoticecheckProcessEOList2 = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage2);
-                resultMap.put("engineerList",busNoticecheckProcessEOList2);
+                resultMap.put("ApprovalList",busNoticecheckProcessEOList2);
                 break;
             case "收文部门负责人审核":
                 /*获取当前登录人所在部门*/
@@ -476,7 +476,7 @@ public class NoticeAndCheckApprovalService {
                 busNoticecheckProcessEOPage3.setProcInstId(processInstanceId);
                 busNoticecheckProcessEOPage3.setTaskId(task.getId());
                 List<BusNoticecheckProcessEO> busNoticecheckProcessEOList3 = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage3);
-                resultMap.put("engineerList",busNoticecheckProcessEOList3);
+                resultMap.put("ApprovalList",busNoticecheckProcessEOList3);
                 break;
             case "发起人审批":
                 //此流程下所有的部门所选工程师所有结果
@@ -484,7 +484,7 @@ public class NoticeAndCheckApprovalService {
                 busNoticecheckProcessEOPage4.setProcInstId(processInstanceId);
                 busNoticecheckProcessEOPage4.setTaskId(task.getId());
                 List<BusNoticecheckProcessEO> busNoticecheckProcessEOList4 = busNoticecheckProcessEOService.queryByList(busNoticecheckProcessEOPage4);
-                resultMap.put("engineerList",busNoticecheckProcessEOList4);
+                resultMap.put("ApprovalList",busNoticecheckProcessEOList4);
                 break;
         }
 
@@ -540,11 +540,11 @@ public class NoticeAndCheckApprovalService {
      * @return:void
      * date: 2018年9月17日 10:34:37
      */
-    public String NoRelationship(String nowUserId,String processInstanceId,Integer flag) {
+    public String NoRelationship(String nowUserId,String processInstanceId) {
         try{
             Task task = taskService.createTaskQuery().processInstanceId(processInstanceId)
                     .taskAssignee(nowUserId).singleResult();
-            taskService.setVariable(task.getId(),"flag",flag);
+            taskService.setVariable(task.getId(),"flag",1);
             taskService.complete(task.getId());
             //查询完成上一次任务后当前任务
             Task taskNow = taskService.createTaskQuery().executionId(task.getExecutionId()).singleResult();
@@ -633,11 +633,14 @@ public class NoticeAndCheckApprovalService {
             }
         }else {
             message = flowProcessUtil.rejectTask(processInstanceId, nowUserId, destTaskKey, comment);
-            BusNoticecheckProcessEOPage page = new BusNoticecheckProcessEOPage();
-            page.setTaskId(taskEntity.getParentTaskId());
-            List<BusNoticecheckProcessEO> list = busNoticecheckProcessEOService.queryByList(page);
-            if(list!=null && !list.isEmpty()){
-                busNoticecheckProcessEOService.deleteNoticeCheckInfo(taskEntity.getParentTaskId());
+            //驳回后把工程师流程业务表删除掉之前的任务ID（废数据）
+            if(taskEntity.getParentTaskId()!=null && !taskEntity.getParentTaskId().isEmpty()) {
+                BusNoticecheckProcessEOPage page = new BusNoticecheckProcessEOPage();
+                page.setTaskId(taskEntity.getParentTaskId());
+                List<BusNoticecheckProcessEO> list = busNoticecheckProcessEOService.queryByList(page);
+                if (list != null && !list.isEmpty()) {
+                    busNoticecheckProcessEOService.deleteNoticeCheckInfo(taskEntity.getParentTaskId());
+                }
             }
         }
         //修改业务表的上一操作人

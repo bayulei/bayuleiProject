@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.activiti.dao.BusResAnalyProcessEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.activiti.entity.BusResAnalyProcessEO" >
+    <id column="id" property="id" />
+    <result column="isagree" property="isagree" />
+    <result column="res_flag" property="resFlag" />
+    <result column="proc_inst_id" property="procInstId" />
+    <result column="parent_id" property="parentId" />
+    <result column="reason_explain" property="reasonExplain" />
+    <result column="prove_material" property="proveMaterial" />
+    <result column="res_result" property="resResult" />
+    <result column="engineer" property="engineer" />
+    <result column="project_manager" property="projectManager" />
+    <result column="dept_name" property="deptName" />
+    <result column="res_name" property="resName" />
+    <result column="res_num" property="resNum" />
+    <result column="res_id" property="resId" />
+  </resultMap>
+
+  <!-- BUS_RES_ANALY_PROCESS table all fields -->
+  <sql id="Base_Column_List" >
+     isagree, res_flag, proc_inst_id, parent_id, reason_explain, prove_material, res_result, engineer, project_manager, dept_name, res_name, res_num, res_id, id
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="isagree != null" >
+        and isagree ${isagreeOperator} #{isagree}
+      </if>
+      <if test="resFlag != null" >
+        and res_flag ${resFlagOperator} #{resFlag}
+      </if>
+      <if test="procInstId != null" >
+        and proc_inst_id ${procInstIdOperator} #{procInstId}
+      </if>
+      <if test="parentId != null" >
+        and parent_id ${parentIdOperator} #{parentId}
+      </if>
+      <if test="reasonExplain != null" >
+        and reason_explain ${reasonExplainOperator} #{reasonExplain}
+      </if>
+      <if test="proveMaterial != null" >
+        and prove_material ${proveMaterialOperator} #{proveMaterial}
+      </if>
+      <if test="resResult != null" >
+        and res_result ${resResultOperator} #{resResult}
+      </if>
+      <if test="engineer != null" >
+        and engineer ${engineerOperator} #{engineer}
+      </if>
+      <if test="projectManager != null" >
+        and project_manager ${projectManagerOperator} #{projectManager}
+      </if>
+      <if test="deptName != null" >
+        and dept_name ${deptNameOperator} #{deptName}
+      </if>
+      <if test="resName != null" >
+        and res_name ${resNameOperator} #{resName}
+      </if>
+      <if test="resNum != null" >
+        and res_num ${resNumOperator} #{resNum}
+      </if>
+      <if test="resId != null" >
+        and res_id ${resIdOperator} #{resId}
+      </if>
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.activiti.entity.BusResAnalyProcessEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_BUS_RES_ANALY_PROCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into BUS_RES_ANALY_PROCESS(<include refid="Base_Column_List" />)
+    values (#{isagree, jdbcType=INTEGER}, #{resFlag, jdbcType=VARCHAR}, #{procInstId, jdbcType=VARCHAR}, #{parentId, jdbcType=VARCHAR}, #{reasonExplain, jdbcType=VARCHAR}, #{proveMaterial, jdbcType=VARCHAR}, #{resResult, jdbcType=INTEGER}, #{engineer, jdbcType=VARCHAR}, #{projectManager, jdbcType=VARCHAR}, #{deptName, jdbcType=VARCHAR}, #{resName, jdbcType=VARCHAR}, #{resNum, jdbcType=VARCHAR}, #{resId, jdbcType=VARCHAR}, #{id, jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.activiti.entity.BusResAnalyProcessEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_BUS_RES_ANALY_PROCESS.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into BUS_RES_ANALY_PROCESS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="isagree != null" >isagree,</if>
+                <if test="resFlag != null" >res_flag,</if>
+                <if test="procInstId != null" >proc_inst_id,</if>
+                <if test="parentId != null" >parent_id,</if>
+                <if test="reasonExplain != null" >reason_explain,</if>
+                <if test="proveMaterial != null" >prove_material,</if>
+                <if test="resResult != null" >res_result,</if>
+                <if test="engineer != null" >engineer,</if>
+                <if test="projectManager != null" >project_manager,</if>
+                <if test="deptName != null" >dept_name,</if>
+                <if test="resName != null" >res_name,</if>
+                <if test="resNum != null" >res_num,</if>
+                <if test="resId != null" >res_id,</if>
+                <if test="id != null" >id,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="isagree != null" >#{isagree, jdbcType=INTEGER},</if>
+                <if test="resFlag != null" >#{resFlag, jdbcType=VARCHAR},</if>
+                <if test="procInstId != null" >#{procInstId, jdbcType=VARCHAR},</if>
+                <if test="parentId != null" >#{parentId, jdbcType=VARCHAR},</if>
+                <if test="reasonExplain != null" >#{reasonExplain, jdbcType=VARCHAR},</if>
+                <if test="proveMaterial != null" >#{proveMaterial, jdbcType=VARCHAR},</if>
+                <if test="resResult != null" >#{resResult, jdbcType=INTEGER},</if>
+                <if test="engineer != null" >#{engineer, jdbcType=VARCHAR},</if>
+                <if test="projectManager != null" >#{projectManager, jdbcType=VARCHAR},</if>
+                <if test="deptName != null" >#{deptName, jdbcType=VARCHAR},</if>
+                <if test="resName != null" >#{resName, jdbcType=VARCHAR},</if>
+                <if test="resNum != null" >#{resNum, jdbcType=VARCHAR},</if>
+                <if test="resId != null" >#{resId, jdbcType=VARCHAR},</if>
+                <if test="id != null" >#{id, jdbcType=VARCHAR},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.activiti.entity.BusResAnalyProcessEO" >
+    update BUS_RES_ANALY_PROCESS
+       set  isagree = #{isagree},
+            res_flag = #{resFlag},
+            proc_inst_id = #{procInstId},
+            parent_id = #{parentId},
+            reason_explain = #{reasonExplain},
+            prove_material = #{proveMaterial},
+            res_result = #{resResult},
+            engineer = #{engineer},
+            project_manager = #{projectManager},
+            dept_name = #{deptName},
+            res_name = #{resName},
+            res_num = #{resNum},
+            res_id = #{resId}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.activiti.entity.BusResAnalyProcessEO" >
+    update BUS_RES_ANALY_PROCESS
+    <set >
+      <if test="isagree != null" >
+        isagree = #{isagree},
+      </if>
+      <if test="resFlag != null" >
+        res_flag = #{resFlag},
+      </if>
+      <if test="procInstId != null" >
+        proc_inst_id = #{procInstId},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId},
+      </if>
+      <if test="reasonExplain != null" >
+        reason_explain = #{reasonExplain},
+      </if>
+      <if test="proveMaterial != null" >
+        prove_material = #{proveMaterial},
+      </if>
+      <if test="resResult != null" >
+        res_result = #{resResult},
+      </if>
+      <if test="engineer != null" >
+        engineer = #{engineer},
+      </if>
+      <if test="projectManager != null" >
+        project_manager = #{projectManager},
+      </if>
+      <if test="deptName != null" >
+        dept_name = #{deptName},
+      </if>
+      <if test="resName != null" >
+        res_name = #{resName},
+      </if>
+      <if test="resNum != null" >
+        res_num = #{resNum},
+      </if>
+      <if test="resId != null" >
+        res_id = #{resId},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 BUS_RES_ANALY_PROCESS -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from BUS_RES_ANALY_PROCESS
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BUS_RES_ANALY_PROCESS
+     where id = #{value}
+
+  </delete>
+
+  <!-- BUS_RES_ANALY_PROCESS 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from BUS_RES_ANALY_PROCESS
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询BUS_RES_ANALY_PROCESS列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+	select <include refid="Base_Column_List" /> from
+		(select tmp_tb.* , rownum rn from
+			(select <include refid="Base_Column_List" /> from BUS_RES_ANALY_PROCESS
+			 <include refid="Base_Where_Clause"/>
+			 <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+			 	${pager.orderCondition}
+			 </if>
+			) tmp_tb where rownum &lt;= ${pager.endIndex})
+			where rn &gt;= ${pager.startIndex}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from BUS_RES_ANALY_PROCESS
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+       ${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>
