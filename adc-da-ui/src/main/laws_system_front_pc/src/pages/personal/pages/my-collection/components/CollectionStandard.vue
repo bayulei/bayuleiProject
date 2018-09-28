@@ -187,30 +187,6 @@ export default {
         this.flag = false
       }
       this.standardModal = true
-      // this.$Modal.confirm({
-      //   render: (h) => {
-      //     return h('Input', {
-      //       props: {
-      //         type: 'textarea',
-      //         maxlength: 200,
-      //         value: num.value,
-      //         placeholder: '请书写笔记……'
-      //       },
-      //       on: {
-      //         input: (val) => {
-      //           num.input = val
-      //         }
-      //       }
-      //     })
-      //   },
-      //   onOk: () => {
-      //     num.value = num.input
-      //   },
-      //   onCancel: () => {
-      //     num.input = ''
-      //   }
-      // })
-      // this.standardModal = true
     },
     // 提交笔记
     saveWriteNotes () {
