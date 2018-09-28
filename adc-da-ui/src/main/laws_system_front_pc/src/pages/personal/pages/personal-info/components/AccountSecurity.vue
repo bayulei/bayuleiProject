@@ -83,7 +83,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   .account-security{
     width: 100%;
     height: 100%;

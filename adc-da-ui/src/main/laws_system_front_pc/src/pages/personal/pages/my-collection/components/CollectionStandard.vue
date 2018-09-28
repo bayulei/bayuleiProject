@@ -27,24 +27,34 @@
            </Col>
           </Row>
          </div>
-         <div slot="content">
-           <Form ref="item.formDynamic" :model="item.formDynamic" :label-width="200">
-             <FormItem>
-               <Button type="dashed" class="btn" @click="handleAdd(index)" icon="md-add">添加笔记</Button>
-             </FormItem>
-             <FormItem v-for="(note, index) in item.formDynamic" :key="index" :label="'笔记 ' + note.index + ':'">
-               <Row>
-                 <Col span="12">
-                   <span>{{note.value}}</span>
-                 </Col>
-                 <Col span="6" offset="1" align="right">
-                   <Button type="info" size="small" @click="handleRender">书写笔记</Button>
-                   <Button type="info"  size="small" @click="handleSubmit">修改笔记</Button>
-                   <Button type="info"  size="small" @click="handleReset" >删除笔记</Button>
-                 </Col>
-               </Row>
-             </FormItem>
-           </Form>
+         <div slot="content" class="note-list">
+           <div class="top-add">
+             <Button type="dashed" class="btn" @click="handleRender(0)" icon="md-add">添加笔记</Button>
+           </div>
+           <div class="note-content" v-for="(note, index) in item.formDynamic" :key="index">
+             <div class="note-left">{{note}}</div>
+             <div class="note-right">
+               <Button type="dashed">查看</Button>
+               <Button type="dashed">删除</Button>
+             </div>
+           </div>
+           <!--<Form ref="item.formDynamic" :model="item.formDynamic" :label-width="200">-->
+             <!--<FormItem>-->
+               <!--<Button type="dashed" class="btn" @click="handleRender(0)" icon="md-add">添加笔记</Button>-->
+             <!--</FormItem>-->
+             <!--<FormItem v-for="(note, index) in item.formDynamic" :key="index" :label="'笔记 ' + note.index + ':'">-->
+               <!--<Row>-->
+                 <!--<Col span="12">-->
+                   <!--<span>{{note.value}}</span>-->
+                 <!--</Col>-->
+                 <!--<Col span="6" offset="1" align="right">-->
+                   <!--<Button type="info" size="small" @click="handleRender(1)">书写笔记</Button>-->
+                   <!--<Button type="info"  size="small" @click="handleSubmit">修改笔记</Button>-->
+                   <!--<Button type="info"  size="small" @click="handleReset" >删除笔记</Button>-->
+                 <!--</Col>-->
+               <!--</Row>-->
+             <!--</FormItem>-->
+           <!--</Form>-->
            <Modal v-model="standardModal" width="450">
              <p slot="header">
                <span>书写笔记</span>
@@ -54,7 +64,8 @@
                <P style="float: right; ">您还可以输入{{remnant}}/200</P>
              </div>
              <div slot="footer">
-               <Button type="primary" size="large" @click="saveWriteNotes">提交笔记</Button>
+               <Button v-if="flag" type="primary" size="large" @click="comAdd()">添加笔记</Button>
+               <Button v-else type="primary" size="large" @click="saveWriteNotes">提交笔记</Button>
              </div>
            </Modal>
          </div>
@@ -72,6 +83,7 @@ export default {
   name: 'collectionStandard',
   data () {
     return {
+      flag: true,
       // 模态框是否显示
       standardModal: false,
       collapseValue: '0',
@@ -120,16 +132,17 @@ export default {
         _this: this,
         loading: 'loading'
       }, res => {
-        for (let i = 0; i < res.data.list.length; i++) {
-          res.data.list[i].formDynamic = [
-            {
-              input: '',
-              value: '',
-              index: 1
-            }
-          ]
-        }
+        console.log(res)
+        // var listItem = res.data.list
         this.collectionList = res.data.list
+        // console.log(res.data)
+        // for (let i = 0; i < this.collectionList.length; i++) {
+        //   this.collectionList[i].formDynamic = {
+        //     input: '',
+        //     value: '',
+        //     index: i + 1
+        //   }
+        // }
         console.log(this.collectionList)
         this.total = res.data.count
       }, e => {})
@@ -156,7 +169,7 @@ export default {
     },
     // 增加笔记
     handleAdd (index) {
-      this.collectionList[index].formDynamic.push({
+      this.collectionList.push({
         value: '',
         index: this.number++
       })
@@ -167,34 +180,21 @@ export default {
       // })
     },
     // 书写笔记
-    handleRender (num) {
-      // this.$Modal.confirm({
-      //   render: (h) => {
-      //     return h('Input', {
-      //       props: {
-      //         type: 'textarea',
-      //         maxlength: 200,
-      //         value: num.value,
-      //         placeholder: '请书写笔记……'
-      //       },
-      //       on: {
-      //         input: (val) => {
-      //           num.input = val
-      //         }
-      //       }
-      //     })
-      //   },
-      //   onOk: () => {
-      //     num.value = num.input
-      //   },
-      //   onCancel: () => {
-      //     num.input = ''
-      //   }
-      // })
+    handleRender (flag) {
+      if (flag === 0) {
+        this.flag = true
+      } else {
+        this.flag = false
+      }
       this.standardModal = true
     },
     // 提交笔记
     saveWriteNotes () {
+      this.standardModal = false
+    },
+    // 添加笔记
+    comAdd () {
+      this.standardModal = false
     }
   },
   mounted () {
@@ -211,12 +211,28 @@ export default {
        overflow-y: auto;
        padding: 0.1rem;
        background-color: white;
+       .note-list{
+         .top-add{
+           height: 30px;
+           line-height: 30px;
+           width: 100%;
+         }
+         .note-content{
+           height: 30px;
+           clear: both;
+           .note-left{
+             height: 30px;
+             width: 80%;
+             float: left;
+           }
+           .note-right {
+             height: 30px;
+             width: 20%;
+             float: right;
+           }
+         }
+       }
      }
-   }
-   .btn-group{
-     position: relative;
-     top:-1.3rem;
-     left: 23rem;
    }
    .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header{
      height: 38px;

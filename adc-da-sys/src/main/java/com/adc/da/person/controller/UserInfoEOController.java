@@ -3,15 +3,10 @@ package com.adc.da.person.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.List;
-import java.util.Map;
 
-
-import com.adc.da.sys.entity.UserEO;
 import com.adc.da.sys.util.LoginUserUtil;
 import com.adc.da.sys.util.UUIDUtils;
-import com.adc.da.util.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +59,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
     @ApiOperation(value = "查找用户信息接口")
     @GetMapping("/getByUserInfoCode")
     public ResponseMessage<UserInfoEO> getByUserInfoCode() throws Exception {
+        //获取当前登录人
         String userId= LoginUserUtil.getUserId();
         UserInfoEO userInfoEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
         return Result.success(userInfoEO);
@@ -135,7 +131,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
     @ApiOperation(value = "|UserInfoEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     //@RequiresPermissions("person:userInfo:update")
-    public ResponseMessage update(@RequestBody UserInfoEO userInfoEO, @PathVariable("restPath") String restPath) throws Exception {
+    public ResponseMessage update(@RequestBody UserInfoEO userInfoEO) throws Exception {
         if(StringUtils.isBlank(userInfoEO.getOfficePhone())){
             return Result.error("r0018","电话号码不能为空");
         }
@@ -163,4 +159,28 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
         return Result.success();
     }
 
+
+
+//    @ApiOperation(value = "|UserInfoEO|修改")
+//    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseMessage<UserInfoEO> updateByUserId(RequestBody String userId)throws Exception{
+//        String userId= LoginUserUtil.getUserId();
+//        UserInfoEO userInfoEO=userInfoEOService.updateByUserId(userId);
+//        return Result.success(userInfoEO);
+//    }
+
+
+    /*
+     * @Author liuyinnan
+     * @Description //根据用户id保存用户信息
+     * @Date 17:12 2018/9/26
+     * @Param [userId]
+     * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.person.entity.UserInfoEO>>
+     **/
+    /*@ApiOperation(value = "根据用户id保存用户信息")
+    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseMessage<List<UserInfoEO>> queryByUserId(String userId)throws Exception{
+        List<UserInfoEO> userInfoEOList=userInfoEOService.queryByUserId(userId);
+        return Result.success(userInfoEOList);
+    }*/
 }
