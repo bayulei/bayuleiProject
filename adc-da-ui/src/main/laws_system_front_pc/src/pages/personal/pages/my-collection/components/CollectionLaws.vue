@@ -22,7 +22,6 @@
                </Col>
                <Col span="4">{{item.creationTime}}</Col>
                <Col span="4" offset="6">
-                 <span>{{ item.check }}</span>
                  <Button type="dashed"  @click="cancelCollection(item.id)">取消收藏</Button>
                  <Button type="dashed" @click="writeNotes(item)">书写笔记</Button>
                </Col>
@@ -65,6 +64,9 @@ export default {
       total: 0,
       page: 1,
       rows: 10,
+      // 字数统计
+      remnant: 200,
+      flag: true,
       loading: false,
       lawsModal: false
     }
@@ -85,16 +87,20 @@ export default {
       this.remnant = 200 - txtVal
     },
     // 添加笔记
-    lawsAdd () {},
+    lawsAdd () {
+    },
     // 提交笔记
     saveLawsNotes () {
+    },
+    // 查询笔记
+    selectNotes () {
+
     },
     // 搜索
     selectLaws () {
       this.$http.get('person/personCollect/page', {
         pageNo: this.page,
         pageSize: this.rows,
-        id: 'WQJ8JT5XTC5MNK3WTKNN',
         collectTitle: this.search.collectType
       }, {
         _this: this,
@@ -118,19 +124,19 @@ export default {
     // 书写笔记
     writeNotes (item) {
       item.check = !item.check
+      if (item.check === true) {
+        this.$http.get('person/personNote/collectId', {
+          id: item.id
+        }, {
+          _this: this
+        }, res => {
+        }, e => {
+        })
+      }
     },
     // 添加笔记
     createNote (item) {
-      console.log(item)
-    }
-  },
-  watch: {
-    lawsList: {
-      deep: true,
-      immediate: true,
-      handler (val) {
-        console.log('watch')
-      }
+      this.lawsModal = true
     }
   },
   mounted () {
