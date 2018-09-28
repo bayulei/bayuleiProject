@@ -265,4 +265,13 @@ public class SarTestItemEOPage extends BasePage {
         this.idOperator = idOperator;
     }
 
+    private String[] idlist;  //用于导出数据过程中传递选择的标准id
+
+    public String[] getIdlist() {
+        return idlist;
+    }
+
+    public void setIdlist(String[] idlist) {
+        this.idlist = idlist;
+    }
 }

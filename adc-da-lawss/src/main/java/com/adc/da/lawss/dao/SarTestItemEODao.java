@@ -1,7 +1,11 @@
 package com.adc.da.lawss.dao;
 
 import com.adc.da.base.dao.BaseDao;
+import com.adc.da.lawss.dto.SarStandExcelDto;
+import com.adc.da.lawss.dto.SarTestItemExportDto;
 import com.adc.da.lawss.entity.SarTestItemEO;
+import com.adc.da.lawss.page.SarStandardsInfoEOPage;
+import com.adc.da.lawss.page.SarTestItemEOPage;
 
 import java.util.List;
 
@@ -17,4 +21,6 @@ public interface SarTestItemEODao extends BaseDao<SarTestItemEO> {
 
     //liwenxuan:删除多条记录
     int deleteByPrimaryKeyList(List<String> ids);
+
+    List<SarTestItemExportDto> getSarStandardsInfo(SarTestItemEOPage page);
 }

@@ -234,4 +234,11 @@
     </if>
   </select>
 
+
+
+ <!--   <select id="getSarStandardsInfo" resultMap="BaseResultMap" parameterType="com.adc.da.lawss.page.SarTestItemEOPage">
+        select <include refid="Base_Column_List"/> from SAR_TEST_ITEM
+
+    </select>
+-->
 </mapper>

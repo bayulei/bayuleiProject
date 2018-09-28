@@ -1,5 +1,9 @@
 package com.adc.da.lawss.service;
 
+import com.adc.da.lawss.dto.SarStandExcelDto;
+import com.adc.da.lawss.dto.SarTestItemExportDto;
+import com.adc.da.lawss.page.SarStandardsInfoEOPage;
+import com.adc.da.lawss.page.SarTestItemEOPage;
 import com.adc.da.sys.util.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,5 +59,10 @@ public class SarTestItemEOService extends BaseService<SarTestItemEO, String> {
     //liwenxuan:删除多条记录
     public int deleteByPrimaryKeyList(List<String> ids){
         return dao.deleteByPrimaryKeyList(ids);
+    }
+
+
+    public List<SarTestItemExportDto> getSarStandardsInfo(SarTestItemEOPage page){
+        return  dao.getSarStandardsInfo(page);
     }
 }
