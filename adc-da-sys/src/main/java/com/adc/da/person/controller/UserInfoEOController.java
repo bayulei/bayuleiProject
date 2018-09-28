@@ -58,9 +58,9 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
      */
     @ApiOperation(value = "查找用户信息接口")
     @GetMapping("/getByUserInfoCode")
-    public ResponseMessage<UserInfoEO> getByUserInfoCode() throws Exception {
+    public ResponseMessage<UserInfoEO> getByUserInfoCode(String userId) throws Exception {
         //获取当前登录人
-        String userId= LoginUserUtil.getUserId();
+        //String userId= LoginUserUtil.getUserId();
         UserInfoEO userInfoEO=userInfoEOService.getUserEOAndInfoEOByUserCode(userId);
         return Result.success(userInfoEO);
     }
@@ -80,13 +80,6 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
         }
         return Result.success(userInfoEOByUserInfoId);
     }
-
-/*    @ApiOperation(value = "|UserInfoEO|详情")
-    @GetMapping("/{id}")
-    @RequiresPermissions("person:userInfo:get")
-    public ResponseMessage<UserInfoEO> find(@PathVariable String id) throws Exception {
-        return Result.success(userInfoEOService.selectByPrimaryKey(id));
-    }*/
 
 
     /**
@@ -128,15 +121,16 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
      * @Param [userInfoEO, restPath]
      * @return com.adc.da.util.http.ResponseMessage
      **/
-    @ApiOperation(value = "|UserInfoEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "保存修改用户信息")
+    @PostMapping(value = "/updatePersonInfo")
     //@RequiresPermissions("person:userInfo:update")
-    public ResponseMessage update(@RequestBody UserInfoEO userInfoEO) throws Exception {
+    public ResponseMessage update(UserInfoEO userInfoEO) throws Exception {
+        userInfoEO.setUserId(LoginUserUtil.getUserId());
         if(StringUtils.isBlank(userInfoEO.getOfficePhone())){
             return Result.error("r0018","电话号码不能为空");
         }
-        if(StringUtils.isBlank(userInfoEO.getAddress())){
-            return Result.error("r0019","个人邮箱地址不能为空");
+        if(StringUtils.isBlank(userInfoEO.getEmail())){
+            return Result.error("r0019","个人邮箱不能为空");
         }
         if(StringUtils.isBlank(userInfoEO.getMobilePhone())){
             return Result.error("r0020","手机号码不能为空");
@@ -144,8 +138,7 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
         if(StringUtils.isBlank(userInfoEO.getFaxAddress())){
             return Result.error("r0021","传真地址不能为空");
         }
-
-        return Result.success(userInfoEOService.updateById(userInfoEO));
+        return Result.success(userInfoEOService.updateByUserId(userInfoEO));
     }
 
 
@@ -161,26 +154,12 @@ public class UserInfoEOController extends BaseController<UserInfoEO>{
 
 
 
-//    @ApiOperation(value = "|UserInfoEO|修改")
-//    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-//    public ResponseMessage<UserInfoEO> updateByUserId(RequestBody String userId)throws Exception{
-//        String userId= LoginUserUtil.getUserId();
-//        UserInfoEO userInfoEO=userInfoEOService.updateByUserId(userId);
-//        return Result.success(userInfoEO);
-//    }
 
+    @ApiOperation(value = "保存用户信息")
+    @PutMapping("/updateByUserInfo")
+    public ResponseMessage updateByUserInfo(UserInfoEO userInfoEO)throws Exception{
+        String userId= LoginUserUtil.getUserId();
+        return userInfoEOService.updateByUserId(userInfoEO);
+    }
 
-    /*
-     * @Author liuyinnan
-     * @Description //根据用户id保存用户信息
-     * @Date 17:12 2018/9/26
-     * @Param [userId]
-     * @return com.adc.da.util.http.ResponseMessage<java.util.List<com.adc.da.person.entity.UserInfoEO>>
-     **/
-    /*@ApiOperation(value = "根据用户id保存用户信息")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseMessage<List<UserInfoEO>> queryByUserId(String userId)throws Exception{
-        List<UserInfoEO> userInfoEOList=userInfoEOService.queryByUserId(userId);
-        return Result.success(userInfoEOList);
-    }*/
 }

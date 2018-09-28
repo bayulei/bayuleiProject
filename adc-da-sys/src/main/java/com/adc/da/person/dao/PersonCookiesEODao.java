@@ -20,7 +20,7 @@ public interface PersonCookiesEODao extends BaseDao<PersonCookiesEO> {
 
     List<PersonCookiesEO> queryByUserId(String userId);
 
-    PersonCookiesEO updateByUserId(PersonCookiesEO personCookiesEO);
+    int updateByUserId(PersonCookiesEO personCookiesEO);
 
     public void update(String id);
 }

@@ -17,11 +17,11 @@ import java.util.List;
 public interface UserInfoEODao extends BaseDao<UserInfoEO> {
 
 
-     public UserInfoEO getUserInfoByUserId(String userId);
+     UserInfoEO getUserInfoByUserId(String userId);
 
      List<UserEO> getUserEOAndInfoEOByUserCode(String userId);
 
-     List<UserInfoEO> queryByUserId(String userId);
+     /*List<UserInfoEO> queryByUserId(String userId);*/
 
      UserInfoEO updateByUserId(String userId);
 
